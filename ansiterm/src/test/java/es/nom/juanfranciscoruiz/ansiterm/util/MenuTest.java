@@ -30,7 +30,7 @@ public class MenuTest {
         instance.setEsMenuInicio(true);
         instance.setOpciones(generaOpciones());
         List<String> expResult = generaOpciones();
-        expResult.addFirst("0. Salir de la aplicación");
+        expResult.add(0,"0. Salir de la aplicación");
 
         List<String> result = instance.getOpciones();
         assertEquals(expResult, result);
