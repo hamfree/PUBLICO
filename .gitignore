@@ -159,4 +159,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+**/nbactions.xml
 
+/utiles/nb-configuration.xml

@@ -1,7 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.util;
 
 import es.nom.juanfranciscoruiz.utiles.TypeConverter;
-import es.nom.juanfranciscoruiz.utiles.IO;
 import es.nom.juanfranciscoruiz.utiles.Types;
 import es.nom.juanfranciscoruiz.utiles.Util;
 import java.util.ArrayList;
@@ -75,12 +74,12 @@ public class Menu {
         } else {
             this.opciones = new ArrayList<>();
         }
-        if (titulo != null && !titulo.isBlank()) {
+        if (titulo != null && !titulo.isEmpty()) {
             this.titulo = titulo;
         } else {
             this.titulo = "Sin titulo";
         }
-        if (mensaje != null && !mensaje.isBlank()){
+        if (mensaje != null && !mensaje.isEmpty()){
             this.mensaje = mensaje;
         } else {
             this.mensaje = mensaje;
@@ -88,7 +87,7 @@ public class Menu {
         
         this.esMenuInicio = esMenuInicio;
         if (this.esMenuInicio) {
-            this.opciones.addFirst("0. Salir de la aplicación");
+            this.opciones.add(0,"0. Salir de la aplicación");
         }
         
     }
@@ -108,7 +107,7 @@ public class Menu {
     public void setOpciones(List<String> opciones) {
         this.opciones = opciones;
         if (this.esMenuInicio) {
-            this.opciones.addFirst("0. Salir de la aplicación");
+            this.opciones.add(0,"0. Salir de la aplicación");
         }
     }
 
@@ -185,7 +184,7 @@ public class Menu {
         // "0. Salir de la aplicación" y eliminarla.
         this.esMenuInicio = esMenuInicio;
          if (this.esMenuInicio) {
-            this.opciones.addFirst("0. Salir de la aplicación");
+            this.opciones.add(0,"0. Salir de la aplicación");
         }
     }
 
@@ -237,7 +236,7 @@ public class Menu {
      * error.
      */
     public Long esperarRespuesta(String msg){
-        if (msg == null || msg.isBlank()) {
+        if (msg == null || msg.isEmpty()) {
             msg = "Haga su selección: ";
         }
         String respuesta;

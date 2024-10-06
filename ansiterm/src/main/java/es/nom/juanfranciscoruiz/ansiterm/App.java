@@ -37,6 +37,8 @@ public class App {
      * se ejecuta nuestro programa.
      */
     public static void main(String[] args) {
+        logger.info("Inicio de la aplicación");
+        
         ANSITerm term = null;
         try {
             term = new ANSITerm();
@@ -65,7 +67,7 @@ public class App {
             do {
                 term.clearScreen();
                 term.moveCursorToBegin();
-                if (menu.getMensaje().isBlank()) {
+                if (menu.getMensaje().isEmpty()) {
                     menu.setMensaje("Ejecutándose en ".concat(System.getProperty("os.name")));
                 }
                 
@@ -113,7 +115,11 @@ public class App {
             } while (resp != 0L);
 
         } catch (Exception ex) {
+            if (term != null){
+                term.resetScreen();
+            }
             logger.error(ex.getMessage());
+            logger.info("La aplicación terminó de forma inesperada");
             System.out.println(ex.getMessage());
             System.exit(-1);
         } finally {
@@ -123,6 +129,7 @@ public class App {
                 term.moveCursorToBegin();
                 term.resetScreen();
             }
+            logger.info("Final de la aplicación");
             System.exit(0);
         }
     }
