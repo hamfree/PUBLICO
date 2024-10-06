@@ -1,15 +1,31 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import ch.qos.logback.classic.LoggerContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import ch.qos.logback.core.util.StatusPrinter2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author juanf
  */
 public class Inicio {
+    public final static Logger logger = LoggerFactory.getLogger(Inicio.class);
+    
     public static void main(String[] args) {
+        
+        //LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        // Imprime el estado interno del logback
+        
+        
+        //StatusPrinter2 sp = new StatusPrinter2();
+        //sp.print(lc);
+        
+        logger.info("Inicio de la aplicación");
+        
         HashMap<String,Integer> map = new HashMap<>();
         map.put("Uno", 1);
         map.put("Dos", 2);
@@ -46,5 +62,10 @@ public class Inicio {
         System.out.println(TypeConverter.map2String(map));
         System.out.println();
         System.out.println(TypeConverter.map2String(map2));
+        
+        logger.debug(TypeConverter.map2String(map));
+        
+        logger.info("Final de la aplicación");
+               
     }
 }

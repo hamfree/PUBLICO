@@ -3,34 +3,50 @@ package es.nom.juanfranciscoruiz.utiles;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-class TypesTest {
+public class TypesTest {
+    
+    public final static Logger logger = LoggerFactory.getLogger(TypesTest.class);
 
     @Test
-    void isNullOrEmpty() {
+    public void isNullOrEmpty() {
     }
 
     @Test
-    void isInteger() {
+    public void isInteger() {
     }
 
     @Test
-    void isLong() {
+    public void isLong() {
     }
 
     @Test
-    void isFloat() {
+    public void isFloat() {
     }
 
     @Test
-    void isDouble() {
+    public void isDouble() {
     }
 
     @Test
-    void isArray() {
+    public void isArray() {
     }
 
     @Test
-    void isFromType() {
+    public void isFromType() {
+    }
+    
+    private void imprimeTitulo(String nombreMetodo){
+        String test = "TEST " + nombreMetodo;
+        logger.debug(test);
+    }
+    
+    private void imprimeResultados(Object expectedValue, Object actualValue){
+        String actVal = "Valor devuelto -> " + String.valueOf(actualValue);
+        String expVal = "Valor esperado -> " + String.valueOf(expectedValue);
+        logger.debug(actVal);
+        logger.debug(expVal);
     }
 }

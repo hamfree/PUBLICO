@@ -5,16 +5,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * Utilidad para imprimir a la salida estándar y recibir caracteres del usuario
+ * por la entrada estándar.
  *
  * @author hamfree
  */
 public class IO {
 
-    private static final Logger LOG = Logger.getLogger(IO.class.getName());
+    /**
+     * Trazas
+     */
+    private static final Logger logger = LoggerFactory.getLogger(IO.class);
 
     /**
      * Caracter de salto de linea del sistema operativo
@@ -48,6 +53,11 @@ public class IO {
     private static final String ERR_NULL = "¡Parámetros nulos!";
     private static final String ERR_LONG = "La longitud de la linea es menor que la longitud del mensaje";
 
+    /**
+     * Es igual que un InputStream, del que extiende y usando el patrón
+     * Decorator hacemos que su método close() no haga nada.
+     *
+     */
     static class UnclosableInputStreamDecorator extends InputStream {
 
         private final InputStream inputStream;
@@ -103,19 +113,17 @@ public class IO {
     }
 
     /**
-     * Imprime los argumentos indicados en la salida estándar. Puede usar el
-     * objeto Console si se pasa true al parámetro usaConsola. En caso contrario
-     * usará el canal estandar de salida.
+     * Imprime los argumentos indicados en la salida estándar. Intentará usar el
+     * objeto Console, en caso contrario usará el canal estandar de salida.
      *
-     * @param usaConsola booleano que si es true intentará usar Console.
      * @param args una lista de objetos a imprimir
      * @throws IllegalArgumentException en caso de pasar parámetros nulos.
      */
-    public static void prt(boolean usaConsola, Object... args) throws IllegalArgumentException {
+    public static void prt(Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (args == null) {
-            if (LOG.isLoggable(Level.SEVERE)) {
-                LOG.log(Level.SEVERE, ERR_NULL);
+            if (logger.isErrorEnabled()) {
+                logger.error(ERR_NULL);
             }
             throw new IllegalArgumentException(ERR_NULL);
         } else {
@@ -123,25 +131,24 @@ public class IO {
                 sb.append(arg.toString());
             }
         }
-        print(sb, usaConsola);
+        print(sb);
     }
 
     /**
-     * Imprime los argumentos indicados en la salida estándar. Puede usar el
-     * objeto Console si se pasa true al parámetro usaConsola. En caso contrario
-     * usará el canal estandar de salida. Después de imprimir la lista de
-     * argumentos hará tantos saltos de línea como indiquemos en el parámetro sl
+     * Imprime los argumentos indicados en la salida estándar. Intentará usar el
+     * objeto Console, si no puede utilizará el canal estandar de salida.
+     * Después de imprimir la lista de argumentos hará tantos saltos de línea
+     * como indiquemos en el parámetro sl.
      *
-     * @param usaConsola booleano que si es true intentará usar Console.
      * @param sl entero con la cantidad de saltos de línea a realizar
      * @param args una lista de objetos a imprimir
      * @throws IllegalArgumentException en caso de pasar parámetros nulos.
      */
-    public static void prtln(boolean usaConsola, int sl, Object... args) throws IllegalArgumentException {
+    public static void prtln(int sl, Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (args == null) {
-            if (LOG.isLoggable(Level.SEVERE)) {
-                LOG.log(Level.SEVERE, ERR_NULL);
+            if (logger.isErrorEnabled()) {
+                logger.error(ERR_NULL);
             }
             throw new IllegalArgumentException(ERR_NULL);
         } else {
@@ -154,62 +161,52 @@ public class IO {
                 }
             }
         }
-        print(sb, usaConsola);
+        print(sb);
     }
 
     /**
-     * Imprime el contenido del argumento sb en la salida estándar. Puede usar
-     * el objeto Console si se pasa true al parámetro usaConsola. En caso
-     * contrario usará el canal estandar de salida.
+     * Imprime el contenido del argumento sb en la salida estándar. Intentará
+     * usar primero el objeto Console. En caso de que no pueda usar Console
+     * utilizará el canal estandar de salida.
      *
      * @param sb StringBuilder que contiene el texto a imprimir.
-     * @param usaConsola booleano que si es true intentará usar Console.
      */
-    private static void print(StringBuilder sb, boolean usaConsola) {
-        if (usaConsola) {
-            Console con = System.console();
-            if (con == null) {
-                System.out.format("%s", sb.toString());
-            } else {
-                con.printf("%s", sb.toString());
-            }
-        } else {
+    private static void print(StringBuilder sb) {
+        Console con = System.console();
+        if (con == null) {
             System.out.format("%s", sb.toString());
+        } else {
+            con.printf("%s", sb.toString());
         }
     }
 
     /**
      * Recupera en una cadena lo introducido por el usuario en la entrada
-     * estándar hasta que pulse INTRO.
-     *
-     * @param usaConsola si es true intentará usar el objeto Console para
-     * recoger lo introducido por el usuario.
+     * estándar hasta que pulse INTRO. Intentará primero usar el objeto Console,
+     * si no puede utilizarlo, usará la entrada estándar System.in.
      *
      * @return una cadena con lo introducido por el usuario hasta que pulse la
      * tecla INTRO.
      * @throws java.lang.Exception En caso de producirse algún error.
      */
-    public static String read(boolean usaConsola) throws Exception {
+    public static String read() throws Exception {
         String dato = "";
-        if (usaConsola) {
-            Console con = System.console();
-            if (con == null) {
-                try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
-                    dato = sc.nextLine();
-                }
-            } else {
-                dato = con.readLine();
-            }
-        } else {
+
+        Console con = System.console();
+        if (con == null) {
             try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
                 dato = sc.nextLine();
             }
+        } else {
+            dato = con.readLine();
         }
         return dato;
     }
 
     /**
-     * Genera un mensaje centrado como título entre dos líneas
+     * Genera una cadena que contendrá un mensaje centrado (msg) como título entre 
+     * dos líneas de la longitud indicada por 'longitud' compuestas por el 
+     * carácter 'car'.
      *
      * @param msg el mensaje del título
      * @param car el caracter que compone cada línea
@@ -222,8 +219,8 @@ public class IO {
     public static String titulo(String msg, Character car, int longitud) {
         StringBuilder sb = new StringBuilder();
         if (Types.isNullOrEmpty(msg) || Types.isNullOrEmpty(car)) {
-            if (LOG.isLoggable(Level.SEVERE)) {
-                LOG.log(Level.SEVERE, ERR_PARAM);
+            if (logger.isErrorEnabled()) {
+                logger.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         } else {
@@ -239,8 +236,8 @@ public class IO {
                 sb.append(getSL()).
                         append(linea(car, longitud));
             } else {
-                if (LOG.isLoggable(Level.SEVERE)) {
-                    LOG.log(Level.SEVERE, ERR_LONG);
+                if (logger.isErrorEnabled()) {
+                    logger.error(ERR_LONG);
                 }
                 throw new IllegalArgumentException(ERR_LONG);
             }
@@ -264,8 +261,8 @@ public class IO {
         if (car != null && longitud > 0) {
             linea = repiteCaracter(car, longitud);
         } else {
-            if (LOG.isLoggable(Level.SEVERE)) {
-                LOG.log(Level.SEVERE, ERR_PARAM);
+            if (logger.isErrorEnabled()) {
+                logger.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         }
@@ -291,8 +288,8 @@ public class IO {
                 sb.append(car);
             }
         } else {
-            if (LOG.isLoggable(Level.SEVERE)) {
-                LOG.log(Level.SEVERE, ERR_PARAM);
+            if (logger.isErrorEnabled()) {
+                logger.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         }
@@ -356,12 +353,5 @@ public class IO {
      */
     public static String getNULL() {
         return NULL;
-    }
-
-    /**
-     * @return el log
-     */
-    public static Logger getLog() {
-        return LOG;
     }
 }

@@ -3,30 +3,46 @@ package es.nom.juanfranciscoruiz.utiles;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-class IOTest {
+public class IOTest {
+    public final static Logger logger = LoggerFactory.getLogger(IOTest.class);
 
     @Test
-    void prt() {
+    public void prt() {
     }
 
     @Test
-    void prtln() {
+    public void prtln() {
     }
 
     @Test
-    void read() {
+    public void read() {
     }
 
     @Test
-    void titulo() {
+    public void titulo() {
     }
 
     @Test
-    void linea() {
+    public void linea() {
     }
 
     @Test
-    void repiteCaracter() {
+    public void repiteCaracter() {
     }
+    
+    private void imprimeTitulo(String nombreMetodo){
+        String test = "TEST " + nombreMetodo;
+        logger.debug(test);
+    }
+    
+    private void imprimeResultados(Object expectedValue, Object actualValue){
+        String actVal = "Valor devuelto -> " + String.valueOf(actualValue);
+        String expVal = "Valor esperado -> " + String.valueOf(expectedValue);
+        logger.debug(actVal);
+        logger.debug(expVal);
+    }
+    
 }

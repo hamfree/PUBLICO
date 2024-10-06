@@ -1,6 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 package es.nom.juanfranciscoruiz.utiles;
 
 import java.nio.charset.Charset;
@@ -14,7 +11,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.SortedMap;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clase con metodos de utilidad usados frecuentemente por las otras clases de
@@ -27,7 +25,7 @@ public class Util {
     /**
      * Para la depuracion.
      */
-    private static final Logger LOG = Logger.getLogger(Util.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
     final static String SL = System.lineSeparator();
 
@@ -37,7 +35,22 @@ public class Util {
     private Util() {
     }
 
-    public static HashMap<String, String> getFeatures() {
+    /**
+     * Devuelve en un mapa las cpu's existentes en el PC, la memoria libre 
+     * disponible para la máquina virtual (MV), la cantidad máxima de memoria que la 
+     * MV intentará utilizar y la cantidad total de memoria 
+     * actualmente disponible para los objetos actuales y futuros, medida en 
+     * bytes.
+     * @return un mapa con cuatro pares de datos:
+     * 
+     * <ol>
+     * <li> Clave: "Nucleos Procesador". Valor: la cantidad de núcleos de CPU disponibles para la MV.</li>
+     * <li> Clave: "Memoria Libre". Valor: la memoria libre disponible para la MV</li>
+     * <li> Clave: "Memoria Disponible". Valor: la cantidad máxima de memoria que la MV intentará utilizar</li>
+     * <li> Clave: "Memoria Total". Valor: la cantidad total de memoria actualmente disponible en la MV para los objetos actuales y futuros.</li>
+     * </ol>
+     */
+    public static Map<String, String> getFeatures() {
         HashMap<String, String> hm = new HashMap<>();
 
         Runtime rt = Runtime.getRuntime();
@@ -55,7 +68,11 @@ public class Util {
         return hm;
     }
 
-    public static HashMap<String, String> getProperties() {
+    /**
+     * Devuelve en un mpa las propiedades del sistema
+     * @return un mapa con las propiedades del sistema.
+     */
+    public static Map<String, String> getProperties() {
         HashMap<String, String> hm = new HashMap<>();
 
         Properties p = System.getProperties();
@@ -64,6 +81,12 @@ public class Util {
         return hm;
     }
 
+    /**
+     * Convierte una matriz de strings en una Lista de Strings
+     * @param args la matriz de strings
+     * @return una lista de strings cuyos elementos son los strings de la matriz 
+     * que se le pasa como argumento.
+     */
     public static List<String> getArgs(String[] args) {
         return Arrays.asList(args);
     }
@@ -85,25 +108,26 @@ public class Util {
         }
         return al;
     }
-    
+
     /**
-     * Procesa las listas y los mapas para mejorar la salida del metodo 
+     * Procesa las listas y los mapas para mejorar la salida del metodo
      * 'toString()' de los objetos de la aplicación.
-     * @param obj el mapa o la lista del que se quiere mostrar sus elementos o 
+     *
+     * @param obj el mapa o la lista del que se quiere mostrar sus elementos o
      * indicar su tipo y tamaño.
-     * @param muestraValores boolean, si es true devolverá una cadena con los 
+     * @param muestraValores boolean, si es true devolverá una cadena con los
      * elementos de la lista o el mapa. Si es false, se devolverá una cadena con
      * el tipo de objeto y la cantidad de elementos que contiene.
      * @param maximoElementos En caso de que se muestren los valores, establece
-     * el número máximo de elementos cuya representación textual se devolveran 
+     * el número máximo de elementos cuya representación textual se devolveran
      * en la cadena.
-     * @return una cadena con la representación textual de los elementos que 
-     * contiene la lista o el mapa o el tipo del objeto y la cantidad de 
-     * elementos que contiene. Si el objeto pasado no es ni un mapa ni una lista 
-     * la cadena que devolverá es generada por el método estático 
+     * @return una cadena con la representación textual de los elementos que
+     * contiene la lista o el mapa o el tipo del objeto y la cantidad de
+     * elementos que contiene. Si el objeto pasado no es ni un mapa ni una lista
+     * la cadena que devolverá es generada por el método estático
      * String.valueOf(). Si el objeto es nulo devolverá la cadena "null".
      */
-    public static String toString(Object obj, boolean muestraValores, int maximoElementos) {
+    public static String CollectionToString(Object obj, boolean muestraValores, int maximoElementos) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -112,7 +136,7 @@ public class Util {
         } else {
             Class<?> clazz = obj.getClass();
             if (clazz.isAssignableFrom(ArrayList.class)) {
-                List l = (List) obj;
+                List<?> l = (List) obj;
                 if (muestraValores) {
                     sb.append("[");
                     if (l.size() < maximoElementos) {
@@ -134,17 +158,17 @@ public class Util {
                 }
 
             } else if (clazz.isAssignableFrom(java.util.HashMap.class)) {
-                Map m = (Map) obj;
+                Map<?, ?> m = (Map) obj;
                 if (muestraValores) {
                     sb.append("[");
                     if (m.size() < maximoElementos) {
-                        for (Iterator it = m.entrySet().iterator(); it.hasNext();) {
+                        for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
                             Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
                             sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
                         }
                     } else {
                         int i = 0;
-                        for (Iterator it = m.entrySet().iterator(); it.hasNext();) {
+                        for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
                             if (i < maximoElementos) {
                                 Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
                                 sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
@@ -167,12 +191,5 @@ public class Util {
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * @return el log
-     */
-    public static Logger getLog() {
-        return LOG;
     }
 }

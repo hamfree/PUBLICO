@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static es.nom.juanfranciscoruiz.utiles.Types.isArray;
 import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
+import java.text.DecimalFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author hamfree
@@ -21,14 +22,14 @@ public class TypeConverter {
     /**
      * Para la depuracion.
      */
-    private final static Logger LOG = Logger.getLogger(TypeConverter.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(TypeConverter.class);
 
     /**
      * Convierte una coleccion de tipo genérico a una ArrayList de tipo generico
      *
-     * @param <T>   el tipo de la colección
+     * @param <T> el tipo de la colección
      * @param clazz La clase del tipo de la colección
-     * @param c     la colección a convertir
+     * @param c la colección a convertir
      * @return Un ArrayList con el contenido de la colección convertido.
      */
     public static <T> List<T> collection2List(Class<? extends T> clazz, Collection<?> c) {
@@ -42,9 +43,9 @@ public class TypeConverter {
     /**
      * Convierte un mapa genérico en una lista generica
      *
-     * @param <T>   el tipo genérico tanto del mapa como el de la lista
+     * @param <T> el tipo genérico tanto del mapa como el de la lista
      * @param clazz la clase del tipo genérico T
-     * @param m     el mapa a convertir
+     * @param m el mapa a convertir
      * @return una lista con el contenido del mapa convertido.
      */
     public static <T> List<T> map2List(Class<? extends T> clazz, Map<String, Object> m) {
@@ -81,12 +82,8 @@ public class TypeConverter {
         } catch (NumberFormatException | ParseException ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
-            LOG.severe(ex.getClass() + " : " + ex.getMessage());
+            logger.error(ex.getClass() + " : " + ex.getMessage());
             numLargo = (long) -1;
-        }
-
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine(numLargo.toString());
         }
         return numLargo;
     }
@@ -95,32 +92,27 @@ public class TypeConverter {
      * Extrae un double de una cadena
      *
      * @param src una cadena que puede contener dígitos que pueden * extraerse
-     *            para generar un dobule
-     * @return un double a partir de los dígitos de la cadena
+     * para generar un double
+     * @return un double a partir de los dígitos de la cadena o Double.NaN si 
+     * no pudo realizar la conversión.
      */
     public static Double extractDoubleFromString(String src) {
         Double numDecimal = Double.valueOf(-1);
-        try {
-            if (src != null) {
-                // 'Saneamos' la entrada, porque puede venir con caracteres que
-                // no son digitos...
-                src = src.trim();
-                src = src.replaceAll("[^.0123456789]", "");
-                /* ¿Y los negativos? Por hacer */
-                Number number = NumberFormat.getInstance().parse(src);
+
+        if (src != null) {
+            // 'Saneamos' la entrada, porque puede venir con caracteres que
+            // no son digitos...
+            src = src.trim();
+            src = src.replaceAll("[^\\d.-]", "");
+
+            try {
                 /* hace la conversión */
-                numDecimal = number.doubleValue();
+                numDecimal = (src != null) ? Double.valueOf(src) : Double.NaN;
+            } catch (NumberFormatException ex) {
+                logger.error(ex.getLocalizedMessage());
+                numDecimal = Double.NaN;
             }
-
-        } catch (NumberFormatException | ParseException ex) {
-            LOG.severe(ex.getLocalizedMessage());
-            numDecimal = Double.NaN;
         }
-
-        if (LOG.isLoggable(Level.SEVERE)) {
-            LOG.severe(numDecimal.toString());
-        }
-
         return numDecimal;
     }
 
@@ -161,9 +153,9 @@ public class TypeConverter {
     /**
      * Devuelve una representación textual de los bytes de un array.
      *
-     * @param array      el vector de bytes
+     * @param array el vector de bytes
      * @param showLength si es true mostrará además la longitud del vector.
-     * @param showIndex  si es true mostrará además el índice del array.
+     * @param showIndex si es true mostrará además el índice del array.
      * @return una representacion textual del vector de bytes.
      */
     public static String arrayByte2String(byte[] array, boolean showLength, boolean showIndex) {
@@ -189,10 +181,10 @@ public class TypeConverter {
      * Devuelve una representación textual del mapa.
      *
      * @param map Un mapa de cualquier par de tipos
-     * @return una cadena con la representación textual de las claves y valores del mapa
+     * @return una cadena con la representación textual de las claves y valores
+     * del mapa
      */
     public static String map2String(Map<?, ?> map) {
-
         StringBuilder sb = new StringBuilder();
         if (map != null && !map.isEmpty()) {
             for (Map.Entry<?, ?> entrada : map.entrySet()) {
@@ -201,7 +193,6 @@ public class TypeConverter {
                 sb.append(key).append(IO.getSEP()).append(value).append(IO.getSL());
             }
         }
-
         return sb.toString();
     }
 
@@ -213,8 +204,8 @@ public class TypeConverter {
      */
     public static String byteToHex(byte b) {
         char hexDigit[] = {
-                '0', '1', '2', '3', '4', '5', '6', '7',
-                '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+            '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
         };
         char[] array = {hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f]};
         return new String(array);
@@ -233,7 +224,8 @@ public class TypeConverter {
     }
 
     /**
-     * Si el objeto pasado es un array y no es nulo devolverá true, en caso contrario false
+     * Si el objeto pasado es un array y no es nulo devolverá true, en caso
+     * contrario false
      *
      * @param obj Un Object a comprobar
      * @return un boolean que será true si el objeto es un array y no es nulo.
@@ -243,7 +235,6 @@ public class TypeConverter {
     }
 
     //Metodos de utilidad y ayuda para array2String()
-
     /**
      * Devuelve true si el índice es el último elemento
      *
@@ -253,13 +244,6 @@ public class TypeConverter {
      */
     private static boolean isLastElement(int index, int length) {
         return (index == length - 1);
-    }
-
-    /**
-     * @return el log
-     */
-    public static Logger getLog() {
-        return LOG;
     }
 
     /**
