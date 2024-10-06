@@ -8,13 +8,21 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * Es igual que un InputStream, del que extiende y usando el patrón Decorator 
+ * hacemos que su método close() no haga nada.
+ * 
  * @author juanf
  */
 public class UnclosableInputStreamDecorator extends InputStream {
 
     private final InputStream inputStream;
 
+    /**
+     * Genera un objeto UnclosableInputStreamDecorator a partir del objeto InputStream
+     * que se le pasa como parámetro.
+     * 
+     * @param inputStream Un objeto InputStream
+     */
     public UnclosableInputStreamDecorator(InputStream inputStream) {
         this.inputStream = inputStream;
     }

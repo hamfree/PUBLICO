@@ -23,6 +23,8 @@ public interface ITerminal {
      * Devuelve el tamaño actual del terminal
      * @return un objeto TerminalSize con las líneas y columnas del terminal 
      * actual
+     * 
+     * @see es.nom.juanfranciscoruiz.ansiterm.TerminalSize
      */
     TerminalSize getTerminalSize();
 }

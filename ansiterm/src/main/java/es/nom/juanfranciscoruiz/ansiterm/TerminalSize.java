@@ -16,23 +16,44 @@ public class TerminalSize {
     */
    private int lineas;
 
+   /**
+    * 
+    * @param width
+    * @param height 
+    */
     public TerminalSize(int width, int height) {
         this.columnas = width;
         this.lineas = height;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public int getColumnas() {
         return columnas;
     }
 
+    /**
+     * 
+     * @param columnas 
+     */
     public void setColumnas(int columnas) {
         this.columnas = columnas;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public int getLineas() {
         return lineas;
     }
 
+    /**
+     * 
+     * @param lineas 
+     */
     public void setLineas(int lineas) {
         this.lineas = lineas;
     }

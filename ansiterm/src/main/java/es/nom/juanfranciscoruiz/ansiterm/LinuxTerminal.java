@@ -17,6 +17,14 @@ public class LinuxTerminal implements ITerminal {
     private static final String ESC = "\033";
     private static final String REC_POS_CUR = ESC + "[6n";
 
+    
+    /**
+     * Instancia un objeto LinuxTerminal
+     */
+    public LinuxTerminal(){
+        
+    }
+    
     /**
      * Habilita el modo 'raw' de la consola. Utiliza el comando 'stty' que
      * suele estar disponible en todos los entornos UNIX. En el modo 'raw' los 

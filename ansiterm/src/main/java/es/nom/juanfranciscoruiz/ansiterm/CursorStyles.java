@@ -6,6 +6,11 @@ package es.nom.juanfranciscoruiz.ansiterm;
  */
 public class CursorStyles {
 
+    /**
+     * Secuencia de escape ANSI con la que comienzan todas las secuencias CSI
+     * Más información en:
+     * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+     */
     public static final String ESC = "\033";
     /**
      * Forma del cursor establecido por el usuario

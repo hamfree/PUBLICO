@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Menu {
     
+    /**
+     * Usado para trazas
+     */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Menu.class);
     
     /**
@@ -46,6 +49,9 @@ public class Menu {
      */
     private boolean esMenuInicio;
 
+    /**
+     * Instancia un objeto Menu 
+     */
     public Menu(){
         this.opciones = new ArrayList<>();
         this.esMenuInicio = false;
@@ -53,6 +59,16 @@ public class Menu {
         this.mensaje = "";
     }
     
+    /**
+     * Instancia un objeto Menu con los parámetros indicados
+     * @param opciones Una lista de opciones
+     * @param titulo Una cadena con el título del menú
+     * @param mensaje Una cadena con el mensaje que mostrará debajo de la lista 
+     * de opciones
+     * @param esMenuInicio booleano que indica si es el menú principal de la 
+     * aplicación, lo que agregará la opción "0. Salir de la aplicación" a la 
+     * propiedad opciones.
+     */
     public Menu(List<String> opciones, String titulo, String mensaje, boolean esMenuInicio) {
         if (opciones != null && !opciones.isEmpty()) {
             this.opciones = opciones;
@@ -77,10 +93,18 @@ public class Menu {
         
     }
 
+    /**
+     * Obtiene la lista de opciones del menú
+     * @return Una lista de strings con las opciones.
+     */
     public List<String> getOpciones() {
         return opciones;
     }
 
+    /**
+     * Establece la lista de opciones del menú
+     * @param opciones Una lista de strings con las nuevas opciones del menú.
+     */
     public void setOpciones(List<String> opciones) {
         this.opciones = opciones;
         if (this.esMenuInicio) {
@@ -88,35 +112,77 @@ public class Menu {
         }
     }
 
+    /**
+     * Obtiene el título del menú
+     * @return una cadena con el título del menú
+     */
     public String getTitulo() {
         return titulo;
     }
 
+    /**
+     * Establece el título del menú
+     * @param titulo Una cadena con el nuevo título del menú
+     */
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
+    /**
+     * Obtiene el mensaje del menú
+     * @return una cadena con el mensaje actual del menú
+     */
     public String getMensaje() {
         return mensaje;
     }
 
+    /**
+     * Establece un nuevo mensaje en el menú
+     * @param mensaje Una cadena con el nuevo mensaje del menú
+     */
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
 
+    /**
+     * Obtiene la opción seleccionada actualmente por el usuario (después de llamar
+     * al método esperarRespuesta() ).
+     * @return un long con la opción seleccionada por el usuario
+     */
     public Long getOpcionSeleccionada() {
         return opcionSeleccionada;
     }
 
+    /**
+     * Establece la opción seleccionada
+     * @param opcionSeleccionada Un long con la opción seleccionada
+     */
     public void setOpcionSeleccionada(Long opcionSeleccionada) {
         this.opcionSeleccionada = opcionSeleccionada;
     }
 
+    /**
+     * Devuelve un booleano que indica si este menú es el menú principal de la 
+     * aplicación.
+     * 
+     * @return un booleano, si es true indica que el menú actual es el menú 
+     * principal de la aplicación y false, en caso contrario.
+     * 
+     */
     public boolean isEsMenuInicio() {
         return esMenuInicio;
     }
 
+    /**
+     * Establece el booleano que indica si el menú actual es el menú principal.
+     * Si se pasa 'true' se agregará como primera opción a la lista de opciones 
+     * la opción "0. Salir de la aplicación"
+     * @param esMenuInicio booleano, si es true indica que el menú actual es el menú 
+     * principal de la aplicación y false, en caso contrario.
+     */
     public void setEsMenuInicio(boolean esMenuInicio) {
+        //TODO: Si se establece en false, habrá que comprobar si tiene la opción
+        // "0. Salir de la aplicación" y eliminarla.
         this.esMenuInicio = esMenuInicio;
          if (this.esMenuInicio) {
             this.opciones.addFirst("0. Salir de la aplicación");
@@ -155,10 +221,12 @@ public class Menu {
     /**
      * Espera la respuesta del usuario, que devuelve como un long, o -1 en caso 
      * de producirse algún error.
-     * Este método controla los errores, devolviendo -1 en caso de:
-     * - Lo introducido no sea un número.
-     * - Lo introducido sea un número, pero fuera del rango de la lista de opciones
-     * - Se pulse directamente INTRO.
+     * Este método controla los errores, devolviendo -1 en caso de:<br>
+     * <ul>
+     * <li>Lo introducido no sea un número.</li>
+     * <li>Lo introducido sea un número, pero fuera del rango de la lista de opciones</li>
+     * <li>Se pulse directamente INTRO.</li>
+     * </ul>
      * También establece el campo 'mensaje' con el error producido, para que 
      * luego el método mostrar() lo saque en pantalla.
      * 

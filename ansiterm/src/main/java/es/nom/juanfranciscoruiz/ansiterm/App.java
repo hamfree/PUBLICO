@@ -20,11 +20,21 @@ import org.slf4j.LoggerFactory;
  */
 public class App {
 
+    /**
+     * Instancia un objeto App
+     */
+    public App(){}
+    
+    /**
+     * Usado para las trazas
+     */
     public static final Logger logger = LoggerFactory.getLogger(App.class);
 
     /**
      * Inicio de la aplicación
-     * @param args 
+     * 
+     * @param args Matriz de cadenas que recibe del sistema operativo cuando 
+     * se ejecuta nuestro programa.
      */
     public static void main(String[] args) {
         ANSITerm term = null;

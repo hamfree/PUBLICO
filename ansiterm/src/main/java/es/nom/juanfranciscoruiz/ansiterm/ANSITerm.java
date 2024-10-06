@@ -13,6 +13,11 @@ import org.slf4j.LoggerFactory;
  * debe soportar este estándar (Windows Terminal, xterm y otros emuladores de
  * terminal lo soportan). El terminal de consola de Windows (cmd.exe) no soporta
  * ANSI.
+ * 
+ * Más información sobre el uso de secuencias de escape ANSI y su uso en:<br><br>
+ * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html<br>
+ * https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences<br>
+ * https://en.wikipedia.org/wiki/ANSI_escape_code
  *
  * @author juanf
  */
@@ -189,8 +194,8 @@ public class ANSITerm {
      * colores y efectos de texto. Use el color predeterminado de las
      * Enumeraciones Color y Bgcolor para restablecer solo los colores.
      *
-     * @See Color
-     * @See BGcolor
+     * @See es.nom.juanfranciscoruiz.ansiterm.Color
+     * @See es.nom.juanfranciscoruiz.ansiterm.BGcolor
      *
      */
     private static final String REINICIA = "0";
@@ -241,7 +246,6 @@ public class ANSITerm {
     private static final String EX_NO_MSG = "No hay mensaje, está vacío o solo contiene blancos";
     private static final String EX_NO_COL = "Color no válido";
     private static final String EX_NO_BACKCOL = "Color de fondo no válido";
-    private static final String EX_MSG4 = "";
 
     /**
      * Instancia un nuevo objeto Terminal.
@@ -249,7 +253,8 @@ public class ANSITerm {
      * un objeto de WindowsTerminal o LinuxTerminal para cuando tenga que 
      * llamar a funciones de bajo nivel del sistema.
      * 
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception En caso de que el sistema operativo no sea 
+     * Windows o Linux
      */
     public ANSITerm() throws Exception {
         String os = System.getProperty("os.name").toLowerCase();
@@ -262,6 +267,12 @@ public class ANSITerm {
         }
     }
 
+    /**
+     * Devuelve un objeto ITerminal con el que podremos acceder a los métodos 
+     * de bajo nivel del terminal que se ejecuta en el sistema operativo actual.
+     * @return un objeto ITerminal con los métodos adecuados de bajo nivel del
+     * sistema operativo donde se ejecuta nuestro programa.
+     */
     public ITerminal getOsCall(){
         return osCall;
     }
@@ -1001,10 +1012,14 @@ public class ANSITerm {
     }
 
     /**
-     *
-     * @param color
-     * @param msg
-     * @return
+     * Establece un código de color de una paleta de 256 colores a la cadena
+     * que se le pasa como parámetro.
+     * 
+     * @param color un entero entre 0 y 255 que contiene el código de color.
+     * @param msg una cadena que recibirá la secuencia ANSI para darle el color 
+     * indicado.
+     * @return una cadena con la secuencia ANSI adecuada para mostrarse en el color 
+     * indicado en el terminal.
      * @throws IllegalArgumentException En caso de que algún argumento no sea
      * válido.
      */
@@ -1032,10 +1047,13 @@ public class ANSITerm {
     }
 
     /**
-     *
-     * @param color
-     * @param msg
-     * @return
+     * Establece un código de color de una paleta de 256 colores para el fondo 
+     * de la cadena que se le pasa como parámetro.
+     * @param color un entero entre 0 y 255 que contiene el código de color.
+     * @param msg una cadena que recibirá la secuencia ANSI para darle el color 
+     * indicado a su fondo.
+     * @return una cadena con la secuencia ANSI adecuada que mostrará el color 
+     * indicado en su fondo en el terminal.
      * @throws IllegalArgumentException En caso de que algún argumento no sea
      * válido.
      */
