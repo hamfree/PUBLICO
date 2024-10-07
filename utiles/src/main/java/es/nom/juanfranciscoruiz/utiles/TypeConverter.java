@@ -145,7 +145,7 @@ public class TypeConverter {
             }
             result.append(IO.getCAR_FIN());
         } else {
-            return null;
+            return IO.getNULL();
         }
         return result.toString();
     }

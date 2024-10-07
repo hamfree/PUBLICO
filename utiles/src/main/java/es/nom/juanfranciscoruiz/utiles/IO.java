@@ -51,6 +51,7 @@ public class IO {
      */
     private static final String ERR_PARAM = "¡Parámetros nulos o incorrectos!";
     private static final String ERR_NULL = "¡Parámetros nulos!";
+    private static final String ERR_SOME_NULL = "¡Alguno de los parámetros es nulo!";
     private static final String ERR_LONG = "La longitud de la linea es menor que la longitud del mensaje";
 
     /**
@@ -126,11 +127,21 @@ public class IO {
                 logger.error(ERR_NULL);
             }
             throw new IllegalArgumentException(ERR_NULL);
-        } else {
-            for (Object arg : args) {
-                sb.append(arg.toString());
+        }
+        if (args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] == null) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(ERR_NULL);
+                    }
+                    throw new IllegalArgumentException(ERR_SOME_NULL);
+                }
             }
         }
+        for (Object arg : args) {
+            sb.append(arg.toString());
+        }
+
         print(sb);
     }
 
@@ -151,16 +162,27 @@ public class IO {
                 logger.error(ERR_NULL);
             }
             throw new IllegalArgumentException(ERR_NULL);
-        } else {
-            for (Object arg : args) {
-                sb.append(arg.toString());
-            }
-            if (sl > 0) {
-                for (int i = 0; i < sl; i++) {
-                    sb.append(SL);
+        }
+        if (args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] == null) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(ERR_NULL);
+                    }
+                    throw new IllegalArgumentException(ERR_SOME_NULL);
                 }
             }
         }
+        
+        for (Object arg : args) {
+            sb.append(arg.toString());
+        }
+        if (sl > 0) {
+            for (int i = 0; i < sl; i++) {
+                sb.append(SL);
+            }
+        }
+
         print(sb);
     }
 
@@ -190,7 +212,7 @@ public class IO {
      * @throws java.lang.Exception En caso de producirse algún error.
      */
     public static String read() throws Exception {
-        String dato = "";
+        String dato;
 
         Console con = System.console();
         if (con == null) {
@@ -204,8 +226,8 @@ public class IO {
     }
 
     /**
-     * Genera una cadena que contendrá un mensaje centrado (msg) como título entre 
-     * dos líneas de la longitud indicada por 'longitud' compuestas por el 
+     * Genera una cadena que contendrá un mensaje centrado (msg) como título
+     * entre dos líneas de la longitud indicada por 'longitud' compuestas por el
      * carácter 'car'.
      *
      * @param msg el mensaje del título

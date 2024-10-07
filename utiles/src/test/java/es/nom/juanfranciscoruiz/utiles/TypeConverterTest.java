@@ -15,6 +15,16 @@ import org.slf4j.LoggerFactory;
 public class TypeConverterTest {
     
     public final static Logger logger = LoggerFactory.getLogger(TypeConverterTest.class);
+    
+    /*
+    Importamos constantes de la clase IO para facilitar la escritura de los tests.
+    */
+    public final static String CAR_INI = IO.getCAR_INI();
+    public final static String CAR_FIN = IO.getCAR_FIN();
+    public final static String NULL = IO.getNULL();
+    public final static String SEP = IO.getSEP();
+    public final static String SF = IO.getSF();
+    public final static String SL = IO.getSL();
 
     @Test
     public void collection2List() {
@@ -97,6 +107,84 @@ public class TypeConverterTest {
 
     @Test
     public void array2String() {
+        imprimeTitulo("array2String()");
+        
+        Integer[] matrizEnteros = {0, 1, 2};
+        String expectedValue = CAR_INI
+                .concat(String.valueOf(0))
+                .concat(SEP)
+                .concat(String.valueOf(1))
+                .concat(SEP)
+                .concat(String.valueOf(2))
+                .concat(CAR_FIN);
+        String actualValue = TypeConverter.array2String(matrizEnteros);
+        
+        imprimeResultados(expectedValue, actualValue);
+        
+        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        
+    }
+    
+    @Test
+    public void arra2StringRecursivo(){
+        imprimeTitulo("arra2StringRecursivo()");
+        
+        Object[] matriz = {0, new Object[]{5,6}, 2, new Object[]{"a","b"}, 4};
+        String expectedValue = CAR_INI
+                .concat(String.valueOf(0))
+                .concat(SEP)
+                .concat(CAR_INI)
+                .concat(String.valueOf(5))
+                .concat(SEP)
+                .concat(String.valueOf(6))
+                .concat(CAR_FIN)
+                .concat(SEP)
+                .concat(String.valueOf(2))
+                .concat(SEP)
+                .concat(CAR_INI)
+                .concat("a")
+                .concat(SEP)
+                .concat("b")
+                .concat(CAR_FIN)
+                .concat(SEP)
+                .concat(String.valueOf(4))
+                .concat(CAR_FIN);
+        String actualValue = TypeConverter.array2String(matriz);
+        
+        imprimeResultados(expectedValue, actualValue);
+        
+        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+    }
+    
+    
+    @Test
+    public void array2StringParametroNoArray(){
+        imprimeTitulo("array2StringParametroNoArray()");
+        
+        List<String> lista = new ArrayList<>();
+        lista.add("a");
+        lista.add("b");
+        
+        String expectedValue = NULL;
+        String actualValue = TypeConverter.array2String(lista);
+        
+        imprimeResultados(expectedValue, actualValue);
+        
+        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+    }
+    
+    @Test
+    public void array2StringArrayNulo(){
+        imprimeTitulo("array2StringArrayNulo()");
+        
+        String[] matriz = null;
+        
+        String expectedValue = NULL;
+        String actualValue = TypeConverter.array2String(matriz);
+        
+        imprimeResultados(expectedValue, actualValue);
+        
+        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
     }
 
     @Test
