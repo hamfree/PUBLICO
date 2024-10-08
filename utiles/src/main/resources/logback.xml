@@ -12,7 +12,7 @@
     <timestamp key="porSegundo" datePattern="yyyyMMdd'T'HHmmss"/>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>e:/des/data/log/utiles-${porSegundo}.log</file>
+        <file>utiles-${porSegundo}.log</file>
         <!-- Establezca immediateFlush en false para obtener un rendimiento de registro mucho mayor-->
         <immediateFlush>true</immediateFlush>
         <!-- A los codificadores se les asigna el tipo

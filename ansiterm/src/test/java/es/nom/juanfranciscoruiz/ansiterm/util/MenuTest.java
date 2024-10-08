@@ -203,7 +203,7 @@ public class MenuTest {
         Menu instance = new Menu();
         StringBuilder sb = new StringBuilder();
         sb.append("Menu{");
-        sb.append("opciones=").append(Util.toString(instance.getOpciones(), true, 10));
+        sb.append("opciones=").append(Util.CollectionToString(instance.getOpciones(), true, 10));
         sb.append(", titulo=").append(instance.getTitulo());
         sb.append(", mensaje=").append(instance.getMensaje());
         sb.append(", opcionSeleccionada=").append(instance.getOpcionSeleccionada());
