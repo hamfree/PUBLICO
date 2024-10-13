@@ -3,11 +3,14 @@ package es.nom.juanfranciscoruiz.utiles;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Clase de utilidad para comprobar tipos (sin usar las API's modernas de JAVA)
+ *
  * @author hamfree
  */
 public class Types {
@@ -25,14 +28,28 @@ public class Types {
     public static boolean isNullOrEmpty(Object obj) {
         if (obj == null) {
             return true;
-        } else if (obj instanceof String) {
+        } else if (obj.getClass().isAssignableFrom(Object.class)) {
+            return Objects.isNull(obj);
+        } else if (obj.getClass().isAssignableFrom(String.class)) {
+            return obj.toString().isEmpty();
+        } else if (obj.getClass().isPrimitive()) {
             return obj.toString().isEmpty();
         } else if (obj.getClass().isArray()) {
-            List<Object> l = Arrays.asList(obj);
-            return l.isEmpty();
-        } else if (obj.getClass().isAssignableFrom(Collection.class)) {
-            Collection<?> col = (Collection<?>) obj;
-            return col.isEmpty();
+            Object[] dummy = (Object[]) obj;
+            return dummy.length <= 0;
+        } else {
+            Class<?>[] interfaces = obj.getClass().getInterfaces();
+            for (int i = 0; i < interfaces.length; i++) {
+                System.out.println(interfaces[i].getName());
+                if (interfaces[i].equals(List.class)) {
+                    Collection<?> col = (Collection<?>) obj;
+                    return col.isEmpty();
+                }
+                if (interfaces[i].equals(Map.class)) {
+                    Map<?,?> col = (Map<?,?>) obj;
+                    return col.isEmpty();
+                }
+            }
         }
         return false;
     }
@@ -136,7 +153,7 @@ public class Types {
         } else {
             if (isNullOrEmpty(clazz)) {
                 String msg = "ERROR: Argumento clazz no puede ser nulo.";
-                if (LOG.isLoggable(Level.SEVERE)){
+                if (LOG.isLoggable(Level.SEVERE)) {
                     LOG.log(Level.SEVERE, msg);
                 }
                 throw new IllegalArgumentException(msg);

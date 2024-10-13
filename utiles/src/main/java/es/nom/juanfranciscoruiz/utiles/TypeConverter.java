@@ -10,7 +10,6 @@ import java.util.Map;
 
 import static es.nom.juanfranciscoruiz.utiles.Types.isArray;
 import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
-import java.text.DecimalFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -222,6 +221,26 @@ public class TypeConverter {
         byte lo = (byte) (c & 0xff);
         return byteToHex(hi) + byteToHex(lo);
     }
+    
+    /**
+     * Extrae los dígitos existentes en un String y los devuelve en una cadena.
+     *
+     * @param src la cadena que puede contener dígitos.
+     * @return una cadena que sólo contiene digitos.
+     */
+    public static String extractDigits(String src) {
+        StringBuilder builder = new StringBuilder();
+        if (src == null || src.isBlank()){
+            return builder.toString();
+        }
+        for (int i = 0; i < src.length(); i++) {
+            char c = src.charAt(i);
+            if (Character.isDigit(c)) {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
 
     /**
      * Si el objeto pasado es un array y no es nulo devolverá true, en caso
@@ -245,22 +264,4 @@ public class TypeConverter {
     private static boolean isLastElement(int index, int length) {
         return (index == length - 1);
     }
-
-    /**
-     * Extrae los dígitos existentes en un String y los devuelve en una cadena.
-     *
-     * @param src la cadena que puede contener dígitos.
-     * @return una cadena que sólo contiene digitos.
-     */
-    public String extractDigits(String src) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < src.length(); i++) {
-            char c = src.charAt(i);
-            if (Character.isDigit(c)) {
-                builder.append(c);
-            }
-        }
-        return builder.toString();
-    }
-
 }

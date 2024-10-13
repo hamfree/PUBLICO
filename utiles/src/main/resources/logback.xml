@@ -9,18 +9,25 @@
     <!-- Inserte la hora actual con el formato "yyyyMMdd'T'HHmmss" debajo de
     la clave "porSegundo" en el contexto del registrador. Este valor estará
     disponible para todos los elementos de configuración posteriores. -->
+    <!--
     <timestamp key="porSegundo" datePattern="yyyyMMdd'T'HHmmss"/>
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logFile.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>utiles-${porSegundo}.log</file>
-        <!-- Establezca immediateFlush en false para obtener un rendimiento de registro mucho mayor-->
-        <immediateFlush>true</immediateFlush>
-        <!-- A los codificadores se les asigna el tipo
-        ch.qos.logback.classic.encoder.PatternLayoutEncoder por defecto -->
-        <encoder>
-            <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
-        </encoder>
-    </appender>
+      <!-- keep 30 days' worth of history capped at 3GB total size -->
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
+    </encoder>
+  </appender> 
 
     <root level="debug">
         <appender-ref ref="FILE" />

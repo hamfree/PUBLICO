@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * @author juanf
  */
 public class UtilTest {
-    
+
     public final static Logger logger = LoggerFactory.getLogger(UtilTest.class);
 
     @Test
@@ -47,7 +47,6 @@ public class UtilTest {
         actualValue = Util.getFeatures();
 
         imprimeResultados(expectedValue, actualValue);
-        
 
         assertEquals(expectedValue.size(), actualValue.size(), "Debe devolver un mapa con cuatro claves específicas");
         assertEquals(expectedValue.get("Memoria Disponible"), actualValue.get("Memoria Disponible"), "La memoria disponible debe ser la misma");
@@ -70,24 +69,24 @@ public class UtilTest {
         for (Map.Entry<Object, Object> entry : p.entrySet()) {
             key = entry.getKey();
             value = entry.getValue();
-            
+
             clazz = key.getClass();
             if (clazz.isAssignableFrom(String.class)) {
                 sKey = (String) key;
             }
             clazz = value.getClass();
-            if (clazz.isAssignableFrom(String.class)){
+            if (clazz.isAssignableFrom(String.class)) {
                 sValue = (String) value;
             }
             expectedValue.put(sKey, sValue);
         }
-        
+
         actualValue = (HashMap<String, String>) Util.getProperties();
-        
+
         imprimeResultados(expectedValue, actualValue);
-        
+
         assertEquals(expectedValue, actualValue, "Deben tener las mismas claves y valores");
-        
+
     }
 
     @Test
@@ -123,12 +122,13 @@ public class UtilTest {
 
         lista.addAll(Arrays.asList(array));
 
-        assertAll(() -> {
-            System.out.println("Muestra los 10 primeros elementos de la lista...");
-            String expResult = toStringEsperadoDeLaLista(lista, 10);
-            String result = Util.CollectionToString(lista, true, 10);
-            assertEquals(expResult, result, "Debería mostra como máximo 10 elementos de la lista.");
-        },
+        assertAll(
+                () -> {
+                    System.out.println("Muestra los 10 primeros elementos de la lista...");
+                    String expResult = toStringEsperadoDeLaLista(lista, 10);
+                    String result = Util.CollectionToString(lista, true, 10);
+                    assertEquals(expResult, result, "Debería mostra como máximo 10 elementos de la lista.");
+                },
                 () -> {
                     String expResult = "java.util.ArrayList 36 elementos.";
                     String result = Util.CollectionToString(lista, false, 1);
@@ -334,13 +334,13 @@ public class UtilTest {
         }
         return array;
     }
-    
-    private void imprimeTitulo(String nombreMetodo){
+
+    private void imprimeTitulo(String nombreMetodo) {
         String test = "TEST " + nombreMetodo;
         logger.debug(test);
     }
-    
-    private void imprimeResultados(Object expectedValue, Object actualValue){
+
+    private void imprimeResultados(Object expectedValue, Object actualValue) {
         String actVal = "Valor devuelto -> " + String.valueOf(actualValue);
         String expVal = "Valor esperado -> " + String.valueOf(expectedValue);
         logger.debug(actVal);
