@@ -60,7 +60,7 @@ public class Types {
      * @param obj un objet que puede contener dígitos convertibles en Integer
      * @return true si el objeto puede convertirse en un Integer.
      */
-    public boolean isInteger(Object obj) {
+    public static boolean isInteger(Object obj) {
         if (!isNullOrEmpty(obj)) {
             try {
                 Integer.valueOf(String.valueOf(obj));
@@ -77,7 +77,7 @@ public class Types {
      * @param obj
      * @return
      */
-    public boolean isLong(Object obj) {
+    public static boolean isLong(Object obj) {
         if (!isNullOrEmpty(obj)) {
             try {
                 Long.valueOf((String) obj);
@@ -96,7 +96,7 @@ public class Types {
      * @param obj un objeto que puede contener dígitos convertibles en Float
      * @return true si el objeto puede convertirse en un Double.
      */
-    public boolean isFloat(Object obj) {
+    public static boolean isFloat(Object obj) {
         if (!isNullOrEmpty(obj)) {
             try {
                 Float.valueOf(String.valueOf(obj));
@@ -114,7 +114,7 @@ public class Types {
      * @param obj un objeto que puede contener dígitos convertibles en Double
      * @return true si el objeto puede convertirse en un Double.
      */
-    public boolean isDouble(Object obj) {
+    public static boolean isDouble(Object obj) {
         if (!isNullOrEmpty(obj)) {
             try {
                 Double.valueOf(String.valueOf(obj));

@@ -14,8 +14,6 @@ public class TypesTest {
 
     public final static Logger logger = LoggerFactory.getLogger(TypesTest.class);
 
-   
-    
     @Test
     public void isNullOrEmpty() {
         imprimeTitulo("isNullOrEmpty()");
@@ -96,7 +94,7 @@ public class TypesTest {
                 },
                 () -> {
                     System.out.println("Una matriz con dos Strings, uno de ellos apunta a null. Debe dar false");
-                    String[] valores = {"un valor",null};
+                    String[] valores = {"un valor", null};
                     boolean expectedValue = false;
                     boolean actualValue = Types.isNullOrEmpty(valores);
 
@@ -123,6 +121,55 @@ public class TypesTest {
 
     @Test
     public void isInteger() {
+        imprimeTitulo("isInteger()");
+
+        assertAll(
+                () -> {
+                    System.out.println("Un objeto que apunta a nulo. Debe dar false");
+                    Object obj = null;
+
+                    boolean expectedValue = false;
+                    boolean actualValue = Types.isInteger(obj);
+
+                    imprimeResultados(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                },
+                () -> {
+                    System.out.println("Una instancia de Object. Debe dar false");
+                    Object obj = new Object();
+
+                    boolean expectedValue = false;
+                    boolean actualValue = Types.isInteger(obj);
+
+                    imprimeResultados(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                },
+                () -> {
+                    System.out.println("Una instancia de String con un contenido convertible a Integer. Debe dar true");
+                    String obj = "45566";
+
+                    boolean expectedValue = true;
+                    boolean actualValue = Types.isInteger(obj);
+
+                    imprimeResultados(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                },
+                () -> {
+                    System.out.println("Una instancia de String con un contenido NO convertible a Integer. Debe dar false");
+                    String obj = "no es un entero";
+
+                    boolean expectedValue = false;
+                    boolean actualValue = Types.isInteger(obj);
+
+                    imprimeResultados(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                }
+        );
+
     }
 
     @Test
