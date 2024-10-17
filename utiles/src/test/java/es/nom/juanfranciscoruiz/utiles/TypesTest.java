@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 public class TypesTest {
 
     public final static Logger logger = LoggerFactory.getLogger(TypesTest.class);
+    
+    public TypesTest() {
+    }
 
     @Test
     public void isNullOrEmpty() {
@@ -20,7 +23,7 @@ public class TypesTest {
 
         assertAll(
                 () -> {
-                    System.out.println("Lista con dos elementos. Debe dar false");
+                    logger.debug("Lista con dos elementos. Debe dar false");
                     List<String> coleccion = new ArrayList<>();
                     coleccion.add("uno");
                     coleccion.add("dos");
@@ -33,7 +36,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Mapa sin elementos. Debe dar true");
+                    logger.debug("Mapa sin elementos. Debe dar true");
                     Map<String, String> coleccion = new HashMap<>();
 
                     boolean expectedValue = true;
@@ -44,7 +47,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Un valor nulo. Debe dar true");
+                    logger.debug("Un valor nulo. Debe dar true");
                     boolean expectedValue = true;
                     boolean actualValue = Types.isNullOrEmpty(null);
 
@@ -53,7 +56,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una instancia de Object que apunta a null. Debe dar true");
+                    logger.debug("Una instancia de Object que apunta a null. Debe dar true");
                     Object valor = null;
                     boolean expectedValue = true;
                     boolean actualValue = Types.isNullOrEmpty(valor);
@@ -63,7 +66,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una instancia de object. Debe dar false");
+                    logger.debug("Una instancia de Object. Debe dar false");
                     Object valor = new Object();
                     boolean expectedValue = false;
                     boolean actualValue = Types.isNullOrEmpty(valor);
@@ -73,7 +76,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una matriz con 5 objects de valor nulo. Debe dar false");
+                    logger.debug("Una matriz con 5 objects de valor nulo. Debe dar false");
                     Object[] valor = new Object[5];
                     boolean expectedValue = false;
                     boolean actualValue = Types.isNullOrEmpty(valor);
@@ -83,7 +86,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una matriz sin elementos. Debe devolver true");
+                    logger.debug("Una matriz sin elementos. Debe devolver true");
                     Object[] valor = new Object[0];
                     boolean expectedValue = true;
                     boolean actualValue = Types.isNullOrEmpty(valor);
@@ -93,7 +96,7 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una matriz con dos Strings, uno de ellos apunta a null. Debe dar false");
+                    logger.debug("Una matriz con dos Strings, uno de ellos apunta a null. Debe dar false");
                     String[] valores = {"un valor", null};
                     boolean expectedValue = false;
                     boolean actualValue = Types.isNullOrEmpty(valores);
@@ -103,10 +106,30 @@ public class TypesTest {
                     assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Un String con un valor asignado. Debe dar false");
+                    logger.debug("Un String con un valor asignado. Debe dar false");
                     String valor = "algun valor";
                     boolean expectedValue = false;
                     boolean actualValue = Types.isNullOrEmpty(valor);
+
+                    imprimeResultados(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                },
+                () -> {
+                    logger.debug("Un array de objects vacío. Debe dar true");
+                    Object[] objetos = {};
+                    boolean expectedValue = true;
+                    boolean actualValue = Types.isNullOrEmpty(objetos);
+
+                    imprimeResultados(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                },
+                () -> {
+                    logger.debug("Un valor de tipo primitivo. Debe dar false");
+                    byte octeto = 0x55;
+                    boolean expectedValue = false;
+                    boolean actualValue = Types.isNullOrEmpty(octeto);
 
                     imprimeResultados(expectedValue, actualValue);
 
@@ -116,8 +139,7 @@ public class TypesTest {
 
     }
 
-    public TypesTest() {
-    }
+
 
     @Test
     public void isInteger() {

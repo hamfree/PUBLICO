@@ -1,12 +1,18 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clase de utilidad para comprobar tipos (sin usar las API's modernas de JAVA)
@@ -15,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class Types {
 
-    private static final Logger LOG = Logger.getLogger(Types.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Types.class.getName());
 
     /**
      * Indica si el objeto pasado es nulo o está vacío (en el caso de ser una
@@ -27,29 +33,62 @@ public class Types {
      */
     public static boolean isNullOrEmpty(Object obj) {
         if (obj == null) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Es un valor nulo");
+            }
             return true;
         } else if (obj.getClass().isAssignableFrom(Object.class)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Es de tipo Object");
+                logger.debug("¿Tiene valor nulo? " + String.valueOf(Objects.isNull(obj)));
+            }
             return Objects.isNull(obj);
         } else if (obj.getClass().isAssignableFrom(String.class)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Es de tipo String");
+                logger.debug("¿Está vacía? " + String.valueOf(obj.toString().isEmpty()));
+            }
             return obj.toString().isEmpty();
         } else if (obj.getClass().isPrimitive()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Es un valor primitivo");
+                logger.debug("¿Está vacío? " + String.valueOf(obj.toString().isEmpty()));
+            }
             return obj.toString().isEmpty();
         } else if (obj.getClass().isArray()) {
-            Object[] dummy = (Object[]) obj;
-            return dummy.length <= 0;
+            int l = Array.getLength(obj);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Es un array");
+                logger.debug("¿Está vacío? " + String.valueOf(l > 0));
+            }
+            if (l > 0) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             Class<?>[] interfaces = obj.getClass().getInterfaces();
             for (int i = 0; i < interfaces.length; i++) {
-                System.out.println(interfaces[i].getName());
                 if (interfaces[i].equals(List.class)) {
                     Collection<?> col = (Collection<?>) obj;
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Implementa la interfaz List");
+                        logger.debug("¿Está vacía? " + String.valueOf(col.isEmpty()));
+                    }
                     return col.isEmpty();
                 }
                 if (interfaces[i].equals(Map.class)) {
-                    Map<?,?> col = (Map<?,?>) obj;
+                    Map<?, ?> col = (Map<?, ?>) obj;
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Implementa la interfaz Map");
+                        logger.debug("¿Está vacío? " + String.valueOf(col.isEmpty()));
+                    }
                     return col.isEmpty();
                 }
             }
+        }
+        if (logger.isDebugEnabled()){
+            logger.debug("Tipo del objeto pasado: " + obj.getClass().getCanonicalName());
         }
         return false;
     }
@@ -153,8 +192,8 @@ public class Types {
         } else {
             if (isNullOrEmpty(clazz)) {
                 String msg = "ERROR: Argumento clazz no puede ser nulo.";
-                if (LOG.isLoggable(Level.SEVERE)) {
-                    LOG.log(Level.SEVERE, msg);
+                if (logger.isErrorEnabled()) {
+                    logger.error(msg);
                 }
                 throw new IllegalArgumentException(msg);
             } else {
