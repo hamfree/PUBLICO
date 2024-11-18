@@ -10,26 +10,31 @@ import java.util.Map;
 
 import static es.nom.juanfranciscoruiz.utiles.Types.isArray;
 import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
+import es.nom.juanfranciscoruiz.utiles.exception.TypeConverterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility that converts some types of objects into others, extracts numeric 
+ * values ​​from a string and converts bytes and characters to their hexadecimal 
+ * representation.
+ * 
  * @author hamfree
  */
 public class TypeConverter {
 
     /**
-     * Para la depuracion.
+     * For debugging.
      */
     private final static Logger logger = LoggerFactory.getLogger(TypeConverter.class);
 
     /**
-     * Convierte una coleccion de tipo genérico a una ArrayList de tipo generico
+     * Converts a generic type collection to a generic type ArrayList
      *
-     * @param <T> el tipo de la colección
-     * @param clazz La clase del tipo de la colección
-     * @param c la colección a convertir
-     * @return Un ArrayList con el contenido de la colección convertido.
+     * @param <T> the type of the collection
+     * @param clazz The collection type class
+     * @param c the collection to be converted
+     * @return An ArrayList with the contents of the collection converted.
      */
     public static <T> List<T> collection2List(Class<? extends T> clazz, Collection<?> c) {
         List<T> r = new ArrayList<>(c.size());
@@ -40,87 +45,90 @@ public class TypeConverter {
     }
 
     /**
-     * Convierte un mapa genérico en una lista generica
+     * Converts a generic map into a generic list (losing the keys, and 
+     * obtaining the values)
      *
-     * @param <T> el tipo genérico tanto del mapa como el de la lista
+     * @param <T> El tipo genérico tanto del mapa como de la lista
      * @param clazz la clase del tipo genérico T
-     * @param m el mapa a convertir
-     * @return una lista con el contenido del mapa convertido.
+     * @param m El mapa a convertir
+     * @return a list containing the contents of the converted map (their 
+     * values).
      */
     public static <T> List<T> map2List(Class<? extends T> clazz, Map<String, Object> m) {
         List<T> r = new ArrayList<>(m.size());
 
-        for (Map.Entry<String, Object> entrada : m.entrySet()) {
-            r.add(clazz.cast(entrada.getValue()));
+        for (Map.Entry<String, Object> entry : m.entrySet()) {
+            r.add(clazz.cast(entry.getValue()));
         }
         return r;
     }
 
     /**
-     * Extrae un long de una cadena
+     * Extracts a Long object from an arbitrary string
      *
-     * @param src la cadena que puede contener dígitos
-     * @return un long a partir de los dígitos existentes en la cadena.
+     * @param src the string that can contain digits
+     * @return a long from the existing digits in the string.
+     * @throws a TypeConverterException in case a NumberFormatException or 
+     * ParseException is generated when attempting the extraction.
      */
-    public static Long extractLongFromString(String src) {
+    public static Long extractLongFromString(String src) throws TypeConverterException {
         Long numLargo = (long) -1;
         try {
             if (src != null) {
-                // 'Saneamos' la entrada, porque puede venir con caracteres que
-                // no son digitos...
+                // We 'sanitize' the input, because it may come with characters 
+                // that are not digits...
                 src = src.trim();
-                src = src.replaceAll("\\D+", ""); // expresion regular
-                // que 'solo' deja
-                // pasar digitos...
-                Number number = NumberFormat.getInstance().parse(src); // hace
-                // la
-                // conversión
+                
+                // regular expression that only allows digits to pass
+                src = src.replaceAll("\\D+", ""); 
+                
+                // Makes the conversion
+                Number number = NumberFormat.getInstance().parse(src); 
                 numLargo = number.longValue();
             }
 
         } catch (NumberFormatException | ParseException ex) {
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-            logger.error(ex.getClass() + " : " + ex.getMessage());
-            numLargo = (long) -1;
+            logger.error(ex.getMessage());
+            throw new TypeConverterException(ex.getMessage(), ex.getCause());
         }
         return numLargo;
     }
 
     /**
-     * Extrae un double de una cadena
+     * Extracts a Double object from an arbitrary string
      *
-     * @param src una cadena que puede contener dígitos que pueden * extraerse
-     * para generar un double
-     * @return un double a partir de los dígitos de la cadena o Double.NaN si 
-     * no pudo realizar la conversión.
+     * @param src a string that can contain digits that can be extracted to 
+     * generate a Double object
+     * @return a Double object if it can be extracted from the string
+     * @throws  a TypeConverterException in case a NumberFormatException or 
+     * ParseException is generated when attempting the extraction.
      */
     public static Double extractDoubleFromString(String src) {
         Double numDecimal = Double.valueOf(-1);
 
         if (src != null) {
-            // 'Saneamos' la entrada, porque puede venir con caracteres que
-            // no son digitos...
+            // We 'sanitize' the input, because it may come with characters 
+            // that are not digits, decimal separator o minus sign...
             src = src.trim();
             src = src.replaceAll("[^\\d.-]", "");
 
             try {
-                /* hace la conversión */
-                numDecimal = (src != null) ? Double.valueOf(src) : Double.NaN;
+                // Makes the conversion
+                numDecimal = Double.valueOf(src);
             } catch (NumberFormatException ex) {
-                logger.error(ex.getLocalizedMessage());
-                numDecimal = Double.NaN;
+                logger.error(ex.getMessage());
+                throw new TypeConverterException(ex.getMessage(), ex.getCause());
             }
         }
         return numDecimal;
     }
 
     /**
-     * Devuelve una representación textual de una matriz.
+     * Returns a textual representation of an array.
      *
-     * @param obj La matriz de la que se quiere su representación textual.
-     * @return una cadena con la representacion textual de la matriz o la
-     * constante NULL ("null").
+     * @param obj The matrix whose textual representation is desired.
+     * @return a string with the textual representation of the array or the
+     * NULL constant ("null") in case the array points to null.
      */
     public static String array2String(Object obj) {
         StringBuilder result;
@@ -128,7 +136,7 @@ public class TypeConverter {
             return IO.getNULL();
         }
         if (isArray(obj)) {
-            result = new StringBuilder(IO.getCAR_INI());
+            result = new StringBuilder(IO.getCHAR_INI());
             int length = Array.getLength(obj);
             for (int idx = 0; idx < length; ++idx) {
                 Object item = Array.get(obj, idx);
@@ -142,7 +150,7 @@ public class TypeConverter {
                     result.append(IO.getSEP());
                 }
             }
-            result.append(IO.getCAR_FIN());
+            result.append(IO.getCHAR_FIN());
         } else {
             return IO.getNULL();
         }
@@ -150,12 +158,12 @@ public class TypeConverter {
     }
 
     /**
-     * Devuelve una representación textual de los bytes de un array.
+     * Returns a textual representation of the bytes in an array.
      *
-     * @param array el vector de bytes
-     * @param showLength si es true mostrará además la longitud del vector.
-     * @param showIndex si es true mostrará además el índice del array.
-     * @return una representacion textual del vector de bytes.
+     * @param array the byte vector
+     * @param showLength If true, it will also display the length of the vector.
+     * @param showIndex If true, it will also display the array index.
+     * @return a textual representation of the byte vector.
      */
     public static String arrayByte2String(byte[] array, boolean showLength, boolean showIndex) {
         StringBuilder sb = new StringBuilder();
@@ -177,29 +185,29 @@ public class TypeConverter {
     }
 
     /**
-     * Devuelve una representación textual del mapa.
+     * Returns a textual representation of the map.
      *
-     * @param map Un mapa de cualquier par de tipos
-     * @return una cadena con la representación textual de las claves y valores
-     * del mapa
+     * @param map A map of any two types
+     * @return a string with the textual representation of the keys and values
+     * of the map
      */
     public static String map2String(Map<?, ?> map) {
         StringBuilder sb = new StringBuilder();
         if (map != null && !map.isEmpty()) {
-            for (Map.Entry<?, ?> entrada : map.entrySet()) {
-                Object key = entrada.getKey();
-                Object value = entrada.getValue();
-                sb.append(key).append(IO.getSEP()).append(value).append(IO.getSL());
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+                sb.append(key).append(IO.getSEP()).append(value).append(IO.getLS());
             }
         }
         return sb.toString();
     }
 
     /**
-     * Devuelve una cadena con la representación hexadecimal del byte
+     * Returns a string with the hexadecimal representation of the byte
      *
-     * @param b un byte
-     * @return un String con la representación hexadecimal del byte
+     * @param b a byte
+     * @return a String with the hexadecimal representation of the byte
      */
     public static String byteToHex(byte b) {
         char hexDigit[] = {
@@ -211,10 +219,10 @@ public class TypeConverter {
     }
 
     /**
-     * Devuelve una cadena con la representación hexadecimal del char c
+     * Returns a string with the hexadecimal representation of the char c
      *
-     * @param c un char
-     * @return un String con la representación hexadecimal del char
+     * @param c a char
+     * @return a String with the hexadecimal representation of the char
      */
     public static String charToHex(char c) {
         byte hi = (byte) (c >>> 8);
@@ -223,10 +231,10 @@ public class TypeConverter {
     }
     
     /**
-     * Extrae los dígitos existentes en un String y los devuelve en una cadena.
+     * Extracts the existing digits in a String and returns them in a string.
      *
-     * @param src la cadena que puede contener dígitos.
-     * @return una cadena que sólo contiene digitos.
+     * @param src the string that can contain digits.
+     * @return a string containing only digits.
      */
     public static String extractDigits(String src) {
         StringBuilder builder = new StringBuilder();
@@ -242,24 +250,26 @@ public class TypeConverter {
         return builder.toString();
     }
 
+    // Utility methods for array2String()
+    
     /**
-     * Si el objeto pasado es un array y no es nulo devolverá true, en caso
-     * contrario false
+     * If the object passed is an array and is not null it will return true, 
+     * otherwise false
      *
-     * @param obj Un Object a comprobar
-     * @return un boolean que será true si el objeto es un array y no es nulo.
+     * @param obj An Object to check
+     * @return a boolean that will be true if the object is an array and is not null.
      */
     private static boolean isNotNullArray(Object obj) {
         return obj != null && obj.getClass().isArray();
     }
 
-    //Metodos de utilidad y ayuda para array2String()
+
     /**
-     * Devuelve true si el índice es el último elemento
+     * Returns true if index is the last element
      *
      * @param index entero con el valor del índice
-     * @param length entero con la longitud de elementos del objeto
-     * @return boolean que será true si 'index' es el último elemento
+     * @param length integer with the length of elements of the object
+     * @return boolean which will be true if 'index' is the last element
      */
     private static boolean isLastElement(int index, int length) {
         return (index == length - 1);

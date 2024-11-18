@@ -9,172 +9,172 @@ import org.junitpioneer.jupiter.StdOut;
 
 public class IOTest {
     
-    private static final String ERR_PARAM = "¡Parámetros nulos o incorrectos!";
-    private static final String ERR_NULL = "¡Parámetros nulos!";
-    private static final String ERR_SOME_NULL  = "¡Alguno de los parámetros es nulo!";
-    private static final String ERR_LONG = "La longitud de la linea es menor que la longitud del mensaje";
+    private static final String ERR_PARAM = "Null or incorrect parameters!";
+    private static final String ERR_NULL = "Null parameters!";
+    private static final String ERR_SOME_NULL = "One of the parameters is null!";
+    private static final String ERR_LONG = "The line length is less than the message length";
 
     @Test
     @StdIo()
-    public void prt(StdOut out) {
-        IO.prt("uno", "dos", "tres");
+    public void testPrt(StdOut out) {
+        IO.prt("one", "two", "three");
         String actualValue = out.capturedString();
-        String expectedValue = "unodostres";
-        assertEquals(expectedValue, actualValue, "Los valores deberían ser los mismos");
+        String expectedValue = "onetwothree";
+        assertEquals(expectedValue, actualValue, "The values ​​should be the same");
     }
 
     @Test
-    public void prtNulo() {
+    public void testPrtNull() {
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             IO.prt(null);
         });
-        assertEquals(ERR_NULL, ex.getMessage(),"Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_NULL);
+        assertEquals(ERR_NULL, ex.getMessage(),"An IllegalArgumentException should be thrown with the message " + ERR_NULL);
     }
     
     @Test
-    public void prtNuloEnPrimerElementoArgumentosVariables() {
+    public void testPrtNullInFirstItemVarArgs() {
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             IO.prt((Object) null);
         });
-        assertEquals(ERR_SOME_NULL, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_SOME_NULL);
+        assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_SOME_NULL);
     }
     
     
     @Test
-    public void prtAlgunNuloEnArgumentosVariables() {
+    public void testPrtSomeNullInVarArgs() {
         Object[] args = {new Object(),null,new Object(), new Object()};
         
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             IO.prt(args);
         });
-        assertEquals(ERR_SOME_NULL, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_SOME_NULL);
+        assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message" + ERR_SOME_NULL);
     }
 
     @Test
     @StdIo()
-    public void prtln(StdOut out) {
+    public void testPrtln(StdOut out) {
         String sl = System.lineSeparator();
-        IO.prtln(2, "uno", "dos", "tres");
+        IO.prtln(2, "one", "two", "three");
         String actualValue = out.capturedString();
-        String expectedValue = "unodostres".concat(sl).concat(sl);
-        assertEquals(expectedValue, actualValue, "Los valores deberían ser los mismos");
+        String expectedValue = "onetwothree".concat(sl).concat(sl);
+        assertEquals(expectedValue, actualValue, "The values ​​should be the same");
     }
     
     @Test
-    public void prtlnNulo(){
+    public void testPrtlnNull(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.prtln(1,null);
+            IO.prtln(1, null);
         });
-        assertEquals(ERR_NULL, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_NULL);
+        assertEquals(ERR_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message" + ERR_NULL);
     }
     
-    public void prtlnNuloEnPrimerElementoArgumentosVariables(){
+    public void testPrtlnNullInFirtsArgInVarArgs(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             IO.prtln(1,(Object) null);
         });
-        assertEquals(ERR_SOME_NULL, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_SOME_NULL);
+        assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_SOME_NULL);
     }
     
-    public void prtlnAlgunNuloEnArgumentosVariables(){
+    public void testPrtlnSomeNullInVarArgs(){
         Object[] args = {new Object(),null,new Object(), new Object()};
         
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             IO.prtln(3,args);
         });
-        assertEquals(ERR_SOME_NULL, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_SOME_NULL);
+        assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_SOME_NULL);
     }
     
 
     @Test
-    @StdIo({"uno"})
-    public void read(StdIn in, StdOut out) throws Exception {
+    @StdIo({"one"})
+    public void testRead(StdIn in, StdOut out) throws Exception {
         String actualValue = IO.read();
-        String expectedValue = "uno";
-        assertEquals(expectedValue, actualValue, "Los valores deberían ser los mismos");
+        String expectedValue = "one";
+        assertEquals(expectedValue, actualValue, "The values ​​should be the same");
     }
 
     @Test
-    public void titulo() {
+    public void testTitle() {
         String expectedValue = System.lineSeparator()
                 .concat("********************")
                 .concat(System.lineSeparator())
-                .concat("      MENSAJE      ")
+                .concat("      MESSAGE      ")
                 .concat(System.lineSeparator())
                 .concat("********************");
-        String actualValue = IO.titulo("MENSAJE", '*', 20);
-        assertEquals(expectedValue, actualValue);
+        String actualValue = IO.title("MESSAGE", '*', 20);
+        assertEquals(expectedValue, actualValue, "The values ​​should be the same");
     }
     
     @Test
-    public void tituloMensajeNulo(){
+    public void testTitleMessageNull(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.titulo(null, '*', 20);
+            IO.title(null, '*', 20);
         });
-        assertEquals(ERR_PARAM, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_PARAM);
+        assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 
     @Test
-    public void tituloCaracterNulo(){
+    public void testTitleNullCharacter(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.titulo("MENSAJE", null, 20);
+            IO.title("MENSAJE", null, 20);
         });
-        assertEquals(ERR_PARAM, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_PARAM);
+        assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
     
     @Test
-    public void tituloLongitudMenorQueLongitudMensaje(){
+    public void testTitleLengthLessThanLengthMessage(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.titulo("MENSAJE", '*', 3);
+            IO.title("MENSAJE", '*', 3);
         });
-        assertEquals(ERR_LONG, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_LONG);
+        assertEquals(ERR_LONG, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_LONG);
     }
     
     @Test
-    public void linea() {
+    public void testLine() {
         String expectedValue = "**********";
-        String actualValue = IO.linea('*', 10);
-        assertEquals(expectedValue, actualValue,"El método linea() debería generar una cadena con 10 asteriscos (*)");
+        String actualValue = IO.line('*', 10);
+        assertEquals(expectedValue, actualValue,"The line() method should generate a string with 10 asterisks (*)");
     }
     
     @Test
-    public void lineaCaracterNulo(){
+    public void testLineNullCharacter(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.linea(null, 10);
+            IO.line(null, 10);
         });
-        assertEquals(ERR_PARAM, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_PARAM);
+        assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
     
     @Test
-    public void lineaLongitudErronea(){
+    public void testLineWrongLength(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.linea('#', 0);
+            IO.line('#', 0);
         });
-        assertEquals(ERR_PARAM, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_PARAM);
+        assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
     
 
     @Test
-    public void repiteCaracter() {
+    public void testRepeatCharacter() {
         String expectedValue = "---------";
-        String actualValue = IO.repiteCaracter('-', 9);
-        assertEquals(expectedValue, actualValue,"El método repiteCaracter() debería generar una cadena con 9 guiones (-)");
+        String actualValue = IO.repeatCharacter('-', 9);
+        assertEquals(expectedValue, actualValue,"The repeatCharacter() method should generate a string with 9 dashes (-)");
     }
     
     @Test
-    public void repiteCaracterParametrosMalCaracter(){
+    public void testRepeatCharacterNullCharacterParameter(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.repiteCaracter(null, 3);
+            IO.repeatCharacter(null, 3);
         });
-        assertEquals(ERR_PARAM, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_PARAM);
+        assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
     
     @Test
-    public void repiteCaracterParametrosMalVeces(){
+    public void testRepeatCharacterWrongTimesParameter(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.repiteCaracter('a', -4);
+            IO.repeatCharacter('a', -4);
         });
-        assertEquals(ERR_PARAM, ex.getMessage(), "Debería generarse una excepcion IllegalArgumentException con el mensaje " + ERR_PARAM);
+        assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 }

@@ -18,18 +18,18 @@ public class TypeConverterTest {
     public final static Logger logger = LoggerFactory.getLogger(TypeConverterTest.class);
 
     /*
-    Importamos constantes de la clase IO para facilitar la escritura de los tests.
+    We import constants from the IO class to make writing tests easier.
      */
-    public final static String CAR_INI = IO.getCAR_INI();
-    public final static String CAR_FIN = IO.getCAR_FIN();
+    public final static String CAR_INI = IO.getCHAR_INI();
+    public final static String CAR_FIN = IO.getCHAR_FIN();
     public final static String NULL = IO.getNULL();
     public final static String SEP = IO.getSEP();
-    public final static String SF = IO.getSF();
-    public final static String SL = IO.getSL();
+    public final static String SF = IO.getFS();
+    public final static String SL = IO.getLS();
 
     @Test
-    public void collection2List() {
-        imprimeTitulo("collection2List()");
+    public void testCollection2List() {
+        printTitle("testCollection2List()");
 
         Collection<Integer> vector = new Vector<>();
         List<Integer> expectedValue = new ArrayList<>();
@@ -48,15 +48,15 @@ public class TypeConverterTest {
 
         actualValue = TypeConverter.collection2List(clazz, vector);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "Debería convertir el vector en una lista");
+        assertEquals(expectedValue, actualValue, "Should convert the vector to a list");
 
     }
 
     @Test
-    public void map2List() {
-        imprimeTitulo("collection2List()");
+    public void testMap2List() {
+        printTitle("testMap2List()");
 
         Map<String, Object> mapToConvert = new HashMap<>();
         List<Integer> expectedValue = new ArrayList<>();
@@ -75,42 +75,46 @@ public class TypeConverterTest {
 
         actualValue = TypeConverter.map2List(clazz, mapToConvert);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "Debería convertir el mapa a una lista");
+        assertEquals(expectedValue, actualValue, "The expected result is to convert the values ​​of the map into a list with those values");
     }
 
     @Test
-    public void extractLongFromString() {
-        imprimeTitulo("extractLongFromString()");
+    public void testExtractLongFromString() {
+        printTitle("testExtractLongFromString()");
+        
+        //TODO: Do the tests for exception and strings with negative long and no long inside.
 
-        String cadena = "0asfklkdkr";
-        Long actualValue = TypeConverter.extractLongFromString(cadena);
+        String theString = "0asfklkdkr";
+        Long actualValue = TypeConverter.extractLongFromString(theString);
         Long expectedValue = 0L;
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void extractDoubleFromString() {
-        imprimeTitulo("extractDoubleFromString()");
+    public void testExtractDoubleFromString() {
+        printTitle("testExtractDoubleFromString()");
+        
+        //TODO: Do the test for exception and strings with negative double and no double inside
 
-        String cadena = "asfk3.07lkdkr";
-        Double actualValue = TypeConverter.extractDoubleFromString(cadena);
+        String theString = "asfk3.07lkdkr";
+        Double actualValue = TypeConverter.extractDoubleFromString(theString);
         Double expectedValue = 3.07;
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void array2String() {
-        imprimeTitulo("array2String()");
+    public void testArray2String() {
+        printTitle("testArray2String()");
 
-        Integer[] matrizEnteros = {0, 1, 2};
+        Integer[] integerArray = {0, 1, 2};
         String expectedValue = CAR_INI
                 .concat(String.valueOf(0))
                 .concat(SEP)
@@ -118,19 +122,19 @@ public class TypeConverterTest {
                 .concat(SEP)
                 .concat(String.valueOf(2))
                 .concat(CAR_FIN);
-        String actualValue = TypeConverter.array2String(matrizEnteros);
+        String actualValue = TypeConverter.array2String(integerArray);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
 
     }
 
     @Test
-    public void arra2StringRecursivo() {
-        imprimeTitulo("arra2StringRecursivo()");
+    public void testArra2StringRecursive() {
+        printTitle("testArra2StringRecursive()");
 
-        Object[] matriz = {0, new Object[]{5, 6}, 2, new Object[]{"a", "b"}, 4};
+        Object[] objectsArray = {0, new Object[]{5, 6}, 2, new Object[]{"a", "b"}, 4};
         String expectedValue = CAR_INI
                 .concat(String.valueOf(0))
                 .concat(SEP)
@@ -150,200 +154,201 @@ public class TypeConverterTest {
                 .concat(SEP)
                 .concat(String.valueOf(4))
                 .concat(CAR_FIN);
-        String actualValue = TypeConverter.array2String(matriz);
+        String actualValue = TypeConverter.array2String(objectsArray);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void array2StringParametroNoArray() {
-        imprimeTitulo("array2StringParametroNoArray()");
+    public void testArray2StringNoArrayParameter() {
+        printTitle("testArray2StringNoArrayParameter()");
 
-        List<String> lista = new ArrayList<>();
-        lista.add("a");
-        lista.add("b");
+        List<String> stringsList = new ArrayList<>();
+        stringsList.add("a");
+        stringsList.add("b");
 
         String expectedValue = NULL;
-        String actualValue = TypeConverter.array2String(lista);
+        String actualValue = TypeConverter.array2String(stringsList);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void array2StringArrayNulo() {
-        imprimeTitulo("array2StringArrayNulo()");
+    public void testArray2StringNullArray() {
+        printTitle("testArray2StringNullArray()");
 
-        String[] matriz = null;
+        String[] stringsArray = null;
 
         String expectedValue = NULL;
-        String actualValue = TypeConverter.array2String(matriz);
+        String actualValue = TypeConverter.array2String(stringsArray);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void arrayByte2String() {
-        imprimeTitulo("arrayByte2String()");
+    public void testArrayByte2String() {
+        printTitle("testArrayByte2String()");
 
         assertAll(
                 () -> {
-                    byte[] matrizBytes = {65, 66, 67, 68};
+                    byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "(4 bytes), [0]=65,[1]=66,[2]=67,[3]=68";
-                    String actualValue = TypeConverter.arrayByte2String(matrizBytes, true, true);
+                    String actualValue = TypeConverter.arrayByte2String(bytesArray, true, true);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    byte[] matrizBytes = {65, 66, 67, 68};
+                    byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "[0]=65,[1]=66,[2]=67,[3]=68";
-                    String actualValue = TypeConverter.arrayByte2String(matrizBytes, false, true);
+                    String actualValue = TypeConverter.arrayByte2String(bytesArray, false, true);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    byte[] matrizBytes = {65, 66, 67, 68};
+                    byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "(4 bytes), 65,66,67,68";
-                    String actualValue = TypeConverter.arrayByte2String(matrizBytes, true, false);
+                    String actualValue = TypeConverter.arrayByte2String(bytesArray, true, false);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    byte[] matrizBytes = {65, 66, 67, 68};
+                    byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "65,66,67,68";
-                    String actualValue = TypeConverter.arrayByte2String(matrizBytes, false, false);
+                    String actualValue = TypeConverter.arrayByte2String(bytesArray, false, false);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    byte[] matrizBytes = null;
+                    byte[] bytesArray = null;
 
                     String expectedValue = "";
-                    String actualValue = TypeConverter.arrayByte2String(matrizBytes, false, false);
+                    String actualValue = TypeConverter.arrayByte2String(bytesArray, false, false);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 }
         );
 
     }
 
     @Test
-    public void map2String() {
-        imprimeTitulo("arrayByte2String()");
+    public void testMap2String() {
+        printTitle("testMap2String()");
 
         assertAll(
                 () -> {
-                    Map<Integer, String> mapa = new TreeMap<>();
-                    mapa.put(1, "UNO");
-                    mapa.put(2, "DOS");
-                    mapa.put(3, "TRES");
-                    mapa.put(4, "CUATRO");
+                    Map<Integer, String> theMap = new TreeMap<>();
+                    theMap.put(1, "ONE");
+                    theMap.put(2, "TWO");
+                    theMap.put(3, "THREE");
+                    theMap.put(4, "FOUR");
 
-                    String expectedValue = String.valueOf(1).concat(SEP).concat("UNO").concat(SL)
-                            .concat(String.valueOf(2)).concat(SEP).concat("DOS").concat(SL)
-                            .concat(String.valueOf(3)).concat(SEP).concat("TRES").concat(SL)
-                            .concat(String.valueOf(4)).concat(SEP).concat("CUATRO").concat(SL);
-                    String actualValue = TypeConverter.map2String(mapa);
-                    imprimeResultados(expectedValue, actualValue);
+                    String expectedValue = String.valueOf(1).concat(SEP).concat("ONE").concat(SL)
+                            .concat(String.valueOf(2)).concat(SEP).concat("TWO").concat(SL)
+                            .concat(String.valueOf(3)).concat(SEP).concat("THREE").concat(SL)
+                            .concat(String.valueOf(4)).concat(SEP).concat("FOUR").concat(SL);
+                    String actualValue = TypeConverter.map2String(theMap);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    Map<Integer, String> mapa = null;
+                    Map<Integer, String> theMap = null;
 
                     String expectedValue = "";
-                    String actualValue = TypeConverter.map2String(mapa);
-                    imprimeResultados(expectedValue, actualValue);
+                    String actualValue = TypeConverter.map2String(theMap);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 }
         );
     }
 
     @Test
-    public void byteToHex() {
-        imprimeTitulo("byteToHex()");
+    public void testByteToHex() {
+        printTitle("testByteToHex()");
 
-        byte octeto = 127;
+        byte theByte = 127;
 
         String expectedValue = "7f";
-        String actualValue = TypeConverter.byteToHex(octeto);
+        String actualValue = TypeConverter.byteToHex(theByte);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void charToHex() {
-        imprimeTitulo("charToHex()");
+    public void testCharToHex() {
+        printTitle("testCharToHex()");
 
-        char caracter = '\uffff';
+        char theCharacter = '\uffff';
 
         String expectedValue = "ffff";
-        String actualValue = TypeConverter.charToHex(caracter);
+        String actualValue = TypeConverter.charToHex(theCharacter);
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
     }
 
     @Test
-    public void extractDigits() {
-        imprimeTitulo("extractDigits()");
+    public void testExtractDigits() {
+        printTitle("testExtractDigits()");
 
         assertAll(
                 () -> {
-                    String cadena = "ds[*_gjd1234ds,cf$vm";
+                    String theString = "ds[*_gjd1234ds,cf$vm";
 
                     String expectedValue = "1234";
-                    String actualValue = TypeConverter.extractDigits(cadena);
+                    String actualValue = TypeConverter.extractDigits(theString);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    String cadena = null;
+                    String theString = null;
                     
                     String expectedValue = "";
-                    String actualValue = TypeConverter.extractDigits(cadena);
+                    String actualValue = TypeConverter.extractDigits(theString);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es" + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 }
         );
 
     }
 
-    private void imprimeTitulo(String nombreMetodo) {
-        String test = "TEST " + nombreMetodo;
+    // Utility methods
+    private void printTitle(String methodName) {
+        String test = "TEST " + methodName;
         logger.debug(test);
     }
 
-    private void imprimeResultados(Object expectedValue, Object actualValue) {
-        String actVal = "Valor devuelto -> " + String.valueOf(actualValue);
-        String expVal = "Valor esperado -> " + String.valueOf(expectedValue);
+    private void printResults(Object expectedValue, Object actualValue) {
+        String actVal = "Return value -> " + String.valueOf(actualValue);
+        String expVal = "Expected value -> " + String.valueOf(expectedValue);
         logger.debug(actVal);
         logger.debug(expVal);
     }

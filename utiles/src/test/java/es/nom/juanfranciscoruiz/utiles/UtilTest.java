@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Test de la clase Util
+ * Testing the Util class
  *
  * @author juanf
  */
@@ -25,8 +25,8 @@ public class UtilTest {
     public final static Logger logger = LoggerFactory.getLogger(UtilTest.class);
 
     @Test
-    public void getFeatures() {
-        imprimeTitulo("getFeatures()");
+    public void testGetFeaturesAsMap() {
+        printTitle("testGetFeaturesAsMap()");
 
         Map<String, String> expectedValue = new HashMap<>();
         Map<String, String> actualValue;
@@ -39,23 +39,23 @@ public class UtilTest {
         String maxMemory = numberFormatter.format(rt.maxMemory());
         String totalMemmory = numberFormatter.format(rt.totalMemory());
 
-        expectedValue.put("Nucleos Procesador", String.valueOf(rt.availableProcessors()));
-        expectedValue.put("Memoria Libre", freeMemory);
-        expectedValue.put("Memoria Disponible", maxMemory);
-        expectedValue.put("Memoria Total", totalMemmory);
+        expectedValue.put("Processor Cores", String.valueOf(rt.availableProcessors()));
+        expectedValue.put("Free Memory", freeMemory);
+        expectedValue.put("Available Memory", maxMemory);
+        expectedValue.put("Total Memory", totalMemmory);
 
-        actualValue = Util.getFeatures();
+        actualValue = Util.getFeaturesAsMap();
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue.size(), actualValue.size(), "Debe devolver un mapa con cuatro claves específicas");
-        assertEquals(expectedValue.get("Memoria Disponible"), actualValue.get("Memoria Disponible"), "La memoria disponible debe ser la misma");
+        assertEquals(expectedValue.size(), actualValue.size(), "It should return a map with four specific keys");
+        assertEquals(expectedValue.get("Available Memory"), actualValue.get("Available Memory"), "Available memory must be the same");
 
     }
 
     @Test
-    public void getProperties() {
-        imprimeTitulo("getProperties()");
+    public void testGetSystemPropertiesAsMap() {
+        printTitle("testGetSystemPropertiesAsMap()");
 
         HashMap<String, String> expectedValue = new HashMap<>();
         HashMap<String, String> actualValue;
@@ -81,32 +81,16 @@ public class UtilTest {
             expectedValue.put(sKey, sValue);
         }
 
-        actualValue = (HashMap<String, String>) Util.getProperties();
+        actualValue = (HashMap<String, String>) Util.getSystemPropertiesAsMap();
 
-        imprimeResultados(expectedValue, actualValue);
+        printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "Deben tener las mismas claves y valores");
+        assertEquals(expectedValue, actualValue, "They must have the same keys and values");
 
     }
 
     @Test
-    public void getArgs() {
-        imprimeTitulo("getArgs()");
-
-        String[] array = generaArray();
-
-        List<String> actualValue;
-        List<String> expectedValue = generaLista();
-
-        actualValue = Util.getArgs(array);
-
-        imprimeResultados(expectedValue, actualValue);
-
-        assertEquals(expectedValue, actualValue, "Debería convertir la matriz en una lista");
-    }
-
-    @Test
-    public void getAllCharsets() {
+    public void testGetAllCharsets() {
     }
 
     /**
@@ -114,28 +98,31 @@ public class UtilTest {
      */
     @Test
     public void testCollectionToString() {
-        imprimeTitulo("CollectionToString()");
+        printTitle("testCollectionToString()");
 
         List<String> lista = new ArrayList<>();
 
-        String[] array = generaArray();
+        String[] array = generateArrayOfStrings();
 
         lista.addAll(Arrays.asList(array));
 
         assertAll(
                 () -> {
-                    System.out.println("Muestra los 10 primeros elementos de la lista...");
-                    String expResult = toStringEsperadoDeLaLista(lista, 10);
+                    logger.debug("Displays the first 10 items in the list...");
+                    String expResult = stringExpectedFromList(lista, 10);
                     String result = Util.CollectionToString(lista, true, 10);
-                    assertEquals(expResult, result, "Debería mostra como máximo 10 elementos de la lista.");
+                    printResults(expResult, result);
+                    assertEquals(expResult, result, "It should display at most 10 list items.");
                 },
                 () -> {
-                    String expResult = "java.util.ArrayList 36 elementos.";
+                    logger.debug("It should show the type and number of elements.");
+                    String expResult = "java.util.ArrayList 36 items.";
                     String result = Util.CollectionToString(lista, false, 1);
-                    assertEquals(expResult, result, "Deberia mostrar el tipo y el número de elementos.");
+                    printResults(expResult, result);
+                    assertEquals(expResult, result, "It should show the type and number of elements.");
                 },
                 () -> {
-                    System.out.println("Muestra los 5 primeros elementos del mapa...");
+                    logger.debug("Shows the first 5 elements of the map...");
                     Map<String, String> mapa = new HashMap<>();
 
                     mapa.put("0", array[0]);
@@ -146,12 +133,13 @@ public class UtilTest {
                     mapa.put("5", array[5]);
                     mapa.put("6", array[6]);
                     mapa.put("7", array[7]);
-                    String expResult = toStringEsperadoDelMapa(mapa, 5);
+                    String expResult = stringExpectedFromMap(mapa, 5);
                     String result = Util.CollectionToString(mapa, true, 5);
-                    assertEquals(expResult, result, "Deberia mostrar como máximo 5 pares de valores del mapa.");
+                    printResults(expResult, result);
+                    assertEquals(expResult, result, "It should display at most 5 pairs of map values.");
                 },
                 () -> {
-                    System.out.println("Muestra el tipo de colección (mapa) y la cantidad de elementos que contiene...");
+                    logger.debug("Displays the type of collection (map) and the number of items it contains...");
                     Map<String, String> mapa = new HashMap<>();
 
                     mapa.put("0", array[0]);
@@ -162,25 +150,25 @@ public class UtilTest {
                     mapa.put("5", array[5]);
                     mapa.put("6", array[6]);
                     mapa.put("7", array[7]);
-                    String expResult = "java.util.HashMap 8 elementos.";
+                    String expResult = "java.util.HashMap 8 items.";
                     String result = Util.CollectionToString(mapa, false, 2);
-                    assertEquals(expResult, result, "Deberia mostrar el tipo y el número de elementos.");
+                    printResults(expResult, result);
+                    assertEquals(expResult, result, "It should show the type and number of elements.");
                 },
                 () -> {
-                    Map<Integer, Integer> mapa = generaMapaEnteros(15, 5, 10);
-
-                    System.out.println("mapa -> " + mapa.toString());
-
-                    String expResult = toStringEsperadoDelMapa(mapa, 7);
+                    logger.debug("It should display at most 7 pairs of map values.");
+                    Map<Integer, Integer> mapa = generateIntegerMap(15, 5, 10);
+                    String expResult = stringExpectedFromMap(mapa, 7);
                     String result = Util.CollectionToString(mapa, true, 7);
-                    assertEquals(expResult, result, "Deberia mostrar como máximo 7 pares de valores del mapa.");
+                    printResults(expResult, result);
+                    assertEquals(expResult, result, "It should display at most 7 pairs of map values.");
                 }
         );
 
     }
 
-    // Métodos de ayuda para la ejecución del test testToString()
-    private String[] generaArray() {
+    // Helper methods for test execution testToString()
+    private String[] generateArrayOfStrings() {
         String[] array = new String[]{
             "jabswitch.exe",
             "jaccessinspector.exe",
@@ -222,7 +210,7 @@ public class UtilTest {
         return array;
     }
 
-    private List<String> generaLista() {
+    private List<String> generateListOfStrings() {
         List<String> lista = new ArrayList<>();
 
         lista.add("jabswitch.exe");
@@ -265,29 +253,29 @@ public class UtilTest {
         return lista;
     }
 
-    private Map<Integer, Integer> generaMapaEnteros(int elementos, int inicio, int incremento) {
-        Integer[] claves = generaArrayClaves(elementos);
-        Integer[] valores = generarArrayValores(elementos, inicio, incremento);
-        Map<Integer, Integer> mapa = new HashMap<>();
-        for (int i = 0; i < elementos; i++) {
-            mapa.put(claves[i], valores[i]);
+    private Map<Integer, Integer> generateIntegerMap(int items, int start, int increase) {
+        Integer[] keyArray = generateKeyIntegerArray(items);
+        Integer[] valuesArray = generateValueIntegerArray(items, start, increase);
+        Map<Integer, Integer> theMap = new HashMap<>();
+        for (int i = 0; i < items; i++) {
+            theMap.put(keyArray[i], valuesArray[i]);
         }
 
-        return mapa;
+        return theMap;
     }
 
-    private String toStringEsperadoDelMapa(Map<?, ?> mapa, int maximoElementos) {
+    private String stringExpectedFromMap(Map<?, ?> theMap, int maximumElements) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("[");
-        if (mapa.size() < maximoElementos) {
-            for (Map.Entry<?, ?> e : mapa.entrySet()) {
+        if (theMap.size() < maximumElements) {
+            for (Map.Entry<?, ?> e : theMap.entrySet()) {
                 sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
             }
         } else {
             int i = 0;
-            for (Iterator<?> it = mapa.entrySet().iterator(); it.hasNext();) {
-                if (i < maximoElementos) {
+            for (Iterator<?> it = theMap.entrySet().iterator(); it.hasNext();) {
+                if (i < maximumElements) {
                     Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
                     sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
                     i++;
@@ -301,16 +289,16 @@ public class UtilTest {
         return sb.toString();
     }
 
-    private String toStringEsperadoDeLaLista(List<?> lista, int maximoElementos) {
+    private String stringExpectedFromList(List<?> theList, int maximumElements) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        if (lista.size() < maximoElementos) {
-            for (Object o : lista.toArray()) {
+        if (theList.size() < maximumElements) {
+            for (Object o : theList.toArray()) {
                 sb.append("'").append(String.valueOf(o)).append("'").append(" ");
             }
         } else {
-            for (int i = 0; i < maximoElementos; i++) {
-                sb.append("'").append(String.valueOf(lista.get(i))).append("'").append(" ");
+            for (int i = 0; i < maximumElements; i++) {
+                sb.append("'").append(String.valueOf(theList.get(i))).append("'").append(" ");
             }
             sb.append(" ...");
         }
@@ -318,31 +306,31 @@ public class UtilTest {
         return sb.toString();
     }
 
-    private Integer[] generaArrayClaves(int elementos) {
-        Integer[] array = new Integer[elementos];
-        for (int i = 0; i < elementos; i++) {
+    private Integer[] generateKeyIntegerArray(int items) {
+        Integer[] array = new Integer[items];
+        for (int i = 0; i < items; i++) {
             array[i] = i;
         }
         return array;
     }
 
-    private Integer[] generarArrayValores(int elementos, int inicio, int incremento) {
-        Integer[] array = new Integer[elementos];
-        for (int i = 0; i < elementos; i++) {
-            array[i] = inicio;
-            inicio = +incremento;
+    private Integer[] generateValueIntegerArray(int items, int start, int increase) {
+        Integer[] array = new Integer[items];
+        for (int i = 0; i < items; i++) {
+            array[i] = start;
+            start = +increase;
         }
         return array;
     }
 
-    private void imprimeTitulo(String nombreMetodo) {
-        String test = "TEST " + nombreMetodo;
+    private void printTitle(String methodName) {
+        String test = "TEST " + methodName;
         logger.debug(test);
     }
 
-    private void imprimeResultados(Object expectedValue, Object actualValue) {
-        String actVal = "Valor devuelto -> " + String.valueOf(actualValue);
-        String expVal = "Valor esperado -> " + String.valueOf(expectedValue);
+    private void printResults(Object expectedValue, Object actualValue) {
+        String actVal = "Return value -> " + String.valueOf(actualValue);
+        String expVal = "Expected value -> " + String.valueOf(expectedValue);
         logger.debug(actVal);
         logger.debug(expVal);
     }

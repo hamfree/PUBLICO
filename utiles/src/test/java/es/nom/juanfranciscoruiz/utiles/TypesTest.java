@@ -18,122 +18,122 @@ public class TypesTest {
     }
 
     @Test
-    public void isNullOrEmpty() {
-        imprimeTitulo("isNullOrEmpty()");
+    public void testIsNullOrEmpty() {
+        printTitle("testIsNullOrEmpty()");
 
         assertAll(
                 () -> {
-                    logger.debug("Lista con dos elementos. Debe dar false");
-                    List<String> coleccion = new ArrayList<>();
-                    coleccion.add("uno");
-                    coleccion.add("dos");
+                    logger.debug("List with two elements. Must return false");
+                    List<String> stringList = new ArrayList<>();
+                    stringList.add("one");
+                    stringList.add("two");
 
                     boolean expectedValue = false;
-                    boolean actualValue = Types.isNullOrEmpty(coleccion);
+                    boolean actualValue = Types.isNullOrEmpty(stringList);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Mapa sin elementos. Debe dar true");
-                    Map<String, String> coleccion = new HashMap<>();
+                    logger.debug("Map without elements. Must return true");
+                    Map<String, String> theMap = new HashMap<>();
 
                     boolean expectedValue = true;
-                    boolean actualValue = Types.isNullOrEmpty(coleccion);
+                    boolean actualValue = Types.isNullOrEmpty(theMap);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Un valor nulo. Debe dar true");
+                    logger.debug("A null value. Must return true");
                     boolean expectedValue = true;
                     boolean actualValue = Types.isNullOrEmpty(null);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Una instancia de Object que apunta a null. Debe dar true");
-                    Object valor = null;
+                    logger.debug("An instance of Object that points to null. Must evaluate to true");
+                    Object theObject=  null;
                     boolean expectedValue = true;
-                    boolean actualValue = Types.isNullOrEmpty(valor);
+                    boolean actualValue = Types.isNullOrEmpty(theObject);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Una instancia de Object. Debe dar false");
-                    Object valor = new Object();
+                    logger.debug("An instance of Object. Must return false");
+                    Object theObject = new Object();
                     boolean expectedValue = false;
-                    boolean actualValue = Types.isNullOrEmpty(valor);
+                    boolean actualValue = Types.isNullOrEmpty(theObject);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Una matriz con 5 objects de valor nulo. Debe dar false");
-                    Object[] valor = new Object[5];
+                    logger.debug("An array with 5 null value objects. Must return false");
+                    Object[] objectsArray = new Object[5];
                     boolean expectedValue = false;
-                    boolean actualValue = Types.isNullOrEmpty(valor);
+                    boolean actualValue = Types.isNullOrEmpty(objectsArray);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Una matriz sin elementos. Debe devolver true");
-                    Object[] valor = new Object[0];
+                    logger.debug("An array with no elements. Must return true");
+                    Object[] objectsArray = new Object[0];
                     boolean expectedValue = true;
-                    boolean actualValue = Types.isNullOrEmpty(valor);
+                    boolean actualValue = Types.isNullOrEmpty(objectsArray);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Una matriz con dos Strings, uno de ellos apunta a null. Debe dar false");
-                    String[] valores = {"un valor", null};
+                    logger.debug("An array with two Strings, one of them points to null. It must return false");
+                    String[] stringsArray = {"un valor", null};
                     boolean expectedValue = false;
-                    boolean actualValue = Types.isNullOrEmpty(valores);
+                    boolean actualValue = Types.isNullOrEmpty(stringsArray);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Un String con un valor asignado. Debe dar false");
-                    String valor = "algun valor";
+                    logger.debug("A String with a value assigned. Must return false");
+                    String theString = "algun valor";
                     boolean expectedValue = false;
-                    boolean actualValue = Types.isNullOrEmpty(valor);
+                    boolean actualValue = Types.isNullOrEmpty(theString);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Un array de objects vacío. Debe dar true");
-                    Object[] objetos = {};
+                    logger.debug("An empty array of objects. Must return true");
+                    Object[] objectsArray = {};
                     boolean expectedValue = true;
-                    boolean actualValue = Types.isNullOrEmpty(objetos);
+                    boolean actualValue = Types.isNullOrEmpty(objectsArray);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    logger.debug("Un valor de tipo primitivo. Debe dar false");
-                    byte octeto = 0x55;
+                    logger.debug("A primitive type value. Must return false");
+                    byte theByte = 0x55;
                     boolean expectedValue = false;
-                    boolean actualValue = Types.isNullOrEmpty(octeto);
+                    boolean actualValue = Types.isNullOrEmpty(theByte);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 }
         );
 
@@ -142,86 +142,87 @@ public class TypesTest {
 
 
     @Test
-    public void isInteger() {
-        imprimeTitulo("isInteger()");
+    public void testIsInteger() {
+        printTitle("testIsInteger()");
 
         assertAll(
                 () -> {
-                    System.out.println("Un objeto que apunta a nulo. Debe dar false");
+                    System.out.println("An object that points to null. Must return false");
                     Object obj = null;
 
                     boolean expectedValue = false;
                     boolean actualValue = Types.isInteger(obj);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una instancia de Object. Debe dar false");
+                    System.out.println("An instance of Object. Must return false");
                     Object obj = new Object();
 
                     boolean expectedValue = false;
                     boolean actualValue = Types.isInteger(obj);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una instancia de String con un contenido convertible a Integer. Debe dar true");
+                    System.out.println("A String instance with content convertible to Integer. Must evaluate to true");
                     String obj = "45566";
 
                     boolean expectedValue = true;
                     boolean actualValue = Types.isInteger(obj);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 },
                 () -> {
-                    System.out.println("Una instancia de String con un contenido NO convertible a Integer. Debe dar false");
-                    String obj = "no es un entero";
+                    System.out.println("A String instance with content NOT convertible to Integer. Must return false");
+                    String obj = "is not an integer";
 
                     boolean expectedValue = false;
                     boolean actualValue = Types.isInteger(obj);
 
-                    imprimeResultados(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "El valor devuelto es " + String.valueOf(actualValue) + " y debía ser " + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
                 }
         );
 
     }
 
     @Test
-    public void isLong() {
+    public void testIsLong() {
     }
 
     @Test
-    public void isFloat() {
+    public void testIsFloat() {
     }
 
     @Test
-    public void isDouble() {
+    public void testIsDouble() {
     }
 
     @Test
-    public void isArray() {
+    public void testIsArray() {
     }
 
     @Test
-    public void isFromType() {
+    public void testIsFromType() {
     }
 
-    private void imprimeTitulo(String nombreMetodo) {
+    // Utility methods
+    private void printTitle(String nombreMetodo) {
         String test = "TEST " + nombreMetodo;
         logger.debug(test);
     }
 
-    private void imprimeResultados(Object expectedValue, Object actualValue) {
-        String actVal = "Valor devuelto -> " + String.valueOf(actualValue);
-        String expVal = "Valor esperado -> " + String.valueOf(expectedValue);
+    private void printResults(Object expectedValue, Object actualValue) {
+        String actVal = "Return value -> " + String.valueOf(actualValue);
+        String expVal = "Expected value -> " + String.valueOf(expectedValue);
         logger.debug(actVal);
         logger.debug(expVal);
     }

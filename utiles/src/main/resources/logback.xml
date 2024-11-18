@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
-    <!-- Recomendación: coloque los escuchas de estado hacia la parte superior del archivo de configuración -->
-    <!--
+    <!-- Recommendation: Place status listeners towards the top of the 
+    configuration file -->
+   
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
-    -->
-    
-    <!-- Inserte la hora actual con el formato "yyyyMMdd'T'HHmmss" debajo de
-    la clave "porSegundo" en el contexto del registrador. Este valor estará
-    disponible para todos los elementos de configuración posteriores. -->
-    <!--
-    <timestamp key="porSegundo" datePattern="yyyyMMdd'T'HHmmss"/>
-    -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logFile.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover -->
-      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
 
-      <!-- keep 30 days' worth of history capped at 3GB total size -->
-      <maxHistory>30</maxHistory>
-      <totalSizeCap>3GB</totalSizeCap>
+            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
 
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
-    </encoder>
-  </appender> 
-
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
+        </encoder>
+    </appender> 
     <root level="debug">
         <appender-ref ref="FILE" />
     </root>

@@ -9,55 +9,60 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utilidad para imprimir a la salida estándar y recibir caracteres del usuario
- * por la entrada estándar.
+ * Utility to print to standard output and receive characters from the user 
+ * through standard input.
  *
  * @author hamfree
  */
 public class IO {
 
     /**
-     * Trazas
+     * Traces
      */
     private static final Logger logger = LoggerFactory.getLogger(IO.class);
 
     /**
-     * Caracter de salto de linea del sistema operativo
+     * Operating system line break character
      */
-    private static final String SL = System.lineSeparator();
+    private static final String LS = System.lineSeparator();
     /**
-     * Caracter separador de rutas del sistema operativo
+     * Operating system path separator character
      */
-    private static final String SF = FileSystems.getDefault().getSeparator();
+    private static final String FS = FileSystems.getDefault().getSeparator();
     /**
-     * Caracter que indica el inicio del contenido de un objeto
+     * Character indicating the beginning of the content of an object in its 
+     * textual representation when passed through a converter function.
      */
-    private static final String CAR_INI = "[";
+    private static final String CHAR_INI = "[";
     /**
-     * Caracter que indica el final del contenido de un objeto
+     * Character indicating the end of an object's contents in its textual 
+     * representation when passed through a converter function.
      */
-    private static final String CAR_FIN = "]";
+    private static final String CHAR_FIN = "]";
     /**
-     * Caracter separador de items
+     * Item separator character of values of an collection type object when 
+     * passed through a converter function.
      */
     private static final String SEP = ", ";
     /**
-     * Constante que representa el valor textual de NULL
+     * Constant representing the textual value of NULL when an object is 
+     * converted into its textual representation.
      */
     private static final String NULL = "null";
 
     /**
-     * Constantes para los mensajes de error
+     * Constants for error messages
      */
-    private static final String ERR_PARAM = "¡Parámetros nulos o incorrectos!";
-    private static final String ERR_NULL = "¡Parámetros nulos!";
-    private static final String ERR_SOME_NULL = "¡Alguno de los parámetros es nulo!";
-    private static final String ERR_LONG = "La longitud de la linea es menor que la longitud del mensaje";
+    private static final String ERR_PARAM = "Null or incorrect parameters!";
+    private static final String ERR_NULL = "Null parameters!";
+    private static final String ERR_SOME_NULL = "One of the parameters is null!";
+    private static final String ERR_LONG = "The line length is less than the message length";
 
     /**
-     * Es igual que un InputStream, del que extiende y usando el patrón
-     * Decorator hacemos que su método close() no haga nada.
-     *
+     * It is the same as an InputStream, which it extends and using the 
+     * Decorator pattern we make its close() method do nothing. With this we 
+     * avoid the problem of closing the standard input and not being able to 
+     * reopen it from the current process.
      */
     static class UnclosableInputStreamDecorator extends InputStream {
 
@@ -114,11 +119,12 @@ public class IO {
     }
 
     /**
-     * Imprime los argumentos indicados en la salida estándar. Intentará usar el
-     * objeto Console, en caso contrario usará el canal estandar de salida.
+     * Prints the given arguments to standard output. It will attempt to use the 
+     * Console object, otherwise it will use the standard output channel.
      *
-     * @param args una lista de objetos a imprimir
-     * @throws IllegalArgumentException en caso de pasar parámetros nulos.
+     * @param args a list of objects to print
+     * @throws IllegalArgumentException in case of passing null or incorrect 
+     * parameters.
      */
     public static void prt(Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -146,16 +152,17 @@ public class IO {
     }
 
     /**
-     * Imprime los argumentos indicados en la salida estándar. Intentará usar el
-     * objeto Console, si no puede utilizará el canal estandar de salida.
-     * Después de imprimir la lista de argumentos hará tantos saltos de línea
-     * como indiquemos en el parámetro sl.
+     * Prints the specified arguments to standard output. It will try to use the 
+     * Console object, otherwise it will use the standard output channel. After 
+     * printing the argument list it will make as many newlines as indicated in 
+     * the sl parameter.
      *
-     * @param sl entero con la cantidad de saltos de línea a realizar
-     * @param args una lista de objetos a imprimir
-     * @throws IllegalArgumentException en caso de pasar parámetros nulos.
+     * @param ls integer with the number of line breaks to perform
+     * @param args a list of objects to print to standar output
+     * @throws IllegalArgumentException in case of passing null or incorrect 
+     * parameters.
      */
-    public static void prtln(int sl, Object... args) throws IllegalArgumentException {
+    public static void prtln(int ls, Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (args == null) {
             if (logger.isErrorEnabled()) {
@@ -177,9 +184,9 @@ public class IO {
         for (Object arg : args) {
             sb.append(arg.toString());
         }
-        if (sl > 0) {
-            for (int i = 0; i < sl; i++) {
-                sb.append(SL);
+        if (ls > 0) {
+            for (int i = 0; i < ls; i++) {
+                sb.append(LS);
             }
         }
 
@@ -187,11 +194,11 @@ public class IO {
     }
 
     /**
-     * Imprime el contenido del argumento sb en la salida estándar. Intentará
-     * usar primero el objeto Console. En caso de que no pueda usar Console
-     * utilizará el canal estandar de salida.
+     * Prints the contents of the sb argument to standard output. It will try to
+     * use the Console object first. If it cannot use Console, it will use the 
+     * standard output channel.
      *
-     * @param sb StringBuilder que contiene el texto a imprimir.
+     * @param sb StringBuilder object containing the text to print.
      */
     private static void print(StringBuilder sb) {
         Console con = System.console();
@@ -203,13 +210,13 @@ public class IO {
     }
 
     /**
-     * Recupera en una cadena lo introducido por el usuario en la entrada
-     * estándar hasta que pulse INTRO. Intentará primero usar el objeto Console,
-     * si no puede utilizarlo, usará la entrada estándar System.in.
+     * Retrieves a string of the user's input from standard input until the user 
+     * presses ENTER. It will first try to use the Console object, if it cannot 
+     * use that, it will use the standard input System.in.
      *
-     * @return una cadena con lo introducido por el usuario hasta que pulse la
-     * tecla INTRO.
-     * @throws java.lang.Exception En caso de producirse algún error.
+     * @return a string containing what the user has entered until the ENTER 
+     * key is pressed.
+     * @throws java.lang.Exception In case any error occurs.
      */
     public static String read() throws Exception {
         String dato;
@@ -226,37 +233,37 @@ public class IO {
     }
 
     /**
-     * Genera una cadena que contendrá un mensaje centrado (msg) como título
-     * entre dos líneas de la longitud indicada por 'longitud' compuestas por el
-     * carácter 'car'.
+     * Generates a string containing a centered message (msg) as a title between 
+     * two lines of the length indicated by 'length' composed of the character 
+     * 'character'.
      *
-     * @param msg el mensaje del título
-     * @param car el caracter que compone cada línea
-     * @param longitud la longitud de la línea (debe ser mayor que la longitud
-     * del mensaje)
-     * @return una cadena con el mensaje centrado como título entre dos líneas
-     * @throws IllegalArgumentException en caso de pasarle parámetros nulos o
-     * incorrectos.
+     * @param msg the message of the title
+     * @param character the character that makes up each line
+     * @param length the length of the line (must be greater than the length of 
+     * the message)
+     * @return a string with the message centered as a title between two lines
+     * @throws IllegalArgumentException in case of passing null or incorrect 
+     * parameters.
      */
-    public static String titulo(String msg, Character car, int longitud) {
+    public static String title(String msg, Character character, int length) {
         StringBuilder sb = new StringBuilder();
-        if (Types.isNullOrEmpty(msg) || Types.isNullOrEmpty(car)) {
+        if (Types.isNullOrEmpty(msg) || Types.isNullOrEmpty(character)) {
             if (logger.isErrorEnabled()) {
                 logger.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         } else {
             int longMsg = msg.length();
-            if (longitud > longMsg) {
-                sb.append(getSL())
-                        .append(linea(car, longitud))
-                        .append(getSL());
-                int relleno = (longitud - longMsg) / 2;
-                sb.append(repiteCaracter(' ', relleno))
+            if (length > longMsg) {
+                sb.append(getLS())
+                        .append(line(character, length))
+                        .append(getLS());
+                int relleno = (length - longMsg) / 2;
+                sb.append(repeatCharacter(' ', relleno))
                         .append(msg)
-                        .append(repiteCaracter(' ', relleno));
-                sb.append(getSL()).
-                        append(linea(car, longitud));
+                        .append(repeatCharacter(' ', relleno));
+                sb.append(getLS()).
+                        append(line(character, length));
             } else {
                 if (logger.isErrorEnabled()) {
                     logger.error(ERR_LONG);
@@ -268,46 +275,46 @@ public class IO {
     }
 
     /**
-     * Genera una línea compuesta por el carácter 'car' que se repetirá tantas
-     * veces como indique 'longitud'
+     * Generates a line composed of the character 'car' that will be repeated as 
+     * many times as 'length' indicates
      *
-     * @param car carácter a repetir
-     * @param longitud número de veces que se repetirá el carácter 'car'
-     * @return String con la línea compuesta de caracteres 'car' repetidos
-     * tantas veces como indica el parámetro 'longitud'.
-     * @throws IllegalArgumentException en caso de pasarle parámetros nulos o
-     * incorrectos.
+     * @param character character to repeat
+     * @param length number of times to repeat the character 'character'
+     * @return String with the line composed of the characters 'car' repeated as 
+     * many times as indicated by the 'length' parameter.
+     * @throws IllegalArgumentException in case of passing null or incorrect 
+     * parameters.
      */
-    public static String linea(Character car, int longitud) {
-        String linea;
-        if (car != null && longitud > 0) {
-            linea = repiteCaracter(car, longitud);
+    public static String line(Character character, int length) {
+        String line;
+        if (character != null && length > 0) {
+            line = repeatCharacter(character, length);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         }
-        return linea;
+        return line;
     }
 
     /**
-     * Genera una cadena compuesta por el caracter <code>car</code> tantas veces
-     * como indica <code>veces</code>.
+     * Generates a string consisting of the character <code>character</code> as 
+     * many times as indicated by <code>times</code>.
      *
-     * @param car el caracter con el que va a estar compuesta la cadena
-     * @param veces el número de veces que se repite el caracter en la cadena
-     * @return una cadena con el caracter <code>car</code> repetida tantas veces
-     * como indica <code>veces</code>
-     * @throws IllegalArgumentException en caso de pasarle parámetros nulos o
-     * incorrectos.
+     * @param character the character with which the string will be composed
+     * @param times the number of times the character is repeated in the string
+     * @return a string with the character <code>character</code> repeated as 
+     * many times as indicated by <code>times</code>
+     * @throws IllegalArgumentException in case of passing null or incorrect 
+     * parameters.
      */
-    public static String repiteCaracter(Character car, int veces) {
+    public static String repeatCharacter(Character character, int times) {
         StringBuilder sb = new StringBuilder();
         sb.setLength(0);
-        if (car != null && veces > 0) {
-            for (int i = 0; i < veces; i++) {
-                sb.append(car);
+        if (character != null && times > 0) {
+            for (int i = 0; i < times; i++) {
+                sb.append(character);
             }
         } else {
             if (logger.isErrorEnabled()) {
@@ -320,58 +327,62 @@ public class IO {
 
     //Getters y Setters
     /**
-     * Devuelve SL, constante con el caracter de control del salto de línea del
-     * sistema operativo actual.
+     * Returns LS, a constant containing the line feed control character of the 
+     * current operating system.
      *
-     * @return una cadena constante
+     * @return a constant chain
      */
-    public static String getSL() {
-        return SL;
+    public static String getLS() {
+        return LS;
     }
 
     /**
-     * Devuelve SF, constante con el caracter separador de rutas del sistema
-     * operativo actual.
+     * Returns FS, a constant containing the path separator character of the 
+     * current operating system.
      *
-     * @return una cadena constante
+     * @return a constant chain
      */
-    public static String getSF() {
-        return SF;
+    public static String getFS() {
+        return FS;
     }
 
     /**
-     * Devuelve CAR_INI, cosntante con el caracter que indica el inicio del
-     * contenido de un objeto
+     * Returns CHAR_INI, a constant containing the character that indicates the 
+     * beginning of the contents of an object in its textual representation when 
+     * passed through a converter function.
      *
-     * @return una cadena constante
+     * @return a constant chain
      */
-    public static String getCAR_INI() {
-        return CAR_INI;
+    public static String getCHAR_INI() {
+        return CHAR_INI;
     }
 
     /**
-     * Devuelve CAR_FIN, cosntante con el caracter que indica el final del
-     * contenido de un objeto
+     * Returns CHAR_END, a constant containing the character that indicates the 
+     * end of the contents of an object in its textual representation when 
+     * passed through a converter function.
      *
-     * @return una cadena constante
+     * @return a constant chain
      */
-    public static String getCAR_FIN() {
-        return CAR_FIN;
+    public static String getCHAR_FIN() {
+        return CHAR_FIN;
     }
 
     /**
-     * Devuelve SEP, el separador de items
+     * Returns SEP, the item separator of values of an collection type object when 
+     * passed through a converter function.
      *
-     * @return una cadena constante
+     * @return a constant chain
      */
     public static String getSEP() {
         return SEP;
     }
 
     /**
-     * Devuelve NULL, una constante que representa el valor nulo.
+     * Returns NULL, a constant representing the null value when an object is 
+     * converted into its textual representation.
      *
-     * @return una cadena constante
+     * @return a constant chain
      */
     public static String getNULL() {
         return NULL;

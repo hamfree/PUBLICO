@@ -3,7 +3,6 @@ package es.nom.juanfranciscoruiz.utiles;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,42 +14,45 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clase con metodos de utilidad usados frecuentemente por las otras clases de
- * la aplicación
+ * Class with various utility methods frequently used by other classes in the
+ * application
  *
  * @author hamfree
  */
 public class Util {
 
     /**
-     * Para la depuracion.
+     * For debugging.
      */
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
-    final static String SL = System.lineSeparator();
+    final static String SL = IO.getLS();
 
     /**
-     * Evitamos que se pueda instanciar
+     * We prevent it from being instantiated
      */
     private Util() {
     }
 
     /**
-     * Devuelve en un mapa las cpu's existentes en el PC, la memoria libre 
-     * disponible para la máquina virtual (MV), la cantidad máxima de memoria que la 
-     * MV intentará utilizar y la cantidad total de memoria 
-     * actualmente disponible para los objetos actuales y futuros, medida en 
-     * bytes.
-     * @return un mapa con cuatro pares de datos:
-     * 
+     * Returns in a map the existing CPUs on the PC, the free memory available
+     * to the virtual machine (VM), the maximum amount of memory the VM will
+     * attempt to use, and the total amount of memory currently available for
+     * current and future objects, measured in bytes.
+     *
+     * @return a map with four data pairs:
+     *
      * <ol>
-     * <li> Clave: "Nucleos Procesador". Valor: la cantidad de núcleos de CPU disponibles para la MV.</li>
-     * <li> Clave: "Memoria Libre". Valor: la memoria libre disponible para la MV</li>
-     * <li> Clave: "Memoria Disponible". Valor: la cantidad máxima de memoria que la MV intentará utilizar</li>
-     * <li> Clave: "Memoria Total". Valor: la cantidad total de memoria actualmente disponible en la MV para los objetos actuales y futuros.</li>
+     * <li> Key: "Processor Cores". Value: The number of CPU cores available to
+     * the VM.</li>
+     * <li> Key: "Free Memory". Value: the free memory available for the VM</li>
+     * <li> Key: "Available Memory" Value: The maximum amount of memory that the
+     * VM will attempt to use</li>
+     * <li> Key: "Total Memory" Value: The total amount of memory currently
+     * available in the VM for current and future objects.</li>
      * </ol>
      */
-    public static Map<String, String> getFeatures() {
+    public static Map<String, String> getFeaturesAsMap() {
         HashMap<String, String> hm = new HashMap<>();
 
         Runtime rt = Runtime.getRuntime();
@@ -61,18 +63,19 @@ public class Util {
         String maxMemory = numberFormatter.format(rt.maxMemory());
         String totalMemmory = numberFormatter.format(rt.totalMemory());
 
-        hm.put("Nucleos Procesador", String.valueOf(rt.availableProcessors()));
-        hm.put("Memoria Libre", freeMemory);
-        hm.put("Memoria Disponible", maxMemory);
-        hm.put("Memoria Total", totalMemmory);
+        hm.put("Processor Cores", String.valueOf(rt.availableProcessors()));
+        hm.put("Free Memory", freeMemory);
+        hm.put("Available Memory", maxMemory);
+        hm.put("Total Memory", totalMemmory);
         return hm;
     }
 
     /**
-     * Devuelve en un mpa las propiedades del sistema
-     * @return un mapa con las propiedades del sistema.
+     * Returns the system properties in a map
+     *
+     * @return a map with the properties of the system.
      */
-    public static Map<String, String> getProperties() {
+    public static Map<String, String> getSystemPropertiesAsMap() {
         HashMap<String, String> hm = new HashMap<>();
 
         Properties p = System.getProperties();
@@ -82,17 +85,7 @@ public class Util {
     }
 
     /**
-     * Convierte una matriz de strings en una Lista de Strings
-     * @param args la matriz de strings
-     * @return una lista de strings cuyos elementos son los strings de la matriz 
-     * que se le pasa como argumento.
-     */
-    public static List<String> getArgs(String[] args) {
-        return Arrays.asList(args);
-    }
-
-    /**
-     * Obtiene todos los charsets soportados por la MVJ actual.
+     * Gets all charsets supported by the current JVM.
      *
      * @return una lista con todos los charsets soportados por la MVJ actual.
      */
@@ -110,24 +103,23 @@ public class Util {
     }
 
     /**
-     * Procesa las listas y los mapas para mejorar la salida del metodo
-     * 'toString()' de los objetos de la aplicación.
+     * Processes lists and maps to improve the output of the application
+     * objects' 'toString()' method.
      *
-     * @param obj el mapa o la lista del que se quiere mostrar sus elementos o
-     * indicar su tipo y tamaño.
-     * @param muestraValores boolean, si es true devolverá una cadena con los
-     * elementos de la lista o el mapa. Si es false, se devolverá una cadena con
-     * el tipo de objeto y la cantidad de elementos que contiene.
-     * @param maximoElementos En caso de que se muestren los valores, establece
-     * el número máximo de elementos cuya representación textual se devolveran
-     * en la cadena.
-     * @return una cadena con la representación textual de los elementos que
-     * contiene la lista o el mapa o el tipo del objeto y la cantidad de
-     * elementos que contiene. Si el objeto pasado no es ni un mapa ni una lista
-     * la cadena que devolverá es generada por el método estático
-     * String.valueOf(). Si el objeto es nulo devolverá la cadena "null".
+     * @param obj the map or list whose elements you want to display or indicate
+     * its type and size.
+     * @param showValues boolean, if true, a string with the elements of the 
+     * list or map will be returned. If false, a string with the type of object 
+     * and the number of elements it contains will be returned.
+     * @param maxElements If values ​​are to be returned, sets the maximum number 
+     * of items whose textual representation will be returned in the string.
+     * @return a string with the textual representation of the elements 
+     * contained in the list or map or the type of the object and the number of 
+     * elements it contains. If the object passed is neither a map nor a list 
+     * the string returned is generated by the static method String.valueOf(). 
+     * If the object is null it returns the string "null".
      */
-    public static String CollectionToString(Object obj, boolean muestraValores, int maximoElementos) {
+    public static String CollectionToString(Object obj, boolean showValues, int maxElements) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -137,14 +129,14 @@ public class Util {
             Class<?> clazz = obj.getClass();
             if (clazz.isAssignableFrom(ArrayList.class)) {
                 List<?> l = (List) obj;
-                if (muestraValores) {
+                if (showValues) {
                     sb.append("[");
-                    if (l.size() < maximoElementos) {
+                    if (l.size() < maxElements) {
                         for (Object o : l.toArray()) {
                             sb.append("'").append(String.valueOf(o)).append("'").append(" ");
                         }
                     } else {
-                        for (int i = 0; i < maximoElementos; i++) {
+                        for (int i = 0; i < maxElements; i++) {
                             sb.append("'").append(String.valueOf(l.get(i))).append("'").append(" ");
                         }
                         sb.append(" ...");
@@ -154,14 +146,14 @@ public class Util {
                     sb.append(obj.getClass().getCanonicalName())
                             .append(" ")
                             .append(String.valueOf(l.size()))
-                            .append(" elementos.");
+                            .append(" items.");
                 }
 
             } else if (clazz.isAssignableFrom(java.util.HashMap.class)) {
                 Map<?, ?> m = (Map) obj;
-                if (muestraValores) {
+                if (showValues) {
                     sb.append("[");
-                    if (m.size() < maximoElementos) {
+                    if (m.size() < maxElements) {
                         for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
                             Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
                             sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
@@ -169,7 +161,7 @@ public class Util {
                     } else {
                         int i = 0;
                         for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
-                            if (i < maximoElementos) {
+                            if (i < maxElements) {
                                 Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
                                 sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
                                 i++;
@@ -184,7 +176,7 @@ public class Util {
                     sb.append(obj.getClass().getCanonicalName())
                             .append(" ")
                             .append(String.valueOf(m.size()))
-                            .append(" elementos.");
+                            .append(" items.");
                 }
             } else {
                 sb.append(String.valueOf(obj));

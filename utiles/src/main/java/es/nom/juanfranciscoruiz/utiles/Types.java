@@ -1,21 +1,15 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clase de utilidad para comprobar tipos (sin usar las API's modernas de JAVA)
+ * Utility class for type checking
  *
  * @author hamfree
  */
@@ -24,42 +18,40 @@ public class Types {
     private static final Logger logger = LoggerFactory.getLogger(Types.class.getName());
 
     /**
-     * Indica si el objeto pasado es nulo o está vacío (en el caso de ser una
-     * colección, u otro objeto contenedor de objetos.
+     * Indicates whether the passed object is null or empty (in the case of a
+     * collection, or other object containing objects.
      *
-     * @param obj el objeto a comprobar
-     * @return true si el objeto es nulo o está vacío, false en el caso
-     * contrario.
+     * @param obj the object to be checked
+     * @return true if the object is null or empty, false otherwise.
      */
     public static boolean isNullOrEmpty(Object obj) {
         if (obj == null) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Es un valor nulo");
+                logger.debug("Is null");
             }
             return true;
         } else if (obj.getClass().isAssignableFrom(Object.class)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Es de tipo Object");
-                logger.debug("¿Tiene valor nulo? " + String.valueOf(Objects.isNull(obj)));
+                logger.debug("It is of type Object");
+                logger.debug("Is its value null? {}", String.valueOf(Objects.isNull(obj)));
             }
             return Objects.isNull(obj);
         } else if (obj.getClass().isAssignableFrom(String.class)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Es de tipo String");
-                logger.debug("¿Está vacía? " + String.valueOf(obj.toString().isEmpty()));
+                logger.debug("It is of type String");
+                logger.debug("Is it empty? {}",String.valueOf(obj.toString().isEmpty()));
             }
             return obj.toString().isEmpty();
         } else if (obj.getClass().isPrimitive()) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Es un valor primitivo");
-                logger.debug("¿Está vacío? " + String.valueOf(obj.toString().isEmpty()));
+                logger.debug("It is a primitive value");
             }
             return obj.toString().isEmpty();
         } else if (obj.getClass().isArray()) {
             int l = Array.getLength(obj);
             if (logger.isDebugEnabled()) {
-                logger.debug("Es un array");
-                logger.debug("¿Está vacío? " + String.valueOf(l > 0));
+                logger.debug("It is an array");
+                logger.debug("Is it empty? {}", String.valueOf(l > 0));
             }
             if (l > 0) {
                 return false;
@@ -72,32 +64,33 @@ public class Types {
                 if (interfaces[i].equals(List.class)) {
                     Collection<?> col = (Collection<?>) obj;
                     if (logger.isDebugEnabled()) {
-                        logger.debug("Implementa la interfaz List");
-                        logger.debug("¿Está vacía? " + String.valueOf(col.isEmpty()));
+                        logger.debug("Implements the List interface");
+                        logger.debug("Is it empty? {}", String.valueOf(col.isEmpty()));
                     }
                     return col.isEmpty();
                 }
                 if (interfaces[i].equals(Map.class)) {
                     Map<?, ?> col = (Map<?, ?>) obj;
                     if (logger.isDebugEnabled()) {
-                        logger.debug("Implementa la interfaz Map");
-                        logger.debug("¿Está vacío? " + String.valueOf(col.isEmpty()));
+                        logger.debug("Implements the Map interface");
+                        logger.debug("Is it empty? {}", String.valueOf(col.isEmpty()));
                     }
                     return col.isEmpty();
                 }
             }
         }
         if (logger.isDebugEnabled()){
-            logger.debug("Tipo del objeto pasado: " + obj.getClass().getCanonicalName());
+            logger.debug("Type of the object passed: {}", obj.getClass().getCanonicalName());
         }
         return false;
     }
 
     /**
-     * Si el objeto puede convertirse en un Integer devolverá verdadero.
+     * If the object can be converted to an Integer it will return true.
      *
-     * @param obj un objet que puede contener dígitos convertibles en Integer
-     * @return true si el objeto puede convertirse en un Integer.
+     * @param obj an object that can hold digits convertible to Integer
+     * @return true if the object can be converted to an Integer and false 
+     * otherwise.
      */
     public static boolean isInteger(Object obj) {
         if (!isNullOrEmpty(obj)) {
@@ -112,9 +105,10 @@ public class Types {
     }
 
     /**
-     *
-     * @param obj
-     * @return
+     * If the object can be converted to a Long it will return true.
+     * @param obj an object that can hold digits convertible to Long
+     * @return true if the object can be converted to a Long and false 
+     * otherwise.
      */
     public static boolean isLong(Object obj) {
         if (!isNullOrEmpty(obj)) {
@@ -129,11 +123,12 @@ public class Types {
     }
 
     /**
-     * Si el objeto puede convertirse en un Float devolverá verdadero. En caso
-     * contrario devolverá falso.
+     * If the object can be converted to a Float it will return true. Otherwise 
+     * it will return false.
      *
-     * @param obj un objeto que puede contener dígitos convertibles en Float
-     * @return true si el objeto puede convertirse en un Double.
+     * @param obj an object that can hold digits convertible to Float
+     * @return true if the object can be converted to a Double or false 
+     * otherwise.
      */
     public static boolean isFloat(Object obj) {
         if (!isNullOrEmpty(obj)) {
@@ -147,11 +142,12 @@ public class Types {
     }
 
     /**
-     * Si el objeto puede convertirse en un Double devolverá verdadero. En caso
-     * contrario devolverá falso.
+     * If the object can be converted to a Double it will return true. Otherwise 
+     * it will return false.
      *
-     * @param obj un objeto que puede contener dígitos convertibles en Double
-     * @return true si el objeto puede convertirse en un Double.
+     * @param obj an object that can hold digits convertible to Double
+     * @return true if the object can be converted to a Double or false 
+     * otherwise.
      */
     public static boolean isDouble(Object obj) {
         if (!isNullOrEmpty(obj)) {
@@ -165,10 +161,11 @@ public class Types {
     }
 
     /**
-     * Indica si el objeto pasado es un array. En caso contrario devolverá false
+     * Indicates whether the passed object is an array. Otherwise it will 
+     * return false.
      *
-     * @param obj el objeto que puede ser un array.
-     * @return true si el objeto es un array.
+     * @param obj the object we are going to check if it is an array.
+     * @return true if the object is an array or false otherwise.
      */
     public static boolean isArray(Object obj) {
         if (isNullOrEmpty(obj)) {
@@ -179,19 +176,26 @@ public class Types {
     }
 
     /**
-     * Comprueba si el objeto pasado es del tipo que le pasamos. Devolverá true
-     * si lo es y false en caso contrario.
+     * Checks if the passed object is of the type passed to it. It will return 
+     * true if it is and false otherwise.
      *
-     * @param obj el objeto a comprobar si es el de tipo indicado.
-     * @param clazz el tipo que vamos a comprobar en el objeto
-     * @return true si el objeto es del tipo indicado y false en caso contrario.
+     * @param obj the object to be checked if it is of the indicated type.
+     * @param clazz the type we are going to check in the object
+     * @return true if the object is of the indicated type and false otherwise.
+     * @throws IllegalArgumentException in case the 'clazz' and/or 'obj' 
+     * parameters are null.
      */
-    public static boolean isFromType(Object obj, Class<?> clazz) {
+    public static boolean isFromType(Object obj, Class<?> clazz)  
+            throws IllegalArgumentException {
         if (isNullOrEmpty(obj)) {
-            return false;
+            String msg = "ERROR: Argument 'obj' cannot be null.";
+                if (logger.isErrorEnabled()) {
+                    logger.error(msg);
+                }
+                throw new IllegalArgumentException(msg);
         } else {
             if (isNullOrEmpty(clazz)) {
-                String msg = "ERROR: Argumento clazz no puede ser nulo.";
+                String msg = "ERROR: Argument 'clazz' cannot be null.";
                 if (logger.isErrorEnabled()) {
                     logger.error(msg);
                 }
