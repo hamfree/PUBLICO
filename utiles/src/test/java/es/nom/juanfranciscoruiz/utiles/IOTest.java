@@ -118,7 +118,7 @@ public class IOTest {
     @Test
     public void testTitleNullCharacter(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.title("MENSAJE", null, 20);
+            IO.title("MESSAGE", null, 20);
         });
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
@@ -126,7 +126,7 @@ public class IOTest {
     @Test
     public void testTitleLengthLessThanLengthMessage(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.title("MENSAJE", '*', 3);
+            IO.title("MESSAGE", '*', 3);
         });
         assertEquals(ERR_LONG, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_LONG);
     }

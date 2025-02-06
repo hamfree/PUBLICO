@@ -1,5 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import es.nom.juanfranciscoruiz.utiles.exception.TypeConverterException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,11 +22,12 @@ public class TypeConverterTest {
     We import constants from the IO class to make writing tests easier.
      */
     public final static String CAR_INI = IO.getCHAR_INI();
-    public final static String CAR_FIN = IO.getCHAR_FIN();
+    public final static String CAR_FIN = IO.getCHAR_END();
     public final static String NULL = IO.getNULL();
     public final static String SEP = IO.getSEP();
     public final static String SF = IO.getFS();
     public final static String SL = IO.getLS();
+    public final static String MESSAGE_EX1 = "";
 
     @Test
     public void testCollection2List() {
@@ -83,31 +85,92 @@ public class TypeConverterTest {
     @Test
     public void testExtractLongFromString() {
         printTitle("testExtractLongFromString()");
-        
-        //TODO: Do the tests for exception and strings with negative long and no long inside.
 
-        String theString = "0asfklkdkr";
-        Long actualValue = TypeConverter.extractLongFromString(theString);
-        Long expectedValue = 0L;
+        assertAll(
+                () -> {
+                    String theString = "0asfklkdkr";
+                    Long actualValue = TypeConverter.extractLongFromString(theString);
+                    Long expectedValue = 0L;
 
-        printResults(expectedValue, actualValue);
+                    printResults(expectedValue, actualValue);
 
-        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is " + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                },
+                () -> {
+                    String theString = "-987654321012me";
+                    Long actualValue = TypeConverter.extractLongFromString(theString);
+                    Long expectedValue = -987654321012L;
+
+                    printResults(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "The value returned is " + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                },
+                () -> {
+                    TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
+                        String theString = "ItsNotALongValue";
+                        Long actualValue = TypeConverter.extractLongFromString(theString);
+                    });
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("TypeConverterException : " + ex.getMessage());
+                    }
+                },
+                () -> {
+                    TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
+                        String theString = "9223372036854775808";
+                        Long actualValue = TypeConverter.extractLongFromString(theString);
+                    });
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("TypeConverterException : " + ex.getMessage());
+                    }
+                }
+        );
+
     }
 
     @Test
     public void testExtractDoubleFromString() {
         printTitle("testExtractDoubleFromString()");
-        
+
         //TODO: Do the test for exception and strings with negative double and no double inside
+        assertAll(
+                () -> {
+                    String theString = "asfk3.07lkdkr";
+                    Double actualValue = TypeConverter.extractDoubleFromString(theString);
+                    Double expectedValue = 3.07;
 
-        String theString = "asfk3.07lkdkr";
-        Double actualValue = TypeConverter.extractDoubleFromString(theString);
-        Double expectedValue = 3.07;
+                    printResults(expectedValue, actualValue);
 
-        printResults(expectedValue, actualValue);
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                },
+                () -> {
+                    String theString = "asfk-3.07lkdkr";
+                    Double actualValue = TypeConverter.extractDoubleFromString(theString);
+                    Double expectedValue = -3.07;
 
-        assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    printResults(expectedValue, actualValue);
+
+                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                },
+                () -> {
+                    TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
+                        String theString = "ItsNotADoubleValue";
+                        Double actualValue = TypeConverter.extractDoubleFromString(theString);
+                    });
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("TypeConverterException : " + ex.getMessage());
+                    }
+                },
+                () -> {
+                    TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
+                        String theString = String.valueOf(Double.MAX_VALUE + 1);
+                        Double actualValue = TypeConverter.extractDoubleFromString(theString);
+                    });
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("TypeConverterException : " + ex.getMessage());
+                    }
+                }
+        );
+
     }
 
     @Test
@@ -328,7 +391,7 @@ public class TypeConverterTest {
                 },
                 () -> {
                     String theString = null;
-                    
+
                     String expectedValue = "";
                     String actualValue = TypeConverter.extractDigits(theString);
 

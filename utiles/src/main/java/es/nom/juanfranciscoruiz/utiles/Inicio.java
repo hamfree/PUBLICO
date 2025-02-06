@@ -47,14 +47,14 @@ public class Inicio {
      * @return a map of String and Integer key/value pairs
      */
     private static Map<String, Integer> generateMap() {
-        HashMap<String, Integer> map = new HashMap<>();
-        map.put("One", 1);
-        map.put("Two", 2);
-        map.put("Three", 3);
-        map.put("Four", 4);
-        map.put("Five", 5);
-        map.put("Six", 6);
-        return map;
+        HashMap<String, Integer> theMap = new HashMap<>();
+        theMap.put("One", 1);
+        theMap.put("Two", 2);
+        theMap.put("Three", 3);
+        theMap.put("Four", 4);
+        theMap.put("Five", 5);
+        theMap.put("Six", 6);
+        return theMap;
     }
 
     /**

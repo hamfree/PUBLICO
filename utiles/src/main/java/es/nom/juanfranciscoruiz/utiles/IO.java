@@ -38,7 +38,7 @@ public class IO {
      * Character indicating the end of an object's contents in its textual 
      * representation when passed through a converter function.
      */
-    private static final String CHAR_FIN = "]";
+    private static final String CHAR_END = "]";
     /**
      * Item separator character of values of an collection type object when 
      * passed through a converter function.
@@ -219,17 +219,17 @@ public class IO {
      * @throws java.lang.Exception In case any error occurs.
      */
     public static String read() throws Exception {
-        String dato;
+        String data;
 
         Console con = System.console();
         if (con == null) {
             try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
-                dato = sc.nextLine();
+                data = sc.nextLine();
             }
         } else {
-            dato = con.readLine();
+            data = con.readLine();
         }
-        return dato;
+        return data;
     }
 
     /**
@@ -258,10 +258,10 @@ public class IO {
                 sb.append(getLS())
                         .append(line(character, length))
                         .append(getLS());
-                int relleno = (length - longMsg) / 2;
-                sb.append(repeatCharacter(' ', relleno))
+                int padding = (length - longMsg) / 2;
+                sb.append(repeatCharacter(' ', padding))
                         .append(msg)
-                        .append(repeatCharacter(' ', relleno));
+                        .append(repeatCharacter(' ', padding));
                 sb.append(getLS()).
                         append(line(character, length));
             } else {
@@ -364,8 +364,8 @@ public class IO {
      *
      * @return a constant chain
      */
-    public static String getCHAR_FIN() {
-        return CHAR_FIN;
+    public static String getCHAR_END() {
+        return CHAR_END;
     }
 
     /**

@@ -1,8 +1,5 @@
 package es.nom.juanfranciscoruiz.utiles.exception;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 /**
  * Thrown to indicate that the TypeConverter class has attempted to extract 
  * from a string a Long or Double object, but that the string does not have the 
@@ -11,6 +8,8 @@ import java.io.PrintWriter;
  * @author juanf
  */
 public class TypeConverterException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
 
     public TypeConverterException() {
     }

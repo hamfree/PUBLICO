@@ -53,11 +53,7 @@ public class Types {
                 logger.debug("It is an array");
                 logger.debug("Is it empty? {}", String.valueOf(l > 0));
             }
-            if (l > 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return l <= 0;
         } else {
             Class<?>[] interfaces = obj.getClass().getInterfaces();
             for (int i = 0; i < interfaces.length; i++) {

@@ -15,10 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility that converts some types of objects into others, extracts numeric 
- * values ​​from a string and converts bytes and characters to their hexadecimal 
+ * Utility that converts some types of objects into others, extracts numeric
+ * values ​​from a string and converts bytes and characters to their hexadecimal
  * representation.
- * 
+ *
  * @author hamfree
  */
 public class TypeConverter {
@@ -45,13 +45,13 @@ public class TypeConverter {
     }
 
     /**
-     * Converts a generic map into a generic list (losing the keys, and 
+     * Converts a generic map into a generic list (losing the keys, and
      * obtaining the values)
      *
      * @param <T> El tipo genérico tanto del mapa como de la lista
      * @param clazz la clase del tipo genérico T
      * @param m El mapa a convertir
-     * @return a list containing the contents of the converted map (their 
+     * @return a list containing the contents of the converted map (their
      * values).
      */
     public static <T> List<T> map2List(Class<? extends T> clazz, Map<String, Object> m) {
@@ -68,67 +68,61 @@ public class TypeConverter {
      *
      * @param src the string that can contain digits
      * @return a long from the existing digits in the string.
-     * @throws a TypeConverterException in case a NumberFormatException or 
+     * @throws TypeConverterException in case a NumberFormatException or
      * ParseException is generated when attempting the extraction.
      */
     public static Long extractLongFromString(String src) throws TypeConverterException {
-        Long numLargo = (long) -1;
+        Long theLong = (long) -1;
         try {
             if (src != null) {
                 // We 'sanitize' the input, because it may come with characters 
                 // that are not digits...
                 src = src.trim();
-                
+
                 // regular expression that only allows digits to pass
-                src = src.replaceAll("\\D+", ""); 
-                
+                src = src.replaceAll("(?=^-?)|(\\D+)", "");
+
                 // Makes the conversion
-                Number number = NumberFormat.getInstance().parse(src); 
-                numLargo = number.longValue();
+                theLong = Long.valueOf(src);
             }
 
-        } catch (NumberFormatException | ParseException ex) {
+        } catch (NumberFormatException ex) {
             logger.error(ex.getMessage());
             throw new TypeConverterException(ex.getMessage(), ex.getCause());
         }
-        return numLargo;
+        return theLong;
     }
 
     /**
      * Extracts a Double object from an arbitrary string
      *
-     * @param src a string that can contain digits that can be extracted to 
+     * @param src a string that can contain digits that can be extracted to
      * generate a Double object
      * @return a Double object if it can be extracted from the string
-     * @throws  a TypeConverterException in case a NumberFormatException or 
+     * @throws TypeConverterException in case a NumberFormatException or
      * ParseException is generated when attempting the extraction.
      */
     public static Double extractDoubleFromString(String src) {
-        Double numDecimal = Double.valueOf(-1);
+        Double theDouble = Double.valueOf(-1);
 
-        if (src != null) {
-            // We 'sanitize' the input, because it may come with characters 
-            // that are not digits, decimal separator o minus sign...
-            src = src.trim();
-            src = src.replaceAll("[^\\d.-]", "");
-
-            try {
+        try {
+            if (Types.isDouble(src)) {
                 // Makes the conversion
-                numDecimal = Double.valueOf(src);
-            } catch (NumberFormatException ex) {
-                logger.error(ex.getMessage());
-                throw new TypeConverterException(ex.getMessage(), ex.getCause());
+                theDouble = Double.parseDouble(src);
             }
+            return theDouble;
+        } catch (NumberFormatException ex) {
+            logger.error(ex.getMessage());
+            throw new TypeConverterException(ex.getMessage(), ex.getCause());
         }
-        return numDecimal;
     }
 
     /**
      * Returns a textual representation of an array.
      *
      * @param obj The matrix whose textual representation is desired.
-     * @return a string with the textual representation of the array or the
-     * NULL constant ("null") in case the array points to null.
+     * @return a string with the textual representation of the array or the NULL
+     * constant ("null") in case the array points to null.
      */
     public static String array2String(Object obj) {
         StringBuilder result;
@@ -150,7 +144,7 @@ public class TypeConverter {
                     result.append(IO.getSEP());
                 }
             }
-            result.append(IO.getCHAR_FIN());
+            result.append(IO.getCHAR_END());
         } else {
             return IO.getNULL();
         }
@@ -229,7 +223,7 @@ public class TypeConverter {
         byte lo = (byte) (c & 0xff);
         return byteToHex(hi) + byteToHex(lo);
     }
-    
+
     /**
      * Extracts the existing digits in a String and returns them in a string.
      *
@@ -238,7 +232,7 @@ public class TypeConverter {
      */
     public static String extractDigits(String src) {
         StringBuilder builder = new StringBuilder();
-        if (src == null || src.isBlank()){
+        if (src == null || src.isBlank()) {
             return builder.toString();
         }
         for (int i = 0; i < src.length(); i++) {
@@ -251,18 +245,17 @@ public class TypeConverter {
     }
 
     // Utility methods for array2String()
-    
     /**
-     * If the object passed is an array and is not null it will return true, 
+     * If the object passed is an array and is not null it will return true,
      * otherwise false
      *
      * @param obj An Object to check
-     * @return a boolean that will be true if the object is an array and is not null.
+     * @return a boolean that will be true if the object is an array and is not
+     * null.
      */
     private static boolean isNotNullArray(Object obj) {
         return obj != null && obj.getClass().isArray();
     }
-
 
     /**
      * Returns true if index is the last element
