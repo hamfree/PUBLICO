@@ -27,7 +27,7 @@ public class IOTest {
     public void testPrtNull() {
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.prt(null);
+            IO.prt((Object) null);
         });
         assertEquals(ERR_NULL, ex.getMessage(),"An IllegalArgumentException should be thrown with the message " + ERR_NULL);
     }
@@ -65,7 +65,7 @@ public class IOTest {
     @Test
     public void testPrtlnNull(){
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            IO.prtln(1, null);
+            IO.prtln(1, (Object) null);
         });
         assertEquals(ERR_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message" + ERR_NULL);
     }

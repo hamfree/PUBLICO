@@ -128,7 +128,7 @@ public class Util {
         } else {
             Class<?> clazz = obj.getClass();
             if (clazz.isAssignableFrom(ArrayList.class)) {
-                List<?> l = (List) obj;
+                List<?> l = (List<?>) obj;
                 if (showValues) {
                     sb.append("[");
                     if (l.size() < maxElements) {
@@ -150,7 +150,7 @@ public class Util {
                 }
 
             } else if (clazz.isAssignableFrom(java.util.HashMap.class)) {
-                Map<?, ?> m = (Map) obj;
+                Map<?, ?> m = (Map<?, ?>) obj;
                 if (showValues) {
                     sb.append("[");
                     if (m.size() < maxElements) {
