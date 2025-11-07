@@ -153,7 +153,7 @@ public class TypeConverterTest {
                 },
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
-                        String theString = "ItsNotADoubleValue";
+                        String theString = null;
                         Double actualValue = TypeConverter.extractDoubleFromString(theString);
                     });
                     if (logger.isDebugEnabled()) {
@@ -162,7 +162,7 @@ public class TypeConverterTest {
                 },
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
-                        String theString = String.valueOf(Double.MAX_VALUE + 1);
+                        String theString = "   ";
                         Double actualValue = TypeConverter.extractDoubleFromString(theString);
                     });
                     if (logger.isDebugEnabled()) {

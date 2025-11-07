@@ -19,7 +19,7 @@ public class IO {
     /**
      * Traces
      */
-    private static final Logger logger = LoggerFactory.getLogger(IO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IO.class);
 
     /**
      * Operating system line break character
@@ -129,16 +129,16 @@ public class IO {
     public static void prt(Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (args == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ERR_NULL);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(ERR_NULL);
             }
             throw new IllegalArgumentException(ERR_NULL);
         }
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
                 if (args[i] == null) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(ERR_NULL);
+                    if (LOGGER.isErrorEnabled()) {
+                        LOGGER.error(ERR_NULL);
                     }
                     throw new IllegalArgumentException(ERR_SOME_NULL);
                 }
@@ -165,16 +165,16 @@ public class IO {
     public static void prtln(int ls, Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (args == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ERR_NULL);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(ERR_NULL);
             }
             throw new IllegalArgumentException(ERR_NULL);
         }
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
                 if (args[i] == null) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(ERR_NULL);
+                    if (LOGGER.isErrorEnabled()) {
+                        LOGGER.error(ERR_NULL);
                     }
                     throw new IllegalArgumentException(ERR_SOME_NULL);
                 }
@@ -248,8 +248,8 @@ public class IO {
     public static String title(String msg, Character character, int length) {
         StringBuilder sb = new StringBuilder();
         if (Types.isNullOrEmpty(msg) || Types.isNullOrEmpty(character)) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ERR_PARAM);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         } else {
@@ -265,8 +265,8 @@ public class IO {
                 sb.append(getLS()).
                         append(line(character, length));
             } else {
-                if (logger.isErrorEnabled()) {
-                    logger.error(ERR_LONG);
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error(ERR_LONG);
                 }
                 throw new IllegalArgumentException(ERR_LONG);
             }
@@ -290,8 +290,8 @@ public class IO {
         if (character != null && length > 0) {
             line = repeatCharacter(character, length);
         } else {
-            if (logger.isErrorEnabled()) {
-                logger.error(ERR_PARAM);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         }
@@ -317,8 +317,8 @@ public class IO {
                 sb.append(character);
             }
         } else {
-            if (logger.isErrorEnabled()) {
-                logger.error(ERR_PARAM);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(ERR_PARAM);
             }
             throw new IllegalArgumentException(ERR_PARAM);
         }

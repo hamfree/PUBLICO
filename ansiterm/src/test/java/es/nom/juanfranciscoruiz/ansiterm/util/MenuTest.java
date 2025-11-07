@@ -6,11 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junitpioneer.jupiter.ReadsStdIo;
-import org.junitpioneer.jupiter.StdIn;
-import org.junitpioneer.jupiter.StdIo;
-import org.junitpioneer.jupiter.StdOut;
-import org.junitpioneer.jupiter.WritesStdIo;
 
 /**
  *

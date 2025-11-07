@@ -242,8 +242,7 @@ public class Menu {
         String respuesta;
         
         int opcMaxima = this.getOpciones().size() - 1;
-        Types t = new Types();
-        Long resp = 0L;
+        Long resp;
         System.out.println(msg);
         try {
             
@@ -251,7 +250,7 @@ public class Menu {
                     respuesta = sc.nextLine();
                 }
             if (!Types.isNullOrEmpty(respuesta)) {
-                if (t.isInteger(respuesta)){
+                if (Types.isInteger(respuesta)){
                     resp = TypeConverter.extractLongFromString(respuesta);
                     if (resp == -1L){
                         this.setMensaje("No ha indicado un número válido");

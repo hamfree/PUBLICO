@@ -11,6 +11,9 @@ import java.util.Map;
 import static es.nom.juanfranciscoruiz.utiles.Types.isArray;
 import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
 import es.nom.juanfranciscoruiz.utiles.exception.TypeConverterException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.RowFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,19 +105,28 @@ public class TypeConverter {
      * @throws TypeConverterException in case a NumberFormatException or
      * ParseException is generated when attempting the extraction.
      */
-    public static Double extractDoubleFromString(String src) {
-        Double theDouble = Double.valueOf(-1);
-
-        try {
-            if (Types.isDouble(src)) {
-                // Makes the conversion
-                theDouble = Double.parseDouble(src);
-            }
-            return theDouble;
-        } catch (NumberFormatException ex) {
-            logger.error(ex.getMessage());
-            throw new TypeConverterException(ex.getMessage(), ex.getCause());
+    public static Double extractDoubleFromString(String src) throws TypeConverterException {
+        Double theDouble = null;
+        String error;
+        if (src == null) {
+            error = "Parameter is null!";
+            logger.error(error);
+            throw new TypeConverterException(error);
         }
+
+        if (src.isBlank()) {
+            error = "Parameter is empty or only contain blank characters!";
+            logger.error(error);
+            throw new TypeConverterException(error);
+        }
+
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        Matcher matcher = pattern.matcher(src);
+
+        while (matcher.find()) {
+            theDouble = Double.valueOf(matcher.group());
+        }
+        return theDouble;
     }
 
     /**
