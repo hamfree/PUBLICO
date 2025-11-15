@@ -17,7 +17,11 @@ public class Inicio {
     public final static Logger logger = LoggerFactory.getLogger(Inicio.class);
 
     public static void main(String[] args) {
-        logger.info("Starting the application");
+        String sl = System.lineSeparator();
+        String msg = "1. Starting the application"; 
+        
+        print(msg);
+        
 
         HashMap<String, Integer> map = (HashMap<String, Integer>) generateMap();
 
@@ -25,20 +29,31 @@ public class Inicio {
 
         List<Integer> list2 = generateList(false);
 
-        HashMap<String, List<Integer>> map2 = (HashMap<String, List<Integer>>) generateMapOfLists(list1, list2);
+        HashMap<String, List<Integer>> map2 = 
+                (HashMap<String, List<Integer>>) generateMapOfLists(list1, list2);
 
-        System.out.println("Converting a simple map into its string representation.");
+        msg = "2. Converting a simple map into its string representation.";
+        
+        print(msg);
+        
         System.out.println(TypeConverter.map2String(map));
+        logger.debug(TypeConverter.map2String(map));
+        
         System.out.println();
-        System.out.println("Converting a map whose key/value pair consists of a "
-                + "string as key and a list of integers as values"
-                + " ​​to its textual representation.");
+        msg = "3. Converting a map whose key/value pair " + sl 
+                + "consists of a string as key and a list of integers " + sl 
+                + "as values to its textual representation." + sl;
+        
+        print(msg);
+        
         System.out.println(TypeConverter.map2String(map2));
-
         logger.debug(TypeConverter.map2String(map));
 
-        logger.info("End of application");
-
+        msg = "4. End of application" + sl;
+        
+        print(msg);
+        
+        System.exit(0);
     }
 
     /**
@@ -99,5 +114,10 @@ public class Inicio {
         theMap.put("list2", list2);
 
         return theMap;
+    }
+    
+    private static void print(String msg){
+        logger.debug(msg);
+        System.out.println(msg);
     }
 }

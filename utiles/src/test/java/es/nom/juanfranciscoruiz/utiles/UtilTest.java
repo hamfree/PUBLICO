@@ -97,7 +97,7 @@ public class UtilTest {
      * Test of CollectionToString method, of class C.
      */
     @Test
-    public void testCollectionToString() {
+    public void testCollectionAsString() {
         printTitle("testCollectionToString()");
 
         List<String> lista = new ArrayList<>();
@@ -110,14 +110,14 @@ public class UtilTest {
                 () -> {
                     logger.debug("Displays the first 10 items in the list...");
                     String expResult = stringExpectedFromList(lista, 10);
-                    String result = Util.CollectionToString(lista, true, 10);
+                    String result = Util.CollectionAsString(lista, true, 10);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should display at most 10 list items.");
                 },
                 () -> {
                     logger.debug("It should show the type and number of elements.");
                     String expResult = "java.util.ArrayList 36 items.";
-                    String result = Util.CollectionToString(lista, false, 1);
+                    String result = Util.CollectionAsString(lista, false, 1);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should show the type and number of elements.");
                 },
@@ -134,7 +134,7 @@ public class UtilTest {
                     mapa.put("6", array[6]);
                     mapa.put("7", array[7]);
                     String expResult = stringExpectedFromMap(mapa, 5);
-                    String result = Util.CollectionToString(mapa, true, 5);
+                    String result = Util.CollectionAsString(mapa, true, 5);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should display at most 5 pairs of map values.");
                 },
@@ -151,7 +151,7 @@ public class UtilTest {
                     mapa.put("6", array[6]);
                     mapa.put("7", array[7]);
                     String expResult = "java.util.HashMap 8 items.";
-                    String result = Util.CollectionToString(mapa, false, 2);
+                    String result = Util.CollectionAsString(mapa, false, 2);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should show the type and number of elements.");
                 },
@@ -159,7 +159,7 @@ public class UtilTest {
                     logger.debug("It should display at most 7 pairs of map values.");
                     Map<Integer, Integer> mapa = generateIntegerMap(15, 5, 10);
                     String expResult = stringExpectedFromMap(mapa, 7);
-                    String result = Util.CollectionToString(mapa, true, 7);
+                    String result = Util.CollectionAsString(mapa, true, 7);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should display at most 7 pairs of map values.");
                 }

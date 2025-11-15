@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
-import es.nom.juanfranciscoruiz.utiles.exception.TypeConverterException;
+import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

@@ -11,6 +11,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility to print to standard output and receive characters from the user 
  * through standard input.
+ * 
+ * TODO: Hacerla estática, y convertirla en un Singleton.
+ * Incluir más métodos que permita hacer más cosas, o mejor, generar una 
+ * interfaz IO y generar después una jerarquía de clases que la implementen: 
+ * una sencilla, como esta clase, otra que se apoye en la librería 'ansiterm' y
+ * que permita realizar operaciones más complejas en la pantalla, etc.
  *
  * @author hamfree
  */
@@ -135,8 +141,8 @@ public class IO {
             throw new IllegalArgumentException(ERR_NULL);
         }
         if (args.length > 0) {
-            for (int i = 0; i < args.length; i++) {
-                if (args[i] == null) {
+            for (Object arg : args) {
+                if (arg == null) {
                     if (LOGGER.isErrorEnabled()) {
                         LOGGER.error(ERR_NULL);
                     }
@@ -171,8 +177,8 @@ public class IO {
             throw new IllegalArgumentException(ERR_NULL);
         }
         if (args.length > 0) {
-            for (int i = 0; i < args.length; i++) {
-                if (args[i] == null) {
+            for (Object arg : args) {
+                if (arg == null) {
                     if (LOGGER.isErrorEnabled()) {
                         LOGGER.error(ERR_NULL);
                     }

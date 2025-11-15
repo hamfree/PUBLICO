@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static es.nom.juanfranciscoruiz.utiles.Types.isArray;
 import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
-import es.nom.juanfranciscoruiz.utiles.exception.TypeConverterException;
+import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.RowFilter;
