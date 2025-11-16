@@ -894,7 +894,7 @@ public class ANSITerm {
     }
 
     /**
-     * Combina varios estilos a la cadena que se le pase. <br/>
+     * Combina varios estilos a la cadena que se le pase. <br>
      * <b>NOTA: No todas las combinaciones de estilos</b> producirán los
      * resultados previstos en <i>algunos terminales</i>.
      *
