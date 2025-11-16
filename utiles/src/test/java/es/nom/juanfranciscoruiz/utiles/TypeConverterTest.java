@@ -108,7 +108,7 @@ public class TypeConverterTest {
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
                         String theString = "ItsNotALongValue";
-                        Long actualValue = TypeConverter.extractLongFromString(theString);
+                        TypeConverter.extractLongFromString(theString);
                     });
                     if (logger.isDebugEnabled()) {
                         logger.debug("TypeConverterException : " + ex.getMessage());
@@ -117,7 +117,7 @@ public class TypeConverterTest {
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
                         String theString = "9223372036854775808";
-                        Long actualValue = TypeConverter.extractLongFromString(theString);
+                        TypeConverter.extractLongFromString(theString);
                     });
                     if (logger.isDebugEnabled()) {
                         logger.debug("TypeConverterException : " + ex.getMessage());

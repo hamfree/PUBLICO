@@ -145,50 +145,50 @@ public class MenuTest {
      * Test of mostrar method, of class Menu.
      * @param out
      */
-//    @Test
-//    @ReadsStdIo
-//    @WritesStdIo
-//    @StdIo("")
-//    public void testMostrar(StdOut out) throws Exception {
-//        Menu instance = new Menu();
-//        instance.setTitulo("Título");
-//        instance.setMensaje("Mensaje");
-//        instance.setEsMenuInicio(true);
-//        instance.setOpciones(generaOpciones());
-//        instance.mostrar();
-//
-//        String expResult = """
-//                           
-//                           **********
-//                             T\u00edtulo  
-//                           **********
-//
-//                                                      
-//                           0. Salir de la aplicaci\u00f3n
-//                           1. Opci\u00f3n 1
-//                           2. Opci\u00f3n 2
-//                           3. Opci\u00f3n 3
-//                           
-//                           Mensaje
-//                           
-//                           """;
-//
-//        instance.mostrar();
-//        assertEquals(expResult, out.capturedString());
-//    }
-//
-//    /**
-//     * Test of esperarRespuesta method, of class Menu.
-//     */
-//    @Test
-//    @StdIo({"2"})
-//    public void testEsperarRespuesta(StdIn in) throws Exception {
-//        String msg = "";
-//        Menu instance = new Menu();
-//        Long expResult = 2L;
-//        assertEquals(expResult, instance.esperarRespuesta(msg));
-//
-//    }
+   @Test
+   @ReadsStdIo
+   @WritesStdIo
+   @StdIo("")
+   public void testMostrar(StdOut out) throws Exception {
+       Menu instance = new Menu();
+       instance.setTitulo("Título");
+       instance.setMensaje("Mensaje");
+       instance.setEsMenuInicio(true);
+       instance.setOpciones(generaOpciones());
+       instance.mostrar();
+
+       String expResult = """
+                          
+                          **********
+                            T\u00edtulo  
+                          **********
+
+                                                     
+                          0. Salir de la aplicaci\u00f3n
+                          1. Opci\u00f3n 1
+                          2. Opci\u00f3n 2
+                          3. Opci\u00f3n 3
+                          
+                          Mensaje
+                          
+                          """;
+
+       instance.mostrar();
+       assertEquals(expResult, out.capturedString());
+   }
+
+   /**
+    * Test of esperarRespuesta method, of class Menu.
+    */
+   @Test
+   @StdIo({"2"})
+   public void testEsperarRespuesta(StdIn in) throws Exception {
+       String msg = "";
+       Menu instance = new Menu();
+       Long expResult = 2L;
+       assertEquals(expResult, instance.esperarRespuesta(msg));
+
+   }
 
     /**
      * Test of toString method, of class Menu.

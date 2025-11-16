@@ -354,7 +354,7 @@ public class Menu {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Menu{");
-        sb.append("opciones=").append(Util.CollectionAsString(options, true, 10));
+        sb.append("opciones=").append(Util.CollectionToString(options, true, 10));
         sb.append(", titulo=").append(title);
         sb.append(", mensaje=").append(message);
         sb.append(", opcionSeleccionada=").append(selectedOption);

@@ -242,10 +242,9 @@ public class Menu {
         String respuesta;
         
         int opcMaxima = this.getOpciones().size() - 1;
-        Long resp;
+        Long resp = 0L;
         System.out.println(msg);
         try {
-            
             try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
                     respuesta = sc.nextLine();
                 }

@@ -1,8 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import java.lang.reflect.Array;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +11,6 @@ import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
 import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.RowFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

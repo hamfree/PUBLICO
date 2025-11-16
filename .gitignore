@@ -161,3 +161,15 @@ nbdist/
 .nb-gradle/
 **/nb-configuration.xml
 **/nbactions.xml
+ansiterm/.idea/compiler.xml
+ansiterm/.idea/dbnavigator.xml
+ansiterm/.idea/encodings.xml
+ansiterm/.idea/jarRepositories.xml
+ansiterm/.idea/misc.xml
+ansiterm/.idea/vcs.xml
+utiles/.idea/compiler.xml
+utiles/.idea/encodings.xml
+utiles/.idea/jarRepositories.xml
+utiles/.idea/misc.xml
+utiles/.idea/vcs.xml
+utiles/jshell.history
