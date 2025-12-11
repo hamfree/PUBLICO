@@ -5,23 +5,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.util.Scanner;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Make it static and convert it into a Singleton. Include more methods
+// that allow doing more things, or better yet, generate an I/O interface and
+// then generate a hierarchy of classes that implement it: a simple one, like
+// this class, another that relies on the 'ansiterm' library, and another that
+// allows performing more complex operations on the screen, etc.
+
 /**
- * Utility to print to standard output and receive characters from the user 
+ * Utility to print to standard output and receive characters from the user
  * through standard input.
- * 
- * TODO: Hacerla estática, y convertirla en un Singleton.
- * Incluir más métodos que permita hacer más cosas, o mejor, generar una 
- * interfaz IO y generar después una jerarquía de clases que la implementen: 
- * una sencilla, como esta clase, otra que se apoye en la librería 'ansiterm' y
- * que permita realizar operaciones más complejas en la pantalla, etc.
+ * <p>
  *
  * @author hamfree
  */
 public class IO {
-
     /**
      * Traces
      */
@@ -36,22 +37,22 @@ public class IO {
      */
     private static final String FS = FileSystems.getDefault().getSeparator();
     /**
-     * Character indicating the beginning of the content of an object in its 
+     * Character indicating the beginning of the content of an object in its
      * textual representation when passed through a converter function.
      */
     private static final String CHAR_INI = "[";
     /**
-     * Character indicating the end of an object's contents in its textual 
+     * Character indicating the end of an object's contents in its textual
      * representation when passed through a converter function.
      */
     private static final String CHAR_END = "]";
     /**
-     * Item separator character of values of an collection type object when 
+     * Item separator character of values of an collection type object when
      * passed through a converter function.
      */
     private static final String SEP = ", ";
     /**
-     * Constant representing the textual value of NULL when an object is 
+     * Constant representing the textual value of NULL when an object is
      * converted into its textual representation.
      */
     private static final String NULL = "null";
@@ -65,9 +66,9 @@ public class IO {
     private static final String ERR_LONG = "The line length is less than the message length";
 
     /**
-     * It is the same as an InputStream, which it extends and using the 
-     * Decorator pattern we make its close() method do nothing. With this we 
-     * avoid the problem of closing the standard input and not being able to 
+     * It is the same as an InputStream, which it extends and using the
+     * Decorator pattern we make its close() method do nothing. With this we
+     * avoid the problem of closing the standard input and not being able to
      * reopen it from the current process.
      */
     static class UnclosableInputStreamDecorator extends InputStream {
@@ -125,12 +126,12 @@ public class IO {
     }
 
     /**
-     * Prints the given arguments to standard output. It will attempt to use the 
+     * Prints the given arguments to standard output. It will attempt to use the
      * Console object, otherwise it will use the standard output channel.
      *
      * @param args a list of objects to print
-     * @throws IllegalArgumentException in case of passing null or incorrect 
-     * parameters.
+     * @throws IllegalArgumentException in case of passing null or incorrect
+     *                                  parameters.
      */
     public static void prt(Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -158,15 +159,15 @@ public class IO {
     }
 
     /**
-     * Prints the specified arguments to standard output. It will try to use the 
-     * Console object, otherwise it will use the standard output channel. After 
-     * printing the argument list it will make as many newlines as indicated in 
+     * Prints the specified arguments to standard output. It will try to use the
+     * Console object, otherwise it will use the standard output channel. After
+     * printing the argument list it will make as many newlines as indicated in
      * the sl parameter.
      *
-     * @param ls integer with the number of line breaks to perform
+     * @param ls   integer with the number of line breaks to perform
      * @param args a list of objects to print to standar output
-     * @throws IllegalArgumentException in case of passing null or incorrect 
-     * parameters.
+     * @throws IllegalArgumentException in case of passing null or incorrect
+     *                                  parameters.
      */
     public static void prtln(int ls, Object... args) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -186,7 +187,7 @@ public class IO {
                 }
             }
         }
-        
+
         for (Object arg : args) {
             sb.append(arg.toString());
         }
@@ -201,7 +202,7 @@ public class IO {
 
     /**
      * Prints the contents of the sb argument to standard output. It will try to
-     * use the Console object first. If it cannot use Console, it will use the 
+     * use the Console object first. If it cannot use Console, it will use the
      * standard output channel.
      *
      * @param sb StringBuilder object containing the text to print.
@@ -216,11 +217,11 @@ public class IO {
     }
 
     /**
-     * Retrieves a string of the user's input from standard input until the user 
-     * presses ENTER. It will first try to use the Console object, if it cannot 
+     * Retrieves a string of the user's input from standard input until the user
+     * presses ENTER. It will first try to use the Console object, if it cannot
      * use that, it will use the standard input System.in.
      *
-     * @return a string containing what the user has entered until the ENTER 
+     * @return a string containing what the user has entered until the ENTER
      * key is pressed.
      * @throws java.lang.Exception In case any error occurs.
      */
@@ -239,17 +240,17 @@ public class IO {
     }
 
     /**
-     * Generates a string containing a centered message (msg) as a title between 
-     * two lines of the length indicated by 'length' composed of the character 
+     * Generates a string containing a centered message (msg) as a title between
+     * two lines of the length indicated by 'length' composed of the character
      * 'character'.
      *
-     * @param msg the message of the title
+     * @param msg       the message of the title
      * @param character the character that makes up each line
-     * @param length the length of the line (must be greater than the length of 
-     * the message)
+     * @param length    the length of the line (must be greater than the length of
+     *                  the message)
      * @return a string with the message centered as a title between two lines
-     * @throws IllegalArgumentException in case of passing null or incorrect 
-     * parameters.
+     * @throws IllegalArgumentException in case of passing null or incorrect
+     *                                  parameters.
      */
     public static String title(String msg, Character character, int length) {
         StringBuilder sb = new StringBuilder();
@@ -281,15 +282,15 @@ public class IO {
     }
 
     /**
-     * Generates a line composed of the character 'car' that will be repeated as 
+     * Generates a line composed of the character 'car' that will be repeated as
      * many times as 'length' indicates
      *
      * @param character character to repeat
-     * @param length number of times to repeat the character 'character'
-     * @return String with the line composed of the characters 'car' repeated as 
+     * @param length    number of times to repeat the character 'character'
+     * @return String with the line composed of the characters 'car' repeated as
      * many times as indicated by the 'length' parameter.
-     * @throws IllegalArgumentException in case of passing null or incorrect 
-     * parameters.
+     * @throws IllegalArgumentException in case of passing null or incorrect
+     *                                  parameters.
      */
     public static String line(Character character, int length) {
         String line;
@@ -305,15 +306,15 @@ public class IO {
     }
 
     /**
-     * Generates a string consisting of the character <code>character</code> as 
+     * Generates a string consisting of the character <code>character</code> as
      * many times as indicated by <code>times</code>.
      *
      * @param character the character with which the string will be composed
-     * @param times the number of times the character is repeated in the string
-     * @return a string with the character <code>character</code> repeated as 
+     * @param times     the number of times the character is repeated in the string
+     * @return a string with the character <code>character</code> repeated as
      * many times as indicated by <code>times</code>
-     * @throws IllegalArgumentException in case of passing null or incorrect 
-     * parameters.
+     * @throws IllegalArgumentException in case of passing null or incorrect
+     *                                  parameters.
      */
     public static String repeatCharacter(Character character, int times) {
         StringBuilder sb = new StringBuilder();
@@ -332,8 +333,9 @@ public class IO {
     }
 
     //Getters y Setters
+
     /**
-     * Returns LS, a constant containing the line feed control character of the 
+     * Returns LS, a constant containing the line feed control character of the
      * current operating system.
      *
      * @return a constant chain
@@ -343,7 +345,7 @@ public class IO {
     }
 
     /**
-     * Returns FS, a constant containing the path separator character of the 
+     * Returns FS, a constant containing the path separator character of the
      * current operating system.
      *
      * @return a constant chain
@@ -353,8 +355,8 @@ public class IO {
     }
 
     /**
-     * Returns CHAR_INI, a constant containing the character that indicates the 
-     * beginning of the contents of an object in its textual representation when 
+     * Returns CHAR_INI, a constant containing the character that indicates the
+     * beginning of the contents of an object in its textual representation when
      * passed through a converter function.
      *
      * @return a constant chain
@@ -364,8 +366,8 @@ public class IO {
     }
 
     /**
-     * Returns CHAR_END, a constant containing the character that indicates the 
-     * end of the contents of an object in its textual representation when 
+     * Returns CHAR_END, a constant containing the character that indicates the
+     * end of the contents of an object in its textual representation when
      * passed through a converter function.
      *
      * @return a constant chain
@@ -375,7 +377,7 @@ public class IO {
     }
 
     /**
-     * Returns SEP, the item separator of values of an collection type object when 
+     * Returns SEP, the item separator of values of an collection type object when
      * passed through a converter function.
      *
      * @return a constant chain
@@ -385,7 +387,7 @@ public class IO {
     }
 
     /**
-     * Returns NULL, a constant representing the null value when an object is 
+     * Returns NULL, a constant representing the null value when an object is
      * converted into its textual representation.
      *
      * @return a constant chain
