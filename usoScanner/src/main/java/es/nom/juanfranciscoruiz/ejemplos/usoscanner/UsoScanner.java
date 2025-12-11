@@ -1,5 +1,6 @@
 package es.nom.juanfranciscoruiz.ejemplos.usoscanner;
 
+import es.nom.juanfranciscoruiz.ejemplos.usoscanner.opciones.*;
 import es.nom.juanfranciscoruiz.utiles.IO;
 import es.nom.juanfranciscoruiz.utiles.Menu;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
@@ -7,8 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author juanf
+ * Entrada de la aplicación. Clase que muestra los distintos enfoques a la
+ * hora de utilizar Scanner en un programa y como controlar la terminación
+ * de las entradas del usuario en un bucle. Cada 'forma' de controlar la
+ * terminación se ha implementado en una clase independiente del paquete
+ * 'opciones'.
+ * NOTA: este código es una adaptación del proyecto original asociado al
+ * artículo en Baeldung que puedes encontrar en:
+ * <a href="https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-io-8">...</a>
  */
 public class UsoScanner {
 
@@ -57,21 +64,11 @@ public class UsoScanner {
       }
       int opcionElegida = menu.getSelectedOption().intValue();
       switch (opcionElegida) {
-        case 1 -> {
-          ejecutaSampleScanner(opciones.get(1));
-        }
-        case 2 -> {
-          ejecutaSampleScannerScan(opciones.get(2));
-        }
-        case 3 -> {
-          ejecutaEOFEXample(opciones.get(3));
-        }
-        case 4 -> {
-          ejecutaSampleScannerSentinel(opciones.get(4));
-        }
-        case 5 -> {
-          ejecutaDoWhileScanner(opciones.get(5));
-        }
+        case 1 -> ejecutaSampleScanner(opciones.get(1));
+        case 2 -> ejecutaSampleScannerScan(opciones.get(2));
+        case 3 -> ejecutaEOFEXample(opciones.get(3));
+        case 4 -> ejecutaSampleScannerSentinel(opciones.get(4));
+        case 5 -> ejecutaDoWhileScanner(opciones.get(5));
         default -> {
           if (opcionElegida != 0) {
             IO.prt("Opción no reconocida");
@@ -86,40 +83,52 @@ public class UsoScanner {
   public void ejecutaSampleScanner(String msgOpcion) throws Exception {
     limpiaPantalla();
     IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    SampleScanner obj = new SampleScanner();
+    obj.ejecuta();
     pulsaIntroParaContinuar();
   }
 
   public void ejecutaSampleScannerScan(String msgOpcion) throws Exception {
     limpiaPantalla();
     IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    SampleScannerScan obj = new SampleScannerScan();
+    obj.ejecuta();
     pulsaIntroParaContinuar();
   }
 
   public void ejecutaEOFEXample(String msgOpcion) throws Exception {
     limpiaPantalla();
     IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    EOFExample obj = new EOFExample();
+    obj.ejecuta();
     pulsaIntroParaContinuar();
   }
 
   public void ejecutaDoWhileScanner(String msgOpcion) throws Exception {
     limpiaPantalla();
     IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    DoWhileScanner obj = new DoWhileScanner();
+    obj.ejecuta();
     pulsaIntroParaContinuar();
   }
 
   public void ejecutaSampleScannerSentinel(String msgOpcion) throws Exception {
     limpiaPantalla();
     IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    SampleScannerSentinel obj = new SampleScannerSentinel();
+    obj.ejecuta();
     pulsaIntroParaContinuar();
   }
 
   /* Métodos de utilidad */
   /**
-   * Manera cutre de limpiar la pantalla...
+   * Uso de códigos ANSI para limpiar la pantalla.
    */
   private static void limpiaPantalla() {
-    /**
+    /*
      * Borra toda la pantalla
+     * (tomado de otro proyecto mío, 'ansiterm'), pero NO mueve el cursor a la
+     * posición 0,0 del terminal.
      */
     final String ESC = "\033";
     final String BOR_PAN = ESC + "[2J";
