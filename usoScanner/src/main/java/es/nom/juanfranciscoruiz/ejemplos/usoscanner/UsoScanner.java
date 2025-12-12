@@ -82,7 +82,7 @@ public class UsoScanner {
 
   public void ejecutaSampleScanner(String msgOpcion) throws Exception {
     limpiaPantalla();
-    IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    IO.prtln(2, IO.title(msgOpcion, '*', msgOpcion.length() + 8));
     SampleScanner obj = new SampleScanner();
     obj.ejecuta();
     pulsaIntroParaContinuar();
@@ -90,7 +90,7 @@ public class UsoScanner {
 
   public void ejecutaSampleScannerScan(String msgOpcion) throws Exception {
     limpiaPantalla();
-    IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    IO.prtln(2, IO.title(msgOpcion, '*', msgOpcion.length() + 8));
     SampleScannerScan obj = new SampleScannerScan();
     obj.ejecuta();
     pulsaIntroParaContinuar();
@@ -98,7 +98,7 @@ public class UsoScanner {
 
   public void ejecutaEOFEXample(String msgOpcion) throws Exception {
     limpiaPantalla();
-    IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    IO.prtln(2, IO.title(msgOpcion, '*', msgOpcion.length() + 8));
     EOFExample obj = new EOFExample();
     obj.ejecuta();
     pulsaIntroParaContinuar();
@@ -106,7 +106,7 @@ public class UsoScanner {
 
   public void ejecutaDoWhileScanner(String msgOpcion) throws Exception {
     limpiaPantalla();
-    IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    IO.prtln(2, IO.title(msgOpcion, '*', msgOpcion.length() + 8));
     DoWhileScanner obj = new DoWhileScanner();
     obj.ejecuta();
     pulsaIntroParaContinuar();
@@ -114,7 +114,7 @@ public class UsoScanner {
 
   public void ejecutaSampleScannerSentinel(String msgOpcion) throws Exception {
     limpiaPantalla();
-    IO.prt(IO.title(msgOpcion, '*', msgOpcion.length() + 8));
+    IO.prtln(2, IO.title(msgOpcion, '*', msgOpcion.length() + 8));
     SampleScannerSentinel obj = new SampleScannerSentinel();
     obj.ejecuta();
     pulsaIntroParaContinuar();
