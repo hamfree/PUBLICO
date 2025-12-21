@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,6 @@ public class Inicio {
         msg = "2. Converting a simple map into its string representation.";
         print(msg);
         print(TypeConverter.map2String(map));
-        logger.debug(TypeConverter.map2String(map));
 
         print(sl);
         msg = "3. Converting a map whose key/value pair " + sl
@@ -75,6 +75,7 @@ public class Inicio {
         System.exit(0);
     }
 
+    //Utility methods for main()
     /**
      * Generates a map of String and Integer key/value pairs
      *
@@ -141,7 +142,7 @@ public class Inicio {
      * @param msg the string to print
      */
     private static void print(String msg) {
-        logger.debug(msg);
-        System.out.println(msg);
+        if(logger.isDebugEnabled()) logger.debug(msg);
+        IO.prt(msg);
     }
 }

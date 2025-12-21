@@ -7,10 +7,12 @@
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <exec.mainClass>es.nom.juanfranciscoruiz.utiles.Inicio</exec.mainClass>
         <maven.compiler.release>21</maven.compiler.release>
-        <logback.version>1.5.21</logback.version>
-        <slf4j.version>2.0.17</slf4j.version>
+        <logback.version>1.5.16</logback.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <junit.version>5.11.4</junit.version>
     </properties>
     
     <dependencyManagement>
@@ -18,7 +20,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.10.1</version>
+                <version>${junit.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -109,6 +111,11 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.12.0</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -128,9 +135,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <file>utiles</file>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -170,7 +174,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <id>enforce-env-requirements</id>
@@ -185,7 +188,7 @@
                             <version>[21,)</version>
                         </requireJavaVersion>
                         <requireMavenVersion>
-                            <version>[3.6,)</version>
+                            <version>[3.6.3,)</version>
                         </requireMavenVersion>
                     </rules>
                 </configuration>
@@ -193,13 +196,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>5.10.2</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
@@ -207,10 +203,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
-                <configuration>
-                    
-                </configuration>
             </plugin>
         </plugins>
     </build>

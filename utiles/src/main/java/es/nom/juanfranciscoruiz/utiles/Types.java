@@ -4,17 +4,18 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility class for type checking
- *
- * @author hamfree
+ * Utility class for type checking and validation.
  */
 public class Types {
 
+    /**
+     * For debugging.
+     */
     private static final Logger logger = LoggerFactory.getLogger(Types.class.getName());
 
     /**
@@ -33,13 +34,13 @@ public class Types {
         } else if (obj.getClass().isAssignableFrom(Object.class)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("It is of type Object");
-                logger.debug("Is its value null? {}", String.valueOf(Objects.isNull(obj)));
+                logger.debug("Is its value null? {}", false);
             }
-            return Objects.isNull(obj);
+            return false;
         } else if (obj.getClass().isAssignableFrom(String.class)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("It is of type String");
-                logger.debug("Is it empty? {}",String.valueOf(obj.toString().isEmpty()));
+                logger.debug("Is it empty? {}", obj.toString().isEmpty());
             }
             return obj.toString().isEmpty();
         } else if (obj.getClass().isPrimitive()) {
@@ -51,25 +52,25 @@ public class Types {
             int l = Array.getLength(obj);
             if (logger.isDebugEnabled()) {
                 logger.debug("It is an array");
-                logger.debug("Is it empty? {}", String.valueOf(l > 0));
+                logger.debug("Is it empty? {}", l > 0);
             }
             return l <= 0;
         } else {
             Class<?>[] interfaces = obj.getClass().getInterfaces();
-            for (int i = 0; i < interfaces.length; i++) {
-                if (interfaces[i].equals(List.class)) {
+            for (Class<?> anInterface : interfaces) {
+                if (anInterface.equals(List.class)) {
                     Collection<?> col = (Collection<?>) obj;
                     if (logger.isDebugEnabled()) {
                         logger.debug("Implements the List interface");
-                        logger.debug("Is it empty? {}", String.valueOf(col.isEmpty()));
+                        logger.debug("Is it empty? {}", col.isEmpty());
                     }
                     return col.isEmpty();
                 }
-                if (interfaces[i].equals(Map.class)) {
+                if (anInterface.equals(Map.class)) {
                     Map<?, ?> col = (Map<?, ?>) obj;
                     if (logger.isDebugEnabled()) {
                         logger.debug("Implements the Map interface");
-                        logger.debug("Is it empty? {}", String.valueOf(col.isEmpty()));
+                        logger.debug("Is it empty? {}", col.isEmpty());
                     }
                     return col.isEmpty();
                 }
@@ -134,7 +135,7 @@ public class Types {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -153,7 +154,7 @@ public class Types {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**

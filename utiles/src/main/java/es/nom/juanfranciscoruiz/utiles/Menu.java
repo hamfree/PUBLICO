@@ -2,6 +2,10 @@ package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,22 +15,27 @@ import java.util.Scanner;
  * It's the representation of an options menu, capable of generating a view of
  * this menu for output devices or streams and for obtaining the user's
  * response.
- *
- * TODO: Save the entire generated menu as a String using a method and delegate
- * its printing outside the class (to the IO class, for example, or the standard
- * Java API). Proceed in the same way with the user's option selection. Use the
- * IO class or a class from the standard Java API for the input itself.
- *
+ * <p>
  * When you want to display the menu, assuming the Menu instance is called
  * principalMenu, it would look something like this:
- *
+ * <p>
  * IO io = new IO(); io.prt(principalMenu.getMenuView());
- *
- * Translate it into English... :-/
  *
  * @author juanf
  */
+//TODO: Convert the Menu class into a class that can manage a menu hierarchy,
+// where there will be a main menu from which all other menus will branch. There
+// will only be one main menu. The Menu class itself will have another Menu
+// object as an attribute to implement the menu hierarchy. The main menu will
+// have a null value for its menu attribute. The other menus will have a
+// reference to their parent menu as the value of their menu attributes.
 public class Menu {
+
+    // Properties
+    /**
+     * For debugging.
+     */
+    private final static Logger logger = LoggerFactory.getLogger(Menu.class);
 
     /**
      * The list of options from menu.
@@ -62,6 +71,9 @@ public class Menu {
      */
     private String menuView;
 
+    /**
+     * Constants for default values and error messages used in the Menu class.
+     */
     private static final String NOTITLE = "Untitled";
     private static final String EXITOPT = "0. Exit the application";
     private static final String DEFAULTMSG = "Make your selection:";
@@ -69,8 +81,10 @@ public class Menu {
     private static final String ERR_NONUMBER = "What was entered is not a number.";
     private static final String ERR_NOTVALIDNUMBER = "You have not entered a valid number.";
     private static final String ERR_NUMBEROUTOFRANGE = "The selected option is outside the allowed range";
+    private static final String ERR_NOOPTIONS = "There are no defined options in this menu";
     private static final Long WRONGOPTION = -1L;
 
+    // Constructors
     /**
      * Instantiate a Menu object
      */
@@ -85,16 +99,16 @@ public class Menu {
     /**
      * Instantiate a Menu object with the specified parameters
      *
-     * @param options A list of options
-     * @param title A string with the menu title
-     * @param message A string containing the message that will be displayed
-     * below the list of options
+     * @param options    A list of options
+     * @param title      A string with the menu title
+     * @param message    A string containing the message that will be displayed
+     *                   below the list of options
      * @param isHomeMenu Boolean indicating whether it is the application's main
-     * menu, which will add the option "0. Exit the application" to the options
-     * property.
+     *                   menu, which will add the option "0. Exit the application" to the options
+     *                   property.
      */
-    public Menu(List<String> options, String title, String message, 
-            boolean isHomeMenu) {
+    public Menu(List<String> options, String title, String message,
+                boolean isHomeMenu) {
         if (options != null && !options.isEmpty()) {
             this.options = options;
         } else {
@@ -105,19 +119,16 @@ public class Menu {
         } else {
             this.title = NOTITLE;
         }
-        if (message != null && !message.isEmpty()) {
-            this.message = message;
-        } else {
-            this.message = message;
-        }
+        this.message = message;
 
         this.isHomeMenu = isHomeMenu;
         if (this.isHomeMenu) {
-            this.options.add(0, EXITOPT);
+            this.options.addFirst(EXITOPT);
         }
 
     }
 
+    //Getters and Setters
     /**
      * Gets the list of menu options
      *
@@ -135,7 +146,7 @@ public class Menu {
     public void setOptions(List<String> options) {
         this.options = options;
         if (this.isHomeMenu) {
-            this.options.add(0, EXITOPT);
+            this.options.addFirst(EXITOPT);
         }
     }
 
@@ -211,19 +222,24 @@ public class Menu {
      * added as the first option in the list of options.
      *
      * @param isHomeMenu boolean, if true it indicates that the current menu is
-     * the main menu of the application and false otherwise.
+     *                   the main menu of the application and false otherwise.
      */
     public void setIsHomeMenu(boolean isHomeMenu) {
-        //TODO: If set to false, you will need to check if it has the option
-        // "0. Exit the application" and remove it.
         this.isHomeMenu = isHomeMenu;
+        if (this.options == null) {
+            this.options = new ArrayList<>();
+        }
+
         if (this.isHomeMenu) {
-            this.options.add(0, EXITOPT);
+            this.options.addFirst(EXITOPT);
+        } else {
+            this.options.remove(EXITOPT);
         }
     }
 
     /**
      * Returns the string containing the contents of the menuView property
+     *
      * @return a string containing the menu content in text form
      */
     public String getMenuView() {
@@ -232,18 +248,19 @@ public class Menu {
 
     /**
      * Sets the value of menuView as the value for the menuView property
-     * 
-     * @param menuView a string with the content to be set (although it can be 
-     * any content, logically it should be the textual representation of a 
-     * menu).
+     *
+     * @param menuView a string with the content to be set (although it can be
+     *                 any content, logically it should be the textual representation of a
+     *                 menu).
      */
     public void setMenuView(String menuView) {
         this.menuView = menuView;
     }
 
+    // Methods
     /**
-     * Generates a text representation in String format of the menu in its 
-     * current state in the menuView attribute. This property can then be 
+     * Generates a text representation in String format of the menu in its
+     * current state in the menuView attribute. This property can then be
      * displayed to standard output or in a stream by another client class.
      */
     public void generateMenuView() {
@@ -253,16 +270,12 @@ public class Menu {
 
         sb.append(LS);
         int longitud = this.getTitle().length();
-        for (int i = 0; i < longitud + 5; i++) {
-            sb.append("*");
-        }
+        sb.append("*".repeat(Math.max(0, longitud + 5)));
 
         sb.append(LS);
         sb.append("  ").append(this.getTitle()).append("  ");
         sb.append(LS);
-        for (int i = 0; i < longitud + 5; i++) {
-            sb.append("*");
-        }
+        sb.append("*".repeat(Math.max(0, longitud + 5)));
 
         String tit = sb.toString();
         sbMenuView
@@ -280,65 +293,80 @@ public class Menu {
     }
 
     /**
-     * It awaits the user's response, setting their response in the 
-     * <code>optionSelected</code> property as a long, or the value -1 if an error 
-     * occurs. This method handles errors, throwing a MenuException in the 
+     * It awaits the user's response, setting their response in the
+     * <code>optionSelected</code> property as a long, or the value -1 if an error
+     * occurs. This method handles errors, throwing a MenuException in the
      * following cases:
      * <ul>
      * <li>Entered value is not a number.</li>
      * <li>Entered value is a number, but outside the range of the options list.</li>
      * <li>Enter is pressed directly.</li>
+     * <li>The options property are empty.</li>
+     * <li>The menuview property is empty.</li>
      * </ul>
-     * 
-     * It also sets the 'message' field with the error message, so that the 
+     * <p>
+     * It also sets the 'message' field with the error message, so that the
      * display() method can then display it on the screen.
-     * 
-     * @param msg An optional string with the text to be printed to the left of 
-     * the user prompt. If nothing is specified, the phrase "Make your 
-     * selection: " will be printed.
-     * 
-     * @throws es.nom.juanfranciscoruiz.utiles.exceptions.MenuException In case 
-     * an error is detected.
+     *
+     * @param msg An optional string with the text to be printed to the left of
+     *            the user prompt. If nothing is specified, the phrase "Make your
+     *            selection: " will be printed.
+     * @throws es.nom.juanfranciscoruiz.utiles.exceptions.MenuException In case
+     *                                                                  an error is detected.
      */
     public void awaitResponse(String msg) throws MenuException {
+        /* We verify that the Menu object has at least one option declared and
+        that the menuView property has the textual representation of the menu.
+        If not, it will throw a MenuException.
+         */
+        if (this.getOptions().isEmpty()) {
+            if (logger.isErrorEnabled()) logger.error(ERR_NOOPTIONS);
+            throw new MenuException(ERR_NOOPTIONS);
+        }
+
         var resp = WRONGOPTION;
-        String respuesta = "";
+        String respuesta;
         int opcMaxima = this.getOptions().size() - 1;
 
         if (msg == null || msg.isEmpty()) {
             msg = DEFAULTMSG;
         }
 
-        System.out.println(msg);
+        IO.prt(msg);
 
         try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
             respuesta = sc.nextLine();
         } catch (Exception ex) {
+            if (logger.isErrorEnabled()) logger.error(ex.getMessage());
             throw new MenuException(ex.getMessage());
         }
 
         if (Types.isNullOrEmpty(respuesta)) {
             this.setMessage(ERR_BLANK_NULL);
+            if (logger.isErrorEnabled()) logger.error(ERR_BLANK_NULL);
             throw new MenuException(ERR_BLANK_NULL);
         }
 
         if (!Types.isInteger(respuesta)) {
             this.setMessage(ERR_NONUMBER);
+            if (logger.isErrorEnabled()) logger.error(ERR_NONUMBER);
             throw new MenuException(ERR_NONUMBER);
         }
-        
+
         try {
             resp = TypeConverter.extractLongFromString(respuesta);
             if (Objects.equals(resp, WRONGOPTION)) {
+                if (logger.isErrorEnabled()) logger.error(ERR_NOTVALIDNUMBER);
                 this.setMessage(ERR_NOTVALIDNUMBER);
-                resp = WRONGOPTION;
+                throw new MenuException(ERR_NOTVALIDNUMBER);
             } else if (resp < 0 || resp > opcMaxima) {
+                if (logger.isErrorEnabled()) logger.error(ERR_NUMBEROUTOFRANGE);
                 this.setMessage(ERR_NUMBEROUTOFRANGE);
-                resp = WRONGOPTION;
+                throw new MenuException(ERR_NUMBEROUTOFRANGE);
             }
         } catch (TypeConverterException ex) {
-            System.out.println(ex.getLocalizedMessage());
-            resp = WRONGOPTION;
+            if (logger.isErrorEnabled()) logger.error(ex.getMessage());
+            throw new MenuException(ex.getMessage());
         }
         this.setSelectedOption(resp);
     }

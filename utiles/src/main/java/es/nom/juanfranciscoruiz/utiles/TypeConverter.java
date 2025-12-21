@@ -11,15 +11,17 @@ import static es.nom.juanfranciscoruiz.utiles.Types.isNullOrEmpty;
 import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Utility that converts some types of objects into others, extracts numeric
- * values ​​from a string and converts bytes and characters to their hexadecimal
+ * values from a string and converts bytes and characters to their hexadecimal
  * representation.
  *
- * @author hamfree
+ * @author juruizf
  */
 public class TypeConverter {
 
@@ -188,7 +190,8 @@ public class TypeConverter {
     }
 
     /**
-     * Returns a textual representation of the map.
+     * Returns a textual representation of the map. This is util in toString()
+     * methods, for example.
      *
      * @param map A map of any two types
      * @return a string with the textual representation of the keys and values
@@ -213,7 +216,7 @@ public class TypeConverter {
      * @return a String with the hexadecimal representation of the byte
      */
     public static String byteToHex(byte b) {
-        char hexDigit[] = {
+        char[] hexDigit = {
             '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
         };

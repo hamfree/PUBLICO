@@ -10,8 +10,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.SortedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class with various utility methods frequently used by other classes in the
@@ -20,19 +18,11 @@ import org.slf4j.LoggerFactory;
  * @author hamfree
  */
 public class Util {
-
+    //Constructors
     /**
-     * For debugging.
+     * We prevent it from being instantiated (Utility class)
      */
-    private static final Logger logger = LoggerFactory.getLogger(Util.class);
-
-    final static String SL = IO.getLS();
-
-    /**
-     * We prevent it from being instantiated
-     */
-    private Util() {
-    }
+    private Util() {}
 
     /**
      * Returns in a map the existing CPUs on the PC, the free memory available
@@ -91,7 +81,7 @@ public class Util {
      */
     public static List<Charset> getAllCharsets() {
         SortedMap<String, Charset> sm;
-        ArrayList<Charset> al = null;
+        ArrayList<Charset> al;
         sm = Charset.availableCharsets();
         Iterator<Charset> it = sm.values().iterator();
         al = new ArrayList<>();
@@ -111,7 +101,7 @@ public class Util {
      * @param showValues boolean, if true, a string with the elements of the 
      * list or map will be returned. If false, a string with the type of object 
      * and the number of elements it contains will be returned.
-     * @param maxElements If values ​​are to be returned, sets the maximum number 
+     * @param maxElements If values are to be returned, sets the maximum number
      * of items whose textual representation will be returned in the string.
      * @return a string with the textual representation of the elements 
      * contained in the list or map or the type of the object and the number of 
@@ -133,11 +123,11 @@ public class Util {
                     sb.append("[");
                     if (l.size() < maxElements) {
                         for (Object o : l.toArray()) {
-                            sb.append("'").append(String.valueOf(o)).append("'").append(" ");
+                            sb.append("'").append(o).append("'").append(" ");
                         }
                     } else {
                         for (int i = 0; i < maxElements; i++) {
-                            sb.append("'").append(String.valueOf(l.get(i))).append("'").append(" ");
+                            sb.append("'").append(l.get(i)).append("'").append(" ");
                         }
                         sb.append(" ...");
                     }
@@ -145,7 +135,7 @@ public class Util {
                 } else {
                     sb.append(obj.getClass().getCanonicalName())
                             .append(" ")
-                            .append(String.valueOf(l.size()))
+                            .append(l.size())
                             .append(" items.");
                 }
 
@@ -154,16 +144,15 @@ public class Util {
                 if (showValues) {
                     sb.append("[");
                     if (m.size() < maxElements) {
-                        for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
-                            Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
-                            sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
+                        for (Map.Entry<?, ?> entry : m.entrySet()) {
+                            sb.append("{'").append(entry.getKey()).append("'->'").append(entry.getValue()).append("'}").append(" ");
                         }
                     } else {
                         int i = 0;
                         for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
                             if (i < maxElements) {
                                 Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
-                                sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
+                                sb.append("{'").append(e.getKey()).append("'->'").append(e.getValue()).append("'}").append(" ");
                                 i++;
                             } else {
                                 sb.append(" ...");
@@ -175,11 +164,11 @@ public class Util {
                 } else {
                     sb.append(obj.getClass().getCanonicalName())
                             .append(" ")
-                            .append(String.valueOf(m.size()))
+                            .append(m.size())
                             .append(" items.");
                 }
             } else {
-                sb.append(String.valueOf(obj));
+                sb.append(obj);
             }
         }
         return sb.toString();
