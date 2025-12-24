@@ -1,8 +1,9 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 import com.sun.jna.LastErrorException;
-import es.nom.juanfranciscoruiz.ansiterm.util.Menu;
+import es.nom.juanfranciscoruiz.utiles.Menu;
 import es.nom.juanfranciscoruiz.ansiterm.util.UnclosableInputStreamDecorator;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,28 +14,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clase que prueba las funcionalidades de la clase ANSITerm (Códigos ANSI)
- * Falta por probar la combinación de colores y estilos.
- *
- * @author juanf
+ * Main application class to demonstrate the functionality of the ANSITerm library.
+ * It provides a menu-driven interface to test various ANSI escape sequence features
+ * like cursor movement, text styles, colors, and more.
  */
 public class App {
 
     /**
-     * Instancia un objeto App
+     * Instantiates a new App object.
      */
     public App(){}
     
     /**
-     * Usado para las trazas
+     * Logger used for tracing and debugging.
      */
     public static final Logger logger = LoggerFactory.getLogger(App.class);
 
     /**
-     * Inicio de la aplicación
+     * Application entry point.
      * 
-     * @param args Matriz de cadenas que recibe del sistema operativo cuando 
-     * se ejecuta nuestro programa.
+     * @param args Command line arguments received from the operating system.
      */
     public static void main(String[] args) {
         logger.info("Inicio de la aplicación");
@@ -45,114 +44,123 @@ public class App {
             App app = new App();
             Menu menu = new Menu();
             List<String> opciones = new ArrayList<>();
-            long resp;
 
-            opciones.add("1. Test modo crudo consola");
-            opciones.add("2. Test recuperación posicion del cursor");
-            opciones.add("3. Test obtención tamaño de la pantalla");
-            opciones.add("4. Test dibujo de rectángulo");
-            opciones.add("5. Borrados de texto desde el cursor");
-            opciones.add("6. Estilos del texto");
-            opciones.add("7. Estilos múltiples del texto");
-            opciones.add("8. Colores del texto");
-            opciones.add("9. Paleta de 256 colores del texto");
-            opciones.add("10. Estilos del cursor");
-            opciones.add("11. Parpadeo del cursor");
-            opciones.add("12. Muestra movimiento del cursor");
-            menu.setEsMenuInicio(true);
-            menu.setTitulo("Test de la libreria ANSITerm");
-            
-            menu.setOpciones(opciones);
+            opciones.add("1. Raw console mode test");
+            opciones.add("2. Cursor position recovery test");
+            opciones.add("3. Screen size test");
+            opciones.add("4. Rectangle drawing test");
+            opciones.add("5. Text deletions from the cursor");
+            opciones.add("6. Text styles");
+            opciones.add("7. Multiple text styles");
+            opciones.add("8. Text colors");
+            opciones.add("9. Text palette of 256 colors");
+            opciones.add("10. Cursor styles");
+            opciones.add("11. Cursor blinking");
+            opciones.add("12. Shows cursor movement");
+            menu.setIsHomeMenu(true);
+            menu.setTitle("Testing the ANSITerm library");
+            menu.setOptions(opciones);
+            menu.generateMenuView();
 
             do {
                 term.clearScreen();
                 term.moveCursorToBegin();
-                if (menu.getMensaje().isEmpty()) {
-                    menu.setMensaje("Ejecutándose en ".concat(System.getProperty("os.name")));
+                if (menu.getMessage().isEmpty()) {
+                    menu.setMessage("Running on".concat(System.getProperty("os.name")));
                 }
-                
-                menu.mostrar();
-                resp = menu.esperarRespuesta(null);
-                if (resp == 1L) {
-                    menu.setMensaje("");
-                    app.habilitaModoRawTeclado(term);
-                } else if (resp == 2L) {
-                    menu.setMensaje("");
-                    app.recuperaPosicionCursor(term, 1L);
-                } else if (resp == 3L) {
-                    menu.setMensaje("");
-                    app.lineasYColumnasPantalla(term);
-                } else if (resp == 4L) {
-                    menu.setMensaje("");
-                    app.dibujaRectangulo(term);
-                } else if (resp == 5L) {
-                    menu.setMensaje("");
-                    app.borradosDesdeCursor(term);
-                } else if (resp == 6L) {
-                    menu.setMensaje("");
-                    app.estilos(term);
-                } else if (resp == 7L) {
-                    menu.setMensaje("");
-                    app.estilosMultiples(term);
-                } else if (resp == 8L) {
-                    menu.setMensaje("");
-                    app.colores(term);
-                } else if (resp == 9L) {
-                    menu.setMensaje("");
-                    app.colores256(term);
-                } else if (resp == 10L) {
-                    menu.setMensaje("");
-                    app.estilosDelCursor(term);
-                } else if (resp == 11L) {
-                    menu.setMensaje("");
-                    app.parpadeoDelCursor(term);
-                } else if (resp == 12L) {
-                    menu.setMensaje("");
-                    app.muestraMovimientoCursor(term, 200L);
-                } else {
-                    logger.warn("El usuario ha introducido {}", resp);
+                IO.prt(menu.getMenuView());
+                menu.awaitResponse("Please choose an option: ");
+                switch (menu.getSelectedOption().intValue()) {
+                    case 1 -> {
+                        menu.setMessage("");
+                        app.habilitaModoRawTeclado(term);
+                    }
+                    case 2 -> {
+                        menu.setMessage("");
+                        app.recuperaPosicionCursor(term, 1L);
+                    }
+                    case 3 -> {
+                        menu.setMessage("");
+                        app.lineasYColumnasPantalla(term);
+                    }
+                    case 4 -> {
+                        menu.setMessage("");
+                        app.dibujaRectangulo(term);
+                    }
+                    case 5 -> {
+                        menu.setMessage("");
+                        app.borradosDesdeCursor(term);
+                    }
+                    case 6 -> {
+                        menu.setMessage("");
+                        app.estilos(term);
+                    }
+                    case 7 -> {
+                        menu.setMessage("");
+                        app.estilosMultiples(term);
+                    }
+                    case 8 -> {
+                        menu.setMessage("");
+                        app.colores(term);
+                    }
+                    case 9 -> {
+                        menu.setMessage("");
+                        app.colores256(term);
+                    }
+                    case 10 -> {
+                        menu.setMessage("");
+                        app.estilosDelCursor(term);
+                    }
+                    case 11 -> {
+                        menu.setMessage("");
+                        app.parpadeoDelCursor(term);
+                    }
+                    case 12 -> {
+                        menu.setMessage("");
+                        app.muestraMovimientoCursor(term, 200L);
+                    }
+                    default -> logger.warn("The user has entered {}", menu.getSelectedOption());
                 }
-            } while (resp != 0L);
+            } while (menu.getSelectedOption() != 0L);
 
         } catch (Exception ex) {
             if (term != null){
                 term.resetScreen();
             }
             logger.error(ex.getMessage());
-            logger.info("La aplicación terminó de forma inesperada");
+            logger.info("The application ended unexpectedly.");
             System.out.println(ex.getMessage());
             System.exit(-1);
         } finally {
-            // Por si algo va mal ... y no dejar el terminal inútil.
+            // Just in case something goes wrong... and to avoid rendering the terminal useless.
             if (term != null) {
                 term.clearScreen();
                 term.moveCursorToBegin();
                 term.resetScreen();
             }
-            logger.info("Final de la aplicación");
+            logger.info("End of application");
             System.exit(0);
         }
     }
 
-    // Metodos de utilidad para mostrar las funcionalidades.
+    // Useful methods for displaying functionalities.
     /**
-     * Realiza una prueba de captación de teclas una vez habilitado el modo 
-     * 'raw' de la terminal. Muestra las teclas que se pulsan en un bucle hasta
-     * que se pulsa la tecla "q"
+     * Perform a keystroke capture test once the terminal's 'raw' mode is
+     * enabled. Display the keys pressed in a loop until the "q" key is pressed.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void habilitaModoRawTeclado(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Modo RAW del teclado ------------", 1, 1);
+        term.printAt("------------ Keyboard RAW mode ------------", 1, 1);
 
         try {
             pausa(2000L, null);
             term.getOsCall().enableRawMode();
 
-            term.printAt("Pulse teclas. Pulse 'q' para salir", 2, 1);
+            term.printAt("Press keys. Press 'q' to exit.", 2, 1);
             term.moveCursorToXY(3, 1);
             
             while (true) {
@@ -167,7 +175,6 @@ public class App {
             logger.error(String.valueOf(e.getErrorCode()));
             logger.error(e.getMessage());
             System.out.println(e.getMessage());
-            e.printStackTrace();
             System.exit(-1);
         } catch (IOException ex) {
             logger.error(ex.getMessage());
@@ -179,19 +186,18 @@ public class App {
     }
 
     /**
-     * Muestra en el terminal el movimiento del cursor con el retardo en milisegundos
-     * entre cada movimiento. La 'ruta' será un rectángulo teniendo en cuenta las
-     * dimensiones actuales del terminal.
+     * Displays the cursor movement in the terminal with the delay in
+     * milliseconds between each movement. The 'path' will be a rectangle,
+     * taking into account the current dimensions of the terminal.
      * 
-     * @param term Un objeto ANSITerm
-     * @param retardo  Un long con el retardo en milisegundos
-     * @throws Exception En caso de que se produzca algún error
+     * @param retardo The delay in milliseconds
+     * @throws Exception In case of any error
      */
     private void muestraMovimientoCursor(ANSITerm term, long retardo) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
         TerminalSize screenSize = term.getTerminalSize();
-        term.printAt("------------ Moviendo el cursor ------------", 1, 1);
+        term.printAt("------------ Moving the cursor ------------", 1, 1);
 
         term.moveCursorToBegin();
         for (int i = 0; i < screenSize.getLineas(); i++) {
@@ -214,18 +220,17 @@ public class App {
     }
 
     /**
-     * Va imprimiendo un carácter 'X' en cada posición de la terminal y por cada
-     * movimiento del cursor recupera su posición imprimiéndola en la última 
-     * línea de la terminal.
+     * It prints an 'X' character in each position of the terminal and for each movement
+     * of the cursor it recovers its position by printing it on the last line of the
+     * terminal.
      * 
-     * @param term Un objeto ANSITerm
-     * @param retardo Un long con el retardo en milisegundos
-     * @throws Exception En caso de que se produzca algún error
+     * @param retardo The delay in milliseconds
+     * @throws Exception In case of any error
      */
     private void recuperaPosicionCursor(ANSITerm term, long retardo) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------  Recuperando la posición del cursor ------------ ", 1, 1);
+        term.printAt("------------  Recovering the cursor position ------------ ", 1, 1);
         TerminalSize screenSize = term.getTerminalSize();
 
         term.cursorShow();
@@ -243,27 +248,27 @@ public class App {
                     System.out.println(e.getMessage());
                 }
                 pausaSinMensaje(retardo);
-                term.printAt("Posicion del cursor: columna : ", screenSize.getLineas() - 2, 1);
+                term.printAt("Cursor position: column : ", screenSize.getLineas() - 2, 1);
                 term.deleteFromCursorToEndLine();
-                term.printAt(p.getCol() + ", fila: " + p.getLin(), screenSize.getLineas() - 2, 31);
+                term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLineas() - 2, 31);
                 pausaSinMensaje(retardo);
             }
         }
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to the menu");
     }
 
     /**
-     * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception En caso de que se produzca algún error
+     * Draw a rectangle with asterisks that borders the screen
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void dibujaRectangulo(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
         TerminalSize ts = term.getTerminalSize();
 
-        term.printAt("------------ Impresion de texto en coordenadas específicas ------------", 1, 1);
-        term.printAt("Se va a dibujar un rectángulo en pantalla:", 2, 1);
+        term.printAt("------------ Printing text at specific coordinates ------------", 1, 1);
+        term.printAt("A rectangle will be drawn on the screen:", 2, 1);
         for (int col = 2; col < ts.getColumnas(); col++) {
             term.printAt("*", 3, col);
         }
@@ -277,13 +282,14 @@ public class App {
             term.printAt("*", linea, 2);
         }
 
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     /**
+     * Tests and displays the screen size (lines and columns).
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void lineasYColumnasPantalla(ANSITerm term) throws Exception {
 
@@ -291,247 +297,250 @@ public class App {
         while (!resp.equals("q")) {
             term.clearScreen();
             term.moveCursorToBegin();
-            term.printAt("------------ Tamaño de la pantalla ------------", 1, 1);
-            term.printAt("Pruebe a redimensionar la ventana de la terminal.", 2, 1);
-            term.printAt("Después pulse INTRO. Se mostrará el tamaño de la terminal.", 3, 1);
-            term.printAt("Pulse q y después INTRO para volver al menú", 4, 1);
+            term.printAt("------------ Screen size ------------", 1, 1);
+            term.printAt("Try resizing the terminal window.", 2, 1);
+            term.printAt("Then press ENTER. The terminal size will be displayed..", 3, 1);
+            term.printAt("Press q and then ENTER to return to the menu", 4, 1);
             term.printAt("> : ", 5, 1);
             Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in));
             resp = sc.nextLine();
             TerminalSize ts = term.getOsCall().getTerminalSize();
-            term.printAt("El tamaño de la pantalla es :"
+            term.printAt("The screen size is:"
                     + ts.getLineas()
-                    + " líneas y "
+                    + "lines and "
                     + ts.getColumnas()
-                    + " columnas.", ts.getLineas() - 2, 1);
+                    + " columns.", ts.getLineas() - 2, 1);
             pausa(0, null);
         }
 
     }
 
     /**
+     * Displays various text styles (bold, dim, italic, etc.) applicable to text.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void estilos(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos aplicables al texto ------------", 1, 1);
-
-        term.printAt(term.setBold("Frase en negrita"), 2, 10);
-        term.printAt(term.setDim("Frase atenuada"), 3, 10);
+        term.printAt("------------ Styles applicable to the text ------------", 1, 1);
+        term.printAt(term.setBold("Bold phrase"), 2, 10);
+        term.printAt(term.setDim("Attenuated phrase"), 3, 10);
         term.printAt(term.setItalic("Frase en cursiva"), 4, 10);
-        term.printAt(term.setBlink("Frase intermitente"), 5, 10);
-        term.printAt(term.setInverse("Frase con los colores invertidos"), 6, 10);
-        term.printAt(term.setHidden("Mensaje oculto"), 7, 10);
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        term.printAt(term.setBlink("Intermittent phrase"), 5, 10);
+        term.printAt(term.setInverse("Phrase with inverted colors"), 6, 10);
+        term.printAt(term.setHidden("Hidden message"), 7, 10);
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     /**
+     * Displays combinations of multiple text styles.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void estilosMultiples(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos múltiples  aplicables al texto ------------", 1, 1);
+        term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
 
-        // Negrita con otros estilos
-        String mensaje = "Frase en NEGRITA con varios estilos";
-        term.printAt("La frase siguiente estará en negrita y atenuada", 2, 5);
+        // Bold with other styles
+        String mensaje = "Bold phrase with various styles";
+        term.printAt("The following sentence will be in bold and dimmed", 2, 5);
         term.printAt(term.setStyles(true, true, false, false, false, false, false, mensaje), 3, 10);
-        term.printAt("La frase siguiente estará en negrita e itálica", 4, 5);
+        term.printAt("The following sentence will be in bold and italics", 4, 5);
         term.printAt(term.setStyles(true, false, true, false, false, false, false, mensaje), 5, 10);
-        term.printAt("La frase siguiente estará en negrita y subrayada", 6, 5);
+        term.printAt("The following sentence will be in bold and underlined", 6, 5);
         term.printAt(term.setStyles(true, false, false, true, false, false, false, mensaje), 7, 10);
-        term.printAt("La frase siguiente estará en negrita e intermitente", 8, 5);
+        term.printAt("The following sentence will be in bold and flashing", 8, 5);
         term.printAt(term.setStyles(true, false, false, false, true, false, false, mensaje), 9, 10);
-        term.printAt("La frase siguiente estará en negrita y con los colores invertidos", 10, 5);
+        term.printAt("The following sentence will be in bold and with inverted colors.", 10, 5);
         term.printAt(term.setStyles(true, false, false, false, false, true, false, mensaje), 11, 10);
-        term.printAt("La frase siguiente estará en negrita y tachada", 12, 5);
+        term.printAt("The following sentence will be in bold and struck through", 12, 5);
         term.printAt(term.setStyles(true, false, false, false, false, false, true, mensaje), 13, 10);
 
-        // Dim con otros estilos
-        mensaje = "Frase ATENUADA con varios estilos";
-        term.printAt("La frase siguiente estará atenuada y en negrita", 14, 5);
+        // Dim with other styles
+        mensaje = "ATTENUATED phrase with various styles";
+        term.printAt("The following sentence will be in bold and attenuated.", 14, 5);
         term.printAt(term.setStyles(true, true, false, false, false, false, false, mensaje), 15, 10);
-        term.printAt("La frase siguiente estará atenuada y en itálica", 16, 5);
+        term.printAt("The following sentence will be attenuated and in italics", 16, 5);
         term.printAt(term.setStyles(false, true, true, false, false, false, false, mensaje), 17, 10);
-        term.printAt("La frase siguiente estará atenuada y subrayada", 18, 5);
+        term.printAt("The following sentence will be highlighted and underlined", 18, 5);
         term.printAt(term.setStyles(false, true, false, true, false, false, false, mensaje), 19, 10);
-        term.printAt("La frase siguiente estará atenuada e intermitente", 20, 5);
+        term.printAt("The following sentence will be dimmed and intermittent.", 20, 5);
         term.printAt(term.setStyles(false, true, false, false, true, false, false, mensaje), 21, 10);
-        term.printAt("La frase siguiente estará atenuada y con los colores invertidos", 22, 5);
+        term.printAt("The following sentence will be dimmed and with inverted colors.", 22, 5);
         term.printAt(term.setStyles(false, true, false, false, false, true, false, mensaje), 23, 10);
-        term.printAt("La frase siguiente estará atenuada y tachada", 24, 5);
+        term.printAt("The following sentence will be grayed out and crossed out", 24, 5);
         term.printAt(term.setStyles(false, true, false, false, false, false, true, mensaje), 25, 10);
 
         pausa(0, null);
         term.clearScreen();
-        term.printAt("------------ Estilos múltiples  aplicables al texto ------------", 1, 1);
+        term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
         
-        // Cursiva con otros estilos
-        mensaje = "Frase en CURSIVA con varios estilos";
-        term.printAt("La frase siguiente estará en italica y atenuada", 2, 5);
+        // Italic with other styles
+        mensaje = "Phrase in CURSIVE with various styles";
+        term.printAt("The following sentence will be in italics and attenuated.", 2, 5);
         term.printAt(term.setStyles(false, true, true, false, false, false, false, mensaje), 3, 10);
-        term.printAt("La frase siguiente estará en italica y negrita", 4, 5);
+        term.printAt("The following sentence will be in italics and bold.", 4, 5);
         term.printAt(term.setStyles(true, false, true, false, false, false, false, mensaje), 5, 10);
-        term.printAt("La frase siguiente estará en italica y subrayada", 6, 5);
+        term.printAt("The following sentence will be in italics and underlined", 6, 5);
         term.printAt(term.setStyles(false, false, true, true, false, false, false, mensaje), 7, 10);
-        term.printAt("La frase siguiente estará en italica e intermitente", 8, 5);
+        term.printAt("The following sentence will be in italics and blinking.", 8, 5);
         term.printAt(term.setStyles(false, false, true, false, true, false, false, mensaje), 9, 10);
-        term.printAt("La frase siguiente estará en italica y con los colores invertidos", 10, 5);
+        term.printAt("The following sentence will be in italics and with inverted colors.", 10, 5);
         term.printAt(term.setStyles(false, false, true, false, false, true, false, mensaje), 11, 10);
-        term.printAt("La frase siguiente estará en italica y tachada", 12, 5);
+        term.printAt("The following sentence will be in italics and crossed out", 12, 5);
         term.printAt(term.setStyles(false, false, true, false, false, false, true, mensaje), 13, 10);
 
-        // Subrayada con otros estilos
-        mensaje = "Frase SUBRAYADA con varios estilos";
-        term.printAt("La frase siguiente estará subrayada y en negrita", 14, 5);
+        // Underline with other styles
+        mensaje = "UNDERLINED phrase with various styles";
+        term.printAt("The following sentence will be underlined and in bold.", 14, 5);
         term.printAt(term.setStyles(true, false, false, true, false, false, false, mensaje), 15, 10);
-        term.printAt("La frase siguiente estará subrayada y en itálica", 16, 5);
+        term.printAt("The following sentence will be underlined and in italics", 16, 5);
         term.printAt(term.setStyles(false, false, true, true, false, false, false, mensaje), 17, 10);
-        term.printAt("La frase siguiente estará subrayada y atenuada", 18, 5);
+        term.printAt("The following sentence will be underlined and highlighted.", 18, 5);
         term.printAt(term.setStyles(false, true, false, true, false, false, false, mensaje), 19, 10);
-        term.printAt("La frase siguiente estará subrayada e intermitente", 20, 5);
+        term.printAt("The following sentence will be underlined and flashing.", 20, 5);
         term.printAt(term.setStyles(false, false, false, true, true, false, false, mensaje), 21, 10);
-        term.printAt("La frase siguiente estará subrayada y con los colores invertidos", 22, 5);
+        term.printAt("The following sentence will be underlined and with inverted colors.", 22, 5);
         term.printAt(term.setStyles(false, false, false, true, false, true, false, mensaje), 23, 10);
-        term.printAt("La frase siguiente estará subrayada y tachada", 24, 5);
+        term.printAt("The following sentence will be underlined and crossed out.", 24, 5);
         term.printAt(term.setStyles(false, false, false, true, false, false, true, mensaje), 25, 10);
 
         pausa(0, null);
 
         term.clearScreen();
-        term.printAt("------------ Estilos múltiples  aplicables al texto ------------", 1, 1);
+        term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
         
-        // Intermitente con otros estilos
-        mensaje = "Frase INTERMITENTE con varios estilos";
-        term.printAt("La frase siguiente estará intermitente y atenuada", 2, 5);
+        // Blinking with other styles
+        mensaje = "INTERMITTENT phrase with various styles";
+        term.printAt("The following sentence will be intermittent and dimmed.", 2, 5);
         term.printAt(term.setStyles(false, true, false, false, true, false, false, mensaje), 3, 10);
-        term.printAt("La frase siguiente estará intermitente y negrita", 4, 5);
+        term.printAt("The following sentence will be flashing and bold", 4, 5);
         term.printAt(term.setStyles(true, false, false, false, true, false, false, mensaje), 5, 10);
-        term.printAt("La frase siguiente estará intermitente y subrayada", 6, 5);
+        term.printAt("The following sentence will be intermittent and underlined", 6, 5);
         term.printAt(term.setStyles(false, false, false, true, true, false, false, mensaje), 7, 10);
-        term.printAt("La frase siguiente estará intermitente e intermitente", 8, 5);
+        term.printAt("The following phrase will be intermittent and intermittent", 8, 5);
         term.printAt(term.setStyles(false, false, false, false, true, false, false, mensaje), 9, 10);
-        term.printAt("La frase siguiente estará intermitente y con los colores invertidos", 10, 5);
+        term.printAt("The following phrase will be flashing and with inverted colors.", 10, 5);
         term.printAt(term.setStyles(false, false, false, false, true, true, false, mensaje), 11, 10);
-        term.printAt("La frase siguiente estará intermitente y tachada", 12, 5);
+        term.printAt("The following sentence will be intermittent and crossed out", 12, 5);
         term.printAt(term.setStyles(false, false, false, false, true, false, true, mensaje), 13, 10);
 
-        // Invertida con otros estilos
-        mensaje = "Frase INVERTIDA con varios estilos";
-        term.printAt("La frase siguiente estará invertida y en negrita", 14, 5);
+        // Inverse with other styles
+        mensaje = "INVERTED phrase with various styles";
+        term.printAt("The following sentence will be reversed and in bold.", 14, 5);
         term.printAt(term.setStyles(true, false, false, false, false, true, false, mensaje), 15, 10);
-        term.printAt("La frase siguiente estará invertida y en itálica", 16, 5);
+        term.printAt("The following sentence will be inverted and in italics", 16, 5);
         term.printAt(term.setStyles(false, false, true, false, false, true, false, mensaje), 17, 10);
-        term.printAt("La frase siguiente estará invertida y atenuada", 18, 5);
+        term.printAt("The following sentence will be inverted and attenuated", 18, 5);
         term.printAt(term.setStyles(false, true, false, false, false, true, false, mensaje), 19, 10);
-        term.printAt("La frase siguiente estará invertida e intermitente", 20, 5);
+        term.printAt("The following sentence will be inverted and intermittent", 20, 5);
         term.printAt(term.setStyles(false, false, false, false, true, true, false, mensaje), 21, 10);
-        term.printAt("La frase siguiente estará invertida", 22, 5);
+        term.printAt("The following sentence will be reversed", 22, 5);
         term.printAt(term.setStyles(false, false, false, false, false, true, false, mensaje), 23, 10);
-        term.printAt("La frase siguiente estará invertida y tachada", 24, 5);
+        term.printAt("The following sentence will be reversed and crossed out", 24, 5);
         term.printAt(term.setStyles(false, false, false, false, false, true, true, mensaje), 25, 10);
 
         pausa(0, null);
 
         term.clearScreen();
-        term.printAt("------------ Estilos múltiples  aplicables al texto ------------", 1, 1);
+        term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
         
-        // Tachada con otros estilos
-        mensaje = "Frase TACHADA con varios estilos";
-        term.printAt("La frase siguiente estará tachada y atenuada", 2, 5);
+        // Strikethrough with other styles
+        mensaje = "Phrase CROSSED out in various styles";
+        term.printAt("The following sentence will be crossed out and dimmed.", 2, 5);
         term.printAt(term.setStyles(false, true, false, false, false, false, true, mensaje), 3, 10);
-        term.printAt("La frase siguiente estará tachada y negrita", 4, 5);
+        term.printAt("The following sentence will be crossed out and in bold.", 4, 5);
         term.printAt(term.setStyles(true, false, false, false, false, false, true, mensaje), 5, 10);
-        term.printAt("La frase siguiente estará tachada y subrayada", 6, 5);
+        term.printAt("The following sentence will be crossed out and underlined.", 6, 5);
         term.printAt(term.setStyles(false, false, false, true, false, false, true, mensaje), 7, 10);
-        term.printAt("La frase siguiente estará tachada e intermitente", 8, 5);
+        term.printAt("The following sentence will be crossed out and intermittent.", 8, 5);
         term.printAt(term.setStyles(false, false, false, false, true, false, true, mensaje), 9, 10);
-        term.printAt("La frase siguiente estará tachada y con los colores invertidos", 10, 5);
+        term.printAt("The following sentence will be crossed out and with the colors inverted.", 10, 5);
         term.printAt(term.setStyles(false, false, false, false, false, true, true, mensaje), 11, 10);
-        term.printAt("La frase siguiente estará tachada", 12, 5);
+        term.printAt("The following sentence will be crossed out", 12, 5);
         term.printAt(term.setStyles(false, false, false, false, false, false, true, mensaje), 13, 10);
 
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     /**
+     * Displays various foreground and background text colors.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void colores(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
 
-        term.printAt("------------ Colores aplicables al texto y al fondo ------------", 1, 1);
-        term.printAt("Colores en primer plano", 2, 1);
+        term.printAt("------------ Colors applicable to the text and background ------------", 1, 1);
+        term.printAt("Colors in the foreground", 2, 1);
 
         term.linefeed();
-        term.printAt(term.setColor(Color.AMARILLO, "Frase en amarillo"), 4, 1);
-        term.printAt(term.setColor(Color.AZUL, "Frase en azul"), 5, 1);
-        term.printAt(term.setColor(Color.BLANCO, "Frase en blanco"), 6, 1);
-        term.printAt(term.setColor(Color.CIAN, "Frase en cian"), 7, 1);
-        term.printAt(term.setColor(Color.MAGENTA, "Frase en magenta"), 8, 1);
-        term.printAt(term.setColor(Color.NEGRO, "Frase en negro"), 9, 1);
-        term.printAt(term.setColor(Color.ROJO, "Frase en rojo"), 10, 1);
-        term.printAt(term.setColor(Color.VERDE, "Frase en verde"), 11, 1);
+        term.printAt(term.setColor(Color.AMARILLO, "Phrase in yellow"), 4, 1);
+        term.printAt(term.setColor(Color.AZUL, "Phrase in blue"), 5, 1);
+        term.printAt(term.setColor(Color.BLANCO, "Blank phrase"), 6, 1);
+        term.printAt(term.setColor(Color.CIAN, "Phrase in cyan"), 7, 1);
+        term.printAt(term.setColor(Color.MAGENTA, "Phrase in magenta"), 8, 1);
+        term.printAt(term.setColor(Color.NEGRO, "Phrase in black"), 9, 1);
+        term.printAt(term.setColor(Color.ROJO, "Phrase in red"), 10, 1);
+        term.printAt(term.setColor(Color.VERDE, "Phrase in green"), 11, 1);
         term.linefeed();
-        term.printAt("Colores de fondo", 13, 1);
+        term.printAt("Background colors", 13, 1);
         term.linefeed();
-        term.printAt(term.setBackgroundColor(BGColor.AMARILLO, "Frase con el fondo en amarillo"), 15, 1);
-        term.printAt(term.setBackgroundColor(BGColor.AZUL, "Frase con el fondo en azul"), 16, 1);
-        term.printAt(term.setBackgroundColor(BGColor.BLANCO, "Frase con el fondo en blanco"), 17, 1);
-        term.printAt(term.setBackgroundColor(BGColor.CIAN, "Frase con el fondo en cian"), 18, 1);
-        term.printAt(term.setBackgroundColor(BGColor.MAGENTA, "Frase con el fondo en magenta"), 19, 1);
-        term.printAt(term.setBackgroundColor(BGColor.NEGRO, "Frase con el fondo en negro"), 20, 1);
-        term.printAt(term.setBackgroundColor(BGColor.ROJO, "Frase con el fondo en rojo"), 21, 1);
+        term.printAt(term.setBackgroundColor(BGColor.AMARILLO, "Phrase with a yellow background"), 15, 1);
+        term.printAt(term.setBackgroundColor(BGColor.AZUL, "Phrase with a blue background"), 16, 1);
+        term.printAt(term.setBackgroundColor(BGColor.BLANCO, "Phrase with a white background"), 17, 1);
+        term.printAt(term.setBackgroundColor(BGColor.CIAN, "Phrase with cyan background"), 18, 1);
+        term.printAt(term.setBackgroundColor(BGColor.MAGENTA, "Phrase with a magenta background"), 19, 1);
+        term.printAt(term.setBackgroundColor(BGColor.NEGRO, "Phrase with a black background"), 20, 1);
+        term.printAt(term.setBackgroundColor(BGColor.ROJO, "Phrase with a red background"), 21, 1);
 
         pausa(0, null);
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Colores aplicables al texto y al fondo ------------", 1, 1);
-        term.printAt("Colores brillantes en primer plano", 2, 1);
+        term.printAt("------------ Colors applicable to the text and background ------------", 1, 1);
+        term.printAt("Bright colors in the foreground", 2, 1);
         term.linefeed();
-        term.printAt(term.setColor(Color.AMARILLO_BRILLANTE, "Frase en amarillo"), 4, 1);
-        term.printAt(term.setColor(Color.AZUL_BRILLANTE, "Frase en azul"), 5, 1);
-        term.printAt(term.setColor(Color.BLANCO_BRILLANTE, "Frase en blanco"), 6, 1);
-        term.printAt(term.setColor(Color.CIAN_BRILLANTE, "Frase en cian"), 7, 1);
-        term.printAt(term.setColor(Color.MAGENTA_BRILLANTE, "Frase en magenta"), 8, 1);
-        term.printAt(term.setColor(Color.NEGRO_BRILLANTE, "Frase en negro"), 9, 1);
-        term.printAt(term.setColor(Color.ROJO_BRILLANTE, "Frase en rojo"), 10, 1);
-        term.printAt(term.setColor(Color.VERDE_BRILLANTE, "Frase en verde"), 11, 1);
+        term.printAt(term.setColor(Color.AMARILLO_BRILLANTE, "Phrase in yellow"), 4, 1);
+        term.printAt(term.setColor(Color.AZUL_BRILLANTE, "Phrase in blue"), 5, 1);
+        term.printAt(term.setColor(Color.BLANCO_BRILLANTE, "Blank phrase"), 6, 1);
+        term.printAt(term.setColor(Color.CIAN_BRILLANTE, "Phrase in cyan"), 7, 1);
+        term.printAt(term.setColor(Color.MAGENTA_BRILLANTE, "Phrase in magenta"), 8, 1);
+        term.printAt(term.setColor(Color.NEGRO_BRILLANTE, "Phrase in black"), 9, 1);
+        term.printAt(term.setColor(Color.ROJO_BRILLANTE, "Phrase in red"), 10, 1);
+        term.printAt(term.setColor(Color.VERDE_BRILLANTE, "Phrase in green"), 11, 1);
         term.linefeed();
-        term.printAt("Colores brillantes para el fondo", 13, 1);
+        term.printAt("Bright colors for the background", 13, 1);
         term.linefeed();
-        term.printAt(term.setBackgroundColor(BGColor.AMARILLO_BRILLANTE, "Frase con el fondo en amarillo"), 15, 1);
-        term.printAt(term.setBackgroundColor(BGColor.AZUL_BRILLANTE, "Frase con el fondo en azul"), 16, 1);
-        term.printAt(term.setBackgroundColor(BGColor.BLANCO_BRILLANTE, "Frase con el fondo en blanco"), 17, 1);
-        term.printAt(term.setBackgroundColor(BGColor.CIAN_BRILLANTE, "Frase con el fondo en cian"), 18, 1);
-        term.printAt(term.setBackgroundColor(BGColor.MAGENTA_BRILLANTE, "Frase con el fondo en magenta"), 19, 1);
-        term.printAt(term.setBackgroundColor(BGColor.NEGRO_BRILLANTE, "Frase con el fondo en negro"), 20, 1);
-        term.printAt(term.setBackgroundColor(BGColor.ROJO_BRILLANTE, "Frase con el fondo en rojo"), 21, 1);
-        term.printAt(term.setBackgroundColor(BGColor.VERDE_BRILLANTE, "Frase con el fondo en verde"), 22, 1);
+        term.printAt(term.setBackgroundColor(BGColor.AMARILLO_BRILLANTE, "Phrase in yellow"), 15, 1);
+        term.printAt(term.setBackgroundColor(BGColor.AZUL_BRILLANTE, "Phrase in blue"), 16, 1);
+        term.printAt(term.setBackgroundColor(BGColor.BLANCO_BRILLANTE, "Blank phrase"), 17, 1);
+        term.printAt(term.setBackgroundColor(BGColor.CIAN_BRILLANTE, "Phrase in cyan"), 18, 1);
+        term.printAt(term.setBackgroundColor(BGColor.MAGENTA_BRILLANTE, "Phrase in magenta"), 19, 1);
+        term.printAt(term.setBackgroundColor(BGColor.NEGRO_BRILLANTE, "Phrase in black"), 20, 1);
+        term.printAt(term.setBackgroundColor(BGColor.ROJO_BRILLANTE, "Phrase in red"), 21, 1);
+        term.printAt(term.setBackgroundColor(BGColor.VERDE_BRILLANTE, "Phrase in green"), 22, 1);
 
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
 
     }
 
     /**
+     * Displays the 256-color palette.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void colores256(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Muestra la paleta de 256 colores ------------", 1, 1);
+        term.printAt("------------ Displays the palette of 256 colors ------------", 1, 1);
 
         int j = 0;
         int line = 2;
@@ -552,21 +561,22 @@ public class App {
             }
         }
 
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     
     /**
+     * Displays various cursor styles (block, bar, underline, blinking, etc.).
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void estilosDelCursor(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
         term.cursorShow();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        String msg = "(1/9) - Forma de cursor de barra estable";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        String msg = "(1/9) - Stable bar cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_BAR_ES);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -574,8 +584,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(2/9) - Forma de cursor de barra parpadeante";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(2/9) - Blinking bar cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_BAR_PAR);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -583,8 +593,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(3/9) - Forma de cursor de bloque estable";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(3/9) - Stable block cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_BLO_EST);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -592,8 +602,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(4/9) - Forma de cursor de bloque parpadeante";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(4/9) - Blinking block cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_BLO_PAR);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -601,8 +611,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(5/9) - Forma de cursor de subrayado estable";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(5/9) - Stable underline cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_SUB_EST);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -610,8 +620,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(6/9) - Forma de cursor de subrayado parpadeante";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(6/9) - Blinking underline cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_SUB_PAR);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -619,8 +629,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(7/9) - Forma de cursor establecida por el usuario";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(7/9) - User-defined cursor shape";
         term.printAt(msg, 2, 1);
         term.cursorChangeStyle(CursorStyles.CUR_USU);
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -628,8 +638,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(8/9) - Oculta el cursor";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(8/9) - Hide the cursor";
         term.printAt(msg, 2, 1);
         term.cursorHide();
         imprimeConLapso(msg, 5, 1, term, 100L);
@@ -637,21 +647,22 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Estilos del cursor ------------", 1, 1);
-        msg = "(9/9) - Muestra el cursor";
+        term.printAt("------------ Cursor styles ------------", 1, 1);
+        msg = "(9/9) - Show cursor";
         term.printAt(msg, 2, 1);
         term.cursorShow();
         imprimeConLapso(msg, 5, 1, term, 100L);
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     /**
+     * Demonstrates screen and line deletion commands from the current cursor position.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void borradosDesdeCursor(ANSITerm term) throws Exception {
-        String msg = "El proceso continuará automáticamente cada 4 segundos. ¡No pulse ninguna tecla!";
+        String msg = "The process will continue automatically every 4 seconds. Do not press any keys!";
         int columnas = term.getTerminalSize().getColumnas();
         int filas = term.getTerminalSize().getLineas();
         final long RETARDO = 4000L;
@@ -660,8 +671,8 @@ public class App {
         term.moveCursorToBegin();
         term.cursorShow();
         term.cursorChangeStyle(CursorStyles.CUR_BLO_PAR);
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(1/13) Borrado desde el cursor hasta el principio de la pantalla", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(1/13) Delete from the cursor to the beginning of the screen", 2, 1);
         term.printAt(msg, 3, 1);
 
         imprimeBloqueTexto(term, 5, filas - 5, columnas);
@@ -672,8 +683,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(2/13) Borrado desde el cursor hasta el final de la pantalla", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(2/13) Deleted from the cursor to the end of the screen", 2, 1);
         term.printAt(msg, 3, 1);
 
         imprimeBloqueTexto(term, 5, filas - 5, columnas);
@@ -684,8 +695,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(3/13) Borrado desde el cursor hasta el principio de la línea", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(3/13) Deleted from the cursor to the beginning of the line", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 1, columnas);
         term.moveCursorToXY(5, 60);
@@ -695,8 +706,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(4/13) Borrado desde el cursor hasta el final de la línea", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(4/13) Deleted from the cursor to the end of the line", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 1, columnas);
         term.moveCursorToXY(5, 60);
@@ -706,8 +717,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(5/13) Borrado de la linea donde se encuentra el cursor", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(5/13) Deleting the line where the cursor is located", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 3, columnas);
         term.moveCursorToXY(6, 60);
@@ -717,8 +728,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(6/13) Borrado de 5 líneas incluyendo la que contiene el cursor", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(6/13) Delete 5 lines including the one containing the cursor", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 15, columnas);
         term.moveCursorToXY(6, 60);
@@ -728,8 +739,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(7/13) Borrado de los 10 caracteres anteriores a la posición del cursor", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(7/13) Delete the 10 characters before the cursor position", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 1, columnas);
         term.moveCursorToXY(5, 60);
@@ -741,8 +752,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(8/13) Borrado de los 20 caracteres siguientes a la posición del cursor", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(8/13) Delete the 20 characters following the cursor position", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 1, columnas);
         term.moveCursorToXY(5, 60);
@@ -752,8 +763,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(9/13) Borra 20 caracteres desde la posición actual del cursor sobrescribiéndolos con un carácter de espacio.", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(9/13) Deletes 20 characters from the current cursor position by overwriting them with a space character.", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 1, columnas);
         term.moveCursorToXY(5, 60);
@@ -763,8 +774,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(10/13) Inserta 10 espacios en la posición actual del cursor. Desplaza todo el texto existente a la derecha", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(10/13) Insert 10 spaces at the current cursor position. Shift all existing text to the right.", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 1, columnas);
         term.moveCursorToXY(5, 60);
@@ -774,8 +785,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(11/13) Inserta 10 lineas en la posición actual del cursor. La línea del cursor y las de debajo se desplazarán hacia abajo", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(11/13) Insert 10 lines at the current cursor position. The cursor line and the lines below it will shift down", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 5, 5, columnas);
         term.moveCursorToXY(7, 60);
@@ -785,8 +796,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(12/13) Mueve " + filas + " lineas hacia abajo el texto", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(12/13) Move " + filas + " lines down the text", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 3, filas - 3, columnas);
 
@@ -799,8 +810,8 @@ public class App {
 
         term.clearScreen();
         term.moveCursorToBegin();
-        term.printAt("------------ Borrados desde el cursor y scroll ------------", 1, 1);
-        term.printAt("(13/13) Mueve " + filas + " lineas hacia arriba el texto", 2, 1);
+        term.printAt("------------ Deleted from the cursor and scroll ------------", 1, 1);
+        term.printAt("(13/13) Move " + filas + " lines upwards the text", 2, 1);
         term.printAt(msg, 3, 1);
         imprimeBloqueTexto(term, 3, filas - 3, columnas);
 
@@ -812,56 +823,55 @@ public class App {
         }
 
         Thread.sleep(RETARDO);
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     /**
+     * Demonstrates enabling and disabling cursor blinking.
      * 
-     * @param term Un objeto ANSITerm
-     * @throws Exception Exception En caso de que se produzca algún error
+     * @param term An ANSITerm object
+     * @throws Exception In case of any error
      */
     private void parpadeoDelCursor(ANSITerm term) throws Exception {
         term.clearScreen();
         term.moveCursorToBegin();
         term.cursorShow();
         term.cursorChangeStyle(CursorStyles.CUR_BLO_EST);
-        term.printAt("------------ Parpadeo del cursor ------------", 1, 1);
-        String msg = "(1/2) - Se activa el parpadeo del cursor";
+        term.printAt("------------ Cursor blinking ------------", 1, 1);
+        String msg = "(1/2) - The cursor starts blinking.";
         term.printAt(msg, 2, 1);
         term.cursorBlink();
         imprimeConLapso(msg, 5, 1, term, 100L);
         pausa(0, null);
 
-        msg = "(2/2) - Desactiva el parpadeo del cursor";
+        msg = "(2/2) - Turn off cursor blinking";
         term.printAt(msg, 2, 1);
         term.cursorNoBlink();
         imprimeConLapso(msg, 5, 1, term, 100L);
-        pausa(0, "Pulse <INTRO> para volver al menú");
+        pausa(0, "Press <ENTER> to return to menu");
     }
 
     /*
-    Métodos de utilidad.
+    Utility methods.
      */
     /**
-     * Realiza una pausa de tantos milisegundos como se pase por parámetro y 
-     * muestra, opcionalmente un mensaje en pantalla. Si no se pasa el mensaje 
-     * mostrará por defecto el mensaje "Pulse &lt;INTRO> para continuar..." en 
-     * la última línea del terminal.
+     * Pauses the program for a specified number of milliseconds and optionally 
+     * displays a message. If no message is provided, it defaults to 
+     * "Press &lt;ENTER&gt; to continue..." on the last line of the terminal.
      * 
-     * Si se indica 0 como parámetro 'milisegundos' la función esperará a que 
-     * el usuario pulse INTRO para continuar. En caso contrario, se mostrará al
-     * usuario que el programa continuará después de los milisegundos indicados
-     * y hace la pausa.
+     * If 0 milliseconds are specified, the function waits for the user to 
+     * press ENTER. Otherwise, it informs the user that the program will 
+     * continue after the specified delay and then pauses.
      * 
-     * @param milisegundos Long con los milisegundos que durará la pausa. Si 
-     * indica 0 la función esperará que el usuario pulse INTRO para continuar.
-     * @param msg Una cadena con el mensaje que se quiere mostrar al usuario.
-     * @throws Exception En caso de que se produzca algún error.
+     * @param milisegundos The duration of the pause in milliseconds. If 0, 
+     * the function waits for the user to press ENTER.
+     * @param msg The message to display to the user.
+     * @throws Exception In case of any error.
      */
     private void pausa(long milisegundos, String msg) throws Exception {
         ANSITerm t = new ANSITerm();
         if (msg == null || msg.isEmpty()) {
-            msg = "\nPulse <INTRO> para continuar...";
+            msg = "\nPress <ENTER> to continue...";
         }
 
         TerminalSize ts = t.getTerminalSize();
@@ -873,19 +883,19 @@ public class App {
             sc.nextLine();
             return;
         }
-        t.printAt("El programa continuará en " + milisegundos + " milisegundos...", ultimaLinea - 1, 1);
+        t.printAt("The program will continue in " + milisegundos + " milliseconds...",
+            ultimaLinea - 1, 1);
         Thread.sleep(milisegundos);
     }
 
     /**
-     * Realiza una pausa de tantos milisegundos como se pase por parámetro. Si 
-     * se indica 0 esperará a que el usuario pulse INTRO para continuar. No 
-     * muestra ningún mensaje por pantalla.
+     * Pauses the program for a specified number of milliseconds. If 0 is 
+     * specified, it waits for the user to press ENTER. No message is 
+     * displayed.
      * 
-     * @param milisegundos Long con los milisegundos que durará la pausa. Si 
-     * indica 0 la función esperará que el usuario pulse INTRO para continuar.
-     * @throws InterruptedException En caso de que se interrumpa al método 
-     * sleep()
+     * @param milisegundos The duration of the pause in milliseconds. If 0, 
+     * the function waits for the user to press ENTER.
+     * @throws Exception In case of any error.
      */
     private void pausaSinMensaje(long milisegundos) throws Exception {
         ANSITerm t = new ANSITerm();
@@ -899,16 +909,13 @@ public class App {
     }
 
     /**
-     * Muestra por pantalla un bloque de texto aleatorio, que comienza en la 
-     * línea 'lineaInicial', tendrá tantas líneas de tamaño como se indique en 
-     * 'lineas' y cada línea del bloque tendrá tantas columnas como indique 
-     * 'cols'.
-     * @param term Un objeto ANSITerm
-     * @param lineaInicial La línea inicial en el terminal donde comenzará el 
-     * bloque de texto.
-     * @param lineas Las líneas que tendrá el bloque de texto.
-     * @param cols El número de columnas (caracteres) que tendrá cada línea del 
-     * bloque de texto.
+     * Displays a block of random text starting at 'lineaInicial', with 
+     * 'lineas' number of rows and 'cols' number of columns per row.
+     * 
+     * @param term An ANSITerm object
+     * @param lineaInicial The starting line in the terminal.
+     * @param lineas The number of lines in the text block.
+     * @param cols The number of columns (characters) in each line.
      */
     private void imprimeBloqueTexto(ANSITerm term, int lineaInicial, int lineas, int cols) {
         int car;
@@ -920,7 +927,7 @@ public class App {
             for (int col = 1; col < cols; col++) {
                 car = rnd.nextInt(94) + 32;
                 ascii = (char) car;
-                sb.append(String.valueOf(ascii));
+                sb.append(ascii);
             }
             term.printAt(sb.toString(), line, 1);
             sb.setLength(0);
@@ -928,14 +935,14 @@ public class App {
     }
 
     /**
-     * Imprime una cadena 'msg' a partir de la posición 'linea, columna' en el 
-     * terminal carácter a carácter con el retardo indicado en 'milisegundos'.
-     * indicado.
-     * @param msg La cadena a imprimir
-     * @param linea La línea del terminal donde se imprimirá la cadena
-     * @param columna La columna del terminal donde se imprimirá la cadena
-     * @param term Un objeto ANSIterm
-     * @param milisegundos Retardo de impresión entre cada carácter en milisegundos
+     * Prints a string 'msg' starting at 'linea, columna' character by 
+     * character with the specified delay in 'milisegundos'.
+     * 
+     * @param msg The string to print.
+     * @param linea The terminal line where the string will be printed.
+     * @param columna The terminal column where the string will be printed.
+     * @param term An ANSITerm object.
+     * @param milisegundos The delay between printing each character in milliseconds.
      */
     private void imprimeConLapso(String msg,
             int linea,

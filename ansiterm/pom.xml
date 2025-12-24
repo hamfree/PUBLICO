@@ -192,6 +192,11 @@
                                     <mainClass>${exec.mainClass}</mainClass>
                                 </transformer>
                             </transformers>
+                            <!-- 
+                            Para 'solucionar' el aviso que da Netbeans con el uso de este plugin
+                            -->
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>launcher</shadedClassifierName>
                         </configuration>
                     </execution>
                 </executions>
