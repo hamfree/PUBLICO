@@ -1,43 +1,43 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
- * Contiene las constantes ANSI para el cambio de los estilos del cursor
+ * Contains the ANSI constants for changing cursor styles
  * @author juanf
  */
 public class CursorStyles {
 
     /**
-     * Secuencia de escape ANSI con la que comienzan todas las secuencias CSI
-     * Más información en:
-     * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+     * ANSI escape sequence with which all CSI sequences begin
+     * More information at:
+     * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">...</a>
      */
     public static final String ESC = "\033";
     /**
-     * Forma del cursor establecido por el usuario
+     * User-set cursor shape
      */
     public final static String CUR_USU = ESC + "[0 q";
     /**
-     * Forma de cursor de bloque parpadeante
+     * Blinking block cursor shape
      */
     public final static String CUR_BLO_PAR = ESC + "[1 q";
     /**
-     * Forma de cursor de bloque estable
+     * Steady block cursor shape
      */
     public final static String CUR_BLO_EST = ESC + "[2 q";
     /**
-     * Forma de cursor de subrayado parpadeante
+     * Blinking underline cursor shape
      */
     public final static String CUR_SUB_PAR = ESC + "[3 q";
     /**
-     * Forma de cursor de subrayado estable
+     * Steady underline cursor shape
      */
     public final static String CUR_SUB_EST  = ESC + "[4 q";
     /**
-     * Forma de cursor de barra parpadeante
+     * Blinking bar cursor shape
      */
     public final static String CUR_BAR_PAR  = ESC + "[5 q";
     /**
-     * Forma de cursor de barra estable
+     * Steady bar cursor shape
      */
     public final static String CUR_BAR_ES  = ESC + "[6 q";
 

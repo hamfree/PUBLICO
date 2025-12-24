@@ -1,76 +1,76 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
- * Enumeración para los colores de primer plano con códigos ANSI para la terminal
+ * Enumeration for foreground colors with ANSI codes for the terminal
  * @author juanf
  */
 public enum Color {
     /**
-     * Color negro para el primer plano.
+     * Black foreground color.
      */
     NEGRO (30), 
     /**
-     * Color rojo para el primer plano.
+     * Red foreground color.
      */
     ROJO (31), 
     /**
-     * Color verde para el primer plano.
+     * Green foreground color.
      */
     VERDE (32), 
     /**
-     * Color amarillo para el primer plano.
+     * Yellow foreground color.
      */
     AMARILLO (33), 
     /**
-     * Color azul para el primer plano.
+     * Blue foreground color.
      */
     AZUL (34), 
     /**
-     * Color magenta para el primer plano.
+     * Magenta foreground color.
      */
     MAGENTA (35), 
     /**
-     * Color cian para el primer plano.
+     * Cyan foreground color.
      */
     CIAN (36),
     /**
-     * Color blanco para el primer plano.
+     * White foreground color.
      */
     BLANCO (37),
     /**
-     * Hace que el color de primer plano vuelva a su valor por defecto.
+     * Returns the foreground color to its default value.
      */
     DEFECTO (39),
     /**
-     *  Color negro brillante para el primer plano.
+     * Bright black foreground color.
      */
     NEGRO_BRILLANTE (90),
     /**
-     * Color rojo brillante para el primer plano.
+     * Bright red foreground color.
      */
     ROJO_BRILLANTE (91), 
     /**
-     * Color verde brillante para el primer plano.
+     * Bright green foreground color.
      */
     VERDE_BRILLANTE (92), 
     /**
-     * Color amarillo brillante para el primer plano.
+     * Bright yellow foreground color.
      */
     AMARILLO_BRILLANTE (93), 
     /**
-     * Color azul brillante para el primer plano.
+     * Bright blue foreground color.
      */
     AZUL_BRILLANTE (94), 
     /**
-     * Color magenta brillante para el primer plano.
+     * Bright magenta foreground color.
      */
     MAGENTA_BRILLANTE (95), 
     /**
-     * Color cian brillante para el primer plano.
+     * Bright cyan foreground color.
      */
     CIAN_BRILLANTE (96),
     /**
-     * Color blanco brillante para el primer plano.
+     * Bright white foreground color.
      */
     BLANCO_BRILLANTE (97),;
     
@@ -81,8 +81,8 @@ public enum Color {
     }
     
     /**
-     * Devuelve el código como una cadena.
-     * @return una cadena con la representación textual del código
+     * Returns the code as a string.
+     * @return a string with the textual representation of the code
      */
     String getAsString() {
         return String.valueOf(this.codigo);

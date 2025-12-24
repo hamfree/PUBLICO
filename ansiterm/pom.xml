@@ -9,12 +9,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>es.nom.juanfranciscoruiz.ansiterm.App</exec.mainClass>
-        <logback.version>1.5.8</logback.version>
+        <logback.version>1.5.19</logback.version>
         <slf4j.version>2.0.16</slf4j.version>
     </properties>
-    
-   
-    <dependencies>
+     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>utiles</artifactId>
@@ -46,7 +44,7 @@
             <type>jar</type>
         </dependency>
         
-        <!-- Para los test -->
+        <!-- For testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -54,7 +52,7 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- Para comprobar clases que escriben o leen de los streams estándar -->
+        <!-- To check classes that write to or read from standard streams -->
         <dependency>
             <groupId>org.junit-pioneer</groupId>
             <artifactId>junit-pioneer</artifactId>
@@ -73,21 +71,21 @@
         <finalName>ansiterm</finalName>
         <pluginManagement>
             <!-- 
-            bloquear las versiones de los complementos para evitar el uso de los 
-            valores predeterminados de Maven (se puede mover al pom principal) 
+            Lock plugin versions to prevent the use of Maven defaults (can be moved to the main pom)
             -->
             <plugins>
                 <!-- 
-                ciclo de vida clean, 
-                vea https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle 
+                life cycle clean,
+                see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle
                 -->
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.4.0</version>
                 </plugin>
                 <!-- 
-                ciclo de vida predeterminado, empaquetado jar:
-                vea https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging 
+                default lifecycle, jar packaging:
+                see https://maven.apache.org/ref/current/maven-core/default-bindings
+                .html#Plugin_bindings_for_jar_packaging
                 -->
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -119,7 +117,7 @@
                     <version>3.6.0</version>
                 </plugin>
                 <!-- 
-                ciclo de vida site, 
+                life cycle site,
                 vea https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle 
                 -->
                 <plugin>
@@ -167,8 +165,7 @@
                         </goals>
                         <configuration>
                             <!--
-                            Elimina avisos por recursos duplicados en las 
-                            dependencias 
+                            Removes duplicate resource warnings in dependencies
                             -->
                             <filters>
                                 <filter>
@@ -193,7 +190,7 @@
                                 </transformer>
                             </transformers>
                             <!-- 
-                            Para 'solucionar' el aviso que da Netbeans con el uso de este plugin
+                            To 'fix' the warning that Netbeans gives when using this plugin
                             -->
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>launcher</shadedClassifierName>
@@ -210,6 +207,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        
     </build>
 </project>

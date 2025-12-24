@@ -5,9 +5,9 @@ import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
 
 /**
- * Proporciona acceso a los modos raw y cooked de la consola en Windows así como
- * la obtención del tamaño de la consola mediante secuencias de escape ANSI y el
- * establecimiento del modo raw para que no aparezca el código ANSI en pantalla.
+ * Provides access to the raw and cooked modes of the Windows console as well as
+ * obtaining the console size using ANSI escape sequences and setting the
+ * raw mode so that the ANSI code does not appear on the screen.
  * 
  * @author juanf
  */
@@ -29,13 +29,13 @@ public class WindowsTerminal implements ITerminal {
     private IntByReference outMode;
 
     /**
-     * Instancia un objeto WindowsTerminal
+     * Instantiates a WindowsTerminal object
      */
     public WindowsTerminal() {
     }
 
     /**
-     * Habilita el modo 'raw' de la consola de Windows
+     * Enables the 'raw' mode of the Windows console
      */
     @Override
     public void enableRawMode() {
@@ -66,7 +66,7 @@ public class WindowsTerminal implements ITerminal {
     }
 
     /**
-     * Deshabilita el modo 'raw' y habilita el modo normal de la consola de Windows
+     * Disables the 'raw' mode and enables the normal mode of the Windows console
      */
     @Override
     public void disableRawMode() {
@@ -78,9 +78,9 @@ public class WindowsTerminal implements ITerminal {
     }
 
     /**
-     * Obtiene el tamaño de la consola 
-     * @return Un objeto TerminalSize con las líneas y columnas actuales de la 
-     * consola
+     * Obtains the console size 
+     * @return A TerminalSize object with the current lines and columns of the 
+     * console
      * 
      * @see es.nom.juanfranciscoruiz.ansiterm.TerminalSize
      */

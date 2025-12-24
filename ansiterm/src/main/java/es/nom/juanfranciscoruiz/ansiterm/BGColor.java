@@ -1,88 +1,88 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
- * Enumeración para los colores de fondo con códigos ANSI para la terminal
+ * Enumeration for background colors with ANSI codes for the terminal
  * @author juanf
  */
 public enum BGColor {
     /**
-     * Color negro 
+     * Black color 
      */
     NEGRO(40),
     /**
-     * Color rojo
+     * Red color
      */
     ROJO(41),
     /**
-     * Color verde
+     * Green color
      */
     VERDE(42),
     /**
-     * Color amarillo
+     * Yellow color
      */
     AMARILLO(43),
     /**
-     * Color azul
+     * Blue color
      */
     AZUL(44),
     /**
-     * Color magenta
+     * Magenta color
      */
     MAGENTA(45),
     /**
-     * Color cian
+     * Cyan color
      */
     CIAN(46),
     /**
-     * Color blanco
+     * White color
      */    
     BLANCO(47),
     /**
-     * Color negro brillante (si ese color lo puede ser, claro)
+     * Bright black color (if that color can be bright, of course)
      */
     NEGRO_BRILLANTE(100),
     /**
-     * Color rojo brillante
+     * Bright red color
      */
     ROJO_BRILLANTE(101),
     /**
-     * Color verde brillante
+     * Bright green color
      */
     VERDE_BRILLANTE(102),
     /**
-     * Color amarillo brillante
+     * Bright yellow color
      */
     AMARILLO_BRILLANTE(103),
     /**
-     * Color azul brillante
+     * Bright blue color
      */
     AZUL_BRILLANTE(104),
     /**
-     * Color magenta brillante
+     * Bright magenta color
      */
     MAGENTA_BRILLANTE(105),
     /**
-     * Color cian brillante
+     * Bright cyan color
      */
     CIAN_BRILLANTE(106),
     /**
-     * Color blanco brillante
+     * Bright white color
      */
     BLANCO_BRILLANTE(107),
     /**
-     * Hace que el color de fondo vuelva a su valor por defecto.
+     * Returns the background color to its default value.
      */
     DEFECTO(49);
 
     private final int codigo;
 
-    private BGColor(int codigo) {
+    BGColor(int codigo) {
         this.codigo = codigo;
     }
 
     /**
-     * Devuelve el código como una cadena.
-     * @return una cadena con la representación textual del código
+     * Returns the code as a string.
+     * @return a string with the textual representation of the code
      */
     String getAsString() {
         return String.valueOf(this.codigo);

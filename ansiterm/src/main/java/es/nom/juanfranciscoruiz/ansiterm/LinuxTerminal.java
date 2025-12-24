@@ -1,36 +1,41 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
-import static es.nom.juanfranciscoruiz.ansiterm.ANSITerm.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Proporciona acceso a los modos raw y cooked del terminal de Linux así como
- * la obtención del tamaño del terminal mediante secuencias de escape ANSI y el
- * establecimiento del modo raw para que no aparezca el código ANSI en pantalla.
+ * Provides access to the raw and cooked modes of the Linux terminal as well as
+ * obtaining the terminal size using ANSI escape sequences and setting the
+ * raw mode so that the ANSI code does not appear on the screen.
  * 
  * @author juanf
  */
 public class LinuxTerminal implements ITerminal {
-
+    
+    public static final Logger logger = LoggerFactory.getLogger(LinuxTerminal.class);
+    
     private static final String ESC = "\033";
     private static final String REC_POS_CUR = ESC + "[6n";
 
     
     /**
-     * Instancia un objeto LinuxTerminal
+     * Instantiates a LinuxTerminal object
      */
     public LinuxTerminal(){
         
     }
     
     /**
-     * Habilita el modo 'raw' de la consola. Utiliza el comando 'stty' que
-     * suele estar disponible en todos los entornos UNIX. En el modo 'raw' los 
-     * caracteres tecleados por el usuario se pasan directamente a la 
-     * aplicación sin que el usuario tenga que pulsar INTRO. Se pasa el parámetro
-     * '-echo' para que no aparezcan los caracteres tecleados en pantalla.
+     * Enables the 'raw' mode of the console. It uses the 'stty' command which
+     * is usually available in all UNIX environments. In 'raw' mode, the 
+     * characters typed by the user are passed directly to the 
+     * application without the user having to press ENTER. The '-echo' 
+     * parameter is passed so that the characters typed do not appear 
+     * on the screen.
      */
     @Override
     public void enableRawMode() {
@@ -38,14 +43,14 @@ public class LinuxTerminal implements ITerminal {
             String[] cmd = {"/bin/sh", "-c", "stty raw -echo < /dev/tty"};
             Runtime.getRuntime().exec(cmd).waitFor();
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
     /**
-     * Deshabilita el modo 'raw' del terminal y habilita el modo 'cooked', que 
-     * es el que habitualmente se usa (se muestran los caracteres tecleados y 
-     * para que el shell reciba nuestra orden hay que pulsar INTRO)
+     * Disables the 'raw' mode of the terminal and enables the 'cooked' mode, 
+     * which is the one normally used (typed characters are shown and for 
+     * the shell to receive our command we have to press ENTER).
      */
     @Override
     public void disableRawMode() {
@@ -53,67 +58,67 @@ public class LinuxTerminal implements ITerminal {
             String[] cmd = {"/bin/sh", "-c", "stty cooked echo < /dev/tty"};
             Runtime.getRuntime().exec(cmd).waitFor();
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
     
     /**
-     * Obtiene el tamaño del terminal.
-     * @return un objeto TerminalSize con las líneas y columnas del terminal.
+     * Obtains the terminal size.
+     * @return a TerminalSize object with the lines and columns of the terminal.
      */
     @Override
     public TerminalSize getTerminalSize() {
-        Posicion inicialPosicion = readCurrentPosition();
+        Position inicialPosition = readCurrentPosition();
         gotoXY(10000, 10000);
-        Posicion result = readCurrentPosition();
-        gotoXY(inicialPosicion.getCol(), inicialPosicion.getLin());
+        Position result = readCurrentPosition();
+        gotoXY(inicialPosition.getCol(), inicialPosition.getLin());
 
         return new TerminalSize(result.getCol(), result.getLin());
     }
 
     
-    // Métodos de utilidad para el método 'getTerminalSize()'
-    private Posicion readCurrentPosition() {
+    // Utility methods for the 'getTerminalSize()' method
+    private Position readCurrentPosition() {
         try {
             this.enableRawMode();
             System.out.print(REC_POS_CUR);
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             int character;
 
             do {
                 character = System.in.read();
                 if (character == 27) {
-                    result += "^";
+                    result.append("^");
                 } else {
-                    result += (char) character;
+                    result.append((char) character);
                 }
             } while (character != 82); // 'R'
 
             Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
-            Matcher matcher = pattern.matcher(result);
+            Matcher matcher = pattern.matcher(result.toString());
             if (matcher.matches()) {
-                return new Posicion(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+                return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
             } else {
-                return new Posicion(1, 1);
+                return new Position(1, 1);
             }
 
         } catch (IOException e) {
             logger.error(e.getMessage());
             System.out.println(e.getMessage());
-            return new Posicion(1, 1);
+            return new Position(1, 1);
         } finally {
             this.disableRawMode();
         }
     }
 
     private void gotoXY(int x, int y) {
-        System.out.print(String.format("\u001B[%d;%dH", y, x)); // CSI n ; m H
+        System.out.printf("\u001B[%d;%dH", y, x); // CSI n ; m H
     }
 
-    private void gotoXY(Posicion screenPosition) {
-        System.out.print(String.format("\u001B[%d;%dH", screenPosition.getLin(), screenPosition.getCol())); // CSI n ; m H
+    private void gotoXY(Position screenPosition) {
+        System.out.printf("\u001B[%d;%dH", screenPosition.getLin(), screenPosition.getCol()); // CSI n ; m H
     }
 
 }

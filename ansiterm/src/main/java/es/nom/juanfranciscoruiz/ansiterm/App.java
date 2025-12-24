@@ -238,7 +238,7 @@ public class App {
 
         for (int lin = 2; lin < screenSize.getLineas() - 3; lin++) {
             for (int col = 1; col <= screenSize.getColumnas(); col++) {
-                Posicion p = new Posicion(1, 1);
+                Position p = new Position(1, 1);
                 term.printAt("X", lin, col);
                 try {
                     p = term.getCursorPosition();

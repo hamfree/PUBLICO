@@ -1,25 +1,26 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
- * Representa el tamaño de la terminal
+ * Represents the terminal size.
  * 
  * @author juanf
  */
 public class TerminalSize {
     /**
-     * Ancho del terminal (en caracteres)
+     * Terminal width (in characters).
      */
    private int columnas;
    
    /**
-    * Alto del terminal (en líneas)
+    * Terminal height (in lines).
     */
    private int lineas;
 
    /**
+    * Creates a new TerminalSize object.
     * 
-    * @param width
-    * @param height 
+    * @param width terminal width (columns)
+    * @param height terminal height (lines)
     */
     public TerminalSize(int width, int height) {
         this.columnas = width;
@@ -27,32 +28,36 @@ public class TerminalSize {
     }
 
     /**
+     * Gets the number of columns.
      * 
-     * @return 
+     * @return the number of columns
      */
     public int getColumnas() {
         return columnas;
     }
 
     /**
+     * Sets the number of columns.
      * 
-     * @param columnas 
+     * @param columnas the number of columns
      */
     public void setColumnas(int columnas) {
         this.columnas = columnas;
     }
 
     /**
+     * Gets the number of lines.
      * 
-     * @return 
+     * @return the number of lines
      */
     public int getLineas() {
         return lineas;
     }
 
     /**
+     * Sets the number of lines.
      * 
-     * @param lineas 
+     * @param lineas the number of lines
      */
     public void setLineas(int lineas) {
         this.lineas = lineas;
@@ -88,8 +93,8 @@ public class TerminalSize {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("TerminalSize{");
-        sb.append("columnas=").append(columnas);
-        sb.append(", lineas=").append(lineas);
+        sb.append("columns=").append(columnas);
+        sb.append(", lines=").append(lineas);
         sb.append('}');
         return sb.toString();
     }
