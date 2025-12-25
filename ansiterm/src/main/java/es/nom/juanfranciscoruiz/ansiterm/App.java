@@ -1,8 +1,11 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 import com.sun.jna.LastErrorException;
+import es.nom.juanfranciscoruiz.ansiterm.codes.BGColor;
+import es.nom.juanfranciscoruiz.ansiterm.codes.Color;
+import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStyles;
 import es.nom.juanfranciscoruiz.utiles.Menu;
-import es.nom.juanfranciscoruiz.ansiterm.util.UnclosableInputStreamDecorator;
+import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import java.io.BufferedInputStream;
 import java.io.IOException;

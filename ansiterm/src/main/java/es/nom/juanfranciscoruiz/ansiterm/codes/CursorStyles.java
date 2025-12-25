@@ -1,17 +1,17 @@
-package es.nom.juanfranciscoruiz.ansiterm;
+package es.nom.juanfranciscoruiz.ansiterm.codes;
+
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CTS.ESC;
 
 /**
  * Contains the ANSI constants for changing cursor styles
  * @author juanf
  */
 public class CursorStyles {
-
     /**
      * ANSI escape sequence with which all CSI sequences begin
      * More information at:
      * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">...</a>
      */
-    public static final String ESC = "\033";
     /**
      * User-set cursor shape
      */

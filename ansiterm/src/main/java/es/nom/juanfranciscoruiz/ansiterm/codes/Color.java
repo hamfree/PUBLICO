@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm;
+package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 /**
  * Enumeration for foreground colors with ANSI codes for the terminal
@@ -84,7 +84,7 @@ public enum Color {
      * Returns the code as a string.
      * @return a string with the textual representation of the code
      */
-    String getAsString() {
+    public String getAsString() {
         return String.valueOf(this.codigo);
     }
 }
