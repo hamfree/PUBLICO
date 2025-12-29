@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CTS.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
  * Contains the ANSI constants for changing cursor styles

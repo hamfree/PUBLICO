@@ -1,7 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CTS.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 public class CursorMovementCodes {
   // Cursor movement controls
@@ -14,17 +14,20 @@ public class CursorMovementCodes {
    */
   public static final String REC_POS_CUR = ESC + "[6n";
   /**
-   * Moves the cursor one line up, scrolling if necessary
+   * Moves the cursor one line up, scrolling if necessary (RI)
    */
   public static final String MUE_CUR_1LIN_ARR = ESC + "M";
   /**
-   * Saves the cursor position (DEC sequence)
+   * Saves the cursor position (DECSC)
    */
   public static final String SAL_POS_CUR = ESC + "7";
   /**
-   * Restores the cursor to its last saved position (DEC sequence)
+   * Restores the cursor to its last saved position (DECSR)
    */
   public static final String RES_POS_CUR = ESC + "8";
   
+  /**
+   * Private constructor. Class can't be instantiated by the user
+   */
   private CursorMovementCodes() {}
 }

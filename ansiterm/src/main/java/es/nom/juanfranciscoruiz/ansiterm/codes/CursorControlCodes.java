@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CTS.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 public class CursorControlCodes {
   // Cursor control codes
@@ -22,5 +22,8 @@ public class CursorControlCodes {
    */
   public static final String CUR_NOPAR = ESC + "[?12l";
   
+  /**
+   * Private constructor. Class can't be instantiated by the user
+   */
   private CursorControlCodes() {}
 }

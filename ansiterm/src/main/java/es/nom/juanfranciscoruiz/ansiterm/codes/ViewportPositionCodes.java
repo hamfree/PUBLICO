@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CTS.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 public class ViewportPositionCodes {
   // Viewport position codes
@@ -17,5 +17,8 @@ public class ViewportPositionCodes {
    */
   public static final String HAB_ALT_BUF = ESC + "[?1049h";
   
+  /**
+   * Private constructor. Class can't be instantiated by the user
+   */
   private ViewportPositionCodes() {}
 }

@@ -9,7 +9,7 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CTS.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
  *
@@ -41,7 +41,7 @@ public class ANSITerm {
     /**
      * ANSI escape sequence
      */
-    private static CTS cts;
+    private static CSI CSI;
     
     // General ASCII controls
     
@@ -265,7 +265,7 @@ public class ANSITerm {
 
     /**
      * Moves the cursor up as many lines as indicated in the 'lines' parameter<br>
-     *
+     * CODE: CUU (Cursor Up)
      * NOTE for the methods:<br>
      * <ul>
      * <li>moveCursorUp(int lines)</li>
@@ -294,7 +294,7 @@ public class ANSITerm {
 
     /**
      * Moves the cursor down as many lines as indicated in the lines parameter
-     *
+     * CODE: CUD (Cursor Down)
      * @see #moveCursorUp(int)
      * @param lines an integer with the lines down where the cursor will be moved
      */
@@ -307,7 +307,7 @@ public class ANSITerm {
     /**
      * Moves the cursor to the right as many characters as indicated in the 
      * cars parameter
-     *
+     * CODE: CUF (Cursor Forward)
      * @see #moveCursorUp(int)
      * @param cars an integer with the characters to the right where the 
      * cursor will be moved
@@ -321,7 +321,7 @@ public class ANSITerm {
     /**
      * Moves the cursor to the left as many characters as indicated in the 
      * cars parameter
-     *
+     * CODE: CUB (Cursor Backward)
      * @see #moveCursorUp(int)
      * @param cars an integer with the characters to the left where the 
      * cursor will be moved
@@ -334,6 +334,7 @@ public class ANSITerm {
 
     /**
      * Hides the cursor
+     * CODE: DECTCEM (Text Cursor Enable Mode Hide)
      */
     public void cursorHide() {
         String sec_ansi = ESC + CursorControlCodes.CUR_INV;
@@ -342,6 +343,7 @@ public class ANSITerm {
 
     /**
      * Shows the cursor
+     * CODE: DECTCEM (Text Cursor Enable Mode Show)
      */
     public void cursorShow() {
         String sec_ansi = ESC + CursorControlCodes.CUR_VIS;
@@ -351,6 +353,7 @@ public class ANSITerm {
     
     /**
      * Enables cursor blinking
+     * CODE: ATT160 (Text Cursor Enable Blinking)
      */
     public void cursorBlink() {
         String sec_ansi = ESC + CursorControlCodes.CUR_PAR;
@@ -359,6 +362,7 @@ public class ANSITerm {
     
     /**
      * Disables cursor blinking
+     * CODE: ATT160 (Text Cursor Disable Blinking)
      */
     public void cursorNoBlink() {
         String sec_ansi = ESC + CursorControlCodes.CUR_NOPAR;
@@ -367,7 +371,16 @@ public class ANSITerm {
 
     /**
      * Sets the cursor style.
-     *
+     * Implements the following ANSI sequences:
+     * <ul>
+     * <li>ESC [ 0 SP q, DECSCUSR, User Shape</li>
+     * <li>ESC [ 1 SP q, DECSCUSR, Blinking Block</li>
+     * <li>ESC [ 2 SP q, DECSCUSR, Steady Block</li>
+     * <li>ESC [ 3 SP q, DECSCUSR, Blinking Underline</li>
+     * <li>ESC [ 4 SP q, DECSCUSR, Steady Underline</li>
+     * <li>ESC [ 5 SP q, DECSCUSR, Blinking Bar</li>
+     * <li>ESC [ 6 SP q, DECSCUSR, Steady Bar</li>
+     * </ul>
      * @param style One of the available cursor styles (Class with static 
      * constants)
      */
