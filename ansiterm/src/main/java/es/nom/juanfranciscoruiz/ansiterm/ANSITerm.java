@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
  * debe soportar este estándar (Windows Terminal, xterm y otros emuladores de
  * terminal lo soportan). El terminal de consola de Windows (cmd.exe) no soporta
  * ANSI.
- * 
+ * <p>
  * Más información sobre el uso de secuencias de escape ANSI y su uso en:<br><br>
- * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html<br>
- * https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences<br>
- * https://en.wikipedia.org/wiki/ANSI_escape_code
+ * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">Invisible-Island</a><br>
+ * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn</a><br>
+ * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia</a>
  *
  * @author juanf
  */
@@ -193,9 +193,9 @@ public class ANSITerm {
      * El color de reinicio es el código de reinicio que restablece todos los
      * colores y efectos de texto. Use el color predeterminado de las
      * Enumeraciones Color y Bgcolor para restablecer solo los colores.
-     *
-     * @See es.nom.juanfranciscoruiz.ansiterm.Color
-     * @See es.nom.juanfranciscoruiz.ansiterm.BGcolor
+     * <p>
+     * {@code @See} es.nom.juanfranciscoruiz.ansiterm.Color
+     * {@code @See} es.nom.juanfranciscoruiz.ansiterm.BGcolor
      *
      */
     private static final String REINICIA = "0";
@@ -406,20 +406,20 @@ public class ANSITerm {
 
             System.out.print(REC_POS_CUR);
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             int character;
 
             do {
                 character = System.in.read();
                 if (character == 27) {
-                    result += "^";
+                    result.append("^");
                 } else {
-                    result += (char) character;
+                    result.append((char) character);
                 }
             } while (character != 82); // 'R'
 
             Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
-            Matcher matcher = pattern.matcher(result);
+            Matcher matcher = pattern.matcher(result.toString());
             if (matcher.matches()) {
                 return new Posicion(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
             } else {
@@ -969,7 +969,6 @@ public class ANSITerm {
                     sb.insert(0, ESC + INI_TAC).append(ESC + FIN_TAC);
                 } else {
                     sb.append(setStrikeThrough(msg));
-                    isMessageAdded = true;
                 }
             }
         } else {
@@ -991,21 +990,17 @@ public class ANSITerm {
     public String setColor(Color color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         int iColor = Integer.parseInt(color.getAsString());
-        if ((iColor >= 30 || iColor <= 37)) {
-            if ((msg != null && !msg.isEmpty())) {
-                sb.append(ESC).append("[")
-                        .append(iColor)
-                        .append("m")
-                        .append(msg)
-                        .append(ESC)
-                        .append("[")
-                        .append(Color.DEFECTO.getAsString())
-                        .append("m");
-            } else {
-                throw new IllegalArgumentException(EX_NO_MSG);
-            }
+        if ((msg != null && !msg.isEmpty())) {
+            sb.append(ESC).append("[")
+                    .append(iColor)
+                    .append("m")
+                    .append(msg)
+                    .append(ESC)
+                    .append("[")
+                    .append(Color.DEFECTO.getAsString())
+                    .append("m");
         } else {
-            throw new IllegalArgumentException(EX_NO_COL);
+            throw new IllegalArgumentException(EX_NO_MSG);
         }
 
         return sb.toString();
@@ -1093,7 +1088,7 @@ public class ANSITerm {
     public String setBackgroundColor(BGColor color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         int iColor = Integer.parseInt(color.getAsString());
-        if ((iColor >= 40 || iColor <= 47)) {
+        if (iColor >= 40 && iColor <= 47) {
             if ((msg != null && !msg.isEmpty())) {
                 sb.append(ESC).append("[")
                         .append(iColor)
@@ -1132,7 +1127,7 @@ public class ANSITerm {
         if ((iColor < 30 || iColor > 37)) {
             throw new IllegalArgumentException(EX_NO_COL);
         }
-        if ((bColor < 40 || iColor > 47)) {
+        if (bColor < 40) {
             throw new IllegalArgumentException(EX_NO_BACKCOL);
         }
         if ((msg == null || msg.isEmpty())) {

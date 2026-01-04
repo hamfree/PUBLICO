@@ -10,13 +10,12 @@ public class MenuException extends Exception {
     /**
      * Constructor for MenuException
      */
-    public MenuException() {
-    }
+    public MenuException() {}
 
     /**
      * Constructor for MenuException
      *
-     * @param message
+     * @param message the error message
      */
     public MenuException(String message) {
         super(message);
@@ -25,8 +24,8 @@ public class MenuException extends Exception {
     /**
      * Constructor for MenuException
      *
-     * @param message
-     * @param cause
+     * @param message the error message
+     * @param cause   the cause
      */
     public MenuException(String message, Throwable cause) {
         super(message, cause);
@@ -35,7 +34,7 @@ public class MenuException extends Exception {
     /**
      * Constructor for MenuException
      *
-     * @param cause
+     * @param cause the cause
      */
     public MenuException(Throwable cause) {
         super(cause);
@@ -44,10 +43,10 @@ public class MenuException extends Exception {
     /**
      * Constructor for MenuException
      *
-     * @param message
-     * @param cause
-     * @param enableSuppression
-     * @param writableStackTrace
+     * @param message            the error message
+     * @param cause              the cause
+     * @param enableSuppression  whether or not suppression is enabled or disabled
+     * @param writableStackTrace whether or not the stack trace should be writable
      */
     public MenuException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);

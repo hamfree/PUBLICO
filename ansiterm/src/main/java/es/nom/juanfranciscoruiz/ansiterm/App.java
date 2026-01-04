@@ -11,10 +11,9 @@ import java.util.Random;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+//TODO: Sustituir Menu por el que está incluído en la librería 'utiles'
 /**
  * Clase que prueba las funcionalidades de la clase ANSITerm (Códigos ANSI)
- * Falta por probar la combinación de colores y estilos.
  *
  * @author juanf
  */
@@ -167,7 +166,6 @@ public class App {
             logger.error(String.valueOf(e.getErrorCode()));
             logger.error(e.getMessage());
             System.out.println(e.getMessage());
-            e.printStackTrace();
             System.exit(-1);
         } catch (IOException ex) {
             logger.error(ex.getMessage());
@@ -182,7 +180,7 @@ public class App {
      * Muestra en el terminal el movimiento del cursor con el retardo en milisegundos
      * entre cada movimiento. La 'ruta' será un rectángulo teniendo en cuenta las
      * dimensiones actuales del terminal.
-     * 
+     *
      * @param term Un objeto ANSITerm
      * @param retardo  Un long con el retardo en milisegundos
      * @throws Exception En caso de que se produzca algún error
@@ -847,7 +845,7 @@ public class App {
      * muestra, opcionalmente un mensaje en pantalla. Si no se pasa el mensaje 
      * mostrará por defecto el mensaje "Pulse &lt;INTRO> para continuar..." en 
      * la última línea del terminal.
-     * 
+     * <p>
      * Si se indica 0 como parámetro 'milisegundos' la función esperará a que 
      * el usuario pulse INTRO para continuar. En caso contrario, se mostrará al
      * usuario que el programa continuará después de los milisegundos indicados
@@ -920,7 +918,7 @@ public class App {
             for (int col = 1; col < cols; col++) {
                 car = rnd.nextInt(94) + 32;
                 ascii = (char) car;
-                sb.append(String.valueOf(ascii));
+                sb.append(ascii);
             }
             term.printAt(sb.toString(), line, 1);
             sb.setLength(0);

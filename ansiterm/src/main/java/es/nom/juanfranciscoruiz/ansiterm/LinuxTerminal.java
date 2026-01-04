@@ -6,9 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Proporciona acceso a los modos raw y cooked del terminal de Linux así como
- * la obtención del tamaño del terminal mediante secuencias de escape ANSI y el
- * establecimiento del modo raw para que no aparezca el código ANSI en pantalla.
+ * It provides access to the raw and cooked modes of the Linux terminal, as well
+ * as theas obtaining the terminal size using ANSI escape sequences and setting
+ * the raw mode so that ANSI code does not appear on the screen.
  * 
  * @author juanf
  */
@@ -17,20 +17,17 @@ public class LinuxTerminal implements ITerminal {
     private static final String ESC = "\033";
     private static final String REC_POS_CUR = ESC + "[6n";
 
-    
     /**
-     * Instancia un objeto LinuxTerminal
+     * Instantiate a LinuxTerminal object
      */
-    public LinuxTerminal(){
-        
-    }
+    public LinuxTerminal(){}
     
     /**
-     * Habilita el modo 'raw' de la consola. Utiliza el comando 'stty' que
-     * suele estar disponible en todos los entornos UNIX. En el modo 'raw' los 
-     * caracteres tecleados por el usuario se pasan directamente a la 
-     * aplicación sin que el usuario tenga que pulsar INTRO. Se pasa el parámetro
-     * '-echo' para que no aparezcan los caracteres tecleados en pantalla.
+     * Enable the console's 'raw' mode. Use the 'stty' command, which is usually
+     * available in all UNIX environments. In 'raw' mode, the characters typed
+     * by the user are passed directly to the application without the user
+     * having to press Enter. The '-echo' parameter is passed to prevent the
+     * typed characters from being displayed on the screen.
      */
     @Override
     public void enableRawMode() {
@@ -43,9 +40,9 @@ public class LinuxTerminal implements ITerminal {
     }
 
     /**
-     * Deshabilita el modo 'raw' del terminal y habilita el modo 'cooked', que 
-     * es el que habitualmente se usa (se muestran los caracteres tecleados y 
-     * para que el shell reciba nuestra orden hay que pulsar INTRO)
+     * Disable the terminal's 'raw' mode and enable 'cooked' mode, which
+     * is the one usually used (the typed characters are displayed and to
+     * receive our command the shell must press ENTER).
      */
     @Override
     public void disableRawMode() {
@@ -57,10 +54,9 @@ public class LinuxTerminal implements ITerminal {
         }
     }
 
-    
     /**
-     * Obtiene el tamaño del terminal.
-     * @return un objeto TerminalSize con las líneas y columnas del terminal.
+     * Get the terminal size.
+     * @return a TerminalSize object with the lines and columns of the terminal.
      */
     @Override
     public TerminalSize getTerminalSize() {
@@ -68,12 +64,16 @@ public class LinuxTerminal implements ITerminal {
         gotoXY(10000, 10000);
         Posicion result = readCurrentPosition();
         gotoXY(inicialPosicion.getCol(), inicialPosicion.getLin());
-
         return new TerminalSize(result.getCol(), result.getLin());
     }
 
     
-    // Métodos de utilidad para el método 'getTerminalSize()'
+    // Utility methods for 'getTerminalSize()'
+
+    /**
+     *
+     * @return
+     */
     private Posicion readCurrentPosition() {
         try {
             this.enableRawMode();
@@ -108,12 +108,20 @@ public class LinuxTerminal implements ITerminal {
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     */
     private void gotoXY(int x, int y) {
         System.out.print(String.format("\u001B[%d;%dH", y, x)); // CSI n ; m H
     }
 
+    /**
+     *
+     * @param screenPosition
+     */
     private void gotoXY(Posicion screenPosition) {
         System.out.print(String.format("\u001B[%d;%dH", screenPosition.getLin(), screenPosition.getCol())); // CSI n ; m H
     }
-
 }
