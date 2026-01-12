@@ -51,7 +51,7 @@ public class ANSITerm {
     private static CursorMovementCodes cmc;
 
     // Erase sequences
-    private EraseSecuences esec;
+    private EraseSecuencesCodes esec;
     
     // Control sequences for colors and styles
     private static ColorsAndStylesCodes csc;
@@ -60,7 +60,7 @@ public class ANSITerm {
     private static CursorControlCodes ccc;
     
     // Viewport position codes
-    private static ViewportPositionCodes vpc;
+    private static PositionCodes vpc;
 
     // Constants for exception messages
     private static final String EX_NO_MSG = "No message, it is empty or only contains whitespace";
@@ -186,7 +186,7 @@ public class ANSITerm {
      * Moves the cursor to the beginning of the terminal (0,0)
      */
     public void moveCursorToBegin() {
-        System.out.print(CursorMovementCodes.MUE_CUR_00);
+        System.out.print(CursorMovementCodes.CURSOR_MOVE_TO_00);
     }
 
     /**
@@ -224,7 +224,7 @@ public class ANSITerm {
             // for them to press ENTER (raw mode)
             this.osCall.enableRawMode();
 
-            System.out.print(CursorMovementCodes.REC_POS_CUR);
+            System.out.print(CursorMovementCodes.CURSOR_GET_POSITION);
 
             StringBuilder result = new StringBuilder();
             int character;
@@ -260,7 +260,7 @@ public class ANSITerm {
      * Moves the cursor one line up
      */
     public void moveCursorUp() {
-        System.out.println(CursorMovementCodes.MUE_CUR_1LIN_ARR);
+        System.out.println(CursorMovementCodes.CURSOR_MOVE_ONE_LINE_UP);
     }
 
     /**
@@ -337,7 +337,7 @@ public class ANSITerm {
      * CODE: DECTCEM (Text Cursor Enable Mode Hide)
      */
     public void cursorHide() {
-        String sec_ansi = ESC + CursorControlCodes.CUR_INV;
+        String sec_ansi = ESC + CursorControlCodes.HIDES_CURSOR;
         System.out.print(sec_ansi);
     }
 
@@ -346,7 +346,7 @@ public class ANSITerm {
      * CODE: DECTCEM (Text Cursor Enable Mode Show)
      */
     public void cursorShow() {
-        String sec_ansi = ESC + CursorControlCodes.CUR_VIS;
+        String sec_ansi = ESC + CursorControlCodes.SHOWS_CURSOR;
         System.out.print(sec_ansi);
     }
     
@@ -356,7 +356,7 @@ public class ANSITerm {
      * CODE: ATT160 (Text Cursor Enable Blinking)
      */
     public void cursorBlink() {
-        String sec_ansi = ESC + CursorControlCodes.CUR_PAR;
+        String sec_ansi = ESC + CursorControlCodes.ENABLE_BLINK_CURSOR;
         System.out.print(sec_ansi);
     }
     
@@ -365,7 +365,7 @@ public class ANSITerm {
      * CODE: ATT160 (Text Cursor Disable Blinking)
      */
     public void cursorNoBlink() {
-        String sec_ansi = ESC + CursorControlCodes.CUR_NOPAR;
+        String sec_ansi = ESC + CursorControlCodes.DISABLE_BLINK_CURSOR;
         System.out.print(sec_ansi);
     }
 
@@ -390,13 +390,13 @@ public class ANSITerm {
             throw new IllegalArgumentException("Invalid style");
         }
 
-        if (!style.equals(CursorStyles.CUR_BAR_ES)
-                && !style.equals(CursorStyles.CUR_BAR_PAR)
-                && !style.equals(CursorStyles.CUR_BLO_EST)
-                && !style.equals(CursorStyles.CUR_BLO_PAR)
-                && !style.equals(CursorStyles.CUR_SUB_EST)
-                && !style.equals(CursorStyles.CUR_SUB_PAR)
-                && !style.equals(CursorStyles.CUR_USU)) {
+        if (!style.equals(CursorStylesCodes.CURSOR_STEADY_BAR_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_BLINKING_BAR_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_BLOCK_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_STEADY_UNDERLINE_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_UNDERLINE_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_USER_SHAPE)) {
             throw new IllegalArgumentException("Unrecognized style");
         }
         System.out.print(style);
@@ -486,7 +486,7 @@ public class ANSITerm {
      * Saves the cursor position
      */
     public void saveCursorPos() {
-        System.out.print(CursorMovementCodes.SAL_POS_CUR);
+        System.out.print(CursorMovementCodes.CURSOR_SAVE_CURRENT_POSITION);
 
     }
 
@@ -494,7 +494,7 @@ public class ANSITerm {
      * Restores the cursor position
      */
     public void restoreCursorPos() {
-        System.out.print(CursorMovementCodes.RES_POS_CUR);
+        System.out.print(CursorMovementCodes.CURSOR_RESTORE_CURRENT_POSITION);
     }
 
     // Erase functions
@@ -502,21 +502,21 @@ public class ANSITerm {
      * Deletes everything from the cursor position to the end of the screen
      */
     public void deleteFromCursorToEndScreen() {
-        System.out.print(EraseSecuences.BOR_CUR_FIN);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_END_OF_SCREEN);
     }
 
     /**
      * Deletes everything from the cursor position to the beginning of the screen
      */
     public void deleteFromCursorToBeginScreen() {
-        System.out.print(EraseSecuences.BOR_CUR_PRI);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_BEGINNING_OF_SCREEN);
     }
 
     /**
      * Erases the screen
      */
     public void clearScreen() {
-        System.out.print(EraseSecuences.BOR_PAN);
+        System.out.print(EraseSecuencesCodes.CLEAR_SCREEN);
     }
 
     /**
@@ -524,7 +524,7 @@ public class ANSITerm {
      * where it is located.
      */
     public void deleteFromCursorToEndLine() {
-        System.out.print(EraseSecuences.BOR_CUR_FIN_LIN);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_END_OF_CURRENT_LINE);
     }
 
     /**
@@ -532,7 +532,7 @@ public class ANSITerm {
      * where it is located.
      */
     public void deleteFromCursorToBeginLine() {
-        System.out.print(EraseSecuences.BOR_CUR_PRI_LIN);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_BEGINNING_OF_CURRENT_LINE);
     }
 
     /**
@@ -540,7 +540,7 @@ public class ANSITerm {
      * located.
      */
     public void deleteLine() {
-        System.out.print(EraseSecuences.BOR_CUR_LIN);
+        System.out.print(EraseSecuencesCodes.ERASES_CURRENT_LINE);
     }
 
     // Colors and styles
@@ -555,9 +555,9 @@ public class ANSITerm {
     public String setBold(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_NEG)
+            sb.append(ESC).append(ColorsAndStylesCodes.BOLD_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_NEG);
+                    .append(ESC).append(ColorsAndStylesCodes.BOLD_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -574,9 +574,9 @@ public class ANSITerm {
     public String setDim(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_OSC)
+            sb.append(ESC).append(ColorsAndStylesCodes.DIM_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_OSC);
+                    .append(ESC).append(ColorsAndStylesCodes.DIM_END);
         }
 
         return sb.toString();
@@ -593,9 +593,9 @@ public class ANSITerm {
     public String setItalic(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_CUR)
+            sb.append(ESC).append(ColorsAndStylesCodes.ITALIC_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_CUR);
+                    .append(ESC).append(ColorsAndStylesCodes.ITALIC_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -614,9 +614,9 @@ public class ANSITerm {
     public String setUnderline(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_SUB)
+            sb.append(ESC).append(ColorsAndStylesCodes.UNDERLINE_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_SUB);
+                    .append(ESC).append(ColorsAndStylesCodes.UNDERLINE_STOP);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -635,9 +635,9 @@ public class ANSITerm {
     public String setBlink(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_INT)
+            sb.append(ESC).append(ColorsAndStylesCodes.BLINK_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_INT);
+                    .append(ESC).append(ColorsAndStylesCodes.BLINK_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -656,9 +656,9 @@ public class ANSITerm {
     public String setInverse(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_REV)
+            sb.append(ESC).append(ColorsAndStylesCodes.REVERSE_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_REV);
+                    .append(ESC).append(ColorsAndStylesCodes.REVERSE_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -678,9 +678,9 @@ public class ANSITerm {
     public String setHidden(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_INV)
+            sb.append(ESC).append(ColorsAndStylesCodes.INVISIBLE_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_INV);
+                    .append(ESC).append(ColorsAndStylesCodes.INVISIBLE_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -699,9 +699,9 @@ public class ANSITerm {
     public String setStrikeThrough(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(ColorsAndStylesCodes.INI_TAC)
+            sb.append(ESC).append(ColorsAndStylesCodes.STRIKETHROUGH_START)
                     .append(msg)
-                    .append(ESC).append(ColorsAndStylesCodes.FIN_TAC);
+                    .append(ESC).append(ColorsAndStylesCodes.STRIKETHROUGH_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -741,8 +741,8 @@ public class ANSITerm {
             if (isDim) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ColorsAndStylesCodes.INI_OSC).append(ESC +
-                        ColorsAndStylesCodes.FIN_OSC);
+                        ColorsAndStylesCodes.DIM_START).append(ESC +
+                        ColorsAndStylesCodes.DIM_END);
                 } else {
                     sb.append(setDim(msg));
                     isMessageAdded = true;
@@ -751,8 +751,8 @@ public class ANSITerm {
             if (isItalic) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ColorsAndStylesCodes.INI_CUR).append(ESC +
-                        ColorsAndStylesCodes.FIN_CUR);
+                        ColorsAndStylesCodes.ITALIC_START).append(ESC +
+                        ColorsAndStylesCodes.ITALIC_END);
                 } else {
                     sb.append(setItalic(msg));
                     isMessageAdded = true;
@@ -761,8 +761,8 @@ public class ANSITerm {
             if (isUnderline) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ColorsAndStylesCodes.INI_SUB).append(ESC +
-                        ColorsAndStylesCodes.FIN_SUB);
+                        ColorsAndStylesCodes.UNDERLINE_START).append(ESC +
+                        ColorsAndStylesCodes.UNDERLINE_STOP);
                 } else {
                     sb.append(setUnderline(msg));
                     isMessageAdded = true;
@@ -771,8 +771,8 @@ public class ANSITerm {
             if (isBlink) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ColorsAndStylesCodes.INI_INT).append(ESC +
-                        ColorsAndStylesCodes.FIN_INT);
+                        ColorsAndStylesCodes.BLINK_START).append(ESC +
+                        ColorsAndStylesCodes.BLINK_END);
                 } else {
                     sb.append(setBlink(msg));
                     isMessageAdded = true;
@@ -781,8 +781,8 @@ public class ANSITerm {
             if (isInverse) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ColorsAndStylesCodes.INI_REV).append(ESC +
-                        ColorsAndStylesCodes.FIN_REV);
+                        ColorsAndStylesCodes.REVERSE_START).append(ESC +
+                        ColorsAndStylesCodes.REVERSE_END);
                 } else {
                     sb.append(setInverse(msg));
                     isMessageAdded = true;
@@ -791,8 +791,8 @@ public class ANSITerm {
             if (isStrikeThrough) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ColorsAndStylesCodes.INI_TAC).append(ESC +
-                        ColorsAndStylesCodes.FIN_TAC);
+                        ColorsAndStylesCodes.STRIKETHROUGH_START).append(ESC +
+                        ColorsAndStylesCodes.STRIKETHROUGH_END);
                 } else {
                     sb.append(setStrikeThrough(msg));
                     isMessageAdded = true;
@@ -824,7 +824,7 @@ public class ANSITerm {
                         .append(msg)
                         .append(ESC)
                         .append("[")
-                        .append(Color.DEFECTO.getAsString())
+                        .append(Color.DEFAULT.getAsString())
                         .append("m");
             } else {
                 throw new IllegalArgumentException(EX_NO_MSG);
@@ -858,13 +858,13 @@ public class ANSITerm {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
 
-        sb.append(ESC).append(ColorsAndStylesCodes.COL256)
+        sb.append(ESC).append(ColorsAndStylesCodes.FOREGROUND_COLOR256)
                 .append(color)
                 .append("m")
                 .append(msg)
                 .append(ESC)
                 .append("[")
-                .append(Color.DEFECTO.getAsString())
+                .append(Color.DEFAULT.getAsString())
                 .append("m");
 
         return sb.toString();
@@ -891,13 +891,13 @@ public class ANSITerm {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
 
-        sb.append(ESC).append(ColorsAndStylesCodes.COL256_F)
+        sb.append(ESC).append(ColorsAndStylesCodes.BACKGROUND_COLOR256)
                 .append(color)
                 .append("m")
                 .append(msg)
                 .append(ESC)
                 .append("[")
-                .append(Color.DEFECTO.getAsString())
+                .append(Color.DEFAULT.getAsString())
                 .append("m");
 
         return sb.toString();
@@ -923,7 +923,7 @@ public class ANSITerm {
                         .append(msg)
                         .append(ESC)
                         .append("[")
-                        .append(BGColor.DEFECTO.getAsString())
+                        .append(BGColor.DEFAULT.getAsString())
                         .append("m");
             } else {
                 throw new IllegalArgumentException(EX_NO_MSG);
@@ -967,7 +967,7 @@ public class ANSITerm {
                 .append(msg)
                 .append(ESC)
                 .append("[")
-                .append(ColorsAndStylesCodes.REINICIA)
+                .append(ColorsAndStylesCodes.RESET_COLOR_AND_STYLES)
                 .append("m");
         return sb.toString();
     }
@@ -977,7 +977,7 @@ public class ANSITerm {
      * this method when you finish using Terminal in your application.
      */
     public void resetScreen() {
-        System.out.print(ViewportPositionCodes.RES_PAN);
+        System.out.print(PositionCodes.RESTORES_SCREEN);
     }
 
 

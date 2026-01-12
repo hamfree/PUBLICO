@@ -8,23 +8,23 @@ public enum BGColor {
     /**
      * Black color 
      */
-    NEGRO(40),
+    BLACK(40),
     /**
      * Red color
      */
-    ROJO(41),
+    RED(41),
     /**
      * Green color
      */
-    VERDE(42),
+    GREEN(42),
     /**
      * Yellow color
      */
-    AMARILLO(43),
+    YELLOW(43),
     /**
      * Blue color
      */
-    AZUL(44),
+    BLUE(44),
     /**
      * Magenta color
      */
@@ -32,47 +32,47 @@ public enum BGColor {
     /**
      * Cyan color
      */
-    CIAN(46),
+    CYAN(46),
     /**
      * White color
      */    
-    BLANCO(47),
+    WHITE(47),
     /**
      * Bright black color (if that color can be bright, of course)
      */
-    NEGRO_BRILLANTE(100),
+    GLOSSY_BLACK(100),
     /**
      * Bright red color
      */
-    ROJO_BRILLANTE(101),
+    GLOSSY_RED(101),
     /**
      * Bright green color
      */
-    VERDE_BRILLANTE(102),
+    GLOSSY_GREEN(102),
     /**
      * Bright yellow color
      */
-    AMARILLO_BRILLANTE(103),
+    GLOSSY_YELLOW(103),
     /**
      * Bright blue color
      */
-    AZUL_BRILLANTE(104),
+    GLOSSY_BLUE(104),
     /**
      * Bright magenta color
      */
-    MAGENTA_BRILLANTE(105),
+    GLOSSY_MAGENTA(105),
     /**
      * Bright cyan color
      */
-    CIAN_BRILLANTE(106),
+    GLOSSY_CYAN(106),
     /**
      * Bright white color
      */
-    BLANCO_BRILLANTE(107),
+    GLOSSY_WHITE(107),
     /**
      * Returns the background color to its default value.
      */
-    DEFECTO(49);
+    DEFAULT(49);
 
     private final int codigo;
 

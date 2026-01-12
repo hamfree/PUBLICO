@@ -8,23 +8,23 @@ public enum Color {
     /**
      * Black foreground color.
      */
-    NEGRO (30), 
+    BLACK(30),
     /**
      * Red foreground color.
      */
-    ROJO (31), 
+    RED(31),
     /**
      * Green foreground color.
      */
-    VERDE (32), 
+    GREEN(32),
     /**
      * Yellow foreground color.
      */
-    AMARILLO (33), 
+    YELLOW(33),
     /**
      * Blue foreground color.
      */
-    AZUL (34), 
+    BLUE(34),
     /**
      * Magenta foreground color.
      */
@@ -32,47 +32,47 @@ public enum Color {
     /**
      * Cyan foreground color.
      */
-    CIAN (36),
+    CYAN(36),
     /**
      * White foreground color.
      */
-    BLANCO (37),
+    WHITE(37),
     /**
      * Returns the foreground color to its default value.
      */
-    DEFECTO (39),
+    DEFAULT(39),
     /**
      * Bright black foreground color.
      */
-    NEGRO_BRILLANTE (90),
+    GLOSSY_BLACK (90),
     /**
      * Bright red foreground color.
      */
-    ROJO_BRILLANTE (91), 
+    GLOSSY_RED(91),
     /**
      * Bright green foreground color.
      */
-    VERDE_BRILLANTE (92), 
+    GLOSSY_GREEN(92),
     /**
      * Bright yellow foreground color.
      */
-    AMARILLO_BRILLANTE (93), 
+    GLOSSY_YELLOW(93),
     /**
      * Bright blue foreground color.
      */
-    AZUL_BRILLANTE (94), 
+    GLOSSY_BLUE(94),
     /**
      * Bright magenta foreground color.
      */
-    MAGENTA_BRILLANTE (95), 
+    GLOSSY_MAGENTA(95),
     /**
      * Bright cyan foreground color.
      */
-    CIAN_BRILLANTE (96),
+    GLOSSY_CYAN(96),
     /**
      * Bright white foreground color.
      */
-    BLANCO_BRILLANTE (97),;
+    GLOSSY_WHITE(97),;
     
     private final int codigo;
     

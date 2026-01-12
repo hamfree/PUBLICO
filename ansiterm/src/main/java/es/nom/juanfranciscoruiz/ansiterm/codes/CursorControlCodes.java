@@ -7,20 +7,20 @@ public class CursorControlCodes {
   /**
    * Hides the cursor (DECTCEM)
    */
-  public static final String CUR_INV = ESC + "[?25l";
+  public static final String HIDES_CURSOR = ESC + "[?25l";
   /**
    * Shows the cursor (DECTCEM)
    */
-  public static final String CUR_VIS = ESC + "[?25h";
+  public static final String SHOWS_CURSOR = ESC + "[?25h";
   
   /**
    * Enables cursor blinking (ATT160)
    */
-  public static final String CUR_PAR = ESC + "[?12h";
+  public static final String ENABLE_BLINK_CURSOR = ESC + "[?12h";
   /**
    * Disables cursor blinking (ATT160)
    */
-  public static final String CUR_NOPAR = ESC + "[?12l";
+  public static final String DISABLE_BLINK_CURSOR = ESC + "[?12l";
   
   /**
    * Private constructor. Class can't be instantiated by the user
