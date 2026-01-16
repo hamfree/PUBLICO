@@ -51,8 +51,9 @@ public class Inicio {
         msg = "\tAnother list of integer from 10 to 0:\n\t" + list2;
         print(msg);
         print(sl);
-        msg = "\tA little bit complex map : a map of Strings as keys and " +
-                "List of Integers as values:\n\t" +
+        msg = """
+              \tA little bit complex map : a map of Strings as keys and List of Integers as values:
+              \t""" +
                 map2;
         print(msg);
         print(sl);

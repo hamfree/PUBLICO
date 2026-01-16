@@ -72,16 +72,45 @@ public class Menu {
     private String menuView;
 
     /**
-     * Constants for default values and error messages used in the Menu class.
+     * Default value for the title property of a Menu Object.
      */
     private static final String NOTITLE = "Untitled";
+    
+    /**
+     * For a Menu object that is the Home Menu this is the option 0 of the menu
+     * for exiting the application.
+     */
     private static final String EXITOPT = "0. Exit the application";
+    
+    /**
+     * Default vale for the message shown to the user below the list options.
+     */
     private static final String DEFAULTMSG = "Make your selection:";
+    /**
+     * Message of error when the user enters an invalid option in awaitResponse().
+     */
     private static final String ERR_BLANK_NULL = "You must enter a number with the option to choose.";
+    /**
+     * Message of error when the user enters something that is not a number.
+     */
     private static final String ERR_NONUMBER = "What was entered is not a number.";
+    /**
+     * Message of error when the user enters a negative or decimal number 
+     */
     private static final String ERR_NOTVALIDNUMBER = "You have not entered a valid number.";
+    
+    /**
+     * Message of error when the user enters a valid number but it's outside the 
+     * allowed range.
+     */
     private static final String ERR_NUMBEROUTOFRANGE = "The selected option is outside the allowed range";
+    /**
+     * Message of error when it's trying to use a Menu Object with no menu options.
+     */
     private static final String ERR_NOOPTIONS = "There are no defined options in this menu";
+    /**
+     * Constant for the wrong option.
+     */
     private static final Long WRONGOPTION = -1L;
 
     // Constructors
