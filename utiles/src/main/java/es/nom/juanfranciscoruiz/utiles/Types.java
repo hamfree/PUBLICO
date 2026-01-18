@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for type checking and validation.
+ * @author Juan F. Ruiz
  */
 public class Types {
 
@@ -17,7 +18,13 @@ public class Types {
      * For debugging.
      */
     private static final Logger logger = LoggerFactory.getLogger(Types.class.getName());
-
+    
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private Types() {
+    }
+    
     /**
      * Indicates whether the passed object is null or empty (in the case of a
      * collection, or other object containing objects.
@@ -26,17 +33,16 @@ public class Types {
      * @return true if the object is null or empty, false otherwise.
      */
     public static boolean isNullOrEmpty(Object obj) {
+        boolean b = false;
         if (obj == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Is null");
-            }
+            if (logger.isDebugEnabled()) logger.debug("Is null");
             return true;
         } else if (obj.getClass().isAssignableFrom(Object.class)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("It is of type Object");
-                logger.debug("Is its value null? {}", false);
+                logger.debug("Is its value null? {}", b);
             }
-            return false;
+            return b;
         } else if (obj.getClass().isAssignableFrom(String.class)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("It is of type String");
@@ -79,7 +85,7 @@ public class Types {
         if (logger.isDebugEnabled()){
             logger.debug("Type of the object passed: {}", obj.getClass().getCanonicalName());
         }
-        return false;
+        return b;
     }
 
     /**
