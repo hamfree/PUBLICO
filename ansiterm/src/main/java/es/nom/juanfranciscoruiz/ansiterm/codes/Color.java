@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 /**
  * Enumeration for foreground colors with ANSI codes for the terminal
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public enum Color {
     /**
@@ -74,8 +74,16 @@ public enum Color {
      */
     GLOSSY_WHITE(97),;
     
+    /**
+     * The ANSI color code.
+     */
     private final int codigo;
     
+    /**
+     * Constructs a new Color with the specified code.
+     * 
+     * @param codigo The ANSI color code.
+     */
     Color(int codigo){
         this.codigo = codigo;
     }

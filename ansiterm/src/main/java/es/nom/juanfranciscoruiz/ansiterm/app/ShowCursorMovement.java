@@ -5,10 +5,24 @@ import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates cursor movement commands.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ShowCursorMovement {
   
+  /**
+   * Constructs a new ShowCursorMovement.
+   */
   public ShowCursorMovement() {}
   
+  /**
+   * Performs the cursor movement demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   public void perform(ANSITerm term) throws Exception {
     Long retardo = 50L;
     

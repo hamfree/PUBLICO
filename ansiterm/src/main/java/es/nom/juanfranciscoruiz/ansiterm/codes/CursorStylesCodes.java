@@ -5,9 +5,12 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 /**
  * Contains the ANSI constants for changing cursor styles
  *  ANSI escape sequence with which all CSI sequences begin
- *  More information at:
- *  <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">...</a>
- * @author juanf
+ * More information about using ANSI escape sequences at:<br><br>
+ *
+ * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">XTerm Control Sequences by Edward Moy</a><br>
+ * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn - Console Virtual Terminal Sequences</a><br>
+ * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia - ANSI escape code</a>
+ * @author Juan F. Ruiz
  */
 public class CursorStylesCodes {
     /**

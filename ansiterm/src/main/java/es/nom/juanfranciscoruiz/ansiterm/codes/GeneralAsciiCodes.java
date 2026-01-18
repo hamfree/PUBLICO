@@ -1,7 +1,15 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+/**
+ * Contains general ASCII control codes.
+ * More information about using ANSI escape sequences at:<br><br>
+ *
+ * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">XTerm Control Sequences by Edward Moy</a><br>
+ * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn - Console Virtual Terminal Sequences</a><br>
+ * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia - ANSI escape code</a>
+ * @author Juan F. Ruiz
+ */
 public class GeneralAsciiCodes {
-  // General ASCII controls
   /**
    * Rings the terminal bell
    * CODE: BELL

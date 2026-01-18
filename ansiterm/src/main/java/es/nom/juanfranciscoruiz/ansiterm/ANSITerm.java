@@ -18,11 +18,10 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * The Windows console terminal (cmd.exe) does not support ANSI.
  * <p>
  * More information about using ANSI escape sequences at:<br><br>
- * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">...</a><br>
- * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">...</a><br>
- * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">...</a>
- *
- * @author juanf
+ * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">XTerm Control Sequences by Edward Moy</a><br>
+ * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn - Console Virtual Terminal Sequences</a><br>
+ * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia - ANSI escape code</a>
+ * @author Juan F. Ruiz
  */
 public class ANSITerm {
 
@@ -39,32 +38,53 @@ public class ANSITerm {
     private ITerminal osCall;
 
     /**
-     * ANSI escape sequence
+     * ANSI escape sequence generator
      */
     private static CSI CSI;
     
-    // General ASCII controls
-    
+    /**
+     * General ASCII controls
+     */
     private static GeneralAsciiCodes gac;
 
-    // Cursor movement controls
+    /**
+     * Cursor movement controls
+     */
     private static CursorMovementCodes cmc;
 
-    // Erase sequences
+    /**
+     * Erase sequences
+     */
     private EraseSecuencesCodes esec;
     
-    // Control sequences for colors and styles
+    /**
+     * Control sequences for colors and styles
+     */
     private static ColorsAndStylesCodes csc;
 
-    // Cursor control codes
+    /**
+     * Cursor control codes
+     */
     private static CursorControlCodes ccc;
     
-    // Viewport position codes
+    /**
+     * Viewport position codes
+     */
     private static PositionCodes vpc;
 
-    // Constants for exception messages
+    /**
+     * Error message for empty or whitespace-only messages.
+     */
     private static final String EX_NO_MSG = "No message, it is empty or only contains whitespace";
+
+    /**
+     * Error message for invalid color.
+     */
     private static final String EX_NO_COL = "Invalid color";
+
+    /**
+     * Error message for invalid background color.
+     */
     private static final String EX_NO_BACKCOL = "Invalid background color";
 
     /**

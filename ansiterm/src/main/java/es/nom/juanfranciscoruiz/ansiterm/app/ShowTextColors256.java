@@ -4,10 +4,22 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates the use of 256 colors.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ShowTextColors256 {
-  
+  /**
+   * Constructs a new ShowTextColors256.
+   */
   ShowTextColors256(){}
   
+  /**
+   * Performs the 256 colors demonstration.
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

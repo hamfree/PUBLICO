@@ -203,7 +203,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-                    
+                    <author>true</author>
+                    <defaultAuthor>Juan F. Ruiz</defaultAuthor>
                 </configuration>
             </plugin>
         </plugins>

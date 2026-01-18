@@ -2,8 +2,16 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
+/**
+ * Contains ANSI escape codes for text colors and styles.
+ * More information about using ANSI escape sequences at:<br><br>
+ *
+ * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">XTerm Control Sequences by Edward Moy</a><br>
+ * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn - Console Virtual Terminal Sequences</a><br>
+ * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia - ANSI escape code</a>
+ * @author Juan F. Ruiz
+ */
 public class ColorsAndStylesCodes {
-  // Control sequences for colors and styles
   /**
    * Resets all modes (styles and colors)
    */
@@ -75,10 +83,10 @@ public class ColorsAndStylesCodes {
   /**
    * The reset color is the reset code that restores all colors and text
    * effects. Use the default color of the <code>Color</code> and
-   * <code>Bgcolor</code> Enums to reset only colors.
-   * <p>
-   * {@code @See} es.nom.juanfranciscoruiz.ansiterm.Color
-   * {@code @See} es.nom.juanfranciscoruiz.ansiterm.BGcolor
+   * <code>BGColor</code> Enums to reset only colors.
+   * 
+   * @see es.nom.juanfranciscoruiz.ansiterm.codes.Color
+   * @see es.nom.juanfranciscoruiz.ansiterm.codes.BGColor
    *
    */
   public static final String RESET_COLOR_AND_STYLES = "0";
@@ -91,5 +99,8 @@ public class ColorsAndStylesCodes {
    */
   public static final String BACKGROUND_COLOR256 = ESC + "[48;5;";
   
+  /**
+   * Private constructor to prevent instantiation.
+   */
   private ColorsAndStylesCodes() {}
 }

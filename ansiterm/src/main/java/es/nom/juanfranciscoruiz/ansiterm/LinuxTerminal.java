@@ -11,14 +11,30 @@ import java.util.regex.Pattern;
  * Provides access to the raw and cooked modes of the Linux terminal as well as
  * obtaining the terminal size using ANSI escape sequences and setting the
  * raw mode so that the ANSI code does not appear on the screen.
- * 
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class LinuxTerminal implements ITerminal {
     
+    /**
+     * A logger instance for the {@code LinuxTerminal} class.
+     * This is used to output logging information, such as error messages,
+     * debug details, or general operational logs, to a configured logging system.
+     * The logger uses the SLF4J API for flexible and configurable logging.
+     */
     public static final Logger logger = LoggerFactory.getLogger(LinuxTerminal.class);
     
+    /**
+     * Represents the ANSI escape character sequence prefix, commonly used
+     * to initiate control sequences for terminal text formatting, cursor movement,
+     * and other terminal operations. This value is specific to UNIX-like environments
+     * and allows manipulation of terminal behavior programmatically.
+     */
     private static final String ESC = "\033";
+    /**
+     * Represents the ANSI escape sequence for retrieving the current cursor position.
+     * This sequence is used to query the terminal for the current cursor position
+     * and is part of the ANSI escape sequence standard.
+     */
     private static final String REC_POS_CUR = ESC + "[6n";
 
     

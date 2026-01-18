@@ -7,7 +7,17 @@ import java.io.BufferedInputStream;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Utility class providing helper methods for terminal operations, such as
+ * pausing execution or printing formatted text blocks.
+ * @author Juan F. Ruiz
+ */
 public class Util {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private Util() {}
+  
   /**
    * Pauses the program for a specified number of milliseconds and optionally
    * displays a message. If no message is provided, it defaults to

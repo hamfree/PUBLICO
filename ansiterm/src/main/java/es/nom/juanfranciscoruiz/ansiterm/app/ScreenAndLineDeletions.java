@@ -6,9 +6,23 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.imprimeBloqueTexto;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates screen and line deletion and movement commands.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ScreenAndLineDeletions {
+  /**
+   * Constructs a new ScreenAndLineDeletions.
+   */
   ScreenAndLineDeletions() {}
   
+  /**
+   * Performs the screen and line deletions demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     String msg = "The process will continue automatically every 4 seconds. Do not press any keys!";
     int columnas = term.getTerminalSize().getColumnas();

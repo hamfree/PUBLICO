@@ -4,10 +4,24 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates the use of multiple text styles combined.
+ *
+ * @author Juan F. Ruiz
+ */
 public class MultipleStylesText {
   
+  /**
+   * Constructs a new MultipleStylesText.
+   */
   MultipleStylesText() {}
   
+  /**
+   * Performs the multiple styles demonstration.
+   * 
+   * @param term The ANSITerm object to use for styling.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

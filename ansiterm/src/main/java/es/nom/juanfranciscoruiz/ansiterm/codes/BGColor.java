@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 /**
  * Enumeration for background colors with ANSI codes for the terminal
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public enum BGColor {
     /**
@@ -74,8 +74,16 @@ public enum BGColor {
      */
     DEFAULT(49);
 
+    /**
+     * The ANSI color code.
+     */
     private final int codigo;
 
+    /**
+     * Constructs a new BGColor with the specified code.
+     * 
+     * @param codigo The ANSI color code.
+     */
     BGColor(int codigo) {
         this.codigo = codigo;
     }

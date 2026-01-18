@@ -8,10 +8,24 @@ import java.util.Scanner;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates how to obtain the current terminal screen size.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ScreenSize {
   
+  /**
+   * Constructs a new ScreenSize.
+   */
   ScreenSize() {}
   
+  /**
+   * Performs the screen size demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     String resp = "";
     while (!resp.equals("q")) {

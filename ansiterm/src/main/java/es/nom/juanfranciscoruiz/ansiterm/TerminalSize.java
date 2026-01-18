@@ -2,8 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
  * Represents the terminal size.
- * 
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class TerminalSize {
     /**

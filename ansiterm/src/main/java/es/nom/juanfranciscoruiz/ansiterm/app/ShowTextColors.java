@@ -6,9 +6,23 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.Color;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates various text and background colors.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ShowTextColors {
+  /**
+   * Constructs a new ShowTextColors.
+   */
   ShowTextColors() {}
   
+  /**
+   * Performs the text colors demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

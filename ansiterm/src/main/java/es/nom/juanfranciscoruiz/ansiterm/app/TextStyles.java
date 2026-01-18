@@ -5,9 +5,23 @@ import org.w3c.dom.Text;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates various text styles like bold, italic, etc.
+ *
+ * @author Juan F. Ruiz
+ */
 public class TextStyles {
+  /**
+   * Constructs a new TextStyles.
+   */
   TextStyles() {}
   
+  /**
+   * Performs the text styles demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

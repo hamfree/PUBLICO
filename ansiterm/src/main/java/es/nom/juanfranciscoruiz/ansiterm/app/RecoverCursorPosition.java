@@ -11,6 +11,11 @@ import org.slf4j.LoggerFactory;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausaSinMensaje;
 
+/**
+ * Demonstrates how to recover the current cursor position from the terminal.
+ *
+ * @author Juan F. Ruiz
+ */
 public class RecoverCursorPosition {
   
   /**
@@ -18,8 +23,17 @@ public class RecoverCursorPosition {
    */
   public static final Logger logger = LoggerFactory.getLogger(RecoverCursorPosition.class);
   
+  /**
+   * Constructs a new RecoverCursorPosition.
+   */
   RecoverCursorPosition() {}
   
+  /**
+   * Performs the cursor position recovery demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

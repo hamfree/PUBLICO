@@ -6,10 +6,24 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.imprimeConLapso;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates various cursor styles and visibility.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ShowCursorStyles {
   
+  /**
+   * Constructs a new ShowCursorStyles.
+   */
   ShowCursorStyles() {}
   
+  /**
+   * Performs the cursor styles demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   public void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

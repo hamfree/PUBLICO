@@ -6,9 +6,23 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.imprimeConLapso;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
+/**
+ * Demonstrates enabling and disabling cursor blinking.
+ *
+ * @author Juan F. Ruiz
+ */
 public class ShowCursorBlinking {
+  /**
+   * Constructs a new ShowCursorBlinking.
+   */
   ShowCursorBlinking() {}
   
+  /**
+   * Performs the cursor blinking demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

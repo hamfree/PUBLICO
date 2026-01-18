@@ -4,9 +4,23 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
 import es.nom.juanfranciscoruiz.ansiterm.utiles.Util;
 
+/**
+ * Draws a rectangle with asterisks around the screen borders.
+ *
+ * @author Juan F. Ruiz
+ */
 public class DrawsRectangle {
+  /**
+   * Constructs a new DrawsRectangle.
+   */
   DrawsRectangle() {}
   
+  /**
+   * Performs the rectangle drawing demonstration.
+   * 
+   * @param term The ANSITerm object to use for drawing.
+   * @throws Exception If an error occurs during execution.
+   */
   void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();

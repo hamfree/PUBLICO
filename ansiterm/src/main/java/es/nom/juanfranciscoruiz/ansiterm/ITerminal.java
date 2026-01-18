@@ -2,8 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
  * Interface for low-level terminal methods.
- * 
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public interface ITerminal {
 

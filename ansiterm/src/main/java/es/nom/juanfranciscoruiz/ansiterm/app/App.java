@@ -13,6 +13,7 @@ import java.util.List;
  * Main application class to demonstrate the functionality of the ANSITerm library.
  * It provides a menu-driven interface to test various ANSI escape sequence features
  * like cursor movement, text styles, colors, and more.
+ * @author Juan F. Ruiz
  */
 public class App {
 
@@ -166,7 +167,7 @@ public class App {
     }
 
     /**
-     * It prints an 'X' character in each position of the terminal and for each movement
+     * It prints an 'X' character in each position of the terminal, and for each movement
      * of the cursor it recovers its position by printing it on the last line of the
      * terminal.
      * 

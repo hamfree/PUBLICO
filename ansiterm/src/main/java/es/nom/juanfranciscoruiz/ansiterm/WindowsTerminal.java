@@ -6,10 +6,9 @@ import com.sun.jna.ptr.IntByReference;
 
 /**
  * Provides access to the raw and cooked modes of the Windows console as well as
- * obtaining the console size using ANSI escape sequences and setting the
+ * getting the console size using ANSI escape sequences and setting the
  * raw mode so that the ANSI code does not appear on the screen.
- * 
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class WindowsTerminal implements ITerminal {
     private final int STD_OUTPUT_HANDLE = Kernel32.STD_OUTPUT_HANDLE;
@@ -78,7 +77,7 @@ public class WindowsTerminal implements ITerminal {
     }
 
     /**
-     * Obtains the console size 
+     * Gets the console size
      * @return A TerminalSize object with the current lines and columns of the 
      * console
      * 
