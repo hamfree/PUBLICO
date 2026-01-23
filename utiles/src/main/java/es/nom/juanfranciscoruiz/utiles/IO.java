@@ -1,12 +1,12 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 /**
- * The IOable interface provides utility methods for performing input and output operations,
+ * The IO interface provides utility methods for performing input and output operations,
  * including printing formatted messages, reading input, and generating formatted strings
  * for various purposes.
- * @author juanf
+ * @author Juan F. Ruiz
  */
-public interface IOable {
+public interface IO {
     /**
      * Prints the provided arguments to the output. This method acts as a utility
      * for formatting and printing objects. If invalid arguments are provided,

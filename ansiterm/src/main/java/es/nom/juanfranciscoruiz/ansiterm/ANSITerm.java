@@ -13,8 +13,8 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
  *
- * Controls terminal output using ANSI escape codes. The terminal must support 
- * this standard (Windows Terminal, xterm, and other terminal emulators support it). 
+ * Controls terminal output using ANSI escape codes. The terminal must support
+ * this standard (Windows Terminal, xterm, and other terminal emulators support it).
  * The Windows console terminal (cmd.exe) does not support ANSI.
  * <p>
  * More information about using ANSI escape sequences at:<br><br>
@@ -31,8 +31,8 @@ public class ANSITerm {
     public static final Logger logger = LoggerFactory.getLogger(ANSITerm.class);
 
     /**
-     * ITerminal object to make calls to the OS functions where the program is 
-     * running and enable/disable console capabilities not available from Java 
+     * ITerminal object to make calls to the OS functions where the program is
+     * running and enable/disable console capabilities not available from Java
      * or ANSI control sequences.
      */
     private ITerminal osCall;
@@ -41,7 +41,7 @@ public class ANSITerm {
      * ANSI escape sequence generator
      */
     private static CSI CSI;
-    
+
     /**
      * General ASCII controls
      */
@@ -56,7 +56,7 @@ public class ANSITerm {
      * Erase sequences
      */
     private EraseSecuencesCodes esec;
-    
+
     /**
      * Control sequences for colors and styles
      */
@@ -66,7 +66,7 @@ public class ANSITerm {
      * Cursor control codes
      */
     private static CursorControlCodes ccc;
-    
+
     /**
      * Viewport position codes
      */
@@ -89,11 +89,11 @@ public class ANSITerm {
 
     /**
      * Instantiates a new Terminal object.
-     * Depending on the operating system where the class is executed, it will 
-     * instantiate a WindowsTerminal or LinuxTerminal object for when it has to 
+     * Depending on the operating system where the class is executed, it will
+     * instantiate a WindowsTerminal or LinuxTerminal object for when it has to
      * call low-level system functions.
      * 
-     * @throws java.lang.Exception In case the operating system is not 
+     * @throws java.lang.Exception In case the operating system is not
      * Windows or Linux
      */
     public ANSITerm() throws Exception {
@@ -108,9 +108,9 @@ public class ANSITerm {
     }
 
     /**
-     * Returns an ITerminal object with which we can access the low-level 
+     * Returns an ITerminal object with which we can access the low-level
      * methods of the terminal running on the current operating system.
-     * @return an ITerminal object with the appropriate low-level methods of 
+     * @return an ITerminal object with the appropriate low-level methods of
      * the operating system where our program is running.
      */
     public ITerminal getOsCall(){
@@ -119,7 +119,7 @@ public class ANSITerm {
     
     
     /**
-     * Enables 'raw' mode in the current console so that ANSI sequences can 
+     * Enables 'raw' mode in the current console so that ANSI sequences can
      * be interpreted.
      *
      * @throws LastErrorException In case an error occurs in the call, or it
@@ -187,7 +187,7 @@ public class ANSITerm {
      */
     public void carriagereturn() {
         // In the Windows terminal it moves the cursor to the beginning of the line
-        // To do a line break you have to do a linefeed() or use 
+        // To do a line break you have to do a linefeed() or use
         // the Java \n escape code
         System.out.print(GeneralAsciiCodes.CR);
     }
@@ -223,7 +223,7 @@ public class ANSITerm {
     /**
      * Moves the cursor to the terminal position indicated by p
      *
-     * @param p Posicion object containing the position where the cursor 
+     * @param p Posicion object containing the position where the cursor
      * will be moved
      */
     public void moveCursorToXY(Position p) {
@@ -240,7 +240,7 @@ public class ANSITerm {
     public Position getCursorPosition() throws LastErrorException {
         try {
             // We make the console not show the characters that are written
-            // and that the user's keystrokes are obtained without waiting 
+            // and that the user's keystrokes are obtained without waiting
             // for them to press ENTER (raw mode)
             this.osCall.enableRawMode();
 
@@ -295,8 +295,8 @@ public class ANSITerm {
      *
      * </ul>
      * <ul>
-     * <li>'lines' or 'cars' represents the distance of transfer and is a 
-     * parameter that is optional for the control sequence (but mandatory 
+     * <li>'lines' or 'cars' represents the distance of transfer and is a
+     * parameter that is optional for the control sequence (but mandatory
      * in the function, if you want to omit it indicate 0).</li>
      * <li>If 'lines' or 'cars' is omitted or equals 0, it will be treated as 1.</li>
      * <li>'lines' or 'cars' cannot be greater than 32,767 (maximum short value).</li>
@@ -325,11 +325,11 @@ public class ANSITerm {
     }
 
     /**
-     * Moves the cursor to the right as many characters as indicated in the 
+     * Moves the cursor to the right as many characters as indicated in the
      * cars parameter
      * CODE: CUF (Cursor Forward)
      * @see #moveCursorUp(int)
-     * @param cars an integer with the characters to the right where the 
+     * @param cars an integer with the characters to the right where the
      * cursor will be moved
      */
     public void moveCursorRight(int cars) {
@@ -339,11 +339,11 @@ public class ANSITerm {
     }
 
     /**
-     * Moves the cursor to the left as many characters as indicated in the 
+     * Moves the cursor to the left as many characters as indicated in the
      * cars parameter
      * CODE: CUB (Cursor Backward)
      * @see #moveCursorUp(int)
-     * @param cars an integer with the characters to the left where the 
+     * @param cars an integer with the characters to the left where the
      * cursor will be moved
      */
     public void moveCursorLeft(int cars) {
@@ -401,7 +401,7 @@ public class ANSITerm {
      * <li>ESC [ 5 SP q, DECSCUSR, Blinking Bar</li>
      * <li>ESC [ 6 SP q, DECSCUSR, Steady Bar</li>
      * </ul>
-     * @param style One of the available cursor styles (Class with static 
+     * @param style One of the available cursor styles (Class with static
      * constants)
      */
     public void cursorChangeStyle(String style) {
@@ -424,7 +424,7 @@ public class ANSITerm {
 
     /**
      * Scrolls text up by as many lines as indicated in 'lines'.
-     * Option also known as "Panning down", new lines are filled from the 
+     * Option also known as "Panning down", new lines are filled from the
      * bottom of the screen.
      *
      * @param lines the number of lines to scroll
@@ -435,7 +435,7 @@ public class ANSITerm {
     }
 
     /**
-     * Scrolls down by as many lines as indicated in 'lines'. Option also 
+     * Scrolls down by as many lines as indicated in 'lines'. Option also
      * known as "Panning up", new lines are filled from the top of the screen.
      *
      * @param lines the number of lines to scroll
@@ -446,8 +446,8 @@ public class ANSITerm {
     }
 
     /**
-     * Inserts 'cars' spaces at the current cursor position, shifting all 
-     * existing text to the right. Also, text that goes off the screen to 
+     * Inserts 'cars' spaces at the current cursor position, shifting all
+     * existing text to the right. Also, text that goes off the screen to
      * the right is removed.
      *
      * @param cars the number of spaces to insert.
@@ -458,7 +458,7 @@ public class ANSITerm {
     }
 
     /**
-     * Deletes 'cars' characters at the current cursor position, shifting 
+     * Deletes 'cars' characters at the current cursor position, shifting
      * space characters from the right edge of the screen.
      *
      * @param cars the number of characters to delete.
@@ -469,7 +469,7 @@ public class ANSITerm {
     }
 
     /**
-     * Deletes 'cars' characters from the current cursor position by 
+     * Deletes 'cars' characters from the current cursor position by
      * overwriting them with a space character.
      *
      * @param cars the number of characters to delete.
@@ -480,8 +480,8 @@ public class ANSITerm {
     }
 
     /**
-     * Inserts the lines indicated by 'lines' into the screen buffer at the 
-     * cursor position. The line where the cursor is and the lines below it 
+     * Inserts the lines indicated by 'lines' into the screen buffer at the
+     * cursor position. The line where the cursor is and the lines below it
      * will shift down.
      *
      * @param lines the number of lines to insert.
@@ -492,7 +492,7 @@ public class ANSITerm {
     }
 
     /**
-     * Deletes the lines indicated by 'lines' from the buffer, starting from 
+     * Deletes the lines indicated by 'lines' from the buffer, starting from
      * the row where the cursor is located.
      *
      * @param lines the number of lines to delete.
@@ -540,7 +540,7 @@ public class ANSITerm {
     }
 
     /**
-     * Deletes everything from the cursor position to the end of the line 
+     * Deletes everything from the cursor position to the end of the line
      * where it is located.
      */
     public void deleteFromCursorToEndLine() {
@@ -548,7 +548,7 @@ public class ANSITerm {
     }
 
     /**
-     * Deletes everything from the cursor position to the beginning of the line 
+     * Deletes everything from the cursor position to the beginning of the line
      * where it is located.
      */
     public void deleteFromCursorToBeginLine() {
@@ -556,7 +556,7 @@ public class ANSITerm {
     }
 
     /**
-     * Erases possible characters from the current line where the cursor is 
+     * Erases possible characters from the current line where the cursor is
      * located.
      */
     public void deleteLine() {
@@ -568,7 +568,7 @@ public class ANSITerm {
      * Sets bold mode for the passed string
      *
      * @param msg the string to put in bold
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be in bold.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -588,7 +588,7 @@ public class ANSITerm {
      * Sets dimmed mode for the passed string
      *
      * @param msg the string that will be put in dimmed mode
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be dimmed.
      */
     public String setDim(String msg) {
@@ -606,7 +606,7 @@ public class ANSITerm {
      * Sets italic mode for the passed string
      *
      * @param msg the string that will be put in italic mode
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be in italics.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -627,7 +627,7 @@ public class ANSITerm {
      * Sets underline mode for the passed string
      *
      * @param msg the string that will be put in underline mode
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be underlined.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -648,7 +648,7 @@ public class ANSITerm {
      * Sets blink mode for the passed string
      *
      * @param msg the string that will be put in blink mode
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be blinking.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -669,7 +669,7 @@ public class ANSITerm {
      * Sets inverse mode for the passed string
      *
      * @param msg the string that will be put in inverse mode
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be inverted (foreground/background color swap).
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -690,8 +690,8 @@ public class ANSITerm {
      * Sets hidden mode for the passed string
      *
      * @param msg the string that will be put in hidden mode
-     * @return a String with the ANSI sequence that, if shown in the 
-     * terminal, will be hidden (nothing appears on the screen, but the space 
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be hidden (nothing appears on the screen, but the space
      * occupied by the string is taken).
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -712,7 +712,7 @@ public class ANSITerm {
      * Sets strikethrough mode for the passed string
      *
      * @param msg the string that will be put in strikethrough mode
-     * @return a String with the ANSI sequence that, if shown in the 
+     * @return a String with the ANSI sequence that, if shown in the
      * terminal, will appear struck through.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -731,7 +731,7 @@ public class ANSITerm {
 
     /**
      * Combines several styles to the passed string. <br>
-     * <b>NOTE: Not all style combinations</b> will produce the intended 
+     * <b>NOTE: Not all style combinations</b> will produce the intended
      * results in <i>some terminals</i>.
      *
      * @param isBold If true, puts the string in bold
@@ -742,7 +742,7 @@ public class ANSITerm {
      * @param isInverse If true, puts the string in inverse mode
      * @param isStrikeThrough If true, puts the string with a strikethrough.
      * @param msg the string to which styles will be applied
-     * @return a String with the ANSI sequences necessary so that, if later 
+     * @return a String with the ANSI sequences necessary so that, if later
      * printed in the terminal, it appears with the requested styles.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -829,7 +829,7 @@ public class ANSITerm {
      * Sets text color
      * @param color A Color enum constant with the color
      * @param msg The string to be colored
-     * @return a string with the appropriate ANSI sequence to show the text 
+     * @return a string with the appropriate ANSI sequence to show the text
      * with the indicated color in the console.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -857,13 +857,13 @@ public class ANSITerm {
     }
 
     /**
-     * Sets a color code from a 256-color palette to the string passed as 
+     * Sets a color code from a 256-color palette to the string passed as
      * a parameter.
      * 
      * @param color an integer between 0 and 255 containing the color code.
-     * @param msg a string that will receive the ANSI sequence to give it the 
+     * @param msg a string that will receive the ANSI sequence to give it the
      * indicated color.
-     * @return a string with the appropriate ANSI sequence to be displayed in 
+     * @return a string with the appropriate ANSI sequence to be displayed in
      * the indicated color in the terminal.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -891,12 +891,12 @@ public class ANSITerm {
     }
 
     /**
-     * Sets a color code from a 256-color palette for the background of the 
+     * Sets a color code from a 256-color palette for the background of the
      * string passed as a parameter.
      * @param color an integer between 0 and 255 containing the color code.
-     * @param msg a string that will receive the ANSI sequence to give its 
+     * @param msg a string that will receive the ANSI sequence to give its
      * background the indicated color.
-     * @return a string with the appropriate ANSI sequence that will show the 
+     * @return a string with the appropriate ANSI sequence that will show the
      * indicated color in its background in the terminal.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -928,7 +928,7 @@ public class ANSITerm {
      *
      * @param color Enum with the background color
      * @param msg String with the string to color
-     * @return a String with the ANSI escape sequences that color the string 
+     * @return a String with the ANSI escape sequences that color the string
      * as requested
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -961,7 +961,7 @@ public class ANSITerm {
      * @param color Enum with the foreground color
      * @param backgroundColor Enum with the background color
      * @param msg String with the string to color
-     * @return a String with the ANSI escape sequences that color the string 
+     * @return a String with the ANSI escape sequences that color the string
      * as requested
      * @throws IllegalArgumentException In case any argument is not valid.
      */
@@ -993,7 +993,7 @@ public class ANSITerm {
     }
 
     /**
-     * Resets the terminal to its default values. It is recommended to call 
+     * Resets the terminal to its default values. It is recommended to call
      * this method when you finish using Terminal in your application.
      */
     public void resetScreen() {
@@ -1003,7 +1003,7 @@ public class ANSITerm {
 
     /**
      * Returns terminal size
-     * @return a TerminalSize object with the current lines and columns of 
+     * @return a TerminalSize object with the current lines and columns of
      * the terminal.
      * 
      * @see TerminalSize
@@ -1013,7 +1013,7 @@ public class ANSITerm {
     }
 
     /**
-     * Prints the msg string at the terminal position indicated by the 
+     * Prints the msg string at the terminal position indicated by the
      * integers line and col (the column)
      *
      * @param msg the string to print

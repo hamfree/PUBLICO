@@ -5,22 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.nom.juanfranciscoruiz.utiles.impl.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Class that demonstrates the functionalities of the "util" library
- *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class Inicio {
-
     /**
      * Logger for this class
      */
     public final static Logger logger = LoggerFactory.getLogger(Inicio.class);
-
+    
+    /**
+     * Constructor for the Inicio class.
+     * Initializes a new instance of the Inicio class.
+     */
+    public Inicio() {}
     /**
      * The entry point of the program.
      *
@@ -144,6 +147,6 @@ public class Inicio {
      */
     private static void print(String msg) {
         if(logger.isDebugEnabled()) logger.debug(msg);
-        IO.prt(msg);
+        IOImpl.prt(msg);
     }
 }
