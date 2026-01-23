@@ -4,257 +4,97 @@ import com.sun.jna.LastErrorException;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import es.nom.juanfranciscoruiz.ansiterm.codes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+
 /**
  *
- * Controla la salida del terminal usando códigos de escape ANSI. La terminal
- * debe soportar este estándar (Windows Terminal, xterm y otros emuladores de
- * terminal lo soportan). El terminal de consola de Windows (cmd.exe) no soporta
- * ANSI.
+ * Controls terminal output using ANSI escape codes. The terminal must support
+ * this standard (Windows Terminal, xterm, and other terminal emulators support it).
+ * The Windows console terminal (cmd.exe) does not support ANSI.
  * <p>
- * Más información sobre el uso de secuencias de escape ANSI y su uso en:<br><br>
- * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">Invisible-Island</a><br>
- * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn</a><br>
- * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia</a>
- *
- * @author juanf
+ * More information about using ANSI escape sequences at:<br><br>
+ * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">XTerm Control Sequences by Edward Moy</a><br>
+ * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn - Console Virtual Terminal Sequences</a><br>
+ * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia - ANSI escape code</a>
+ * @author Juan F. Ruiz
  */
 public class ANSITerm {
 
     /**
-     * Para trazas
+     * For logging
      */
     public static final Logger logger = LoggerFactory.getLogger(ANSITerm.class);
 
     /**
-     * Objeto de tipo ITerminal para poder hacer las llamadas a las funciones 
-     * del SO donde se  ejecuta el programa y habilitar/deshabilitar capacidades 
-     * de la consolano disponibles desde Java o las secuencias de control ANSI.
+     * ITerminal object to make calls to the OS functions where the program is
+     * running and enable/disable console capabilities not available from Java
+     * or ANSI control sequences.
      */
     private ITerminal osCall;
 
     /**
-     * Secuencia de escape ANSI
+     * ANSI escape sequence generator
      */
-    private static final String ESC = "\033";
-
-    // Controles generales ASCII
-    /**
-     * Hace sonar la campana del terminal
-     */
-    private static final char BELL = 7;
-    /**
-     * Retrocede un caracter
-     */
-    private static final char BS = 8;
-    /**
-     * Tabulador horizontal
-     */
-    private static final char TAB = 9;
-    /**
-     * Salto de línea
-     */
-    private static final char LF = 10;
+    private static CSI CSI;
 
     /**
-     * Tabulador vertical
+     * General ASCII controls
      */
-    private static final char VT = 11;
-    /**
-     * Formfeed o nueva página
-     */
-    private static final char FF = 12;
-    /**
-     * Retorno de carro
-     */
-    private static final char CR = 13;
-
-    // Controles de movimiento del cursor
-    /**
-     * Mueve el cursor a la posición 0,0
-     */
-    private static final String MUE_CUR_00 = ESC + "[H";
-    /**
-     * Respuesta como ESC[#;#R de la posición del cursor
-     */
-    private static final String REC_POS_CUR = ESC + "[6n";
-    /**
-     * Mueve el cursor una línea hacia arriba, desplazándose si es necesario
-     */
-    private static final String MUE_CUR_1LIN_ARR = ESC + "M";
-    /**
-     * Salva la posición del cursor (Secuencia DEC)
-     */
-    private static final String SAL_POS_CUR = ESC + "7";
-    /**
-     * Restaura el cursor a su última posición salvada (Secuencia DEC)
-     */
-    private static final String RES_POS_CUR = ESC + "8";
-
-    // Secuencias de borrado 
-    /**
-     * Borra desde el cursor hasta el final de la pantalla
-     */
-    private static final String BOR_CUR_FIN = ESC + "[0J";
-    /**
-     * Borra desde el cursor hasta el principio de la pantalla
-     */
-    private static final String BOR_CUR_PRI = ESC + "[1J";
-    /**
-     * Borra toda la pantalla
-     */
-    private static final String BOR_PAN = ESC + "[2J";
-    /**
-     * Borra desde el cursor hasta el final de la línea actual
-     */
-    private static final String BOR_CUR_FIN_LIN = ESC + "[0K";
-    /**
-     * Borra desde el cursor hasta el principio de la línea actual
-     */
-    private static final String BOR_CUR_PRI_LIN = ESC + "[1K";
-    /**
-     * Borra la linea actual entera (El borrado de una línea NO mueve el cursor)
-     */
-    private static final String BOR_CUR_LIN = ESC + "[2K";
-
-    // Secuencias de control para colores y estilos
-    /**
-     * Reinicia todos los modos (estilos y colores)
-     */
-    private static final String REINICIA_ESTILOS = ESC + "[0m";
-    /**
-     * Inicia negritas.
-     */
-    private static final String INI_NEG = ESC + "[1m";
-    /**
-     * Finaliza negritas
-     */
-    private static final String FIN_NEG = ESC + "[22m";
-    /**
-     * Inicia modo oscuro/tenue.
-     */
-    private static final String INI_OSC = ESC + "[2m";
-    /**
-     * Finaliza modo oscuro/tenue.
-     */
-    private static final String FIN_OSC = ESC + "[22m";
-    /**
-     * Inicia el modo cursiva.
-     */
-    private static final String INI_CUR = ESC + "[3m";
-    /**
-     * Finaliza el modo cursiva.
-     */
-    private static final String FIN_CUR = ESC + "[23m";
-    /**
-     * Inicia el modo subrayado.
-     */
-    private static final String INI_SUB = ESC + "[4m";
-    /**
-     * Finaliza el modo subrayado.
-     */
-    private static final String FIN_SUB = ESC + "[24m";
-    /**
-     * Inicia modo intermitente
-     */
-    private static final String INI_INT = ESC + "[5m";
-    /**
-     * Finaliza modo intermitente
-     */
-    private static final String FIN_INT = ESC + "[25m";
-    /**
-     * Inicia modo inverso/reverso (colores intercambiados)
-     */
-    private static final String INI_REV = ESC + "[7m";
-    /**
-     * Finaliza modo inverso/reverso (colores intercambiados)
-     */
-    private static final String FIN_REV = ESC + "[27m";
-    /**
-     * Inicia modo invisible
-     */
-    private static final String INI_INV = ESC + "[8m";
-    /**
-     * Finaliza modo invisible
-     */
-    private static final String FIN_INV = ESC + "[28m";
-    /**
-     * Inicia el modo tachado.
-     */
-    private static final String INI_TAC = ESC + "[9m";
-    /**
-     * Finaliza el modo tachado.
-     */
-    private static final String FIN_TAC = ESC + "[29m";
+    private static GeneralAsciiCodes gac;
 
     /**
-     * El color de reinicio es el código de reinicio que restablece todos los
-     * colores y efectos de texto. Use el color predeterminado de las
-     * Enumeraciones Color y Bgcolor para restablecer solo los colores.
-     * <p>
-     * {@code @See} es.nom.juanfranciscoruiz.ansiterm.Color
-     * {@code @See} es.nom.juanfranciscoruiz.ansiterm.BGcolor
-     *
+     * Cursor movement controls
      */
-    private static final String REINICIA = "0";
+    private static CursorMovementCodes cmc;
 
     /**
-     * Color (hasta 256) del primer plano. Se usa ESC[38;5;{0-255}m
+     * Erase sequences
      */
-    private static final String COL256 = ESC + "[38;5;";
-    /**
-     * Color (hasta 256) del fondo. Se usa ESC[48;5;{0-255}m
-     */
-    private static final String COL256_F = ESC + "[48;5;";
-
-    // Códigos de control para el cursor
-    /**
-     * Oculta el cursor (DECTCEM)
-     */
-    private static final String CUR_INV = ESC + "[?25l";
-    /**
-     * Muestra el cursor (DECTCEM)
-     */
-    private static final String CUR_VIS = ESC + "[?25h";
+    private EraseSecuencesCodes esec;
 
     /**
-     * Permite iniciar el parpadeo del cursor (ATT160)
+     * Control sequences for colors and styles
      */
-    private static final String CUR_PAR = ESC + "[?12h";
-    /**
-     * Permite detener el parpadeo del cursor. (ATT160)
-     */
-    private static final String CUR_NOPAR = ESC + "[?12l";
-
-    // Códigos de posición de la ventanilla
-    /**
-     * Restaura la pantalla
-     */
-    private static final String RES_PAN = ESC + "c";
-    /**
-     * Salva la pantalla
-     */
-    private static final String SAV_PAN = ESC + "[?47h";
-    /**
-     * Habilita el buffer alternativo
-     */
-    private static final String HAB_ALT_BUF = ESC + "[?1049h";
-
-    // Constantes para los mensajes de excepción
-    private static final String EX_NO_MSG = "No hay mensaje, está vacío o solo contiene blancos";
-    private static final String EX_NO_COL = "Color no válido";
-    private static final String EX_NO_BACKCOL = "Color de fondo no válido";
+    private static ColorsAndStylesCodes csc;
 
     /**
-     * Instancia un nuevo objeto Terminal.
-     * Dependiendo del sistema operativo donde se ejecute la clase instanciará 
-     * un objeto de WindowsTerminal o LinuxTerminal para cuando tenga que 
-     * llamar a funciones de bajo nivel del sistema.
+     * Cursor control codes
+     */
+    private static CursorControlCodes ccc;
+
+    /**
+     * Viewport position codes
+     */
+    private static PositionCodes vpc;
+
+    /**
+     * Error message for empty or whitespace-only messages.
+     */
+    private static final String EX_NO_MSG = "No message, it is empty or only contains whitespace";
+
+    /**
+     * Error message for invalid color.
+     */
+    private static final String EX_NO_COL = "Invalid color";
+
+    /**
+     * Error message for invalid background color.
+     */
+    private static final String EX_NO_BACKCOL = "Invalid background color";
+
+    /**
+     * Instantiates a new Terminal object.
+     * Depending on the operating system where the class is executed, it will
+     * instantiate a WindowsTerminal or LinuxTerminal object for when it has to
+     * call low-level system functions.
      * 
-     * @throws java.lang.Exception En caso de que el sistema operativo no sea 
-     * Windows o Linux
+     * @throws java.lang.Exception In case the operating system is not
+     * Windows or Linux
      */
     public ANSITerm() throws Exception {
         String os = System.getProperty("os.name").toLowerCase();
@@ -263,15 +103,15 @@ public class ANSITerm {
         } else if (os.contains("linux")) {
             osCall = new LinuxTerminal();
         }  else {
-            throw new Exception("Sistema operativo no soportado");
+            throw new Exception("Unsupported operating system");
         }
     }
 
     /**
-     * Devuelve un objeto ITerminal con el que podremos acceder a los métodos 
-     * de bajo nivel del terminal que se ejecuta en el sistema operativo actual.
-     * @return un objeto ITerminal con los métodos adecuados de bajo nivel del
-     * sistema operativo donde se ejecuta nuestro programa.
+     * Returns an ITerminal object with which we can access the low-level
+     * methods of the terminal running on the current operating system.
+     * @return an ITerminal object with the appropriate low-level methods of
+     * the operating system where our program is running.
      */
     public ITerminal getOsCall(){
         return osCall;
@@ -279,22 +119,21 @@ public class ANSITerm {
     
     
     /**
-     * Habilita el modo 'raw' en la consola actual para
-     * que puedan ser interpretadas las secuencias ANSI. 
+     * Enables 'raw' mode in the current console so that ANSI sequences can
+     * be interpreted.
      *
-     * @throws LastErrorException En caso de que se produzca algún error en la
-     * llamada o no se ejecute en Microsoft Windows.
+     * @throws LastErrorException In case an error occurs in the call, or it
+     * is not running on Microsoft Windows.
      */
     public void enableRawMode() throws LastErrorException {
         osCall.enableRawMode();
     }
 
     /**
-     * Deshabilita el modo 'raw' (y habilita el modo 'cooked' en la consola 
-     * actual.
+     * Disables 'raw' mode (and enables 'cooked' mode) in the current console.
      *
-     * @throws LastErrorException En caso de que se produzca algún error en la
-     * llamada o no se ejecute en Microsoft Windows.
+     * @throws LastErrorException In case an error occurs in the call, or it
+     * is not running on Microsoft Windows.
      */
     public void disableRawMode() throws LastErrorException {
         osCall.disableRawMode();
@@ -302,79 +141,79 @@ public class ANSITerm {
 
     
     /**
-     * Hace sonar la campana del terminal
+     * Rings the terminal bell
      */
     public void bell() {
-        System.out.print(BELL);
+        System.out.print(GeneralAsciiCodes.BELL);
     }
 
     /**
-     * Provoca un retroceso del cursor
+     * Causes a cursor backspace
      */
     public void backSpace() {
-        System.out.print(BS);
+        System.out.print(GeneralAsciiCodes.BS);
     }
 
     /**
-     * Genera una tabulación
+     * Generates a tab
      */
     public void tab() {
-        System.out.print(TAB);
+        System.out.print(GeneralAsciiCodes.TAB);
     }
 
     /**
-     * Genera un salto de línea
+     * Generates a line feed
      */
     public void linefeed() {
-        System.out.print(LF);
+        System.out.print(GeneralAsciiCodes.LF);
     }
 
     /**
-     * Genera una tabulación vertical
+     * Generates a vertical tab
      */
     public void verticalTab() {
-        System.out.print(VT);
+        System.out.print(GeneralAsciiCodes.VT);
     }
 
     /**
-     * Genera un avance de formulario
+     * Generates a form feed
      */
     public void formfeed() {
-        System.out.print(FF);
+        System.out.print(GeneralAsciiCodes.FF);
     }
 
     /**
-     * Genera un retorno de carro
+     * Generates a carriage return
      */
     public void carriagereturn() {
-        // En el terminal de windows mueve el cursor al principio de la línea
-        // Para hacer un salto de línea hay que hacer un linefeed() o usar 
-        // el codigo de escape \n de Java
-        System.out.print(CR);
+        // In the Windows terminal it moves the cursor to the beginning of the line
+        // To do a line break you have to do a linefeed() or use
+        // the Java \n escape code
+        System.out.print(GeneralAsciiCodes.CR);
     }
 
     /**
-     * Borra el caracter anterior a la posición del cursor.
+     * Deletes the character before the cursor position.
      */
     public void deleteCharacter() {
-        // En Windows no funciona.
+        // Does not work on Windows.
         char c = 127; //DEL (Delete character)
         System.out.print(c);
     }
 
-    // Funciones del cursor
+    // Cursor functions
     /**
-     * Mueve el cursor al principio del terminal (0,0)
+     * Moves the cursor to the beginning of the terminal (0,0)
      */
     public void moveCursorToBegin() {
-        System.out.print(MUE_CUR_00);
+        System.out.print(CursorMovementCodes.CURSOR_MOVE_TO_00);
     }
 
     /**
-     * Mueve el cursor a la posición line, column del terminal
+     * Moves the cursor to the line, column position of the terminal
      *
-     * @param line entero con la línea a la que mover el cursor
-     * @param column entero con la columna a la que mover el cursor
+     * @param line integer with the line to move the cursor to
+     * @param column integer with the column to move the cursor to
      */
     public void moveCursorToXY(int line, int column) {
         String sec_ansi = ESC + "[" + line + ";" + column + "H";
@@ -382,29 +221,30 @@ public class ANSITerm {
     }
 
     /**
-     * Mueve el cursor a la posición del terminal indicada por p
+     * Moves the cursor to the terminal position indicated by p
      *
-     * @param p Objeto Posicion que contiene la posició donde se moverá el
-     * cursor
+     * @param p Posicion object containing the position where the cursor
+     * will be moved
      */
-    public void moveCursorToXY(Posicion p) {
+    public void moveCursorToXY(Position p) {
         String sec_ansi = ESC + "[" + p.getCol() + ";" + p.getLin() + "H";
         System.out.print(sec_ansi);
     }
 
     /**
-     * Devuelve la posición del cursor en pantalla
+     * Returns the cursor position on the screen
      *
-     * @return un objeto Posicion con la posición actual del cursor en pantalla
+     * @return a Posicion object with the current cursor position on the screen
+     * @throws LastErrorException if an error occurs while getting the position
      */
-    public Posicion getCursorPosition() throws LastErrorException {
+    public Position getCursorPosition() throws LastErrorException {
         try {
-            // Hacemos que la consola no muestre los caracteres que se escriban
-            // y que las pulsaciones de las teclas del usuario sean obtenidas
-            // sin esperar a que pulse INTRO (modo raw)
+            // We make the console not show the characters that are written
+            // and that the user's keystrokes are obtained without waiting
+            // for them to press ENTER (raw mode)
             this.osCall.enableRawMode();
 
-            System.out.print(REC_POS_CUR);
+            System.out.print(CursorMovementCodes.CURSOR_GET_POSITION);
 
             StringBuilder result = new StringBuilder();
             int character;
@@ -421,33 +261,32 @@ public class ANSITerm {
             Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
             Matcher matcher = pattern.matcher(result.toString());
             if (matcher.matches()) {
-                return new Posicion(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+                return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
             } else {
-                return new Posicion(1, 1);
+                return new Position(1, 1);
             }
 
         } catch (IOException e) {
             logger.error(e.getMessage());
             System.out.println(e.getMessage());
-            return new Posicion(1, 1);
+            return new Position(1, 1);
         } finally {
-            // Hay que dejar la consola en el modo normal.
+            // The console must be left in normal mode.
             this.osCall.disableRawMode();
         }
     }
 
     /**
-     * Mueve el cursor una línea hacia arriba
+     * Moves the cursor one line up
      */
     public void moveCursorUp() {
-        System.out.println(MUE_CUR_1LIN_ARR);
+        System.out.println(CursorMovementCodes.CURSOR_MOVE_ONE_LINE_UP);
     }
 
     /**
-     * Mueve el cursor hacia arriba tantas líneas como indiquemos en el
-     * parámetro 'lines'<br>
-     *
-     * NOTA para los métodos:<br>
+     * Moves the cursor up as many lines as indicated in the 'lines' parameter<br>
+     * CODE: CUU (Cursor Up)
+     * NOTE for the methods:<br>
      * <ul>
      * <li>moveCursorUp(int lines)</li>
      * <li>moveCursorDown(int lines)</li>
@@ -456,18 +295,16 @@ public class ANSITerm {
      *
      * </ul>
      * <ul>
-     * <li>'lines' o 'cars' representa la distancia de traslado y es un
-     * parámetro que es opcional para la secuencia de control (pero obligatorio
-     * en la función, sise quiere omitir indique 0.</li>
-     * <li>Si 'lines' o 'cars' se omite o es igual a 0, se tratará como 1.</li>
-     * <li>'lines' o 'cars' no puede ser mayor que 32.767 (valor corto
-     * máximo).</li>
-     * <li>'lines' o 'cars' no puede ser negativo.</li>
+     * <li>'lines' or 'cars' represents the distance of transfer and is a
+     * parameter that is optional for the control sequence (but mandatory
+     * in the function, if you want to omit it indicate 0).</li>
+     * <li>If 'lines' or 'cars' is omitted or equals 0, it will be treated as 1.</li>
+     * <li>'lines' or 'cars' cannot be greater than 32,767 (maximum short value).</li>
+     * <li>'lines' or 'cars' cannot be negative.</li>
      * </ul>
      *
      *
-     * @param lines un entero con las líneas hacia arriba donde se moverá el
-     * cursor
+     * @param lines an integer with the lines up where the cursor will be moved
      */
     public void moveCursorUp(int lines) {
         // ESC[#A
@@ -476,12 +313,10 @@ public class ANSITerm {
     }
 
     /**
-     * Mueve el cursor hacia abajo tantas líneas como indiquemos en el parámetro
-     * lines
-     *
-     * @see moveCursorUp
-     * @param lines un entero con las líneas hacia abajo donde se moverá el
-     * cursor
+     * Moves the cursor down as many lines as indicated in the lines parameter
+     * CODE: CUD (Cursor Down)
+     * @see #moveCursorUp(int)
+     * @param lines an integer with the lines down where the cursor will be moved
      */
     public void moveCursorDown(int lines) {
         // ESC[#B
@@ -490,12 +325,12 @@ public class ANSITerm {
     }
 
     /**
-     * Mueve el cursor hacia la derecha tantos caracteres como indiquemos en el
-     * parámetro cars
-     *
-     * @see moveCursorUp
-     * @param cars un entero con los caracteres hacia la derecha donde se moverá
-     * el cursor
+     * Moves the cursor to the right as many characters as indicated in the
+     * cars parameter
+     * CODE: CUF (Cursor Forward)
+     * @see #moveCursorUp(int)
+     * @param cars an integer with the characters to the right where the
+     * cursor will be moved
      */
     public void moveCursorRight(int cars) {
         // ESC[#C
@@ -504,12 +339,12 @@ public class ANSITerm {
     }
 
     /**
-     * Mueve el cursor hacia la izquierda tantos caracteres como indiquemos en
-     * el parámetro cars
-     *
-     * @see moveCursorUp
-     * @param cars un entero con los caracteres hacia la izquierda donde se
-     * moverá el cursor
+     * Moves the cursor to the left as many characters as indicated in the
+     * cars parameter
+     * CODE: CUB (Cursor Backward)
+     * @see #moveCursorUp(int)
+     * @param cars an integer with the characters to the left where the
+     * cursor will be moved
      */
     public void moveCursorLeft(int cars) {
         // ESC[#D
@@ -518,68 +353,81 @@ public class ANSITerm {
     }
 
     /**
-     * Oculta el cursor
+     * Hides the cursor
+     * CODE: DECTCEM (Text Cursor Enable Mode Hide)
      */
     public void cursorHide() {
-        String sec_ansi = ESC + CUR_INV;
+        String sec_ansi = ESC + CursorControlCodes.HIDES_CURSOR;
         System.out.print(sec_ansi);
     }
 
     /**
-     * Muestra el cursor
+     * Shows the cursor
+     * CODE: DECTCEM (Text Cursor Enable Mode Show)
      */
     public void cursorShow() {
-        String sec_ansi = ESC + CUR_VIS;
+        String sec_ansi = ESC + CursorControlCodes.SHOWS_CURSOR;
         System.out.print(sec_ansi);
     }
     
     
     /**
-     * Activa el parpadeo del cursor
+     * Enables cursor blinking
+     * CODE: ATT160 (Text Cursor Enable Blinking)
      */
     public void cursorBlink() {
-        String sec_ansi = ESC + CUR_PAR;
+        String sec_ansi = ESC + CursorControlCodes.ENABLE_BLINK_CURSOR;
         System.out.print(sec_ansi);
     }
     
     /**
-     * Desactiva el parpadeo del cursor
+     * Disables cursor blinking
+     * CODE: ATT160 (Text Cursor Disable Blinking)
      */
     public void cursorNoBlink() {
-        String sec_ansi = ESC + CUR_NOPAR;
+        String sec_ansi = ESC + CursorControlCodes.DISABLE_BLINK_CURSOR;
         System.out.print(sec_ansi);
     }
 
     /**
-     * Establece el estilo del cursor.
-     *
-     * @param style Uno de los estilos de cursor disponibles (Clase con
-     * constantes estáticas)
+     * Sets the cursor style.
+     * Implements the following ANSI sequences:
+     * <ul>
+     * <li>ESC [ 0 SP q, DECSCUSR, User Shape</li>
+     * <li>ESC [ 1 SP q, DECSCUSR, Blinking Block</li>
+     * <li>ESC [ 2 SP q, DECSCUSR, Steady Block</li>
+     * <li>ESC [ 3 SP q, DECSCUSR, Blinking Underline</li>
+     * <li>ESC [ 4 SP q, DECSCUSR, Steady Underline</li>
+     * <li>ESC [ 5 SP q, DECSCUSR, Blinking Bar</li>
+     * <li>ESC [ 6 SP q, DECSCUSR, Steady Bar</li>
+     * </ul>
+     * @param style One of the available cursor styles (Class with static
+     * constants)
      */
     public void cursorChangeStyle(String style) {
         this.cursorShow();
         if (style == null || style.isEmpty()) {
-            throw new IllegalArgumentException("Estilo no válido");
+            throw new IllegalArgumentException("Invalid style");
         }
 
-        if (!style.equals(CursorStyles.CUR_BAR_ES)
-                && !style.equals(CursorStyles.CUR_BAR_PAR)
-                && !style.equals(CursorStyles.CUR_BLO_EST)
-                && !style.equals(CursorStyles.CUR_BLO_PAR)
-                && !style.equals(CursorStyles.CUR_SUB_EST)
-                && !style.equals(CursorStyles.CUR_SUB_PAR)
-                && !style.equals(CursorStyles.CUR_USU)) {
-            throw new IllegalArgumentException("Estilo no reconocido");
+        if (!style.equals(CursorStylesCodes.CURSOR_STEADY_BAR_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_BLINKING_BAR_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_BLOCK_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_STEADY_UNDERLINE_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_UNDERLINE_SHAPE)
+                && !style.equals(CursorStylesCodes.CURSOR_USER_SHAPE)) {
+            throw new IllegalArgumentException("Unrecognized style");
         }
         System.out.print(style);
     }
 
     /**
-     * Desplaza el texto hacia arriba tantas líneas como se indique en 'lines'.
-     * Opción también conocida como "Movimiento panorámico hacia abajo", las
-     * nuevas líneas se rellenan desde la parte inferior de la pantalla.
+     * Scrolls text up by as many lines as indicated in 'lines'.
+     * Option also known as "Panning down", new lines are filled from the
+     * bottom of the screen.
      *
-     * @param lines el número de líneas a desplazar
+     * @param lines the number of lines to scroll
      */
     public void moveTextUp(int lines) {
         String sec_ansi = ESC + "[" + lines + "S";
@@ -587,11 +435,10 @@ public class ANSITerm {
     }
 
     /**
-     * Desplazarse hacia abajo tantas líneas como se indique en 'lines'. Opción
-     * también conocida como "Movimiento panorámico hacia arriba", las nuevas
-     * líneas se rellenan desde la parte superior de la pantalla.
+     * Scrolls down by as many lines as indicated in 'lines'. Option also
+     * known as "Panning up", new lines are filled from the top of the screen.
      *
-     * @param lines el número de líneas a desplazar
+     * @param lines the number of lines to scroll
      */
     public void moveTextDown(int lines) {
         String sec_ansi = ESC + "[" + lines + "T";
@@ -599,11 +446,11 @@ public class ANSITerm {
     }
 
     /**
-     * Inserta 'cars' espacios en la posición actual del cursor, desplazando
-     * todo el texto existente a la derecha. Asimismo, se quita el texto que
-     * sale de la pantalla hacia la derecha.
+     * Inserts 'cars' spaces at the current cursor position, shifting all
+     * existing text to the right. Also, text that goes off the screen to
+     * the right is removed.
      *
-     * @param cars el número de espacios a insertar.
+     * @param cars the number of spaces to insert.
      */
     public void insertSpaces(int cars) {
         String sec_ansi = ESC + "[" + cars + "@";
@@ -611,10 +458,10 @@ public class ANSITerm {
     }
 
     /**
-     * Elimine 'cars' caracteres en la posición actual del cursor, desplazando
-     * los caracteres de espacio desde el borde derecho de la pantalla.
+     * Deletes 'cars' characters at the current cursor position, shifting
+     * space characters from the right edge of the screen.
      *
-     * @param cars el número de caracteres a borrar.
+     * @param cars the number of characters to delete.
      */
     public void delChars(int cars) {
         String sec_ansi = ESC + "[" + cars + "P";
@@ -622,10 +469,10 @@ public class ANSITerm {
     }
 
     /**
-     * Borre 'cars' caracteres de la posición actual del cursor
-     * sobrescribiéndolos con un carácter de espacio.
+     * Deletes 'cars' characters from the current cursor position by
+     * overwriting them with a space character.
      *
-     * @param cars el número de caracteres a borrar.
+     * @param cars the number of characters to delete.
      */
     public void delCharsWithSpaces(int cars) {
         String sec_ansi = ESC + "[" + cars + "X";
@@ -633,11 +480,11 @@ public class ANSITerm {
     }
 
     /**
-     * Inserta las líneas indicadas por 'lines' en el búfer de pantalla en la
-     * posición del cursor. La línea en la que se encuentra el cursor y las
-     * líneas que tiene debajo se desplazarán hacia abajo.
+     * Inserts the lines indicated by 'lines' into the screen buffer at the
+     * cursor position. The line where the cursor is and the lines below it
+     * will shift down.
      *
-     * @param lines el número de líneas a insertar.
+     * @param lines the number of lines to insert.
      */
     public void insertLines(int lines) {
         String sec_ansi = ESC + "[" + lines + "L";
@@ -645,10 +492,10 @@ public class ANSITerm {
     }
 
     /**
-     * Elimina las líneas indicadas por 'lines' del búfer, comenzando por la
-     * fila en la que se encuentra el cursor.
+     * Deletes the lines indicated by 'lines' from the buffer, starting from
+     * the row where the cursor is located.
      *
-     * @param lines el número de líneas a eliminar.
+     * @param lines the number of lines to delete.
      */
     public void deleteLines(int lines) {
         String sec_ansi = ESC + "[" + lines + "M";
@@ -656,83 +503,81 @@ public class ANSITerm {
     }
 
     /**
-     * Salva la posición del cursor
+     * Saves the cursor position
      */
     public void saveCursorPos() {
-        System.out.print(SAL_POS_CUR);
+        System.out.print(CursorMovementCodes.CURSOR_SAVE_CURRENT_POSITION);
 
     }
 
     /**
-     * Restaura la posición del cursor
+     * Restores the cursor position
      */
     public void restoreCursorPos() {
-        System.out.print(RES_POS_CUR);
+        System.out.print(CursorMovementCodes.CURSOR_RESTORE_CURRENT_POSITION);
     }
 
-    // Funciones de borrado
+    // Erase functions
     /**
-     * Elimina todo desde la posición del cursor hasta el final de la pantalla
+     * Deletes everything from the cursor position to the end of the screen
      */
     public void deleteFromCursorToEndScreen() {
-        System.out.print(BOR_CUR_FIN);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_END_OF_SCREEN);
     }
 
     /**
-     * Elimina todo desde la posición del cursor hasta el principio de la
-     * pantalla
+     * Deletes everything from the cursor position to the beginning of the screen
      */
     public void deleteFromCursorToBeginScreen() {
-        System.out.print(BOR_CUR_PRI);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_BEGINNING_OF_SCREEN);
     }
 
     /**
-     * Borra la pantalla
+     * Erases the screen
      */
     public void clearScreen() {
-        System.out.print(BOR_PAN);
+        System.out.print(EraseSecuencesCodes.CLEAR_SCREEN);
     }
 
     /**
-     * Elimina todo desde la posición del cursor hasta el final de la línea
-     * donde se encuentra.
+     * Deletes everything from the cursor position to the end of the line
+     * where it is located.
      */
     public void deleteFromCursorToEndLine() {
-        System.out.print(BOR_CUR_FIN_LIN);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_END_OF_CURRENT_LINE);
     }
 
     /**
-     * Elimina todo desde la posición del cursor hasta el principio de la línea
-     * donde se encuentra.
+     * Deletes everything from the cursor position to the beginning of the line
+     * where it is located.
      */
     public void deleteFromCursorToBeginLine() {
-        System.out.print(BOR_CUR_PRI_LIN);
+        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_BEGINNING_OF_CURRENT_LINE);
     }
 
     /**
-     * Borra los posibles caracteres de la línea actual donde se encuentra el
-     * cursor.
+     * Erases possible characters from the current line where the cursor is
+     * located.
      */
     public void deleteLine() {
-        System.out.print(BOR_CUR_LIN);
+        System.out.print(EraseSecuencesCodes.ERASES_CURRENT_LINE);
     }
 
-    // Colores y estilos
+    // Colors and styles
     /**
-     * Establece el modo negrita para la cadena que se le pase
+     * Sets bold mode for the passed string
      *
-     * @param msg la cadena a poner en negrita
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará en negrita.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string to put in bold
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be in bold.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBold(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_NEG)
+            sb.append(ESC).append(ColorsAndStylesCodes.BOLD_START)
                     .append(msg)
-                    .append(ESC).append(FIN_NEG);
+                    .append(ESC).append(ColorsAndStylesCodes.BOLD_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -740,40 +585,37 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el modo atenuado para la cadena que se le pase
+     * Sets dimmed mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo atenuado
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará de forma atenuada.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in dimmed mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be dimmed.
      */
-    public String setDim(String msg) throws IllegalArgumentException {
+    public String setDim(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_OSC)
+            sb.append(ESC).append(ColorsAndStylesCodes.DIM_START)
                     .append(msg)
-                    .append(ESC).append(FIN_OSC);
+                    .append(ESC).append(ColorsAndStylesCodes.DIM_END);
         }
 
         return sb.toString();
     }
 
     /**
-     * Establece el modo cursiva para la cadena que se le pase
+     * Sets italic mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo cursiva
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará de forma cursiva.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in italic mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be in italics.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setItalic(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_CUR)
+            sb.append(ESC).append(ColorsAndStylesCodes.ITALIC_START)
                     .append(msg)
-                    .append(ESC).append(FIN_CUR);
+                    .append(ESC).append(ColorsAndStylesCodes.ITALIC_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -782,20 +624,19 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el modo subrayado para la cadena que se le pase
+     * Sets underline mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo subrayado
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará de forma subrayada.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in underline mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be underlined.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setUnderline(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_SUB)
+            sb.append(ESC).append(ColorsAndStylesCodes.UNDERLINE_START)
                     .append(msg)
-                    .append(ESC).append(FIN_SUB);
+                    .append(ESC).append(ColorsAndStylesCodes.UNDERLINE_STOP);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -804,20 +645,19 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el modo intermitente/parpadeante para la cadena que se le pase
+     * Sets blink mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo intermitente/parpadeante
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará de forma intermitente/parpadeante.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in blink mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be blinking.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBlink(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_INT)
+            sb.append(ESC).append(ColorsAndStylesCodes.BLINK_START)
                     .append(msg)
-                    .append(ESC).append(FIN_INT);
+                    .append(ESC).append(ColorsAndStylesCodes.BLINK_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -826,21 +666,19 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el modo inverso para la cadena que se le pase
+     * Sets inverse mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo inverso
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará de forma inversa (intercambio de colores del primer
-     * plano/fondo).
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in inverse mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be inverted (foreground/background color swap).
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setInverse(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_REV)
+            sb.append(ESC).append(ColorsAndStylesCodes.REVERSE_START)
                     .append(msg)
-                    .append(ESC).append(FIN_REV);
+                    .append(ESC).append(ColorsAndStylesCodes.REVERSE_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -849,21 +687,20 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el modo oculto para la cadena que se le pase
+     * Sets hidden mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo inverso
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, lo hará de forma oculta (no aparece nada en la pantalla, pero
-     * se ocupa el espacio que tenga la cadena).
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in hidden mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will be hidden (nothing appears on the screen, but the space
+     * occupied by the string is taken).
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setHidden(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_INV)
+            sb.append(ESC).append(ColorsAndStylesCodes.INVISIBLE_START)
                     .append(msg)
-                    .append(ESC).append(FIN_INV);
+                    .append(ESC).append(ColorsAndStylesCodes.INVISIBLE_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -872,20 +709,19 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el modo tachado para la cadena que se le pase
+     * Sets strikethrough mode for the passed string
      *
-     * @param msg la cadena que se pondrá en modo tachado
-     * @return un String con la secuencia ANSI que, si se muestra en el
-     * terminal, aparecerá tachada.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param msg the string that will be put in strikethrough mode
+     * @return a String with the ANSI sequence that, if shown in the
+     * terminal, will appear struck through.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setStrikeThrough(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(INI_TAC)
+            sb.append(ESC).append(ColorsAndStylesCodes.STRIKETHROUGH_START)
                     .append(msg)
-                    .append(ESC).append(FIN_TAC);
+                    .append(ESC).append(ColorsAndStylesCodes.STRIKETHROUGH_END);
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
@@ -894,23 +730,21 @@ public class ANSITerm {
     }
 
     /**
-     * Combina varios estilos a la cadena que se le pase. <br>
-     * <b>NOTA: No todas las combinaciones de estilos</b> producirán los
-     * resultados previstos en <i>algunos terminales</i>.
+     * Combines several styles to the passed string. <br>
+     * <b>NOTE: Not all style combinations</b> will produce the intended
+     * results in <i>some terminals</i>.
      *
-     * @param isBold Si es true pondrá la cadena en negritas
-     * @param isDim Si es true pondrá la cadena de forma atenuada
-     * @param isItalic Si es true pondrá la cadena en cursiva
-     * @param isUnderline Si es true pondrá la cadena subrayada
-     * @param isBlink Si es true pondrá la cadena intermitente/parpadeante
-     * @param isInverse Si es true pondrá la cadena en modo inverso
-     * @param isStrikeThrough Si es true pondrá la cadena con un 'tachado' por
-     * encima.
-     * @param msg la cadena a la que se aplicarán los estilos
-     * @return un String con las secuencias ANSI necesarias para que, si luego
-     * se imprime en el terminal, aparezca con los estilos solicitados.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param isBold If true, puts the string in bold
+     * @param isDim If true, puts the string in dimmed mode
+     * @param isItalic If true, puts the string in italics
+     * @param isUnderline If true, puts the string underlined
+     * @param isBlink If true, puts the string blinking
+     * @param isInverse If true, puts the string in inverse mode
+     * @param isStrikeThrough If true, puts the string with a strikethrough.
+     * @param msg the string to which styles will be applied
+     * @return a String with the ANSI sequences necessary so that, if later
+     * printed in the terminal, it appears with the requested styles.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setStyles(boolean isBold, boolean isDim,
             boolean isItalic, boolean isUnderline,
@@ -926,7 +760,9 @@ public class ANSITerm {
             }
             if (isDim) {
                 if (isMessageAdded) {
-                    sb.insert(0, ESC + INI_OSC).append(ESC + FIN_OSC);
+                    sb.insert(0, ESC +
+                        ColorsAndStylesCodes.DIM_START).append(ESC +
+                        ColorsAndStylesCodes.DIM_END);
                 } else {
                     sb.append(setDim(msg));
                     isMessageAdded = true;
@@ -934,7 +770,9 @@ public class ANSITerm {
             }
             if (isItalic) {
                 if (isMessageAdded) {
-                    sb.insert(0, ESC + INI_CUR).append(ESC + FIN_CUR);
+                    sb.insert(0, ESC +
+                        ColorsAndStylesCodes.ITALIC_START).append(ESC +
+                        ColorsAndStylesCodes.ITALIC_END);
                 } else {
                     sb.append(setItalic(msg));
                     isMessageAdded = true;
@@ -942,7 +780,9 @@ public class ANSITerm {
             }
             if (isUnderline) {
                 if (isMessageAdded) {
-                    sb.insert(0, ESC + INI_SUB).append(ESC + FIN_SUB);
+                    sb.insert(0, ESC +
+                        ColorsAndStylesCodes.UNDERLINE_START).append(ESC +
+                        ColorsAndStylesCodes.UNDERLINE_STOP);
                 } else {
                     sb.append(setUnderline(msg));
                     isMessageAdded = true;
@@ -950,7 +790,9 @@ public class ANSITerm {
             }
             if (isBlink) {
                 if (isMessageAdded) {
-                    sb.insert(0, ESC + INI_INT).append(ESC + FIN_INT);
+                    sb.insert(0, ESC +
+                        ColorsAndStylesCodes.BLINK_START).append(ESC +
+                        ColorsAndStylesCodes.BLINK_END);
                 } else {
                     sb.append(setBlink(msg));
                     isMessageAdded = true;
@@ -958,7 +800,9 @@ public class ANSITerm {
             }
             if (isInverse) {
                 if (isMessageAdded) {
-                    sb.insert(0, ESC + INI_REV).append(ESC + FIN_REV);
+                    sb.insert(0, ESC +
+                        ColorsAndStylesCodes.REVERSE_START).append(ESC +
+                        ColorsAndStylesCodes.REVERSE_END);
                 } else {
                     sb.append(setInverse(msg));
                     isMessageAdded = true;
@@ -966,9 +810,12 @@ public class ANSITerm {
             }
             if (isStrikeThrough) {
                 if (isMessageAdded) {
-                    sb.insert(0, ESC + INI_TAC).append(ESC + FIN_TAC);
+                    sb.insert(0, ESC +
+                        ColorsAndStylesCodes.STRIKETHROUGH_START).append(ESC +
+                        ColorsAndStylesCodes.STRIKETHROUGH_END);
                 } else {
                     sb.append(setStrikeThrough(msg));
+                    isMessageAdded = true;
                 }
             }
         } else {
@@ -979,44 +826,46 @@ public class ANSITerm {
     }
 
     /**
-     * Establece el color del texto
-     * @param color Una constante de la enumeración Color con el color
-     * @param msg La cadena que se quiere colorear
-     * @return una cadena con la secuencia ANSI apropiada para mostrar en la consola
-     * el texto con el color indicado.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * Sets text color
+     * @param color A Color enum constant with the color
+     * @param msg The string to be colored
+     * @return a string with the appropriate ANSI sequence to show the text
+     * with the indicated color in the console.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setColor(Color color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         int iColor = Integer.parseInt(color.getAsString());
-        if ((msg != null && !msg.isEmpty())) {
-            sb.append(ESC).append("[")
-                    .append(iColor)
-                    .append("m")
-                    .append(msg)
-                    .append(ESC)
-                    .append("[")
-                    .append(Color.DEFECTO.getAsString())
-                    .append("m");
+        if ((iColor >= 30 || iColor <= 37)) {
+            if ((msg != null && !msg.isEmpty())) {
+                sb.append(ESC).append("[")
+                        .append(iColor)
+                        .append("m")
+                        .append(msg)
+                        .append(ESC)
+                        .append("[")
+                        .append(Color.DEFAULT.getAsString())
+                        .append("m");
+            } else {
+                throw new IllegalArgumentException(EX_NO_MSG);
+            }
         } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
+            throw new IllegalArgumentException(EX_NO_COL);
         }
 
         return sb.toString();
     }
 
     /**
-     * Establece un código de color de una paleta de 256 colores a la cadena
-     * que se le pasa como parámetro.
+     * Sets a color code from a 256-color palette to the string passed as
+     * a parameter.
      * 
-     * @param color un entero entre 0 y 255 que contiene el código de color.
-     * @param msg una cadena que recibirá la secuencia ANSI para darle el color 
-     * indicado.
-     * @return una cadena con la secuencia ANSI adecuada para mostrarse en el color 
-     * indicado en el terminal.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param color an integer between 0 and 255 containing the color code.
+     * @param msg a string that will receive the ANSI sequence to give it the
+     * indicated color.
+     * @return a string with the appropriate ANSI sequence to be displayed in
+     * the indicated color in the terminal.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setColor256(int color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -1029,28 +878,27 @@ public class ANSITerm {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
 
-        sb.append(ESC).append(COL256)
+        sb.append(ESC).append(ColorsAndStylesCodes.FOREGROUND_COLOR256)
                 .append(color)
                 .append("m")
                 .append(msg)
                 .append(ESC)
                 .append("[")
-                .append(Color.DEFECTO.getAsString())
+                .append(Color.DEFAULT.getAsString())
                 .append("m");
 
         return sb.toString();
     }
 
     /**
-     * Establece un código de color de una paleta de 256 colores para el fondo 
-     * de la cadena que se le pasa como parámetro.
-     * @param color un entero entre 0 y 255 que contiene el código de color.
-     * @param msg una cadena que recibirá la secuencia ANSI para darle el color 
-     * indicado a su fondo.
-     * @return una cadena con la secuencia ANSI adecuada que mostrará el color 
-     * indicado en su fondo en el terminal.
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * Sets a color code from a 256-color palette for the background of the
+     * string passed as a parameter.
+     * @param color an integer between 0 and 255 containing the color code.
+     * @param msg a string that will receive the ANSI sequence to give its
+     * background the indicated color.
+     * @return a string with the appropriate ANSI sequence that will show the
+     * indicated color in its background in the terminal.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBackgroundColor256(int color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -1063,32 +911,31 @@ public class ANSITerm {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
 
-        sb.append(ESC).append(COL256_F)
+        sb.append(ESC).append(ColorsAndStylesCodes.BACKGROUND_COLOR256)
                 .append(color)
                 .append("m")
                 .append(msg)
                 .append(ESC)
                 .append("[")
-                .append(Color.DEFECTO.getAsString())
+                .append(Color.DEFAULT.getAsString())
                 .append("m");
 
         return sb.toString();
     }
 
     /**
-     * Establece el color de fondo de la cadena que se le pasa
+     * Sets the background color of the passed string
      *
-     * @param color Enum con el color de fondo
-     * @param msg String con la cadena a colorear
-     * @return un String con las secuencias de escape ANSI que colorean la
-     * cadena segun lo solicitado
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param color Enum with the background color
+     * @param msg String with the string to color
+     * @return a String with the ANSI escape sequences that color the string
+     * as requested
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBackgroundColor(BGColor color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         int iColor = Integer.parseInt(color.getAsString());
-        if (iColor >= 40 && iColor <= 47) {
+        if ((iColor >= 40 || iColor <= 47)) {
             if ((msg != null && !msg.isEmpty())) {
                 sb.append(ESC).append("[")
                         .append(iColor)
@@ -1096,7 +943,7 @@ public class ANSITerm {
                         .append(msg)
                         .append(ESC)
                         .append("[")
-                        .append(BGColor.DEFECTO.getAsString())
+                        .append(BGColor.DEFAULT.getAsString())
                         .append("m");
             } else {
                 throw new IllegalArgumentException(EX_NO_MSG);
@@ -1109,16 +956,14 @@ public class ANSITerm {
     }
 
     /**
-     * Establece los colores de primer plano y de fondo de la cadena que se le
-     * pasa
+     * Sets the foreground and background colors of the passed string
      *
-     * @param color Enum con el color de primer plano
-     * @param backgroundColor Enum con el color de fondo
-     * @param msg String con la cadena a colorear
-     * @return un String con las secuencias de escape ANSI que colorean la
-     * cadena segun lo solicitado
-     * @throws IllegalArgumentException En caso de que algún argumento no sea
-     * válido.
+     * @param color Enum with the foreground color
+     * @param backgroundColor Enum with the background color
+     * @param msg String with the string to color
+     * @return a String with the ANSI escape sequences that color the string
+     * as requested
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setColors(Color color, BGColor backgroundColor, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -1127,7 +972,7 @@ public class ANSITerm {
         if ((iColor < 30 || iColor > 37)) {
             throw new IllegalArgumentException(EX_NO_COL);
         }
-        if (bColor < 40) {
+        if ((bColor < 40 || iColor > 47)) {
             throw new IllegalArgumentException(EX_NO_BACKCOL);
         }
         if ((msg == null || msg.isEmpty())) {
@@ -1142,24 +987,24 @@ public class ANSITerm {
                 .append(msg)
                 .append(ESC)
                 .append("[")
-                .append(REINICIA)
+                .append(ColorsAndStylesCodes.RESET_COLOR_AND_STYLES)
                 .append("m");
         return sb.toString();
     }
 
     /**
-     * Resetea el terminal a sus valores por defecto. Se recomienda llamar a
-     * este método cuando se termine de usar Terminal en su aplicación.
+     * Resets the terminal to its default values. It is recommended to call
+     * this method when you finish using Terminal in your application.
      */
     public void resetScreen() {
-        System.out.print(RES_PAN);
+        System.out.print(PositionCodes.RESTORES_SCREEN);
     }
 
 
     /**
-     * Devuelve el tamaño de la terminal
-     * @return un objeto TerminalSize con las líneas y columnas actuales de la 
-     * terminal.
+     * Returns terminal size
+     * @return a TerminalSize object with the current lines and columns of
+     * the terminal.
      * 
      * @see TerminalSize
      */
@@ -1168,13 +1013,13 @@ public class ANSITerm {
     }
 
     /**
-     * Imprime la cadena msg en la posición del terminal indicada por los
-     * enteros line (la línea) y col (la columna)
+     * Prints the msg string at the terminal position indicated by the
+     * integers line and col (the column)
      *
-     * @param msg la cadena a imprimir
-     * @param line la línea donde se imprimirá
-     * @param col la columna a partir de la cual se imprimirá la cadena
-     * @throws IllegalArgumentException En caso de argumentros no válidos.
+     * @param msg the string to print
+     * @param line the line where it will be printed
+     * @param col the column from which the string will be printed
+     * @throws IllegalArgumentException In case of invalid arguments.
      */
     public void printAt(String msg, int line, int col) throws IllegalArgumentException {
         if ((msg != null && !msg.isEmpty())) {
@@ -1187,13 +1032,12 @@ public class ANSITerm {
     }
 
     /**
-     * Imprime la cadena msg en la posición p en el terminal
+     * Prints the msg string at position p in the terminal
      *
-     * @param msg la cadena a imprimir
-     * @param p la posición en el terminal donde comenzará a imprimirse la
-     * cadena
+     * @param msg the string to print
+     * @param p the terminal position where the string will start to be printed
      */
-    public void printAt(String msg, Posicion p) {
+    public void printAt(String msg, Position p) {
         printAt(msg, p.getCol(), p.getLin());
     }
 }

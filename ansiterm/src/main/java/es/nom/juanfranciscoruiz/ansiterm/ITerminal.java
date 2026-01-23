@@ -1,26 +1,25 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
- * Interface for the low-level methods of a terminal.
- * 
- * @author juanf
+ * Interface for low-level terminal methods.
+ * @author Juan F. Ruiz
  */
 public interface ITerminal {
 
     /**
-     * Enable the terminal's 'raw' mode
+     * Enables the 'raw' mode of the terminal
      */
     void enableRawMode();
 
     /**
-     * Disable the terminal's 'raw' mode
+     * Disables the 'raw' mode of the terminal
      */
     void disableRawMode();
 
     /**
      * Returns the current size of the terminal
-     * @return a TerminalSize object with the lines and columns of the current
-     * terminal
+     * @return a TerminalSize object with the lines and columns of the 
+     * current terminal
      * 
      * @see es.nom.juanfranciscoruiz.ansiterm.TerminalSize
      */

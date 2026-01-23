@@ -22,39 +22,37 @@ import org.slf4j.LoggerFactory;
  */
 public class UtilTest {
 
-    /**
-     * Logger for this class
-     */
     public final static Logger logger = LoggerFactory.getLogger(UtilTest.class);
 
-    /**
-     * Tests that feature map has expected values
-     */
     @Test
     public void testGetFeaturesAsMap() {
         printTitle("testGetFeaturesAsMap()");
 
         Map<String, String> expectedValue = new HashMap<>();
         Map<String, String> actualValue;
+
         Runtime rt = Runtime.getRuntime();
         NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
+
         System.gc();
         String freeMemory = numberFormatter.format(rt.freeMemory());
         String maxMemory = numberFormatter.format(rt.maxMemory());
         String totalMemmory = numberFormatter.format(rt.totalMemory());
+
         expectedValue.put("Processor Cores", String.valueOf(rt.availableProcessors()));
         expectedValue.put("Free Memory", freeMemory);
         expectedValue.put("Available Memory", maxMemory);
         expectedValue.put("Total Memory", totalMemmory);
+
         actualValue = Util.getFeaturesAsMap();
+
         printResults(expectedValue, actualValue);
+
         assertEquals(expectedValue.size(), actualValue.size(), "It should return a map with four specific keys");
         assertEquals(expectedValue.get("Available Memory"), actualValue.get("Available Memory"), "Available memory must be the same");
+
     }
 
-    /**
-     * Tests that system properties are returned as a map
-     */
     @Test
     public void testGetSystemPropertiesAsMap() {
         printTitle("testGetSystemPropertiesAsMap()");
@@ -82,14 +80,15 @@ public class UtilTest {
             }
             expectedValue.put(sKey, sValue);
         }
+
         actualValue = (HashMap<String, String>) Util.getSystemPropertiesAsMap();
+
         printResults(expectedValue, actualValue);
+
         assertEquals(expectedValue, actualValue, "They must have the same keys and values");
+
     }
 
-    /**
-     * Test of getAllCharsets method, of class C.
-     */
     @Test
     public void testGetAllCharsets() {
     }
@@ -100,14 +99,15 @@ public class UtilTest {
     @Test
     public void testCollectionAsString() {
         printTitle("testCollectionToString()");
-
-        String[] array = generateArrayOfStrings();
-        List<String> lista = new ArrayList<>(Arrays.asList(array));
+      
+      String[] array = generateArrayOfStrings();
+      
+      List<String> lista = new ArrayList<>(Arrays.asList(array));
 
         assertAll(
                 () -> {
                     logger.debug("Displays the first 10 items in the list...");
-                    String expResult = stringExpectedFromList(lista);
+                    String expResult = stringExpectedFromList(lista, 10);
                     String result = Util.CollectionToString(lista, true, 10);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should display at most 10 list items.");
@@ -155,65 +155,58 @@ public class UtilTest {
                 },
                 () -> {
                     logger.debug("It should display at most 7 pairs of map values.");
-                    Map<Integer, Integer> mapa = generateIntegerMap();
+                    Map<Integer, Integer> mapa = generateIntegerMap(15, 5, 10);
                     String expResult = stringExpectedFromMap(mapa, 7);
                     String result = Util.CollectionToString(mapa, true, 7);
                     printResults(expResult, result);
                     assertEquals(expResult, result, "It should display at most 7 pairs of map values.");
                 }
         );
+
     }
 
-    // Helper methods for test execution
-    /**
-     * Generates and returns an array of predefined string values representing executable file names.
-     *
-     * @return an array of strings containing executable file names.
-     */
+    // Helper methods for test execution testToString()
     private String[] generateArrayOfStrings() {
-        return new String[]{
-            "jabswitch.exe",
-            "jaccessinspector.exe",
-            "jaccesswalker.exe",
-            "jar.exe",
-            "jarsigner.exe",
-            "java.exe",
-            "javac.exe",
-            "javadoc.exe",
-            "javap.exe",
-            "javaw.exe",
-            "jcmd.exe",
-            "jconsole.exe",
-            "jdb.exe",
-            "jdeprscan.exe",
-            "jdeps.exe",
-            "jfr.exe",
-            "jhsdb.exe",
-            "jimage.exe",
-            "jinfo.exe",
-            "jlink.exe",
-            "jmap.exe",
-            "jmod.exe",
-            "jpackage.exe",
-            "jps.exe",
-            "jrunscript.exe",
-            "jshell.exe",
-            "jstack.exe",
-            "jstat.exe",
-            "jstatd.exe",
-            "jwebserver.exe",
-            "keytool.exe",
-            "kinit.exe",
-            "klist.exe",
-            "ktab.exe",
-            "rmiregistry.exe",
-            "serialver.exe"
-        };
+      return new String[]{
+          "jabswitch.exe",
+          "jaccessinspector.exe",
+          "jaccesswalker.exe",
+          "jar.exe",
+          "jarsigner.exe",
+          "java.exe",
+          "javac.exe",
+          "javadoc.exe",
+          "javap.exe",
+          "javaw.exe",
+          "jcmd.exe",
+          "jconsole.exe",
+          "jdb.exe",
+          "jdeprscan.exe",
+          "jdeps.exe",
+          "jfr.exe",
+          "jhsdb.exe",
+          "jimage.exe",
+          "jinfo.exe",
+          "jlink.exe",
+          "jmap.exe",
+          "jmod.exe",
+          "jpackage.exe",
+          "jps.exe",
+          "jrunscript.exe",
+          "jshell.exe",
+          "jstack.exe",
+          "jstat.exe",
+          "jstatd.exe",
+          "jwebserver.exe",
+          "keytool.exe",
+          "kinit.exe",
+          "klist.exe",
+          "ktab.exe",
+          "rmiregistry.exe",
+          "serialver.exe"
+      };
     }
 
-    /**
-     * Creates list of strings with Java executables
-     */
     private List<String> generateListOfStrings() {
         List<String> lista = new ArrayList<>();
 
@@ -257,28 +250,17 @@ public class UtilTest {
         return lista;
     }
 
-    /**
-     * Generates and returns a map with integer keys and values.
-     *
-     * @return a map with integer keys and values.
-     */
-    private Map<Integer, Integer> generateIntegerMap() {
-        Integer[] keyArray = generateKeyIntegerArray();
-        Integer[] valuesArray = generateValueIntegerArray(5, 10);
+    private Map<Integer, Integer> generateIntegerMap(int items, int start, int increase) {
+        Integer[] keyArray = generateKeyIntegerArray(items);
+        Integer[] valuesArray = generateValueIntegerArray(items, start, increase);
         Map<Integer, Integer> theMap = new HashMap<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < items; i++) {
             theMap.put(keyArray[i], valuesArray[i]);
         }
 
         return theMap;
     }
 
-    /**
-     * Returns string representation of map contents
-     *
-     * @param theMap the map to be converted to string
-     * @return string representation of map contents
-     */
     private String stringExpectedFromMap(Map<?, ?> theMap, int maximumElements) {
         StringBuilder sb = new StringBuilder();
 
@@ -304,24 +286,15 @@ public class UtilTest {
         return sb.toString();
     }
 
-    /**
-     * Generates a string representation of the elements in the given list.
-     * If the list contains fewer than 10 elements, all elements are included in the resulting string.
-     * Otherwise, only the first 10 elements are included, followed by an ellipsis.
-     *
-     * @param theList the list of objects to be converted into a string representation
-     * @return a string representing the elements of the list, formatted with each element enclosed in single quotes,
-     * separated by spaces, and enclosed in square brackets
-     */
-    private String stringExpectedFromList(List<?> theList) {
+    private String stringExpectedFromList(List<?> theList, int maximumElements) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        if (theList.size() < 10) {
+        if (theList.size() < maximumElements) {
             for (Object o : theList.toArray()) {
                 sb.append("'").append(o).append("'").append(" ");
             }
         } else {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < maximumElements; i++) {
                 sb.append("'").append(theList.get(i)).append("'").append(" ");
             }
             sb.append(" ...");
@@ -330,53 +303,28 @@ public class UtilTest {
         return sb.toString();
     }
 
-    /**
-     * Generates and returns an array of integers where the values range from 0 to 14.
-     *
-     * @return an array of integers containing values from 0 to 14.
-     */
-    private Integer[] generateKeyIntegerArray() {
-        Integer[] array = new Integer[15];
-        for (int i = 0; i < 15; i++) {
+    private Integer[] generateKeyIntegerArray(int items) {
+        Integer[] array = new Integer[items];
+        for (int i = 0; i < items; i++) {
             array[i] = i;
         }
         return array;
     }
 
-    /**
-     * Generates and returns an array of integers where each element is assigned
-     * a value based on the given starting value and an incremental value that replaces
-     * the starting value for subsequent iterations.
-     *
-     * @param start the initial value to assign to the first element of the array
-     * @param increase the value to replace the starting value for successive elements
-     * @return an array of integers with 15 elements populated based on the start and increase values
-     */
-    private Integer[] generateValueIntegerArray(int start, int increase) {
-        Integer[] array = new Integer[15];
-        for (int i = 0; i < 15; i++) {
+    private Integer[] generateValueIntegerArray(int items, int start, int increase) {
+        Integer[] array = new Integer[items];
+        for (int i = 0; i < items; i++) {
             array[i] = start;
             start = increase;
         }
         return array;
     }
 
-    /**
-     * Logs a debug message with the specified method name prefixed by "TEST ".
-     *
-     * @param methodName the name of the method to be included in the debug log message
-     */
     private void printTitle(String methodName) {
         String test = "TEST " + methodName;
         logger.debug(test);
     }
 
-    /**
-     * Logs the actual and expected values for debugging purposes.
-     *
-     * @param expectedValue the expected value to be compared
-     * @param actualValue the actual value obtained
-     */
     private void printResults(Object expectedValue, Object actualValue) {
         String actVal = "Return value -> " + actualValue;
         String expVal = "Expected value -> " + expectedValue;

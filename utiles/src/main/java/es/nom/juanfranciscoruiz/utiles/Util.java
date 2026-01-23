@@ -1,24 +1,19 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import java.io.BufferedInputStream;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.SortedMap;
+import java.util.*;
+
+import static es.nom.juanfranciscoruiz.utiles.IO.prtln;
 
 /**
  * Class with various utility methods frequently used by other classes in the
  * application
  *
- * @author hamfree
+ * @author Juan F. Ruiz
  */
 public class Util {
-    //Constructors
     /**
      * We prevent it from being instantiated (Utility class)
      */
@@ -172,5 +167,51 @@ public class Util {
             }
         }
         return sb.toString();
+    }
+    
+    /**
+     * Pauses the program for a specified number of milliseconds and optionally
+     * displays a message. If no message is provided, it defaults to
+     * "Press &lt;ENTER&gt; to continue..." on the terminal.
+     * <p>
+     * If 0 milliseconds are specified, the function waits for the user to
+     * press ENTER. Otherwise, it informs the user that the program will
+     * continue after the specified delay and then pauses.
+     *
+     * @param milliseconds The duration of the pause in milliseconds. If 0,
+     * the function waits for the user to press ENTER.
+     * @param msg The message to display to the user.
+     * @throws Exception In case of any error.
+     */
+    public static void pause(long milliseconds, String msg) throws Exception {
+        if (msg == null || msg.isEmpty()) {
+            msg = "\nPress <ENTER> to continue...";
+        }
+        if (milliseconds == 0) {
+            prtln(1,msg);
+            Scanner sc = new Scanner(new BufferedInputStream(System.in));
+            sc.nextLine();
+            return;
+        }
+        prtln(1,"The program will continue in " + milliseconds + " milliseconds...");
+        Thread.sleep(milliseconds);
+    }
+    
+    /**
+     * Pauses the program for a specified number of milliseconds. If 0 is
+     * specified, it waits for the user to press ENTER. No message is
+     * displayed.
+     *
+     * @param milliseconds The duration of the pause in milliseconds. If 0,
+     * the function waits for the user to press ENTER.
+     * @throws Exception In case of any error.
+     */
+    public static void pauseWithoutMessage(long milliseconds) throws Exception {
+        if (milliseconds == 0) {
+            Scanner sc = new Scanner(new BufferedInputStream(System.in));
+            sc.nextLine();
+            return;
+        }
+        Thread.sleep(milliseconds);
     }
 }

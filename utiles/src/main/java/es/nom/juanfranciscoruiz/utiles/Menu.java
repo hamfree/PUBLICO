@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
-import es.nom.juanfranciscoruiz.utiles.impl.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,24 +11,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+/*
+TODO:
+ Convert the Menu class into a class that can manage a menu hierarchy,
+ where there will be a main menu from which all other menus will branch. There
+ will only be one main menu. The Menu class itself will have another Menu
+ object as an attribute to implement the menu hierarchy. The main menu will
+ have a null value for its menu attribute. The other menus will have a
+ reference to their parent menu as the value of their menu attributes.
+ */
+
 /**
  * It's the representation of an options menu, capable of generating a view of
- * this menu for output devices or streams and for obtaining the user's
+ * this menu for output devices or streams and for getting the user's
  * response.
  * <p>
  * When you want to display the menu, assuming the Menu instance is called
  * principalMenu, it would look something like this:
  * <p>
- * IO io = new IO(); io.prt(principalMenu.getMenuView());
+ *  IO.prt(principalMenu.getMenuView());
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
-//TODO: Convert the Menu class into a class that can manage a menu hierarchy,
-// where there will be a main menu from which all other menus will branch. There
-// will only be one main menu. The Menu class itself will have another Menu
-// object as an attribute to implement the menu hierarchy. The main menu will
-// have a null value for its menu attribute. The other menus will have a
-// reference to their parent menu as the value of their menu attributes.
 public class Menu {
 
     // Properties
@@ -72,16 +76,45 @@ public class Menu {
     private String menuView;
 
     /**
-     * Constants for default values and error messages used in the Menu class.
+     * Default value for the title property of a Menu Object.
      */
     private static final String NOTITLE = "Untitled";
+    
+    /**
+     * For a Menu object that is the Home Menu this is the option 0 of the menu
+     * for exiting the application.
+     */
     private static final String EXITOPT = "0. Exit the application";
+    
+    /**
+     * Default vale for the message shown to the user below the list options.
+     */
     private static final String DEFAULTMSG = "Make your selection:";
+    /**
+     * Message of error when the user enters an invalid option in awaitResponse().
+     */
     private static final String ERR_BLANK_NULL = "You must enter a number with the option to choose.";
+    /**
+     * Message of error when the user enters something that is not a number.
+     */
     private static final String ERR_NONUMBER = "What was entered is not a number.";
+    /**
+     * Message of error when the user enters a negative or decimal number 
+     */
     private static final String ERR_NOTVALIDNUMBER = "You have not entered a valid number.";
+    
+    /**
+     * Message of error when the user enters a valid number but it's outside the 
+     * allowed range.
+     */
     private static final String ERR_NUMBEROUTOFRANGE = "The selected option is outside the allowed range";
+    /**
+     * Message of error when it's trying to use a Menu Object with no menu options.
+     */
     private static final String ERR_NOOPTIONS = "There are no defined options in this menu";
+    /**
+     * Constant for the wrong option.
+     */
     private static final Long WRONGOPTION = -1L;
 
     // Constructors
@@ -270,12 +303,13 @@ public class Menu {
 
         sb.append(LS);
         int longitud = this.getTitle().length();
-        sb.append("*".repeat(Math.max(0, longitud + 5)));
+        String repeat = "*".repeat(Math.max(0, longitud + 5));
+        sb.append(repeat);
 
         sb.append(LS);
         sb.append("  ").append(this.getTitle()).append("  ");
         sb.append(LS);
-        sb.append("*".repeat(Math.max(0, longitud + 5)));
+        sb.append(repeat);
 
         String tit = sb.toString();
         sbMenuView
@@ -332,7 +366,7 @@ public class Menu {
             msg = DEFAULTMSG;
         }
 
-        IO.prt(msg);
+        IOImpl.prt(msg);
 
         try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
             respuesta = sc.nextLine();

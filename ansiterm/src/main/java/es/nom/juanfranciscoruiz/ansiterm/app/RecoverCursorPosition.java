@@ -1,0 +1,67 @@
+package es.nom.juanfranciscoruiz.ansiterm.app;
+
+import com.sun.jna.LastErrorException;
+import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
+import es.nom.juanfranciscoruiz.ansiterm.Position;
+import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
+import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausaSinMensaje;
+
+/**
+ * Demonstrates how to recover the current cursor position from the terminal.
+ *
+ * @author Juan F. Ruiz
+ */
+public class RecoverCursorPosition {
+  
+  /**
+   * Logger used for tracing and debugging.
+   */
+  public static final Logger logger = LoggerFactory.getLogger(RecoverCursorPosition.class);
+  
+  /**
+   * Constructs a new RecoverCursorPosition.
+   */
+  RecoverCursorPosition() {}
+  
+  /**
+   * Performs the cursor position recovery demonstration.
+   * 
+   * @param term The ANSITerm object to use.
+   * @throws Exception If an error occurs during execution.
+   */
+  void perform(ANSITerm term) throws Exception {
+    term.clearScreen();
+    term.moveCursorToBegin();
+    term.printAt("------------  Recovering the cursor position ------------ ", 1, 1);
+    TerminalSize screenSize = term.getTerminalSize();
+    
+    term.cursorShow();
+    term.cursorChangeStyle(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE);
+    
+    for (int lin = 2; lin < screenSize.getLineas() - 3; lin++) {
+      for (int col = 1; col <= screenSize.getColumnas(); col++) {
+        Position p = new Position(1, 1);
+        term.printAt("X", lin, col);
+        try {
+          p = term.getCursorPosition();
+        } catch (LastErrorException e) {
+          logger.error(String.valueOf(e.getErrorCode()));
+          System.out.println(e.getErrorCode());
+          System.out.println(e.getMessage());
+        }
+        long retardo = 250L;
+        pausaSinMensaje(retardo);
+        term.printAt("Cursor position: column : ", screenSize.getLineas() - 2, 1);
+        term.deleteFromCursorToEndLine();
+        term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLineas() - 2, 31);
+        pausaSinMensaje(retardo);
+      }
+    }
+    pausa(0, "Press <ENTER> to return to the menu");
+  }
+}

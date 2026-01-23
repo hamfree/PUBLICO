@@ -10,9 +10,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import es.nom.juanfranciscoruiz.utiles.impl.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
 import org.junit.jupiter.api.Test;
 
+import static es.nom.juanfranciscoruiz.utiles.TypeConverter.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.slf4j.Logger;
@@ -33,11 +34,11 @@ public class TypeConverterTest {
     /*
     We import constants from the IO class to make writing tests easier.
      */
-    public final static String CAR_INI = IO.getCHAR_INI();
-    public final static String CAR_FIN = IO.getCHAR_END();
-    public final static String NULL = IO.getNULL();
-    public final static String SEP = IO.getSEP();
-    public final static String SL = IO.getLS();
+    public final static String CAR_INI = IOImpl.getCHAR_INI();
+    public final static String CAR_FIN = IOImpl.getCHAR_END();
+    public final static String NULL = IOImpl.getNULL();
+    public final static String SEP = IOImpl.getSEP();
+    public final static String SL = IOImpl.getLS();
 
     /**
      * Tests collection conversion to list
@@ -60,7 +61,7 @@ public class TypeConverterTest {
         expectedValue.add(3);
 
         clazz = Integer.class;
-        actualValue = TypeConverter.collection2List(clazz, vector);
+        actualValue = collection2List(clazz, vector);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "Should convert the vector to a list");
     }
@@ -86,7 +87,7 @@ public class TypeConverterTest {
         expectedValue.add(3);
 
         clazz = Integer.class;
-        actualValue = TypeConverter.map2List(clazz, mapToConvert);
+        actualValue = map2List(clazz, mapToConvert);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The expected result is to convert the values of the map into a list with those values");
     }
@@ -101,14 +102,14 @@ public class TypeConverterTest {
         assertAll(
                 () -> {
                     String theString = "0asfklkdkr";
-                    Long actualValue = TypeConverter.extractLongFromString(theString);
+                    Long actualValue = extractLongFromString(theString);
                     Long expectedValue = 0L;
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is %dand it should be%s".formatted(actualValue, expectedValue));
                 },
                 () -> {
                     String theString = "-987654321012me";
-                    Long actualValue = TypeConverter.extractLongFromString(theString);
+                    Long actualValue = extractLongFromString(theString);
                     Long expectedValue = -987654321012L;
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is " + actualValue + "and it should be" + expectedValue);
@@ -116,14 +117,14 @@ public class TypeConverterTest {
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
                         String theString = "ItsNotALongValue";
-                        TypeConverter.extractLongFromString(theString);
+                        extractLongFromString(theString);
                     });
                     if (logger.isDebugEnabled()) logger.debug("TypeConverterException : {}", ex.getMessage());
                 },
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
                         String theString = "9223372036854775808";
-                        TypeConverter.extractLongFromString(theString);
+                        extractLongFromString(theString);
                     });
                     if (logger.isDebugEnabled()) logger.debug("TypeConverterException : {}", ex.getMessage());
                 }
@@ -141,26 +142,26 @@ public class TypeConverterTest {
         assertAll(
                 () -> {
                     String theString = "asfk3.07lkdkr";
-                    Double actualValue = TypeConverter.extractDoubleFromString(theString);
+                    Double actualValue = extractDoubleFromString(theString);
                     Double expectedValue = 3.07;
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     String theString = "asfk-3.07lkdkr";
-                    Double actualValue = TypeConverter.extractDoubleFromString(theString);
+                    Double actualValue = extractDoubleFromString(theString);
                     Double expectedValue = -3.07;
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
-                    TypeConverterException ex = assertThrows(TypeConverterException.class, () -> TypeConverter.extractDoubleFromString(null));
+                    TypeConverterException ex = assertThrows(TypeConverterException.class, () -> extractDoubleFromString(null));
                     if (logger.isDebugEnabled()) logger.debug("TypeConverterException : {}", ex.getMessage());
                 },
                 () -> {
                     TypeConverterException ex = assertThrows(TypeConverterException.class, () -> {
                         String theString = "   ";
-                        TypeConverter.extractDoubleFromString(theString);
+                        extractDoubleFromString(theString);
                     });
                     if (logger.isDebugEnabled()) logger.debug("TypeConverterException : {}", ex.getMessage());
                 }
@@ -182,7 +183,7 @@ public class TypeConverterTest {
                 .concat(SEP)
                 .concat(String.valueOf(2))
                 .concat(CAR_FIN);
-        String actualValue = TypeConverter.array2String(integerArray);
+        String actualValue = array2String(integerArray);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
     }
@@ -214,7 +215,7 @@ public class TypeConverterTest {
                 .concat(SEP)
                 .concat(String.valueOf(4))
                 .concat(CAR_FIN);
-        String actualValue = TypeConverter.array2String(objectsArray);
+        String actualValue = array2String(objectsArray);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
     }
@@ -230,7 +231,7 @@ public class TypeConverterTest {
         stringsList.add("a");
         stringsList.add("b");
         String expectedValue = NULL;
-        String actualValue = TypeConverter.array2String(stringsList);
+        String actualValue = array2String(stringsList);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
     }
@@ -243,7 +244,7 @@ public class TypeConverterTest {
         printTitle("testArray2StringNullArray()");
 
         String expectedValue = NULL;
-        String actualValue = TypeConverter.array2String(null);
+        String actualValue = array2String(null);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
     }
@@ -260,7 +261,7 @@ public class TypeConverterTest {
                     byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "(4 bytes), [0]=65,[1]=66,[2]=67,[3]=68";
-                    String actualValue = TypeConverter.arrayByte2String(bytesArray, true, true);
+                    String actualValue = arrayByte2String(bytesArray, true, true);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
@@ -268,7 +269,7 @@ public class TypeConverterTest {
                     byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "[0]=65,[1]=66,[2]=67,[3]=68";
-                    String actualValue = TypeConverter.arrayByte2String(bytesArray, false, true);
+                    String actualValue = arrayByte2String(bytesArray, false, true);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
@@ -276,7 +277,7 @@ public class TypeConverterTest {
                     byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "(4 bytes), 65,66,67,68";
-                    String actualValue = TypeConverter.arrayByte2String(bytesArray, true, false);
+                    String actualValue = arrayByte2String(bytesArray, true, false);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
@@ -284,13 +285,13 @@ public class TypeConverterTest {
                     byte[] bytesArray = {65, 66, 67, 68};
 
                     String expectedValue = "65,66,67,68";
-                    String actualValue = TypeConverter.arrayByte2String(bytesArray, false, false);
+                    String actualValue = arrayByte2String(bytesArray, false, false);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     String expectedValue = "";
-                    String actualValue = TypeConverter.arrayByte2String(null, false, false);
+                    String actualValue = arrayByte2String(null, false, false);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 }
@@ -313,13 +314,13 @@ public class TypeConverterTest {
                             .concat(String.valueOf(2)).concat(SEP).concat("TWO").concat(SL)
                             .concat(String.valueOf(3)).concat(SEP).concat("THREE").concat(SL)
                             .concat(String.valueOf(4)).concat(SEP).concat("FOUR").concat(SL);
-                    String actualValue = TypeConverter.map2String(theMap);
+                    String actualValue = map2String(theMap);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     String expectedValue = "";
-                    String actualValue = TypeConverter.map2String(null);
+                    String actualValue = map2String(null);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 }
@@ -332,7 +333,7 @@ public class TypeConverterTest {
 
         byte theByte = 127;
         String expectedValue = "7f";
-        String actualValue = TypeConverter.byteToHex(theByte);
+        String actualValue = byteToHex(theByte);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
     }
@@ -343,7 +344,7 @@ public class TypeConverterTest {
 
         char theCharacter = '\uffff';
         String expectedValue = "ffff";
-        String actualValue = TypeConverter.charToHex(theCharacter);
+        String actualValue = charToHex(theCharacter);
         printResults(expectedValue, actualValue);
         assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
     }
@@ -356,13 +357,13 @@ public class TypeConverterTest {
                 () -> {
                     String theString = "ds[*_gjd1234ds,cf$vm";
                     String expectedValue = "1234";
-                    String actualValue = TypeConverter.extractDigits(theString);
+                    String actualValue = extractDigits(theString);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     String expectedValue = "";
-                    String actualValue = TypeConverter.extractDigits(null);
+                    String actualValue = extractDigits(null);
                     printResults(expectedValue, actualValue);
                     assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 }

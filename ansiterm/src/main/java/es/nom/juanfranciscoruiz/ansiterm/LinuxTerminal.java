@@ -1,33 +1,57 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
-import static es.nom.juanfranciscoruiz.ansiterm.ANSITerm.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * It provides access to the raw and cooked modes of the Linux terminal, as well
- * as theas obtaining the terminal size using ANSI escape sequences and setting
- * the raw mode so that ANSI code does not appear on the screen.
- * 
- * @author juanf
+ * Provides access to the raw and cooked modes of the Linux terminal as well as
+ * obtaining the terminal size using ANSI escape sequences and setting the
+ * raw mode so that the ANSI code does not appear on the screen.
+ * @author Juan F. Ruiz
  */
 public class LinuxTerminal implements ITerminal {
-
-    private static final String ESC = "\033";
-    private static final String REC_POS_CUR = ESC + "[6n";
-
-    /**
-     * Instantiate a LinuxTerminal object
-     */
-    public LinuxTerminal(){}
     
     /**
-     * Enable the console's 'raw' mode. Use the 'stty' command, which is usually
-     * available in all UNIX environments. In 'raw' mode, the characters typed
-     * by the user are passed directly to the application without the user
-     * having to press Enter. The '-echo' parameter is passed to prevent the
-     * typed characters from being displayed on the screen.
+     * A logger instance for the {@code LinuxTerminal} class.
+     * This is used to output logging information, such as error messages,
+     * debug details, or general operational logs, to a configured logging system.
+     * The logger uses the SLF4J API for flexible and configurable logging.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(LinuxTerminal.class);
+    
+    /**
+     * Represents the ANSI escape character sequence prefix, commonly used
+     * to initiate control sequences for terminal text formatting, cursor movement,
+     * and other terminal operations. This value is specific to UNIX-like environments
+     * and allows manipulation of terminal behavior programmatically.
+     */
+    private static final String ESC = "\033";
+    /**
+     * Represents the ANSI escape sequence for retrieving the current cursor position.
+     * This sequence is used to query the terminal for the current cursor position
+     * and is part of the ANSI escape sequence standard.
+     */
+    private static final String REC_POS_CUR = ESC + "[6n";
+
+    
+    /**
+     * Instantiates a LinuxTerminal object
+     */
+    public LinuxTerminal(){
+        
+    }
+    
+    /**
+     * Enables the 'raw' mode of the console. It uses the 'stty' command which
+     * is usually available in all UNIX environments. In 'raw' mode, the 
+     * characters typed by the user are passed directly to the 
+     * application without the user having to press ENTER. The '-echo' 
+     * parameter is passed so that the characters typed do not appear 
+     * on the screen.
      */
     @Override
     public void enableRawMode() {
@@ -35,14 +59,14 @@ public class LinuxTerminal implements ITerminal {
             String[] cmd = {"/bin/sh", "-c", "stty raw -echo < /dev/tty"};
             Runtime.getRuntime().exec(cmd).waitFor();
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
     /**
-     * Disable the terminal's 'raw' mode and enable 'cooked' mode, which
-     * is the one usually used (the typed characters are displayed and to
-     * receive our command the shell must press ENTER).
+     * Disables the 'raw' mode of the terminal and enables the 'cooked' mode, 
+     * which is the one normally used (typed characters are shown and for 
+     * the shell to receive our command we have to press ENTER).
      */
     @Override
     public void disableRawMode() {
@@ -50,78 +74,67 @@ public class LinuxTerminal implements ITerminal {
             String[] cmd = {"/bin/sh", "-c", "stty cooked echo < /dev/tty"};
             Runtime.getRuntime().exec(cmd).waitFor();
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
+    
     /**
-     * Get the terminal size.
+     * Obtains the terminal size.
      * @return a TerminalSize object with the lines and columns of the terminal.
      */
     @Override
     public TerminalSize getTerminalSize() {
-        Posicion inicialPosicion = readCurrentPosition();
+        Position inicialPosition = readCurrentPosition();
         gotoXY(10000, 10000);
-        Posicion result = readCurrentPosition();
-        gotoXY(inicialPosicion.getCol(), inicialPosicion.getLin());
+        Position result = readCurrentPosition();
+        gotoXY(inicialPosition.getCol(), inicialPosition.getLin());
+
         return new TerminalSize(result.getCol(), result.getLin());
     }
 
     
-    // Utility methods for 'getTerminalSize()'
-
-    /**
-     *
-     * @return
-     */
-    private Posicion readCurrentPosition() {
+    // Utility methods for the 'getTerminalSize()' method
+    private Position readCurrentPosition() {
         try {
             this.enableRawMode();
             System.out.print(REC_POS_CUR);
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             int character;
 
             do {
                 character = System.in.read();
                 if (character == 27) {
-                    result += "^";
+                    result.append("^");
                 } else {
-                    result += (char) character;
+                    result.append((char) character);
                 }
             } while (character != 82); // 'R'
 
             Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
-            Matcher matcher = pattern.matcher(result);
+            Matcher matcher = pattern.matcher(result.toString());
             if (matcher.matches()) {
-                return new Posicion(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+                return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
             } else {
-                return new Posicion(1, 1);
+                return new Position(1, 1);
             }
 
         } catch (IOException e) {
             logger.error(e.getMessage());
             System.out.println(e.getMessage());
-            return new Posicion(1, 1);
+            return new Position(1, 1);
         } finally {
             this.disableRawMode();
         }
     }
 
-    /**
-     *
-     * @param x
-     * @param y
-     */
     private void gotoXY(int x, int y) {
-        System.out.print(String.format("\u001B[%d;%dH", y, x)); // CSI n ; m H
+        System.out.printf("\u001B[%d;%dH", y, x); // CSI n ; m H
     }
 
-    /**
-     *
-     * @param screenPosition
-     */
-    private void gotoXY(Posicion screenPosition) {
-        System.out.print(String.format("\u001B[%d;%dH", screenPosition.getLin(), screenPosition.getCol())); // CSI n ; m H
+    private void gotoXY(Position screenPosition) {
+        System.out.printf("\u001B[%d;%dH", screenPosition.getLin(), screenPosition.getCol()); // CSI n ; m H
     }
+
 }
