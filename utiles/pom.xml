@@ -4,16 +4,36 @@
     <groupId>es.nom.juanfranciscoruiz</groupId>
     <artifactId>utiles</artifactId>
     <version>1.1</version>
+    <name>utiles</name>
+    <description>Librería de utilidades generales</description>
+    
     <packaging>jar</packaging>
+    
+    <licenses>
+        <license>
+            <name>GPL-3.0 license</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <exec.mainClass>es.nom.juanfranciscoruiz.utiles.Inicio</exec.mainClass>
         <maven.compiler.release>21</maven.compiler.release>
-        <logback.version>1.5.16</logback.version>
+        <logback.version>1.5.25</logback.version>
         <slf4j.version>2.0.16</slf4j.version>
         <junit.version>5.11.4</junit.version>
     </properties>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Hamfree Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/hamfree/PUBLICO</url>
+        </repository>
+    </distributionManagement>
     
     <dependencyManagement>
         <dependencies>
