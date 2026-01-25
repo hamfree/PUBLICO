@@ -14,5 +14,5 @@ jobs:
       - run: echo "🖥️ El flujo de trabajo ahora está listo para probar su código en el ejecutor."
       - name: Lsita fichero en el repositorio
         run: |
-          ls ${{ github.workspace }}
+          ls -R ${{ github.workspace }}
       - run: echo "🍏 El estado de este trabajo es ${{ job.status }}."
