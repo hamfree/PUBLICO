@@ -3,7 +3,7 @@ package es.nom.juanfranciscoruiz.utiles.exceptions;
 /**
  * Customized Exception class for Menu class
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class MenuException extends Exception {
 

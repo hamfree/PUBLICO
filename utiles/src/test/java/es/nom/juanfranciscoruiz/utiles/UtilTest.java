@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Testing the Util class
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class UtilTest {
 
@@ -99,12 +99,10 @@ public class UtilTest {
     @Test
     public void testCollectionAsString() {
         printTitle("testCollectionToString()");
-
-        List<String> lista = new ArrayList<>();
-
-        String[] array = generateArrayOfStrings();
-
-        lista.addAll(Arrays.asList(array));
+      
+      String[] array = generateArrayOfStrings();
+      
+      List<String> lista = new ArrayList<>(Arrays.asList(array));
 
         assertAll(
                 () -> {
@@ -169,45 +167,44 @@ public class UtilTest {
 
     // Helper methods for test execution testToString()
     private String[] generateArrayOfStrings() {
-        String[] array = new String[]{
-            "jabswitch.exe",
-            "jaccessinspector.exe",
-            "jaccesswalker.exe",
-            "jar.exe",
-            "jarsigner.exe",
-            "java.exe",
-            "javac.exe",
-            "javadoc.exe",
-            "javap.exe",
-            "javaw.exe",
-            "jcmd.exe",
-            "jconsole.exe",
-            "jdb.exe",
-            "jdeprscan.exe",
-            "jdeps.exe",
-            "jfr.exe",
-            "jhsdb.exe",
-            "jimage.exe",
-            "jinfo.exe",
-            "jlink.exe",
-            "jmap.exe",
-            "jmod.exe",
-            "jpackage.exe",
-            "jps.exe",
-            "jrunscript.exe",
-            "jshell.exe",
-            "jstack.exe",
-            "jstat.exe",
-            "jstatd.exe",
-            "jwebserver.exe",
-            "keytool.exe",
-            "kinit.exe",
-            "klist.exe",
-            "ktab.exe",
-            "rmiregistry.exe",
-            "serialver.exe"
-        };
-        return array;
+      return new String[]{
+          "jabswitch.exe",
+          "jaccessinspector.exe",
+          "jaccesswalker.exe",
+          "jar.exe",
+          "jarsigner.exe",
+          "java.exe",
+          "javac.exe",
+          "javadoc.exe",
+          "javap.exe",
+          "javaw.exe",
+          "jcmd.exe",
+          "jconsole.exe",
+          "jdb.exe",
+          "jdeprscan.exe",
+          "jdeps.exe",
+          "jfr.exe",
+          "jhsdb.exe",
+          "jimage.exe",
+          "jinfo.exe",
+          "jlink.exe",
+          "jmap.exe",
+          "jmod.exe",
+          "jpackage.exe",
+          "jps.exe",
+          "jrunscript.exe",
+          "jshell.exe",
+          "jstack.exe",
+          "jstat.exe",
+          "jstatd.exe",
+          "jwebserver.exe",
+          "keytool.exe",
+          "kinit.exe",
+          "klist.exe",
+          "ktab.exe",
+          "rmiregistry.exe",
+          "serialver.exe"
+      };
     }
 
     private List<String> generateListOfStrings() {
@@ -270,14 +267,14 @@ public class UtilTest {
         sb.append("[");
         if (theMap.size() < maximumElements) {
             for (Map.Entry<?, ?> e : theMap.entrySet()) {
-                sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
+                sb.append("{'").append(e.getKey()).append("'->'").append(e.getValue()).append("'}").append(" ");
             }
         } else {
             int i = 0;
             for (Iterator<?> it = theMap.entrySet().iterator(); it.hasNext();) {
                 if (i < maximumElements) {
                     Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
-                    sb.append("{'").append(String.valueOf(e.getKey())).append("'->'").append(String.valueOf(e.getValue())).append("'}").append(" ");
+                    sb.append("{'").append(e.getKey()).append("'->'").append(e.getValue()).append("'}").append(" ");
                     i++;
                 } else {
                     sb.append(" ...");
@@ -294,11 +291,11 @@ public class UtilTest {
         sb.append("[");
         if (theList.size() < maximumElements) {
             for (Object o : theList.toArray()) {
-                sb.append("'").append(String.valueOf(o)).append("'").append(" ");
+                sb.append("'").append(o).append("'").append(" ");
             }
         } else {
             for (int i = 0; i < maximumElements; i++) {
-                sb.append("'").append(String.valueOf(theList.get(i))).append("'").append(" ");
+                sb.append("'").append(theList.get(i)).append("'").append(" ");
             }
             sb.append(" ...");
         }
@@ -318,7 +315,7 @@ public class UtilTest {
         Integer[] array = new Integer[items];
         for (int i = 0; i < items; i++) {
             array[i] = start;
-            start = +increase;
+            start = increase;
         }
         return array;
     }
@@ -329,8 +326,8 @@ public class UtilTest {
     }
 
     private void printResults(Object expectedValue, Object actualValue) {
-        String actVal = "Return value -> " + String.valueOf(actualValue);
-        String expVal = "Expected value -> " + String.valueOf(expectedValue);
+        String actVal = "Return value -> " + actualValue;
+        String expVal = "Expected value -> " + expectedValue;
         logger.debug(actVal);
         logger.debug(expVal);
     }

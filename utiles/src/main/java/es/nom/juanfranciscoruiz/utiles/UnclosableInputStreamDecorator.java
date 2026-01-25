@@ -7,7 +7,7 @@ import java.io.InputStream;
  * Es igual que un InputStream, del que extiende y usando el patrón Decorator 
  * hacemos que su metodo close() no haga nada.
  * 
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class UnclosableInputStreamDecorator extends InputStream {
 

@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Tests for TypeConverter class
  *
- * @author juruizf
+ * @author Juan F. Ruiz
  */
 public class TypeConverterTest {
 

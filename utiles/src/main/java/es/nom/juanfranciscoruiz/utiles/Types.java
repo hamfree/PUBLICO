@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for type checking and validation.
+ *
+ * @author Juan F. Ruiz
  */
 public class Types {
 

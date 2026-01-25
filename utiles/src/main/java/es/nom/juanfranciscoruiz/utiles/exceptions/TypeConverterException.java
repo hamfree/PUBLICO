@@ -5,7 +5,7 @@ package es.nom.juanfranciscoruiz.utiles.exceptions;
  * from a string a Long or Double object, but that the string does not have the
  * appropriate format.
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class TypeConverterException extends RuntimeException {
 

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Class that demonstrates the functionalities of the "util" library
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class Inicio {
 

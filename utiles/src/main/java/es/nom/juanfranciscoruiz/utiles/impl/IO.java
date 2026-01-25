@@ -10,20 +10,12 @@ import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*
- TODO: Make it static and convert it into a Singleton. Include more methods
- that allow doing more things, or better yet, generate an I/O interface and
- then generate a hierarchy of classes that implement it: a simple one, like
- this class, another that relies on the 'ansiterm' library, and another that
- allows performing more complex operations on the screen, etc.
- */
-
 /**
  * Utility to print to standard output and receive characters from the user
  * through standard input.
  * <p>
  *
- * @author juruizf
+ * @author Juan F. Ruiz
  */
 public class IO implements IOable {
     /**

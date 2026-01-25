@@ -10,6 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Unit tests for the Types class.
+ *
+ * @author Juan F. Ruiz
+ */
 public class TypesTest {
 
     public final static Logger logger = LoggerFactory.getLogger(TypesTest.class);
@@ -33,7 +38,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("Map without elements. Must return true");
@@ -44,7 +49,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("A null value. Must return true");
@@ -53,7 +58,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("An instance of Object that points to null. Must evaluate to true");
@@ -63,7 +68,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("An instance of Object. Must return false");
@@ -73,7 +78,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("An array with 5 null value objects. Must return false");
@@ -83,7 +88,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("An array with no elements. Must return true");
@@ -93,7 +98,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("An array with two Strings, one of them points to null. It must return false");
@@ -103,7 +108,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("A String with a value assigned. Must return false");
@@ -113,7 +118,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("An empty array of objects. Must return true");
@@ -123,7 +128,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     logger.debug("A primitive type value. Must return false");
@@ -133,7 +138,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 }
         );
 
@@ -155,7 +160,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     System.out.println("An instance of Object. Must return false");
@@ -166,7 +171,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     System.out.println("A String instance with content convertible to Integer. Must evaluate to true");
@@ -177,7 +182,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 },
                 () -> {
                     System.out.println("A String instance with content NOT convertible to Integer. Must return false");
@@ -188,7 +193,7 @@ public class TypesTest {
 
                     printResults(expectedValue, actualValue);
 
-                    assertEquals(expectedValue, actualValue, "The value returned is" + String.valueOf(actualValue) + "and it should be" + String.valueOf(expectedValue));
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
                 }
         );
 
@@ -221,8 +226,8 @@ public class TypesTest {
     }
 
     private void printResults(Object expectedValue, Object actualValue) {
-        String actVal = "Return value -> " + String.valueOf(actualValue);
-        String expVal = "Expected value -> " + String.valueOf(expectedValue);
+        String actVal = "Return value -> " + actualValue;
+        String expVal = "Expected value -> " + expectedValue;
         logger.debug(actVal);
         logger.debug(expVal);
     }

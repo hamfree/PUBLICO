@@ -16,7 +16,7 @@ import org.junitpioneer.jupiter.StdOut;
  * Tests cover both normal operation and error handling scenarios.
  * </p>
  *
- * @author juruizf
+ * @author Juan F. Ruiz
  */
 public class IOTest {
     

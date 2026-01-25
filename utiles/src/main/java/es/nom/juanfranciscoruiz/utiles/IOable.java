@@ -4,7 +4,7 @@ package es.nom.juanfranciscoruiz.utiles;
  * The IOable interface provides utility methods for performing input and output operations,
  * including printing formatted messages, reading input, and generating formatted strings
  * for various purposes.
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public interface IOable {
     /**

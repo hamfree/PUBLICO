@@ -15,7 +15,7 @@ import java.util.SortedMap;
  * Class with various utility methods frequently used by other classes in the
  * application
  *
- * @author hamfree
+ * @author Juan F. Ruiz
  */
 public class Util {
     //Constructors

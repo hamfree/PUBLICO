@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 /**
  * It's the representation of an options menu, capable of generating a view of
- * this menu for output devices or streams and for obtaining the user's
+ * this menu for output devices or streams and for getting the user's
  * response.
  * <p>
  * When you want to display the menu, assuming the Menu instance is called
@@ -21,7 +21,7 @@ import java.util.Scanner;
  * <p>
  * IO io = new IO(); io.prt(principalMenu.getMenuView());
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 //TODO: Convert the Menu class into a class that can manage a menu hierarchy,
 // where there will be a main menu from which all other menus will branch. There
@@ -138,9 +138,8 @@ public class Menu {
      */
     public Menu(List<String> options, String title, String message,
                 boolean isHomeMenu) {
-        if (options != null && !options.isEmpty()) {
-            this.options = options;
-        } else {
+        if (options != null && !options.isEmpty()) this.options = options;
+        else {
             this.options = new ArrayList<>();
         }
         if (title != null && !title.isEmpty()) {
@@ -299,12 +298,13 @@ public class Menu {
 
         sb.append(LS);
         int longitud = this.getTitle().length();
-        sb.append("*".repeat(Math.max(0, longitud + 5)));
+        String repeat = "*".repeat(Math.max(0, longitud + 5));
+        sb.append(repeat);
 
         sb.append(LS);
         sb.append("  ").append(this.getTitle()).append("  ");
         sb.append(LS);
-        sb.append("*".repeat(Math.max(0, longitud + 5)));
+        sb.append(repeat);
 
         String tit = sb.toString();
         sbMenuView

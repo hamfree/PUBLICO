@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Unit tests for the Menu class.
- * @author juruizf
+ * @author Juan F. Ruiz
  */
 public class MenuTest {
     public final static Logger logger = LoggerFactory.getLogger(MenuTest.class);

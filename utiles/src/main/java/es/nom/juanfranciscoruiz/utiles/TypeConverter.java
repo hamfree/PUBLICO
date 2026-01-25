@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * values from a string and converts bytes and characters to their hexadecimal
  * representation.
  *
- * @author juruizf
+ * @author Juan F. Ruiz
  */
 public class TypeConverter {
 
