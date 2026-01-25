@@ -1,8 +1,9 @@
 package es.nom.juanfranciscoruiz.ansiterm.app;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
+import es.nom.juanfranciscoruiz.utiles.IO;
 import es.nom.juanfranciscoruiz.utiles.Menu;
-import es.nom.juanfranciscoruiz.utiles.impl.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
