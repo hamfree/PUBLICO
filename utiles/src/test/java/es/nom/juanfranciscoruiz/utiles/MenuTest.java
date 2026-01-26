@@ -1,5 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,29 +27,67 @@ public class MenuTest {
      * Test of getOptions method, of class Menu.
      */
     @Test
-    public void testGetOpciones() {
-        printTitle("testGetOpciones()");
+    public void testGetOptionsForRootMenu() throws MenuException {
+        printTitle("testGetOptionsForRootMenu()");
         Menu instance = new Menu();
-        instance.setIsHomeMenu(true);
-        instance.setOptions(generaOpciones());
-        List<String> expResult = generaOpciones();
+        instance.setIsRootMenu(true);
+        instance.setOptions(generateOptionsForChildMenus());
+        List<String> expResult = generateOptionsForChildMenus();
         expResult.addFirst("0. Exit the application");
         List<String> result = instance.getOptions();
         printResults(expResult,result);
         assertEquals(expResult, result);
     }
+    
+    @Test
+    public void testGetOptionsForNonRootMenu() throws MenuException {
+        printTitle("testGetOptionsForNonRootMenu()");
+        Menu instance = new Menu();
+        instance.setIsRootMenu(false);
+        instance.setOptions(generateOptionsForChildMenus());
+        List<String> expResult = generateOptionsForChildMenus();
+        List<String> result = instance.getOptions();
+        printResults(expResult,result);
+    }
+    
+    @Test
+    public void testGetOptionsForNonRootEmptyMenu() throws MenuException {
+        printTitle("testGetOptionsForNonRootEmptyMenu()");
+        Menu instance = new Menu();
+        instance.setIsRootMenu(false);
+        List<String> expResult = new ArrayList<>();
+        List<String> result = instance.getOptions();
+    }
+    
 
     /**
      * Test of setOptions method, of class Menu.
      */
     @Test
-    public void testSetOptions() {
+    public void testSetOptions() throws MenuException {
         printTitle("testSetOptions()");
-        List<String> opciones = generaOpciones();
+        List<String> opciones = generateOptionsForChildMenus();
         Menu instance = new Menu();
-        instance.setIsHomeMenu(false);
+        instance.setIsRootMenu(false);
         instance.setOptions(opciones);
-        List<String> expResult = generaOpciones();
+        List<String> expResult = generateOptionsForChildMenus();
+        List<String> result = instance.getOptions();
+        printResults(expResult,result);
+        assertEquals(expResult, result);
+    }
+    
+    
+    @Test
+    public void testSetOptionsForRootMenu() throws MenuException {
+        printTitle("testSetOptionsForRootMenu()");
+        Menu instance = new Menu();
+        // At this point the method setIsRootMenu(true) would add the first option "0. Exit the
+        // application"
+        instance.setIsRootMenu(true);
+        instance.setOptions(generateOptionsForChildMenus());
+        
+        // When setting options for a root menu, the first option should be "0. Exit the application"
+        List<String> expResult = generateOptionsForRootMenu();
         List<String> result = instance.getOptions();
         printResults(expResult,result);
         assertEquals(expResult, result);
@@ -58,7 +97,7 @@ public class MenuTest {
      * Test of getTitle method, of class Menu.
      */
     @Test
-    public void testGetTitleOfAnUnsettedTitleProperty() {
+    public void testGetTitleOfAnUnsettedTitleProperty() throws MenuException {
         printTitle("testGetTitleOfAnUnsettedTitleProperty()");
         Menu instance = new Menu();
         String expResult = "Untitled";
@@ -71,8 +110,8 @@ public class MenuTest {
      * Test of setTitle method, of class Menu.
      */
     @Test
-    public void testSetTitulo() {
-        printTitle("testSetTitulo()");
+    public void testSetTitle() throws MenuException {
+        printTitle("testSetTitle()");
         String titulo = "Application Test";
         Menu instance = new Menu();
         instance.setTitle(titulo);
@@ -86,8 +125,8 @@ public class MenuTest {
      * Test of getMessage method, of class Menu.
      */
     @Test
-    public void testGetMensaje() {
-        printTitle("testGetMensaje()");
+    public void testGetMessage() throws MenuException {
+        printTitle("testGetMessage()");
         Menu instance = new Menu();
         String expResult = "";
         String result = instance.getMessage();
@@ -99,7 +138,7 @@ public class MenuTest {
      * Test of setMessage method, of class Menu.
      */
     @Test
-    public void testSetMensaje() {
+    public void testSetMessage() throws MenuException {
         printTitle("testSetMensaje()");
         String mensaje = "Un mensaje cualquiera";
         Menu instance = new Menu();
@@ -114,8 +153,8 @@ public class MenuTest {
      * Test of getSelectedOption method, of class Menu.
      */
     @Test
-    public void testGetOpcionSeleccionada() {
-        printTitle("testGetOpcionSeleccionada()");
+    public void testGetSelectedOption() throws MenuException {
+        printTitle("testGetSelectedOption()");
         Menu instance = new Menu();
         Long result = instance.getSelectedOption();
         printResults(null,result);
@@ -126,7 +165,7 @@ public class MenuTest {
      * Test of setSelectedOption method, of class Menu.
      */
     @Test
-    public void testSetSelectedOption() {
+    public void testSetSelectedOption() throws MenuException {
         printTitle("testSetSelectedOption()");
         Long opcionSeleccionada = 5L;
         Menu instance = new Menu();
@@ -138,29 +177,29 @@ public class MenuTest {
     }
 
     /**
-     * Test of getIsHomeMenu method, of class Menu.
+     * Test of getIsRootMenu method, of class Menu.
      */
     @Test
-    public void testIsEsMenuInicio() {
-        printTitle("testIsEsMenuInicio()");
+    public void testIsRootMenu() throws MenuException {
+        printTitle("testIsRootMenu()");
         Menu instance = new Menu();
         boolean expResult = false;
-        boolean result = instance.getIsHomeMenu();
+        boolean result = instance.getIsRootMenu();
         printResults(expResult,result);
         assertEquals(expResult, result);
     }
-
+    
     /**
-     * Test of setIsHomeMenu method, of class Menu.
+     * Test of setIsRootMenu method, of class Menu.
      */
     @Test
-    public void testSetEsMenuInicio() {
+    public void testSetIsRootMenu() throws MenuException {
         printTitle("testSetEsMenuInicio()");
         boolean esMenuInicio = true;
         Menu instance = new Menu();
-        instance.setIsHomeMenu(esMenuInicio);
+        instance.setIsRootMenu(esMenuInicio);
         boolean expResult = true;
-        boolean result = instance.getIsHomeMenu();
+        boolean result = instance.getIsRootMenu();
         printResults(expResult,result);
         assertEquals(expResult, result);
     }
@@ -169,14 +208,14 @@ public class MenuTest {
      * Test of mostrar method, of class Menu.
      */
     @Test
-    public void testGenerateView() {
+    public void testGenerateView() throws MenuException {
         printTitle("testGenerateView()");
         final String SL = System.lineSeparator();
         Menu instance = new Menu();
         instance.setTitle("Title");
         instance.setMessage("this is the message");
-        instance.setIsHomeMenu(true);
-        instance.setOptions(generaOpciones());
+        instance.setIsRootMenu(true);
+        instance.setOptions(generateOptionsForChildMenus());
         instance.generateMenuView();
 
         String expResult = SL 
@@ -208,8 +247,8 @@ public class MenuTest {
         printTitle("testAwaitResponse()");
         String msg = "";
         Menu instance = new Menu();
-        instance.setOptions(generaOpciones());
-        instance.setIsHomeMenu(true);
+        instance.setOptions(generateOptionsForChildMenus());
+        instance.setIsRootMenu(true);
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
         Long expResult = 2L;
@@ -228,12 +267,12 @@ public class MenuTest {
      */
     @Test
     @StdIo({"notValid"})
-    public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) {
+    public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException {
         printTitle("testAwaitResponseForInvalidResponse()");
         String msg = "";
         Menu instance = new Menu();
-        instance.setOptions(generaOpciones());
-        instance.setIsHomeMenu(true);
+        instance.setOptions(generateOptionsForChildMenus());
+        instance.setIsRootMenu(true);
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
 
@@ -250,12 +289,12 @@ public class MenuTest {
      */
     @Test
     @StdIo({"6"})
-    public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) {
+    public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException {
         printTitle("testAwaitResponseForResponseOutOfRange()");
         String msg = "";
         Menu instance = new Menu();
-        instance.setOptions(generaOpciones());
-        instance.setIsHomeMenu(true);
+        instance.setOptions(generateOptionsForChildMenus());
+        instance.setIsRootMenu(true);
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
 
@@ -268,15 +307,36 @@ public class MenuTest {
      * Tests exception on invalid menu object
      */
     @Test
-    public void testAwaitResponseForNonValidMenuObject() {
+    public void testAwaitResponseForNonValidMenuObject() throws MenuException {
         printTitle("testAwaitResponseForNonValidMenuObject()");
         String msg = "";
         Menu instance = new Menu();
-        instance.setOptions(null); //Invalid options list
-        instance.setIsHomeMenu(false); //Not include the exit option
+        instance.setIsRootMenu(false); //Not include the exit option
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
-
+      
+        // We must use reflexion to bypass the private field validation
+        // In normal cases, the options property should be set by the client class
+        // and validated by the constructor and the setter methods. This is an
+        // exceptional case for testing purposes.
+        if (logger.isDebugEnabled()) logger.debug("Setting options to null with api reflection!");
+        try {
+            Class<?> clazz = instance.getClass();
+            Field fields[] = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getName().equals("options")) {
+                    field.setAccessible(true);
+                    field.set(instance,null); // set the List<String> of field 'options' to null
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        
+        if (logger.isDebugEnabled()) logger.debug("Value of 'options' field: {}",
+            instance.getOptions() != null ? "not null" :"null");
+        
+        
         MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg));
         if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
 
@@ -286,36 +346,86 @@ public class MenuTest {
      * Test of toString method, of class Menu.
      */
     @Test
-    public void testToString() {
+    public void testToString() throws MenuException {
         printTitle("testToString()");
         Menu instance = new Menu();
         StringBuilder sb = new StringBuilder();
         sb.append("Menu{");
-        sb.append("opciones=").append(Util.CollectionToString(instance.getOptions(), true, 10));
-        sb.append(", titulo=").append(instance.getTitle());
-        sb.append(", mensaje=").append(instance.getMessage());
-        sb.append(", opcionSeleccionada=").append(instance.getSelectedOption());
-        sb.append(", esMenuInicio=").append(instance.getIsHomeMenu());
+        sb.append("options=").append(Util.CollectionToString(instance.getOptions(), true, 10));
+        sb.append(", title=").append(instance.getTitle());
+        sb.append(", message=").append(instance.getMessage());
+        sb.append(", selectedOption=").append(instance.getSelectedOption());
+        sb.append(", isRootMenu=").append(instance.getIsRootMenu());
+        sb.append(", parentMenu=").append(instance.getParentMenu() != null ?
+            instance.getParentMenu().getTitle() : "null");
+        sb.append(", menuView='").append(instance.getMenuView()).append('\'');
+        sb.append(", subMenus=").append(Util.CollectionToString(instance.getSubMenus(), true, 10));
         sb.append('}');
         String expResult = sb.toString();
         String result = instance.toString();
         printResults(expResult,result);
         assertEquals(expResult, result);
     }
-
+    
+ 
+   
+    @Test
+    void testGetMenuView() {
+    }
+    
+    @Test
+    void testGetSubMenus() {
+    }
+    
+    @Test
+    void TestSetSubMenus() {
+    }
+    
+    @Test
+    void TestGetParentMenu() {
+    }
+    
+    @Test
+    void TestSetParentMenu() {
+    }
+    
+    @Test
+    void TestAddSubMenu() {
+    }
+    
+    @Test
+    void TestRemoveSubMenu() {
+    }
+    
+    @Test
+    void TestAddOption() {
+    }
+    
+    @Test
+    void TestRemoveOption() {
+    }
+    
+    
     // Utility methods for tests
     /**
      * Generates a list of sample menu options for testing purposes.
      * @return a list of menu options
      */
-    private List<String> generaOpciones() {
+    private List<String> generateOptionsForChildMenus() {
         List<String> opciones = new ArrayList<>();
         opciones.add("1. Option One");
         opciones.add("2. Option Two");
         opciones.add("3. Option Three");
         return opciones;
     }
-
+    
+    private List<String> generateOptionsForRootMenu() {
+        List<String> opciones = new ArrayList<>();
+        opciones.add("0. Exit the application");
+        opciones.addAll(generateOptionsForChildMenus());
+        return opciones;
+    }
+    
     /**
      * Logs a debug message with the formatted title for the given method name.
      *
@@ -325,7 +435,7 @@ public class MenuTest {
         String test = "TEST " + methodName;
         logger.debug(test);
     }
-
+    
     /**
      * Logs the actual and expected values for debugging purposes.
      *
