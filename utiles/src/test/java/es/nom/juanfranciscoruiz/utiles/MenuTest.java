@@ -322,7 +322,7 @@ public class MenuTest {
         if (logger.isDebugEnabled()) logger.debug("Setting options to null with api reflection!");
         try {
             Class<?> clazz = instance.getClass();
-            Field fields[] = clazz.getDeclaredFields();
+            Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
                 if (field.getName().equals("options")) {
                     field.setAccessible(true);
