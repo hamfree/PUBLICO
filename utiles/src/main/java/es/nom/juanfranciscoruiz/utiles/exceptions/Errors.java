@@ -8,6 +8,11 @@ package es.nom.juanfranciscoruiz.utiles.exceptions;
  */
 public class Errors {
   /**
+   * Private constructor to prevent instantiation.
+   */
+  private Errors() {
+  }
+  /**
    * Message of error when the user enters an invalid option in awaitResponse().
    */
   public static final String ERR_BLANK_NULL = "You must enter a number with the option to choose.";
@@ -28,13 +33,20 @@ public class Errors {
    * Message of error when it's trying to use a Menu Object with no menu options.
    */
   public static final String ERR_NO_OPTIONS = "There are no defined options in this menu";
-  
+  /** Message of error when the options list is null. */
   public static final String ERR_OPTIONS_CANNOT_BE_NULL = "Menu options cannot be null";
-  
   /**
    * Message of error when the option already exists in the menu.
    */
   public static final String ERR_OPTION_ALREADY_EXISTS = "This option already exists in the menu";
+  /**
+   * Message of error when the title is null.
+   */
+  public static final String ERR_TITLE_CANNOT_BE_NULL = "Menu title cannot be null";
+  /**
+   * Message of error when the message is null.
+   */
+  public static final String ERR_MESSAGE_CANNOT_BE_NULL = "Menu message cannot be null";
   /**
    * Message of error when the root menu has a parent menu.
    */
@@ -48,6 +60,10 @@ public class Errors {
    */
   public static final String ERR_SUBMENU_SET_AS_ROOT = "A submenu must be removed from the menu " +
       "hierarchy before making it the root menu.";
+  /**
+   * Message of error when a submenu list is null.
+   */
+  public static final String ERR_SUBMENUS_CANNOT_BE_NULL = "Submenus list cannot be null";
   /**
    * Message of error when a menu is pointed to itself.
    */

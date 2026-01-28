@@ -1,5 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import es.nom.juanfranciscoruiz.utiles.constants.MenuConstants;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import es.nom.juanfranciscoruiz.utiles.impl.IO;
@@ -88,15 +89,17 @@ public class Menu {
   /**
    * Instantiate a Menu object.
    * By default, the menu is not the root menu and has no title or message, but it has a default
-   * value for the title property, a blank string for the message property, and an empty list for
-   * the options property.
+   * value for the title property (because title is mandatory), a blank string for the message
+   * property (message can't be null), and an empty list for the options property.
    */
   public Menu() throws MenuException {
     this.setOptions(new ArrayList<>());
+    this.setSubMenus(new ArrayList<>());
     this.setRootMenu(false);
-    this.setTitle(NO_TITLE);
+    this.setTitle(MenuConstants.NO_TITLE);
     this.setMessage("");
     this.setMenuView("");
+    this.setSelectedOption(0L);
   }
   
   /**
@@ -119,13 +122,13 @@ public class Menu {
     if (title != null && !title.isEmpty()) {
       this.setTitle(title);
     } else {
-      this.setTitle(NO_TITLE);
+      this.setTitle(MenuConstants.NO_TITLE);
     }
     this.setMessage(message);
     
     this.setRootMenu(isRootMenu);
     if (this.isRootMenu()) {
-      this.getOptions().addFirst(EXITOPT);
+      this.getOptions().addFirst(MenuConstants.EXITOPT);
     }
   }
   
@@ -139,14 +142,18 @@ public class Menu {
    * @param isRootMenu Boolean indicating whether it is the application's main menu,
    *                   which will add the option "0. Exit the application" to the
    *                   options property.
-   * @param subMenus   A list of submenus
+   * @param subMenus   A list of submenus (can't be null because throws MenuException)
    * @param parentMenu The parent menu of this menu, or null if this is the
-   *                   main menu.
+   *                   main menu (if the client class tries to set a parent menu to a root menu,
+   *                   it will throw a MenuException) because a root menu can't have a parent menu.
    * @throws MenuException In case of error
    */
   public Menu(List<String> options, String title, String message, boolean isRootMenu,
               List<Menu> subMenus, Menu parentMenu) throws MenuException {
     this(options, title, message, isRootMenu);
+    if (subMenus == null) {
+      throw new MenuException(ERR_SUBMENUS_CANNOT_BE_NULL);
+    }
     this.setSubMenus(subMenus);
     if (isRootMenu) {
       if (parentMenu != null) {
@@ -181,9 +188,10 @@ public class Menu {
     if (options == null) {
       throw new MenuException(ERR_OPTIONS_CANNOT_BE_NULL);
     }
+    
     this.options = options;
     if (this.isRootMenu()) {
-      this.options.addFirst(EXITOPT);
+      this.options.addFirst(MenuConstants.EXITOPT);
     }
   }
   
@@ -197,11 +205,16 @@ public class Menu {
   }
   
   /**
-   * Set the menu title
+   * Set the menu title.
+   * The title can't be null for a valid menu object.
    *
    * @param title A chain with the new menu title
+   * @throws MenuException If the title is null
    */
-  public void setTitle(String title) {
+  public void setTitle(String title) throws MenuException {
+    if (title == null) {
+      throw new MenuException(ERR_TITLE_CANNOT_BE_NULL);
+    }
     this.title = title;
   }
   
@@ -215,11 +228,16 @@ public class Menu {
   }
   
   /**
-   * Set a new message in the menu
+   * Set a new message in the menu.
+   * A valid message can't be null.
    *
    * @param message A string with the new menu message
+   * @throws MenuException If the message is null
    */
-  public void setMessage(String message) {
+  public void setMessage(String message) throws MenuException {
+    if (message == null) {
+      throw new MenuException(ERR_MESSAGE_CANNOT_BE_NULL);
+    }
     this.message = message;
   }
   
@@ -270,9 +288,9 @@ public class Menu {
       this.setOptions(new ArrayList<>());
     }
     if (this.isRootMenu()) {
-      this.getOptions().addFirst(EXITOPT);
+      this.getOptions().addFirst(MenuConstants.EXITOPT);
     } else {
-      this.getOptions().remove(EXITOPT);
+      this.getOptions().remove(MenuConstants.EXITOPT);
     }
   }
   
@@ -373,12 +391,12 @@ public class Menu {
       throw new MenuException(ERR_NO_OPTIONS);
     }
     
-    var resp = WRONG_OPTION;
+    var resp = MenuConstants.WRONG_OPTION;
     String respuesta;
     int opcMaxima = this.getOptions().size() - 1;
     
     if (msg == null || msg.isEmpty()) {
-      msg = DEFAULT_MSG;
+      msg = MenuConstants.DEFAULT_MSG;
     }
     
     IO.prt(msg);
@@ -404,7 +422,7 @@ public class Menu {
     
     try {
       resp = TypeConverter.extractLongFromString(respuesta);
-      if (Objects.equals(resp, WRONG_OPTION)) {
+      if (Objects.equals(resp, MenuConstants.WRONG_OPTION)) {
         if (logger.isErrorEnabled()) logger.error(ERR_NOT_VALID_NUMBER);
         this.setMessage(ERR_NOT_VALID_NUMBER);
         throw new MenuException(ERR_NOT_VALID_NUMBER);

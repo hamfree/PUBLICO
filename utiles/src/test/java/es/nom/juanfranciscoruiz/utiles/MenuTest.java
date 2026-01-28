@@ -27,6 +27,88 @@ public class MenuTest {
      * Test of getOptions method, of class Menu.
      */
     @Test
+    public void testDefaultConstructor() throws MenuException {
+        printTitle("testDefaultConstructor()");
+        Menu instance = new Menu();
+        assertAll(
+            () -> assertNotNull(instance.getOptions(),"...testing not null options"),
+            () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
+            () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
+            () -> assertEquals("", instance.getMessage(), "...testing default message"),
+            () -> assertEquals("", instance.getMenuView(), "...testing default menu view"),
+            () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
+        );
+    }
+
+    @Test
+    public void testConstructorWithParamsDefaults() throws MenuException {
+        printTitle("testConstructorWithParamsDefaults()");
+        Menu instance = new Menu(null, "", "msg", false);
+        assertAll(
+            () -> assertNotNull(instance.getOptions()),
+            () -> assertTrue(instance.getOptions().isEmpty()),
+            () -> assertEquals("Untitled", instance.getTitle()),
+            () -> assertEquals("msg", instance.getMessage()),
+            () -> assertFalse(instance.getIsRootMenu())
+        );
+    }
+
+    @Test
+    public void testConstructorWithParamsRootAddsExitOption() throws MenuException {
+        printTitle("testConstructorWithParamsRootAddsExitOption()");
+        List<String> options = generateOptionsForChildMenus();
+        Menu instance = new Menu(options, "Title", "Msg", true);
+        List<String> result = instance.getOptions();
+        assertAll(
+            () -> assertEquals("0. Exit the application", result.getFirst()),
+            () -> assertEquals(4, result.size()),
+            () -> assertEquals("1. Option One", result.get(1))
+        );
+    }
+
+    @Test
+    public void testConstructorWithParamsNullMessageThrows() {
+        printTitle("testConstructorWithParamsNullMessageThrows()");
+        assertThrows(
+            MenuException.class, () -> new Menu(new ArrayList<>(), "Title", null, false),
+            "The message can't be null");
+    }
+
+    @Test
+    public void testConstructorWithSubmenusRootWithParentThrows() throws MenuException {
+        printTitle("testConstructorWithSubmenusRootWithParentThrows()");
+        Menu parent = new Menu();
+        assertThrows(MenuException.class, () ->
+            new Menu(generateOptionsForChildMenus(), "Title", "Msg", true,
+                new ArrayList<>(), parent),
+            "The parent menu can't be null for root menus"
+        );
+    }
+
+    @Test
+    public void testConstructorWithSubmenusNonRootWithoutParentThrows() {
+        printTitle("testConstructorWithSubmenusNonRootWithoutParentThrows()");
+        assertThrows(MenuException.class, () ->
+            new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
+                new ArrayList<>(), null),
+            "The parent menu can't be null for non-root menus"
+        );
+    }
+
+    @Test
+    public void testConstructorWithSubmenusSetsParentAndSubmenus() throws MenuException {
+        printTitle("testConstructorWithSubmenusSetsParentAndSubmenus()");
+        Menu parent = new Menu();
+        List<Menu> subMenus = new ArrayList<>();
+        Menu instance = new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
+            subMenus, parent);
+        assertAll(
+            () -> assertSame(parent, instance.getParentMenu(), "...testing parent menu"),
+            () -> assertSame(subMenus, instance.getSubMenus(), "...testing submenus")
+        );
+    }
+
+    @Test
     public void testGetOptionsForRootMenu() throws MenuException {
         printTitle("testGetOptionsForRootMenu()");
         Menu instance = new Menu();
@@ -36,7 +118,8 @@ public class MenuTest {
         expResult.addFirst("0. Exit the application");
         List<String> result = instance.getOptions();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result,
+            "The first option should be '0. Exit the application'");
     }
     
     @Test
@@ -48,6 +131,8 @@ public class MenuTest {
         List<String> expResult = generateOptionsForChildMenus();
         List<String> result = instance.getOptions();
         printResults(expResult,result);
+        assertEquals(expResult, result,
+            "The list of options should be the same as the one set with setOptions()");
     }
     
     @Test
@@ -57,6 +142,7 @@ public class MenuTest {
         instance.setIsRootMenu(false);
         List<String> expResult = new ArrayList<>();
         List<String> result = instance.getOptions();
+        assertEquals(expResult, result, "The list of options should be empty");
     }
     
 
@@ -73,9 +159,19 @@ public class MenuTest {
         List<String> expResult = generateOptionsForChildMenus();
         List<String> result = instance.getOptions();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result,
+            "The list of options should be the same as the one set with setOptions()");
     }
     
+    @Test
+    public void testSetOptionsWithNullt() throws MenuException {
+        printTitle("testSetOptionsWithEmptyList()");
+        Menu instance = new Menu();
+        instance.setIsRootMenu(false);
+        MenuException ex = assertThrows(MenuException.class, () -> instance.setOptions(null),
+            "The list of options can't be null");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
+    }
     
     @Test
     public void testSetOptionsForRootMenu() throws MenuException {
@@ -90,7 +186,9 @@ public class MenuTest {
         List<String> expResult = generateOptionsForRootMenu();
         List<String> result = instance.getOptions();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result,
+            "The first option should be '0. Exit the application' and" +
+            " the list of options should be the same as the one set with setOptions()");
     }
 
     /**
@@ -103,7 +201,7 @@ public class MenuTest {
         String expResult = "Untitled";
         String result = instance.getTitle();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The title should be 'Untitled'");
     }
 
     /**
@@ -118,7 +216,16 @@ public class MenuTest {
         String expResult = "Application Test";
         String result = instance.getTitle();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The title should be 'Application Test'");
+    }
+    
+    @Test
+    public void testSetTitleWithNullValue() throws MenuException {
+        printTitle("testSetTitleWithNullValue()");
+        Menu instance = new Menu();
+        MenuException ex = assertThrows(MenuException.class, () -> instance.setTitle(null),
+            "The method setTitle() can't accept null values and throws an MenuException");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
     }
 
     /**
@@ -131,7 +238,7 @@ public class MenuTest {
         String expResult = "";
         String result = instance.getMessage();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The message should be empty");
     }
 
     /**
@@ -146,19 +253,30 @@ public class MenuTest {
         String result = instance.getMessage();
         String expResult = "Un mensaje cualquiera";
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The message should be 'Un mensaje cualquiera'");
+    }
+    
+    @Test
+    public void testSetMessageWithNullValue() throws MenuException {
+        printTitle("testSetMessageWithNullValue()");
+        Menu instance = new Menu();
+        MenuException ex = assertThrows(MenuException.class, () -> instance.setMessage(null),
+            "The method setMessage() can't accept null values and throws an MenuException");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
     }
 
     /**
      * Test of getSelectedOption method, of class Menu.
      */
     @Test
-    public void testGetSelectedOption() throws MenuException {
+    public void testGetSelectedOptionOfANewMenu() throws MenuException {
         printTitle("testGetSelectedOption()");
         Menu instance = new Menu();
         Long result = instance.getSelectedOption();
-        printResults(null,result);
-        assertNull(result);
+        Long expResult = 0L;
+        printResults(expResult,result);
+        assertEquals(expResult, result,
+            "The selected option should be 0 (Exit the application)");
     }
 
     /**
@@ -173,7 +291,7 @@ public class MenuTest {
         Long expResult = 5L;
         Long result = instance.getSelectedOption();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The selected option should be 5");
     }
 
     /**
@@ -186,7 +304,7 @@ public class MenuTest {
         boolean expResult = false;
         boolean result = instance.getIsRootMenu();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The menu should not be a root menu");
     }
     
     /**
@@ -201,7 +319,7 @@ public class MenuTest {
         boolean expResult = true;
         boolean result = instance.getIsRootMenu();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The menu should be a root menu");
     }
 
     /**
@@ -231,7 +349,7 @@ public class MenuTest {
                 + "this is the message" + SL;
         String result = instance.getMenuView();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The menu view should be generated correctly");
     }
 
     /**
@@ -255,7 +373,7 @@ public class MenuTest {
         instance.awaitResponse(msg);
         Long result = instance.getSelectedOption();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, "The selected option should be 2");
     }
 
     /**
@@ -276,7 +394,8 @@ public class MenuTest {
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
 
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg));
+        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
+            "The user answer with an invalid response (not a number) and throws an MenuException");
         if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
     }
 
@@ -298,7 +417,8 @@ public class MenuTest {
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
 
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg));
+        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
+            "The user answer with an invalid response (out of range) and throws an MenuException");
         if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
     }
 
@@ -315,10 +435,11 @@ public class MenuTest {
         instance.setMessage("Select an option:");
         instance.setTitle("Testing the awaitResponse() method");
       
-        // We must use reflexion to bypass the private field validation
-        // In normal cases, the options property should be set by the client class
-        // and validated by the constructor and the setter methods. This is an
-        // exceptional case for testing purposes.
+        /*
+         We must use reflexion to bypass the private field validation. In normal cases, the
+         options property should be set by the client class and validated by the constructor
+         and the setter methods. This is an exceptional case for testing purposes.
+         */
         if (logger.isDebugEnabled()) logger.debug("Setting options to null with api reflection!");
         try {
             Class<?> clazz = instance.getClass();
@@ -335,11 +456,9 @@ public class MenuTest {
         
         if (logger.isDebugEnabled()) logger.debug("Value of 'options' field: {}",
             instance.getOptions() != null ? "not null" :"null");
-        
-        
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg));
+        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
+            "The user answer with an invalid response (not a number) and throws an MenuException");
         if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-
     }
 
     /**
@@ -364,13 +483,14 @@ public class MenuTest {
         String expResult = sb.toString();
         String result = instance.toString();
         printResults(expResult,result);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result,
+            "The toString() method should return a string " +
+            "representation of the object");
     }
     
- 
-   
     @Test
     void testGetMenuView() {
+    
     }
     
     @Test
@@ -419,6 +539,10 @@ public class MenuTest {
         return opciones;
     }
     
+    /**
+     * Generates a list of sample menu options for testing purposes.
+     * @return a list of menu options
+     */
     private List<String> generateOptionsForRootMenu() {
         List<String> opciones = new ArrayList<>();
         opciones.add("0. Exit the application");
