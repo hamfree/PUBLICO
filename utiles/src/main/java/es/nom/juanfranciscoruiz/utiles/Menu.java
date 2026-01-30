@@ -463,10 +463,6 @@ public class Menu {
   
   /**
    * In the case that an application has several menus, if isRootMenu is true,
-   // ... existing code ...
-  
-  /**
-   * In the case that an application has several menus, if isRootMenu is true,
    * then this is the main menu of the application and the option "0. Exit the
    * application" will be added as the first option.
    */
