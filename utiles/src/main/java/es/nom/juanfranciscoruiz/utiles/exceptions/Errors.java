@@ -89,4 +89,22 @@ public class Errors {
    * error reporting.
    */
   public static final String ERR_OPTION_NULL = "The option (title) to remove can't be null or empty!";
+
+
+  // Errors for MenuManager operations
+  /**
+   * Error message used to indicate that a null menu object was provided when attempting to
+   * read user response. This constant is primarily used for exception
+   * messages or validation errors to improve clarity and maintain consistency in
+   * error reporting.
+   */
+  public static final String ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL = "Menu is null, cannot read user response";
+
+  /**
+   * Error message used to indicate that a null menu object was provided when attempting to
+   * show the menu. This constant is primarily used for exception
+   * messages or validation errors to improve clarity and maintain consistency in
+   * error reporting.
+   */
+  public static final String ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL = "Menu is null, cannot show menu";
 }

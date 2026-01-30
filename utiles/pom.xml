@@ -62,6 +62,14 @@
             <version>2.3.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Otra librería para comprobar clases que escriben o leen de los streams estándar -->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-lambda</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
         
         <!-- Logging -->
         <dependency>

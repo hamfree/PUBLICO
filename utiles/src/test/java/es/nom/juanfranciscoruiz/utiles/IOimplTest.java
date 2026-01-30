@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
-import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
+import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +18,7 @@ import org.junitpioneer.jupiter.StdOut;
  *
  * @author Juan F. Ruiz
  */
-public class IOImplTest {
+public class IOimplTest {
     
     private static final String ERR_PARAM = "Null or incorrect parameters!";
     private static final String ERR_NULL = "Null parameters!";
@@ -32,7 +32,7 @@ public class IOImplTest {
     @Test
     @StdIo()
     public void testPrt(StdOut out) {
-        IOImpl.prt("one", "two", "three");
+        IOimpl.prt("one", "two", "three");
         String actualValue = out.capturedString();
         String expectedValue = "onetwothree";
         assertEquals(expectedValue, actualValue, "The values should be the same");
@@ -44,7 +44,7 @@ public class IOImplTest {
     @Test
     public void testPrtNull() {
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.prt((Object) null));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.prt((Object) null));
         assertEquals(ERR_SOME_NULL, ex.getMessage(),"An IllegalArgumentException should be thrown with the message " + ERR_NULL);
     }
 
@@ -54,7 +54,7 @@ public class IOImplTest {
     @Test
     public void testPrtNullInFirstItemVarArgs() {
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.prt((Object) null));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.prt((Object) null));
         assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_SOME_NULL);
     }
 
@@ -66,7 +66,7 @@ public class IOImplTest {
     public void testPrtSomeNullInVarArgs() {
         Object[] args = {new Object(),null,new Object(), new Object()};
         
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.prt(args));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.prt(args));
         assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message" + ERR_SOME_NULL);
     }
 
@@ -78,7 +78,7 @@ public class IOImplTest {
     @StdIo()
     public void testPrtln(StdOut out) {
         String sl = System.lineSeparator();
-        IOImpl.prtln(2, "one", "two", "three");
+        IOimpl.prtln(2, "one", "two", "three");
         String actualValue = out.capturedString();
         String expectedValue = "onetwothree".concat(sl).concat(sl);
         assertEquals(expectedValue, actualValue, "The values ​​should be the same");
@@ -89,7 +89,7 @@ public class IOImplTest {
      */
     @Test
     public void testPrtlnNull(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.prtln(1, (Object) null));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.prtln(1, (Object) null));
         assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message" + ERR_NULL);
     }
 
@@ -98,7 +98,7 @@ public class IOImplTest {
      */
     @Test
     public void testPrtlnNullInFirtsArgInVarArgs(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.prtln(1,(Object) null));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.prtln(1,(Object) null));
         assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_SOME_NULL);
     }
 
@@ -109,7 +109,7 @@ public class IOImplTest {
     public void testPrtlnSomeNullInVarArgs(){
         Object[] args = {new Object(),null,new Object(), new Object()};
         
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.prtln(3,args));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.prtln(3,args));
         assertEquals(ERR_SOME_NULL, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_SOME_NULL);
     }
 
@@ -120,7 +120,7 @@ public class IOImplTest {
     @Test
     @StdIo({"one"})
     public void testRead(StdIn in, StdOut out) {
-        String actualValue = IOImpl.read();
+        String actualValue = IOimpl.read();
         String expectedValue = "one";
         assertEquals(expectedValue, actualValue, "The values should be the same");
     }
@@ -137,7 +137,7 @@ public class IOImplTest {
                 .concat("      MESSAGE      ")
                 .concat(System.lineSeparator())
                 .concat("********************");
-        String actualValue = IOImpl.title("MESSAGE", '*', 20);
+        String actualValue = IOimpl.title("MESSAGE", '*', 20);
         assertEquals(expectedValue, actualValue, "The values should be the same");
     }
 
@@ -146,7 +146,7 @@ public class IOImplTest {
      */
     @Test
     public void testTitleMessageNull(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.title(null, '*', 20));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.title(null, '*', 20));
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 
@@ -155,7 +155,7 @@ public class IOImplTest {
      */
     @Test
     public void testTitleNullCharacter(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.title("MESSAGE", null, 20));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.title("MESSAGE", null, 20));
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 
@@ -164,7 +164,7 @@ public class IOImplTest {
      */
     @Test
     public void testTitleLengthLessThanLengthMessage(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.title("MESSAGE", '*', 3));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.title("MESSAGE", '*', 3));
         assertEquals(ERR_LONG, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_LONG);
     }
 
@@ -174,7 +174,7 @@ public class IOImplTest {
     @Test
     public void testLine() {
         String expectedValue = "**********";
-        String actualValue = IOImpl.line('*', 10);
+        String actualValue = IOimpl.line('*', 10);
         assertEquals(expectedValue, actualValue,"The line() method should generate a string with 10 asterisks (*)");
     }
 
@@ -183,7 +183,7 @@ public class IOImplTest {
      */
     @Test
     public void testLineNullCharacter(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.line(null, 10));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.line(null, 10));
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 
@@ -192,7 +192,7 @@ public class IOImplTest {
      */
     @Test
     public void testLineWrongLength(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.line('#', 0));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.line('#', 0));
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 
@@ -203,7 +203,7 @@ public class IOImplTest {
     @Test
     public void testRepeatCharacter() {
         String expectedValue = "---------";
-        String actualValue = IOImpl.repeatCharacter('-', 9);
+        String actualValue = IOimpl.repeatCharacter('-', 9);
         assertEquals(expectedValue, actualValue,"The repeatCharacter() method should generate a string with 9 dashes (-)");
     }
 
@@ -212,7 +212,7 @@ public class IOImplTest {
      */
     @Test
     public void testRepeatCharacterNullCharacterParameter(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.repeatCharacter(null, 3));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.repeatCharacter(null, 3));
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 
@@ -221,7 +221,7 @@ public class IOImplTest {
      */
     @Test
     public void testRepeatCharacterWrongTimesParameter(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOImpl.repeatCharacter('a', -4));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.repeatCharacter('a', -4));
         assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
     }
 }

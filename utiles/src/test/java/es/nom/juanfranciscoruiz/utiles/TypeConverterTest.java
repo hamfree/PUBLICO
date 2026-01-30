@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
+import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TypeConverter.*;
@@ -34,11 +34,11 @@ public class TypeConverterTest {
     /*
     We import constants from the IO class to make writing tests easier.
      */
-    public final static String CAR_INI = IOImpl.getCHAR_INI();
-    public final static String CAR_FIN = IOImpl.getCHAR_END();
-    public final static String NULL = IOImpl.getNULL();
-    public final static String SEP = IOImpl.getSEP();
-    public final static String SL = IOImpl.getLS();
+    public final static String CAR_INI = IOimpl.getCHAR_INI();
+    public final static String CAR_FIN = IOimpl.getCHAR_END();
+    public final static String NULL = IOimpl.getNULL();
+    public final static String SEP = IOimpl.getSEP();
+    public final static String SL = IOimpl.getLS();
 
     /**
      * Tests collection conversion to list

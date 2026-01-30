@@ -24,6 +24,9 @@ public class UtilTest {
 
     public final static Logger logger = LoggerFactory.getLogger(UtilTest.class);
 
+    /**
+     * Tests that features are returned as map
+     */
     @Test
     public void testGetFeaturesAsMap() {
         printTitle("testGetFeaturesAsMap()");
@@ -53,6 +56,9 @@ public class UtilTest {
 
     }
 
+    /**
+     * Tests that system properties are returned as map
+     */
     @Test
     public void testGetSystemPropertiesAsMap() {
         printTitle("testGetSystemPropertiesAsMap()");
@@ -89,12 +95,15 @@ public class UtilTest {
 
     }
 
+    /**
+     * Test of getAllCharsets method, of class Util
+     */
     @Test
     public void testGetAllCharsets() {
     }
 
     /**
-     * Test of CollectionToString method, of class C.
+     * Test of CollectionToString method, of class Util.
      */
     @Test
     public void testCollectionAsString() {
@@ -104,6 +113,7 @@ public class UtilTest {
       
       List<String> lista = new ArrayList<>(Arrays.asList(array));
 
+        // Tests CollectionToString method with lists and maps
         assertAll(
                 () -> {
                     logger.debug("Displays the first 10 items in the list...");
@@ -166,6 +176,9 @@ public class UtilTest {
     }
 
     // Helper methods for test execution testToString()
+    /**
+     * Creates array of strings by adding executables
+     */
     private String[] generateArrayOfStrings() {
       return new String[]{
           "jabswitch.exe",
@@ -207,6 +220,9 @@ public class UtilTest {
       };
     }
 
+    /**
+     * Creates list of strings by adding executables
+     */
     private List<String> generateListOfStrings() {
         List<String> lista = new ArrayList<>();
 
@@ -261,6 +277,9 @@ public class UtilTest {
         return theMap;
     }
 
+    /**
+     * Returns string representation of map contents
+     */
     private String stringExpectedFromMap(Map<?, ?> theMap, int maximumElements) {
         StringBuilder sb = new StringBuilder();
 
@@ -320,12 +339,12 @@ public class UtilTest {
         return array;
     }
 
-    private void printTitle(String methodName) {
+    private static void printTitle(String methodName) {
         String test = "TEST " + methodName;
         logger.debug(test);
     }
 
-    private void printResults(Object expectedValue, Object actualValue) {
+    private static void printResults(Object expectedValue, Object actualValue) {
         String actVal = "Return value -> " + actualValue;
         String expVal = "Expected value -> " + expectedValue;
         logger.debug(actVal);

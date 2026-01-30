@@ -4,7 +4,7 @@ import java.io.Console;
 import java.nio.file.FileSystems;
 import java.util.Scanner;
 
-import es.nom.juanfranciscoruiz.utiles.IOable;
+import es.nom.juanfranciscoruiz.utiles.IO;
 import es.nom.juanfranciscoruiz.utiles.Types;
 import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 import org.slf4j.Logger;
@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Juan F. Ruiz
  */
-public class IO implements IOable {
+public class IOimpl implements IO {
     /**
      * Traces
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(IO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IOimpl.class);
 
     /**
      * Singleton instance
@@ -78,25 +78,7 @@ public class IO implements IOable {
     /**
      * Private constructor to make this class non-instantiable
      */
-    private IO() {
-    }
-
-    /**
-     * Returns an instance of the IO class, ensuring thread-safe initialization.
-     *
-     * @return the singleton instance of IO
-     */
-    public IO getInstance() {
-        if (instance == null) {
-            //synchronized block to remove overhead
-            synchronized (IO.class) {
-                if (instance == null) {
-                    //if instance is null, initialize
-                    instance = new IO();
-                }
-            }
-        }
-        return instance;
+    private IOimpl() {
     }
 
     //Getters y Setters
@@ -184,7 +166,7 @@ public class IO implements IOable {
      *                    to be set as the static input stream.
      */
     public static void setInputStream(UnclosableInputStreamDecorator inputStream) {
-        IO.inputStream = inputStream;
+        IOimpl.inputStream = inputStream;
     }
 
     // Methods

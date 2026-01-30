@@ -1,15 +1,12 @@
 package es.nom.juanfranciscoruiz.utiles;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junitpioneer.jupiter.StdIn;
-import org.junitpioneer.jupiter.StdIo;
-import org.junitpioneer.jupiter.StdOut;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +27,7 @@ public class MenuTest {
     public void testDefaultConstructor() throws MenuException {
         printTitle("testDefaultConstructor()");
         Menu instance = new Menu();
+        // Verifies default constructor initializes menu properties correctly
         assertAll(
             () -> assertNotNull(instance.getOptions(),"...testing not null options"),
             () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
@@ -44,6 +42,7 @@ public class MenuTest {
     public void testConstructorWithParamsDefaults() throws MenuException {
         printTitle("testConstructorWithParamsDefaults()");
         Menu instance = new Menu(null, "", "msg", false);
+        // Verifies constructor with null title uses default title
         assertAll(
             () -> assertNotNull(instance.getOptions()),
             () -> assertTrue(instance.getOptions().isEmpty()),
@@ -53,6 +52,9 @@ public class MenuTest {
         );
     }
 
+    /**
+     * Verifies root menu constructor adds exit option
+     */
     @Test
     public void testConstructorWithParamsRootAddsExitOption() throws MenuException {
         printTitle("testConstructorWithParamsRootAddsExitOption()");
@@ -95,6 +97,9 @@ public class MenuTest {
         );
     }
 
+    /**
+     * Tests constructor sets parent and submenus correctly
+     */
     @Test
     public void testConstructorWithSubmenusSetsParentAndSubmenus() throws MenuException {
         printTitle("testConstructorWithSubmenusSetsParentAndSubmenus()");
@@ -108,6 +113,9 @@ public class MenuTest {
         );
     }
 
+    /**
+     * Tests root menu options include exit option
+     */
     @Test
     public void testGetOptionsForRootMenu() throws MenuException {
         printTitle("testGetOptionsForRootMenu()");
@@ -121,7 +129,10 @@ public class MenuTest {
         assertEquals(expResult, result,
             "The first option should be '0. Exit the application'");
     }
-    
+
+    /**
+     * Tests non‑root menu options are those set
+     */
     @Test
     public void testGetOptionsForNonRootMenu() throws MenuException {
         printTitle("testGetOptionsForNonRootMenu()");
@@ -134,7 +145,7 @@ public class MenuTest {
         assertEquals(expResult, result,
             "The list of options should be the same as the one set with setOptions()");
     }
-    
+
     @Test
     public void testGetOptionsForNonRootEmptyMenu() throws MenuException {
         printTitle("testGetOptionsForNonRootEmptyMenu()");
@@ -144,7 +155,7 @@ public class MenuTest {
         List<String> result = instance.getOptions();
         assertEquals(expResult, result, "The list of options should be empty");
     }
-    
+
 
     /**
      * Test of setOptions method, of class Menu.
@@ -162,7 +173,10 @@ public class MenuTest {
         assertEquals(expResult, result,
             "The list of options should be the same as the one set with setOptions()");
     }
-    
+
+    /**
+     * Verifies `MenuException` is thrown when options are null
+     */
     @Test
     public void testSetOptionsWithNullt() throws MenuException {
         printTitle("testSetOptionsWithEmptyList()");
@@ -172,7 +186,10 @@ public class MenuTest {
             "The list of options can't be null");
         if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
     }
-    
+
+    /**
+     * Tests root menu options include exit option
+     */
     @Test
     public void testSetOptionsForRootMenu() throws MenuException {
         printTitle("testSetOptionsForRootMenu()");
@@ -181,7 +198,7 @@ public class MenuTest {
         // application"
         instance.setIsRootMenu(true);
         instance.setOptions(generateOptionsForChildMenus());
-        
+
         // When setting options for a root menu, the first option should be "0. Exit the application"
         List<String> expResult = generateOptionsForRootMenu();
         List<String> result = instance.getOptions();
@@ -218,7 +235,10 @@ public class MenuTest {
         printResults(expResult,result);
         assertEquals(expResult, result, "The title should be 'Application Test'");
     }
-    
+
+    /**
+     * Confirms `setTitle` throws exception on null input
+     */
     @Test
     public void testSetTitleWithNullValue() throws MenuException {
         printTitle("testSetTitleWithNullValue()");
@@ -255,7 +275,10 @@ public class MenuTest {
         printResults(expResult,result);
         assertEquals(expResult, result, "The message should be 'Un mensaje cualquiera'");
     }
-    
+
+    /**
+     * Confirms `setMessage` throws exception on null input
+     */
     @Test
     public void testSetMessageWithNullValue() throws MenuException {
         printTitle("testSetMessageWithNullValue()");
@@ -306,7 +329,7 @@ public class MenuTest {
         printResults(expResult,result);
         assertEquals(expResult, result, "The menu should not be a root menu");
     }
-    
+
     /**
      * Test of setIsRootMenu method, of class Menu.
      */
@@ -352,114 +375,7 @@ public class MenuTest {
         assertEquals(expResult, result, "The menu view should be generated correctly");
     }
 
-    /**
-     * Test of awaitResponse method, of class Menu.
-     *
-     * @param in a StdIn object for testing
-     * @param out a StdOut object for testing
-     * @throws java.lang.Exception in case of an error
-     */
-    @Test
-    @StdIo({"2"})
-    public void testAwaitResponse(StdIn in, StdOut out) throws Exception {
-        printTitle("testAwaitResponse()");
-        String msg = "";
-        Menu instance = new Menu();
-        instance.setOptions(generateOptionsForChildMenus());
-        instance.setIsRootMenu(true);
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
-        Long expResult = 2L;
-        instance.awaitResponse(msg);
-        Long result = instance.getSelectedOption();
-        printResults(expResult,result);
-        assertEquals(expResult, result, "The selected option should be 2");
-    }
 
-    /**
-     * Test of awaitResponse method, of class Menu when the user answer with
-     * an invalid response (not a number).
-     *
-     * @param in a StdIn object for testing
-     * @param out a StdOut object for testing
-     */
-    @Test
-    @StdIo({"notValid"})
-    public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException {
-        printTitle("testAwaitResponseForInvalidResponse()");
-        String msg = "";
-        Menu instance = new Menu();
-        instance.setOptions(generateOptionsForChildMenus());
-        instance.setIsRootMenu(true);
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
-
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
-            "The user answer with an invalid response (not a number) and throws an MenuException");
-        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-    }
-
-    /**
-     * Test of awaitResponse method, of class Menu when the user answer with
-     * an invalid response (not a number).
-     *
-     * @param in a StdIn object for testing
-     * @param out a StdOut object for testing
-     */
-    @Test
-    @StdIo({"6"})
-    public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException {
-        printTitle("testAwaitResponseForResponseOutOfRange()");
-        String msg = "";
-        Menu instance = new Menu();
-        instance.setOptions(generateOptionsForChildMenus());
-        instance.setIsRootMenu(true);
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
-
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
-            "The user answer with an invalid response (out of range) and throws an MenuException");
-        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-    }
-
-
-    /**
-     * Tests exception on invalid menu object
-     */
-    @Test
-    public void testAwaitResponseForNonValidMenuObject() throws MenuException {
-        printTitle("testAwaitResponseForNonValidMenuObject()");
-        String msg = "";
-        Menu instance = new Menu();
-        instance.setIsRootMenu(false); //Not include the exit option
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
-      
-        /*
-         We must use reflexion to bypass the private field validation. In normal cases, the
-         options property should be set by the client class and validated by the constructor
-         and the setter methods. This is an exceptional case for testing purposes.
-         */
-        if (logger.isDebugEnabled()) logger.debug("Setting options to null with api reflection!");
-        try {
-            Class<?> clazz = instance.getClass();
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (field.getName().equals("options")) {
-                    field.setAccessible(true);
-                    field.set(instance,null); // set the List<String> of field 'options' to null
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        
-        if (logger.isDebugEnabled()) logger.debug("Value of 'options' field: {}",
-            instance.getOptions() != null ? "not null" :"null");
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
-            "The user answer with an invalid response (not a number) and throws an MenuException");
-        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-    }
 
     /**
      * Test of toString method, of class Menu.
@@ -468,64 +384,62 @@ public class MenuTest {
     public void testToString() throws MenuException {
         printTitle("testToString()");
         Menu instance = new Menu();
-        StringBuilder sb = new StringBuilder();
-        sb.append("Menu{");
-        sb.append("options=").append(Util.CollectionToString(instance.getOptions(), true, 10));
-        sb.append(", title=").append(instance.getTitle());
-        sb.append(", message=").append(instance.getMessage());
-        sb.append(", selectedOption=").append(instance.getSelectedOption());
-        sb.append(", isRootMenu=").append(instance.getIsRootMenu());
-        sb.append(", parentMenu=").append(instance.getParentMenu() != null ?
-            instance.getParentMenu().getTitle() : "null");
-        sb.append(", menuView='").append(instance.getMenuView()).append('\'');
-        sb.append(", subMenus=").append(Util.CollectionToString(instance.getSubMenus(), true, 10));
-        sb.append('}');
-        String expResult = sb.toString();
+        String expResult = "Menu{" +
+                "options=" + Util.CollectionToString(instance.getOptions(), true, 10) +
+                ", title=" + instance.getTitle() +
+                ", message=" + instance.getMessage() +
+                ", selectedOption=" + instance.getSelectedOption() +
+                ", isRootMenu=" + instance.getIsRootMenu() +
+                ", parentMenu=" + (instance.getParentMenu() != null ?
+                instance.getParentMenu().getTitle() : "null") +
+                ", menuView='" + instance.getMenuView() + '\'' +
+                ", subMenus=" + Util.CollectionToString(instance.getSubMenus(), true, 10) +
+                '}';
         String result = instance.toString();
         printResults(expResult,result);
         assertEquals(expResult, result,
             "The toString() method should return a string " +
             "representation of the object");
     }
-    
+
     @Test
     void testGetMenuView() {
-    
+
     }
-    
+
     @Test
     void testGetSubMenus() {
     }
-    
+
     @Test
     void TestSetSubMenus() {
     }
-    
+
     @Test
     void TestGetParentMenu() {
     }
-    
+
     @Test
     void TestSetParentMenu() {
     }
-    
+
     @Test
     void TestAddSubMenu() {
     }
-    
+
     @Test
     void TestRemoveSubMenu() {
     }
-    
+
     @Test
     void TestAddOption() {
     }
-    
+
     @Test
     void TestRemoveOption() {
     }
-    
-    
+
+
     // Utility methods for tests
     /**
      * Generates a list of sample menu options for testing purposes.
@@ -538,7 +452,7 @@ public class MenuTest {
         opciones.add("3. Option Three");
         return opciones;
     }
-    
+
     /**
      * Generates a list of sample menu options for testing purposes.
      * @return a list of menu options
@@ -549,7 +463,7 @@ public class MenuTest {
         opciones.addAll(generateOptionsForChildMenus());
         return opciones;
     }
-    
+
     /**
      * Logs a debug message with the formatted title for the given method name.
      *
@@ -559,7 +473,7 @@ public class MenuTest {
         String test = "TEST " + methodName;
         logger.debug(test);
     }
-    
+
     /**
      * Logs the actual and expected values for debugging purposes.
      *
