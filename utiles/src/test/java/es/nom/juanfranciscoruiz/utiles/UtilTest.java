@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Testing the Util class
  *
- * @author juanf
+ * @author Juan F. Ruiz
  */
 public class UtilTest {
 

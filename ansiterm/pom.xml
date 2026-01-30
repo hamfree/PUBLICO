@@ -3,13 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.nom.juanfranciscoruiz</groupId>
     <artifactId>ansiterm</artifactId>
-    <version>1</version>
+    <version>1.3-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <scm>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
+        <url>git@github.com:hamfree/PUBLICO.git </url>
+        <tag>HEAD</tag>
+    </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <exec.mainClass>es.nom.juanfranciscoruiz.ansiterm.app.App</exec.mainClass>
-        <logback.version>1.5.19</logback.version>
+        <logback.version>1.5.25</logback.version>
         <slf4j.version>2.0.16</slf4j.version>
     </properties>
      <dependencies>
@@ -205,6 +212,13 @@
                 <configuration>
                     <author>true</author>
                     <defaultAuthor>Juan F. Ruiz</defaultAuthor>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <scmCommentPrefix>[ci skip]</scmCommentPrefix>
                 </configuration>
             </plugin>
         </plugins>

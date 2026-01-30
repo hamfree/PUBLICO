@@ -12,14 +12,15 @@ import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Utility that converts some types of objects into others, extracts numeric
- * values from a string, and converts bytes and characters to their hexadecimal
+ * values from a string and converts bytes and characters to their hexadecimal
  * representation.
+ *
  * @author Juan F. Ruiz
  */
 public class TypeConverter {
@@ -28,11 +29,6 @@ public class TypeConverter {
      * For debugging.
      */
     private final static Logger logger = LoggerFactory.getLogger(TypeConverter.class);
-    
-    /**
-     * Private constructor to prevent instantiation.
-     */
-    private TypeConverter() {}
 
     /**
      * Converts a generic type collection to a generic type ArrayList
@@ -52,7 +48,7 @@ public class TypeConverter {
 
     /**
      * Converts a generic map into a generic list (losing the keys, and
-     * getting the values)
+     * obtaining the values)
      *
      * @param <T> El tipo genérico tanto del mapa como de la lista
      * @param clazz la clase del tipo genérico T
@@ -142,10 +138,10 @@ public class TypeConverter {
     public static String array2String(Object obj) {
         StringBuilder result;
         if (obj == null) {
-            return IOImpl.getNULL();
+            return IO.getNULL();
         }
         if (isArray(obj)) {
-            result = new StringBuilder(IOImpl.getCHAR_INI());
+            result = new StringBuilder(IO.getCHAR_INI());
             int length = Array.getLength(obj);
             for (int idx = 0; idx < length; ++idx) {
                 Object item = Array.get(obj, idx);
@@ -156,12 +152,12 @@ public class TypeConverter {
                     result.append(item);
                 }
                 if (!isLastElement(idx, length)) {
-                    result.append(IOImpl.getSEP());
+                    result.append(IO.getSEP());
                 }
             }
-            result.append(IOImpl.getCHAR_END());
+            result.append(IO.getCHAR_END());
         } else {
-            return IOImpl.getNULL();
+            return IO.getNULL();
         }
         return result.toString();
     }
@@ -207,7 +203,7 @@ public class TypeConverter {
             for (Map.Entry<?, ?> entry : map.entrySet()) {
                 Object key = entry.getKey();
                 Object value = entry.getValue();
-                sb.append(key).append(IOImpl.getSEP()).append(value).append(IOImpl.getLS());
+                sb.append(key).append(IO.getSEP()).append(value).append(IO.getLS());
             }
         }
         return sb.toString();

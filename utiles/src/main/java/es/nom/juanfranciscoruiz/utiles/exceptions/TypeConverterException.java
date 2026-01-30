@@ -4,12 +4,11 @@ package es.nom.juanfranciscoruiz.utiles.exceptions;
  * Thrown to indicate that the TypeConverter class has attempted to extract
  * from a string a Long or Double object, but that the string does not have the
  * appropriate format.
+ *
  * @author Juan F. Ruiz
  */
 public class TypeConverterException extends RuntimeException {
-    /**
-     * Generated serial version UID
-     */
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -21,7 +20,7 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param message the detail message. The detail message is saved for later
+     * @param message
      */
     public TypeConverterException(String message) {
         super(message);
@@ -30,9 +29,8 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param message the detail message. The detail message is saved for later
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-     *              (A {@code null} value is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @param message
+     * @param cause
      */
     public TypeConverterException(String message, Throwable cause) {
         super(message, cause);
@@ -41,8 +39,7 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-     *              (A {@code null} value is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @param cause
      */
     public TypeConverterException(Throwable cause) {
         super(cause);
@@ -51,13 +48,14 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param message the detail message. The detail message is saved for later
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-     *              (A {@code null} value is permitted, and indicates that the cause is nonexistent or unknown.)
-     * @param enableSuppression whether suppression is enabled or disabled
-     * @param writableStackTrace whether the stack trace should be writable
+     * @param message
+     * @param cause
+     * @param enableSuppression
+     * @param writableStackTrace
      */
     public TypeConverterException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
+
 }

@@ -40,20 +40,7 @@ public class App {
             term = new ANSITerm();
             App app = new App();
             Menu menu = new Menu();
-            List<String> opciones = new ArrayList<>();
-
-            opciones.add("1. Raw console mode test");
-            opciones.add("2. Cursor position recovery test");
-            opciones.add("3. Screen size test");
-            opciones.add("4. Rectangle drawing test");
-            opciones.add("5. Text deletions from the cursor");
-            opciones.add("6. Text styles");
-            opciones.add("7. Multiple text styles");
-            opciones.add("8. Text colors");
-            opciones.add("9. Text palette of 256 colors");
-            opciones.add("10. Cursor styles");
-            opciones.add("11. Cursor blinking");
-            opciones.add("12. Shows cursor movement");
+            List<String> opciones = getOpciones();
             menu.setIsHomeMenu(true);
             menu.setTitle("Testing the ANSITerm library");
             menu.setOptions(opciones);
@@ -139,7 +126,29 @@ public class App {
             System.exit(0);
         }
     }
-
+    
+    /**
+     * Returns a list of menu options.
+     * @return A list of menu options.
+     */
+    private static List<String> getOpciones() {
+        List<String> opciones = new ArrayList<>();
+        
+        opciones.add("1. Raw console mode test");
+        opciones.add("2. Cursor position recovery test");
+        opciones.add("3. Screen size test");
+        opciones.add("4. Rectangle drawing test");
+        opciones.add("5. Text deletions from the cursor");
+        opciones.add("6. Text styles");
+        opciones.add("7. Multiple text styles");
+        opciones.add("8. Text colors");
+        opciones.add("9. Text palette of 256 colors");
+        opciones.add("10. Cursor styles");
+        opciones.add("11. Cursor blinking");
+        opciones.add("12. Shows cursor movement");
+        return opciones;
+    }
+    
     // Useful methods for displaying functionalities.
     /**
      * Perform a keystroke capture test once the terminal's 'raw' mode is
