@@ -18,7 +18,11 @@ public class CursorMovementCodes {
    */
   public static final String CURSOR_MOVE_TO_00 = ESC + "[H";
   /**
-   * Response as ESC[#;#R of the cursor position
+   * Sequence......: ESC [6 n
+   * Code..........: DECXCPR
+   * Description...: Specify the cursor position
+   * Behavior......: Outputs the cursor position as ESC[<r>;<c>R,
+   * where <r> is equal to the cursor row and <c> is equal to the cursor column
    */
   public static final String CURSOR_GET_POSITION = ESC + "[6n";
   /**
@@ -26,11 +30,20 @@ public class CursorMovementCodes {
    */
   public static final String CURSOR_MOVE_ONE_LINE_UP = ESC + "M";
   /**
-   * Saves the cursor position (DECSC)
+   * Sequence......: ESC 7
+   * Code..........: DECSC
+   * Description...: Saves the cursor position in memory.
+   * Notes.........: No value will be stored in memory until the `save` command
+   * is used for the first time. The only way to access the saved value is with the `restore` command.
    */
   public static final String CURSOR_SAVE_CURRENT_POSITION = ESC + "7";
   /**
-   * Restores the cursor to its last saved position (DECSR)
+   * Sequence......: ESC 8
+   * Code..........: DECSR
+   * Description...: Restores the cursor to its last saved position from memory
+   * Notes.........: No value will be stored in memory until the `save` command
+   * is used for the first time. The only way to access the saved value is with the `restore` command.
+   *
    */
   public static final String CURSOR_RESTORE_CURRENT_POSITION = ESC + "8";
   

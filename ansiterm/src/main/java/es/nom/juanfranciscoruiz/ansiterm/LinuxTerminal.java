@@ -100,25 +100,7 @@ public class LinuxTerminal implements ITerminal {
             this.enableRawMode();
             System.out.print(REC_POS_CUR);
 
-            StringBuilder result = new StringBuilder();
-            int character;
-
-            do {
-                character = System.in.read();
-                if (character == 27) {
-                    result.append("^");
-                } else {
-                    result.append((char) character);
-                }
-            } while (character != 82); // 'R'
-
-            Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
-            Matcher matcher = pattern.matcher(result.toString());
-            if (matcher.matches()) {
-                return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
-            } else {
-                return new Position(1, 1);
-            }
+            return getPosition();
 
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -126,6 +108,31 @@ public class LinuxTerminal implements ITerminal {
             return new Position(1, 1);
         } finally {
             this.disableRawMode();
+        }
+    }
+
+    /**
+     * Reads terminal response; extracts position or defaults
+     */
+    static Position getPosition() throws IOException {
+        StringBuilder result = new StringBuilder();
+        int character;
+
+        do {
+            character = System.in.read();
+            if (character == 27) {
+                result.append("^");
+            } else {
+                result.append((char) character);
+            }
+        } while (character != 82); // 'R'
+
+        Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
+        Matcher matcher = pattern.matcher(result.toString());
+        if (matcher.matches()) {
+            return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+        } else {
+            return new Position(1, 1);
         }
     }
 

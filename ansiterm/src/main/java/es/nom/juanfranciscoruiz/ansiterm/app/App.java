@@ -33,14 +33,14 @@ public class App {
      * @param args Command line arguments received from the operating system.
      */
     public static void main(String[] args) {
-        logger.info("Inicio de la aplicación");
+        logger.info("Application launch");
         
         ANSITerm term = null;
         try {
             term = new ANSITerm();
             App app = new App();
             Menu menu = new Menu();
-            List<String> opciones = getOpciones();
+            List<String> opciones = getOptions();
             menu.setIsHomeMenu(true);
             menu.setTitle("Testing the ANSITerm library");
             menu.setOptions(opciones);
@@ -57,51 +57,51 @@ public class App {
                 switch (menu.getSelectedOption().intValue()) {
                     case 1 -> {
                         menu.setMessage("");
-                        app.habilitaModoRawTeclado(term);
+                        app.enableRawModeKeyboard(term);
                     }
                     case 2 -> {
                         menu.setMessage("");
-                        app.recuperaPosicionCursor(term, 1L);
+                        app.recoverCursorPosition(term, 1L);
                     }
                     case 3 -> {
                         menu.setMessage("");
-                        app.lineasYColumnasPantalla(term);
+                        app.testAndShowScreenSize(term);
                     }
                     case 4 -> {
                         menu.setMessage("");
-                        app.dibujaRectangulo(term);
+                        app.drawBorderedRectangle(term);
                     }
                     case 5 -> {
                         menu.setMessage("");
-                        app.borradosDesdeCursor(term);
+                        app.showScreenLineDeletionCommands(term);
                     }
                     case 6 -> {
                         menu.setMessage("");
-                        app.estilos(term);
+                        app.displayTextStyles(term);
                     }
                     case 7 -> {
                         menu.setMessage("");
-                        app.estilosMultiples(term);
+                        app.showMultipleStyles(term);
                     }
                     case 8 -> {
                         menu.setMessage("");
-                        app.colores(term);
+                        app.displayTextColors(term);
                     }
                     case 9 -> {
                         menu.setMessage("");
-                        app.colores256(term);
+                        app.display256ColorPalette(term);
                     }
                     case 10 -> {
                         menu.setMessage("");
-                        app.estilosDelCursor(term);
+                        app.displayCursorStyles(term);
                     }
                     case 11 -> {
                         menu.setMessage("");
-                        app.parpadeoDelCursor(term);
+                        app.showCursorBlinkingEffect(term);
                     }
                     case 12 -> {
                         menu.setMessage("");
-                        app.muestraMovimientoCursor(term, 200L);
+                        app.showCursorAnimation(term, 200L);
                     }
                     default -> logger.warn("The user has entered {}", menu.getSelectedOption());
                 }
@@ -131,7 +131,7 @@ public class App {
      * Returns a list of menu options.
      * @return A list of menu options.
      */
-    private static List<String> getOpciones() {
+    private static List<String> getOptions() {
         List<String> opciones = new ArrayList<>();
         
         opciones.add("1. Raw console mode test");
@@ -157,7 +157,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void habilitaModoRawTeclado(ANSITerm term) throws Exception {
+    private void enableRawModeKeyboard(ANSITerm term) throws Exception {
        RawMode rawMode = new RawMode();
        rawMode.perform(term);
     }
@@ -170,7 +170,7 @@ public class App {
      * @param retardo The delay in milliseconds
      * @throws Exception In case of any error
      */
-    private void muestraMovimientoCursor(ANSITerm term, long retardo) throws Exception {
+    private void showCursorAnimation(ANSITerm term, long retardo) throws Exception {
         ShowCursorMovement showCursorMovement = new ShowCursorMovement();
         showCursorMovement.perform(term);
     }
@@ -183,7 +183,7 @@ public class App {
      * @param retardo The delay in milliseconds
      * @throws Exception In case of any error
      */
-    private void recuperaPosicionCursor(ANSITerm term, long retardo) throws Exception {
+    private void recoverCursorPosition(ANSITerm term, long retardo) throws Exception {
         RecoverCursorPosition recoverCursorPosition = new RecoverCursorPosition();
         recoverCursorPosition.perform(term);
     }
@@ -193,7 +193,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void dibujaRectangulo(ANSITerm term) throws Exception {
+    private void drawBorderedRectangle(ANSITerm term) throws Exception {
        DrawsRectangle dr = new DrawsRectangle();
        dr.perform(term);
     }
@@ -204,7 +204,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void lineasYColumnasPantalla(ANSITerm term) throws Exception {
+    private void testAndShowScreenSize(ANSITerm term) throws Exception {
         ScreenSize  screenSize = new ScreenSize();
         screenSize.perform(term);
     }
@@ -215,7 +215,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void estilos(ANSITerm term) throws Exception {
+    private void displayTextStyles(ANSITerm term) throws Exception {
        TextStyles textStyles = new TextStyles();
        textStyles.perform(term);
     }
@@ -226,7 +226,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void estilosMultiples(ANSITerm term) throws Exception {
+    private void showMultipleStyles(ANSITerm term) throws Exception {
        MultipleStylesText multipleStylesText = new MultipleStylesText();
        multipleStylesText.perform(term);
     }
@@ -237,7 +237,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void colores(ANSITerm term) throws Exception {
+    private void displayTextColors(ANSITerm term) throws Exception {
         ShowTextColors showTextColors = new ShowTextColors();
         showTextColors.perform(term);
     }
@@ -248,7 +248,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void colores256(ANSITerm term) throws Exception {
+    private void display256ColorPalette(ANSITerm term) throws Exception {
        ShowTextColors256 showTextColors256 = new ShowTextColors256();
        showTextColors256.perform(term);
     }
@@ -259,7 +259,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void estilosDelCursor(ANSITerm term) throws Exception {
+    private void displayCursorStyles(ANSITerm term) throws Exception {
        ShowCursorStyles showCursorStyles = new ShowCursorStyles();
        showCursorStyles.perform(term);
     }
@@ -270,7 +270,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void borradosDesdeCursor(ANSITerm term) throws Exception {
+    private void showScreenLineDeletionCommands(ANSITerm term) throws Exception {
        ScreenAndLineDeletions screenAndLineDeletions = new ScreenAndLineDeletions();
        screenAndLineDeletions.perform(term);
     }
@@ -281,7 +281,7 @@ public class App {
      * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void parpadeoDelCursor(ANSITerm term) throws Exception {
+    private void showCursorBlinkingEffect(ANSITerm term) throws Exception {
         ShowCursorBlinking showCursorBlinking = new ShowCursorBlinking();
         showCursorBlinking.perform(term);
     }
