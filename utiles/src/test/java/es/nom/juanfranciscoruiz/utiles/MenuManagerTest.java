@@ -32,11 +32,32 @@ class MenuManagerTest {
     }
 
     @Test
-    void getMenu() {
+    void getMenu() throws MenuException {
+        printTitle("testGetMenu()", logger);
+        MenuManager instance = new MenuManager();
+        Menu expectedValue = instance.getMenu();
+        printResults(expectedValue,instance.getMenu(),logger);
+        assertNotNull(expectedValue, "Menu should not be null after initialization");
     }
 
     @Test
-    void setMenu() {
+    void setMenu() throws MenuException, MenuManagerException {
+        printTitle("testSetMenu()", logger);
+        MenuManager instance = new MenuManager();
+        Menu expectedValue = new Menu();
+        instance.setMenu(expectedValue);
+        printResults(expectedValue,instance.getMenu(),logger);
+        assertEquals(expectedValue, instance.getMenu(), "Menu should be the same after setting it");
+    }
+    
+    @Test
+    void setMenuWithNull() throws MenuException, MenuManagerException {
+        printTitle("testSetMenuWithNull()", logger);
+        MenuManager instance = new MenuManager();
+        assertThrows(MenuManagerException.class, () -> instance.setMenu(null),
+            "MenuManagerException" +
+            " " +
+            "should be thrown");
     }
 
     /**
@@ -44,23 +65,20 @@ class MenuManagerTest {
      */
     @Test
     void showMenu() throws Exception {
+        printTitle("testShowMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu menu = new Menu();
         menu.setOptions(options);
         menu.setIsRootMenu(true);
         menu.setMessage("Select an option:");
         menu.setTitle("Testing the showMenu method");
-
         instance.setMenu(menu);
-
         String expectedValue = menu.getMenuView();
-
         String actualValue = tapSystemOut(() -> {
             instance.showMenu(false);
         });
-
+        printResults(expectedValue,actualValue,logger);
         assertEquals(expectedValue, actualValue);
-
     }
 
     /**
@@ -68,6 +86,7 @@ class MenuManagerTest {
      */
     @Test
     void showInvalidMenu() throws MenuManagerException, MenuException {
+        printTitle("testShowInvalidMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu menu = new Menu();
         menu.setOptions(options);
@@ -77,16 +96,12 @@ class MenuManagerTest {
 
         // Clear options to simulate an invalid menu
         menu.getOptions().clear();
-
         try {
             instance.showMenu(false);
             fail("Expected MenuException not thrown");
         } catch (MenuManagerException e) {
             assertEquals("There are no defined options in this menu", e.getMessage());
         }
-
-
-
     }
 
     /**

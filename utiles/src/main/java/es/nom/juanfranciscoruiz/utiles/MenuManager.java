@@ -57,7 +57,10 @@ public class MenuManager {
         return menu;
     }
 
-    public void setMenu(Menu menu) {
+    public void setMenu(Menu menu) throws MenuManagerException {
+        if (menu == null) {
+            throw new MenuManagerException(ERR_MENU_NULL);
+        }
         this.menu = menu;
     }
 
