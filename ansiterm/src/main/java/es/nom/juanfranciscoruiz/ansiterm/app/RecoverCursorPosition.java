@@ -23,6 +23,8 @@ public class RecoverCursorPosition {
    */
   public static final Logger logger = LoggerFactory.getLogger(RecoverCursorPosition.class);
   
+  public static final Long DELAY = 10L;
+  
   /**
    * Constructs a new RecoverCursorPosition.
    */
@@ -54,7 +56,7 @@ public class RecoverCursorPosition {
           System.out.println(e.getErrorCode());
           System.out.println(e.getMessage());
         }
-        long retardo = 250L;
+        long retardo = DELAY;
         pausaSinMensaje(retardo);
         term.printAt("Cursor position: column : ", screenSize.getLineas() - 2, 1);
         term.deleteFromCursorToEndLine();

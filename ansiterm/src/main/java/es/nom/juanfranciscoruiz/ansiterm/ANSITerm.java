@@ -30,13 +30,22 @@ public class ANSITerm {
      * For logging
      */
     public static final Logger logger = LoggerFactory.getLogger(ANSITerm.class);
-
+    
     /**
      * ITerminal object to make calls to the OS functions where the program is
      * running and enable/disable console capabilities not available from Java
      * or ANSI control sequences.
      */
     private ITerminal osCall;
+    /**
+     * Terminal size
+     */
+    private TerminalSize terminalSize;
+    /**
+     * Cursor position
+     */
+    private Position cursorPosition;
+    
     /**
      * Control sequences for colors and styles
      */
@@ -77,16 +86,23 @@ public class ANSITerm {
      * Tab codes
      */
     private static TabCodes tc;
-
+    /**
+     * Viewport positioning codes
+     */
+    private static ViewportPositioningCodes vposc;
+    /**
+     * Character set mode codes
+     */
+    private static CharacterSetModeCodes csmc;
 
     /**
-     * Instantiates a new Terminal object.
-     * Depending on the operating system where the class is executed, it will
-     * instantiate a WindowsTerminal or LinuxTerminal object for when it has to
-     * call low-level system functions.
-     * 
-     * @throws ANSITermException In case the operating system is not
-     * Windows or Linux
+     * Constructor for the ANSITerm class.
+     *
+     * This constructor initializes the terminal based on the operating system. It determines
+     * whether the operating system is Windows or Linux and creates an appropriate terminal instance.
+     * If the operating system is unsupported, an exception will be thrown.
+     *
+     * @throws ANSITermException if the operating system is unsupported.
      */
     public ANSITerm() throws ANSITermException {
         String os = System.getProperty("os.name").toLowerCase();
@@ -97,8 +113,99 @@ public class ANSITerm {
         }  else {
             throw new ANSITermException("Unsupported operating system");
         }
+        this.terminalSize = osCall.getTerminalSize();
+        this.cursorPosition = this.getCursorPosition();
     }
-
+    
+    
+    public static ColorsAndStylesCodes getCosc() {
+        return cosc;
+    }
+    
+    public static void setCosc(ColorsAndStylesCodes cosc) {
+        ANSITerm.cosc = cosc;
+    }
+    
+    public static CSI getCSI() {
+        return CSI;
+    }
+    
+    public static void setCSI(CSI CSI) {
+        ANSITerm.CSI = CSI;
+    }
+    
+    public static CursorControlCodes getCcc() {
+        return ccc;
+    }
+    
+    public static void setCcc(CursorControlCodes ccc) {
+        ANSITerm.ccc = ccc;
+    }
+    
+    public static CursorMovementCodes getCmc() {
+        return cmc;
+    }
+    
+    public static void setCmc(CursorMovementCodes cmc) {
+        ANSITerm.cmc = cmc;
+    }
+    
+    public static CursorStylesCodes getCsc() {
+        return csc;
+    }
+    
+    public static void setCsc(CursorStylesCodes csc) {
+        ANSITerm.csc = csc;
+    }
+    
+    public EraseSecuencesCodes getEsec() {
+        return esec;
+    }
+    
+    public void setEsec(EraseSecuencesCodes esec) {
+        this.esec = esec;
+    }
+    
+    public static GeneralAsciiCodes getGac() {
+        return gac;
+    }
+    
+    public static void setGac(GeneralAsciiCodes gac) {
+        ANSITerm.gac = gac;
+    }
+    
+    public static InputModeChangesCodes getImcc() {
+        return imcc;
+    }
+    
+    public static void setImcc(InputModeChangesCodes imcc) {
+        ANSITerm.imcc = imcc;
+    }
+    
+    public static PositionCodes getVpc() {
+        return vpc;
+    }
+    
+    public static void setVpc(PositionCodes vpc) {
+        ANSITerm.vpc = vpc;
+    }
+    
+    public static TabCodes getTc() {
+        return tc;
+    }
+    
+    public static void setTc(TabCodes tc) {
+        ANSITerm.tc = tc;
+    }
+    
+    public static ViewportPositioningCodes getVposc() {
+        return vposc;
+    }
+    
+    public static void setVposc(ViewportPositioningCodes vposc) {
+        ANSITerm.vposc = vposc;
+    }
+    
     /**
      * Returns an ITerminal object with which we can access the low-level
      * methods of the terminal running on the current operating system.
@@ -139,6 +246,10 @@ public class ANSITerm {
         System.out.print(GeneralAsciiCodes.BELL);
     }
 
+    /*
+    TODO: The methods that moves the cursor has to update the 'cursorPosition' property of this
+     class.
+     */
     /**
      * Causes a cursor backspace
      */
@@ -401,29 +512,6 @@ public class ANSITerm {
             throw new ANSITermException("Unrecognized style");
         }
         System.out.print(style);
-    }
-
-    /**
-     * Scrolls text up by as many lines as indicated in 'lines'.
-     * Option also known as "Panning down", new lines are filled from the
-     * bottom of the screen.
-     *
-     * @param lines the number of lines to scroll
-     */
-    public void moveTextUp(int lines) {
-        String sec_ansi = ESC + "[" + lines + "S";
-        System.out.print(sec_ansi);
-    }
-
-    /**
-     * Scrolls down by as many lines as indicated in 'lines'. Option also
-     * known as "Panning up", new lines are filled from the top of the screen.
-     *
-     * @param lines the number of lines to scroll
-     */
-    public void moveTextDown(int lines) {
-        String sec_ansi = ESC + "[" + lines + "T";
-        System.out.print(sec_ansi);
     }
 
     /**
@@ -981,7 +1069,6 @@ public class ANSITerm {
         System.out.print(PositionCodes.RESTORES_SCREEN);
     }
 
-
     /**
      * Returns terminal size
      * @return a TerminalSize object with the current lines and columns of
@@ -1023,5 +1110,14 @@ public class ANSITerm {
         } catch (ANSITermException e) {
             throw new ANSITermException(e);
         }
+    }
+    
+    
+    public void  moveTextUp(int lines) {
+        vposc.moveTextUp(lines);
+    }
+    
+    public void  moveTextDown(int lines) {
+        vposc.moveTextDown(lines);
     }
 }

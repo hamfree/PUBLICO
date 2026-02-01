@@ -9,7 +9,7 @@ import java.util.Scanner;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
 
 /**
- * Demonstrates how to obtain the current terminal screen size.
+ * Demonstrates how to get the current terminal screen size.
  *
  * @author Juan F. Ruiz
  */
