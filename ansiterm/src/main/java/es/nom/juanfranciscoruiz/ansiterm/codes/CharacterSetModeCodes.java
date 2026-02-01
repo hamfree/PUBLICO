@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import org.slf4j.Logger;
+
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -14,47 +16,68 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class CharacterSetModeCodes {
-  /**
-   * DEC Line Drawing Mode
-   */
-  public static final String DEC_LINE_DRAWING = ESC + "(0";
-  /**
-   * ASCII Mode
-   */
-  public static final String ASCII_MODE = ESC + "(B";
-  /*
-   * Singleton instance.
-   */
-   private static final CharacterSetModeCodes instance = new CharacterSetModeCodes();
-  
-   /**
-   * Private constructor. The user can't instantiate class
-   */
-   private CharacterSetModeCodes() {}
-  
-   /**
-   * Returns an instance of CharacterSetModeCodes
-   * @return an instance of CharacterSetModeCodes
-   */
-   public static CharacterSetModeCodes getInstance() { return instance; }
-  
-  /**
-   * Sequence....: ESC(0
-   * Description.: Designate Character Set
-   * Behavior....: Enables DEC Line Drawing Mode.
-   * @return the CSI sequence to enable DEC Line Drawing Mode
-   */
-  public String EnableDECLineDrawing() {
-    return DEC_LINE_DRAWING;
-  }
-  
-  /**
-   * Sequence....: ESC(B)
-   * Description.: Designate Character Set
-   * Behavior....: Enables ASCII Mode.
-   * @return the CSI sequence to enable ASCII Mode
-   */
-  public String EnableASCII() {
-    return ASCII_MODE;
-  }
+
+    // Constants and attributes
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CharacterSetModeCodes.class);
+    /*
+     * Singleton instance.
+     */
+    private static final CharacterSetModeCodes instance;
+
+
+    static {
+        instance = new CharacterSetModeCodes();
+        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
+    }
+
+    /**
+     * DEC Line Drawing Mode
+     */
+    public static final String DEC_LINE_DRAWING = ESC + "(0";
+    /**
+     * ASCII Mode
+     */
+    public static final String ASCII_MODE = ESC + "(B";
+
+    /**
+     * Private constructor. The user can't instantiate class
+     */
+    private CharacterSetModeCodes() {
+    }
+
+    /**
+     * Returns an instance of CharacterSetModeCodes
+     *
+     * @return an instance of CharacterSetModeCodes
+     */
+    public static CharacterSetModeCodes getInstance() {
+        return instance;
+    }
+
+    /**
+     * Sequence....: ESC(0
+     * Description.: Designate Character Set
+     * Behavior....: Enables DEC Line Drawing Mode.
+     *
+     * @return the CSI sequence to enable DEC Line Drawing Mode
+     */
+    public String EnableDECLineDrawing() {
+        return DEC_LINE_DRAWING;
+    }
+
+    /**
+     * Sequence....: ESC(B)
+     * Description.: Designate Character Set
+     * Behavior....: Enables ASCII Mode.
+     *
+     * @return the CSI sequence to enable ASCII Mode
+     */
+    public String EnableASCII() {
+        return ASCII_MODE;
+    }
+
+    @Override
+    public String toString() {
+        return "CharacterSetModeCodes{'ANSI escape codes for character set mode'}";
+    }
 }

@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
  * Demonstrates the use of 256 colors.
@@ -28,7 +28,7 @@ public class ShowTextColors256 {
     int j = 0;
     int line = 2;
     int col = 0;
-    term.moveCursorToXY(line, col);
+    term.printAt(line, col);
     for (int i = 0; i < 256; i++) {
       String msg = term.setColor256(i, String.valueOf(i));
       if (j > 15) {
@@ -44,6 +44,6 @@ public class ShowTextColors256 {
       }
     }
     
-    pausa(0, "Press <ENTER> to return to menu");
+    pauseWithMessage(0, "Press <ENTER> to return to menu");
   }
 }

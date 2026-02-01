@@ -2,6 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 /**
  * Enumeration for foreground colors with ANSI codes for the terminal
+ *
  * @author Juan F. Ruiz
  */
 public enum Color {
@@ -43,6 +44,7 @@ public enum Color {
     DEFAULT(39),
     /**
      * Bright black foreground color.
+     * Note: For some, black is not a color but the absence of light... and can the color black be bright? :-D
      */
     GLOSSY_BLACK (90),
     /**
@@ -77,15 +79,15 @@ public enum Color {
     /**
      * The ANSI color code.
      */
-    private final int codigo;
+    private final int code;
     
     /**
      * Constructs a new Color with the specified code.
      * 
-     * @param codigo The ANSI color code.
+     * @param code The ANSI color code.
      */
-    Color(int codigo){
-        this.codigo = codigo;
+    Color(int code){
+        this.code = code;
     }
     
     /**
@@ -93,6 +95,11 @@ public enum Color {
      * @return a string with the textual representation of the code
      */
     public String getAsString() {
-        return String.valueOf(this.codigo);
+        return String.valueOf(this.code);
+    }
+
+    @Override
+    public String toString() {
+        return "Color{'ANSI escape codes for foreground colors'}";
     }
 }

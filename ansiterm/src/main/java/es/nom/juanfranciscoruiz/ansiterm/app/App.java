@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.utiles.Menu;
-import es.nom.juanfranciscoruiz.utiles.impl.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class App {
                 if (menu.getMessage().isEmpty()) {
                     menu.setMessage("Running on".concat(System.getProperty("os.name")));
                 }
-                IO.prt(menu.getMenuView());
+                IOImpl.prt(menu.getMenuView());
                 menu.awaitResponse("Please choose an option: ");
                 switch (menu.getSelectedOption().intValue()) {
                     case 1 -> {

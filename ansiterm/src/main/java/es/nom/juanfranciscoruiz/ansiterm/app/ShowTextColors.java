@@ -4,7 +4,7 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.codes.BGColor;
 import es.nom.juanfranciscoruiz.ansiterm.codes.Color;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
  * Demonstrates various text and background colors.
@@ -50,7 +50,7 @@ public class ShowTextColors {
     term.printAt(term.setBackgroundColor(BGColor.BLACK, "Phrase with a black background"), 20, 1);
     term.printAt(term.setBackgroundColor(BGColor.RED, "Phrase with a red background"), 21, 1);
     
-    pausa(0, null);
+    pauseWithMessage(0, null);
     
     term.clearScreen();
     term.moveCursorToBegin();
@@ -85,6 +85,6 @@ public class ShowTextColors {
     term.printAt(term.setBackgroundColor(BGColor.GLOSSY_GREEN, "Phrase in glossy green" +
         "background"), 22, 1);
     
-    pausa(0, "Press <ENTER> to return to menu");
+    pauseWithMessage(0, "Press <ENTER> to return to menu");
   }
 }

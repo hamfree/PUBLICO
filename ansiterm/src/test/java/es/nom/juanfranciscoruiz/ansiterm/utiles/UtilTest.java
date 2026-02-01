@@ -2,16 +2,14 @@ package es.nom.juanfranciscoruiz.ansiterm.utiles;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class UtilTest {
 
     @Test
-    void pausa() {
+    void pauseWithMessage() {
     }
 
     @Test
-    void pausaSinMensaje() {
+    void pauseWithMessageSinMensaje() {
     }
 
     @Test

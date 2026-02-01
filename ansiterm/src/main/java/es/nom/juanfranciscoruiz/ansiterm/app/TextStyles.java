@@ -1,9 +1,8 @@
 package es.nom.juanfranciscoruiz.ansiterm.app;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
-import org.w3c.dom.Text;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
  * Demonstrates various text styles like bold, italic, etc.
@@ -32,6 +31,6 @@ public class TextStyles {
     term.printAt(term.setBlink("Intermittent phrase"), 5, 10);
     term.printAt(term.setInverse("Phrase with inverted colors"), 6, 10);
     term.printAt(term.setHidden("Hidden message"), 7, 10);
-    pausa(0, "Press <ENTER> to return to menu");
+    pauseWithMessage(0, "Press <ENTER> to return to menu");
   }
 }

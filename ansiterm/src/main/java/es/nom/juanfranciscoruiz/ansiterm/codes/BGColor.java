@@ -2,6 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 /**
  * Enumeration for background colors with ANSI codes for the terminal
+ *
  * @author Juan F. Ruiz
  */
 public enum BGColor {
@@ -94,5 +95,10 @@ public enum BGColor {
      */
     public String getAsString() {
         return String.valueOf(this.codigo);
+    }
+
+    @Override
+    public String toString() {
+        return "BGColor{'ANSI escape codes for background colors'}";
     }
 }

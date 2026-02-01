@@ -3,6 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm.exceptions;
 /**
  * Utility class providing predefined error messages used within the application.
  * This class is not meant to be instantiated.
+ *
  * @author Juan F. Ruiz
  */
 public class Errors {

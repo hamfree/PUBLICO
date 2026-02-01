@@ -28,19 +28,19 @@ public class DrawsRectangle {
     
     term.printAt("------------ Printing text at specific coordinates ------------", 1, 1);
     term.printAt("A rectangle will be drawn on the screen:", 2, 1);
-    for (int col = 2; col < ts.getColumnas(); col++) {
+    for (int col = 2; col < ts.getColumns(); col++) {
       term.printAt("*", 3, col);
     }
-    for (int linea = 3; linea < ts.getLineas() - 2; linea++) {
-      term.printAt("*", linea, ts.getColumnas() - 1);
+    for (int linea = 3; linea < ts.getLines() - 2; linea++) {
+      term.printAt("*", linea, ts.getColumns() - 1);
     }
-    for (int col = ts.getColumnas() - 1; col > 1; col--) {
-      term.printAt("*", ts.getLineas() - 2, col);
+    for (int col = ts.getColumns() - 1; col > 1; col--) {
+      term.printAt("*", ts.getLines() - 2, col);
     }
-    for (int linea = ts.getLineas() - 2; linea > 2; linea--) {
+    for (int linea = ts.getLines() - 2; linea > 2; linea--) {
       term.printAt("*", linea, 2);
     }
     
-    Util.pausa(0, "Press <ENTER> to return to menu");
+    Util.pauseWithMessage(0, "Press <ENTER> to return to menu");
   }
 }

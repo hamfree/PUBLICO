@@ -28,28 +28,22 @@
         
         
         <!-- Logging -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <type>jar</type>
-        </dependency>
+         <dependency>
+             <groupId>ch.qos.logback</groupId>
+             <artifactId>logback-core</artifactId>
+             <version>${logback.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>ch.qos.logback</groupId>
+             <artifactId>logback-classic</artifactId>
+             <version>${logback.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+             <version>${slf4j.version}</version>
+             <type>jar</type>
+         </dependency>
         
         <!-- For testing -->
         <dependency>
@@ -188,6 +182,7 @@
                                         <exclude>META-INF/AL2.0</exclude>
                                         <exclude>META-INF/LGPL2.1</exclude>
                                         <exclude>META-INF/services/org.slf4j.spi.SLF4JServiceProvider</exclude>
+                                        <exclude>logback.xml</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

@@ -6,7 +6,7 @@ import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 
 import java.util.Scanner;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
  * Demonstrates how to get the current terminal screen size.
@@ -40,11 +40,11 @@ public class ScreenSize {
       resp = sc.nextLine();
       TerminalSize ts = term.getOsCall().getTerminalSize();
       term.printAt("The screen size is:"
-          + ts.getLineas()
+          + ts.getLines()
           + "lines and "
-          + ts.getColumnas()
-          + " columns.", ts.getLineas() - 2, 1);
-      pausa(0, null);
+          + ts.getColumns()
+          + " columns.", ts.getLines() - 2, 1);
+      pauseWithMessage(0, null);
     }
   }
 }

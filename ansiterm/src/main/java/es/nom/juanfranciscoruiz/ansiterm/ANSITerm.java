@@ -22,10 +22,11 @@ import static es.nom.juanfranciscoruiz.ansiterm.exceptions.Errors.*;
  * <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">XTerm Control Sequences by Edward Moy</a><br>
  * <a href="https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences">Microsoft Learn - Console Virtual Terminal Sequences</a><br>
  * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">Wikipedia - ANSI escape code</a>
+ *
  * @author Juan F. Ruiz
  */
 public class ANSITerm {
-
+    // Constants and attributes
     /**
      * For logging
      */
@@ -45,11 +46,8 @@ public class ANSITerm {
      * Cursor position
      */
     private Position cursorPosition;
-    
-    /**
-     * Control sequences for colors and styles
-     */
-    private static ColorsAndStylesCodes cosc;
+
+    // Helper classes that represent ANSI control sequences and return them.
     /**
      * ANSI escape sequence generator
      */
@@ -63,9 +61,10 @@ public class ANSITerm {
      */
     private static CursorMovementCodes cmc;
     /**
-     * Cursor styles codes
+     * Singleton instance for colors and styles codes.
+     * This class is stateless (constants), so sharing one instance is safe.
      */
-    private static CursorStylesCodes csc;
+    private static ColorsAndStylesCodes cosc = ColorsAndStylesCodes.getInstance();
     /**
      * Erase sequences
      */
@@ -73,7 +72,7 @@ public class ANSITerm {
     /**
      * General ASCII controls
      */
-    private static GeneralAsciiCodes gac;
+    private static GeneralControlCodes gac;
     /**
      * Input mode changes codes
      */
@@ -95,9 +94,10 @@ public class ANSITerm {
      */
     private static CharacterSetModeCodes csmc;
 
+    // Constructors
     /**
      * Constructor for the ANSITerm class.
-     *
+     * <p>
      * This constructor initializes the terminal based on the operating system. It determines
      * whether the operating system is Windows or Linux and creates an appropriate terminal instance.
      * If the operating system is unsupported, an exception will be thrown.
@@ -114,98 +114,40 @@ public class ANSITerm {
             throw new ANSITermException("Unsupported operating system");
         }
         this.terminalSize = osCall.getTerminalSize();
-        this.cursorPosition = this.getCursorPosition();
+        this.cursorPosition = new Position(0, 0);
+
+        esec = EraseSecuencesCodes.getInstance();
+        CSI = es.nom.juanfranciscoruiz.ansiterm.codes.CSI.getInstance();
+        ccc = CursorControlCodes.getInstance();
+        cmc = CursorMovementCodes.getInstance();
+        gac = GeneralControlCodes.getInstance();
+        imcc = InputModeChangesCodes.getInstance();
+        vpc = PositionCodes.getInstance();
+        tc = TabCodes.getInstance();
+        vposc = ViewportPositioningCodes.getInstance();
+        csmc = CharacterSetModeCodes.getInstance();
+        if (logger.isDebugEnabled()) logger.debug(this.toString());
     }
-    
-    
-    public static ColorsAndStylesCodes getCosc() {
-        return cosc;
+
+    // Getters and setters
+    /**
+     * Sets the size of the terminal.
+     *
+     * @param terminalSize the new size to set for the terminal
+     */
+    public void setTerminalSize(TerminalSize terminalSize) {
+        this.terminalSize = terminalSize;
     }
-    
-    public static void setCosc(ColorsAndStylesCodes cosc) {
-        ANSITerm.cosc = cosc;
+
+    /**
+     * Sets the cursor position.
+     *
+     * @param cursorPosition the new position to set for the cursor
+     */
+    public void setCursorPosition(Position cursorPosition) {
+        this.cursorPosition = cursorPosition;
     }
-    
-    public static CSI getCSI() {
-        return CSI;
-    }
-    
-    public static void setCSI(CSI CSI) {
-        ANSITerm.CSI = CSI;
-    }
-    
-    public static CursorControlCodes getCcc() {
-        return ccc;
-    }
-    
-    public static void setCcc(CursorControlCodes ccc) {
-        ANSITerm.ccc = ccc;
-    }
-    
-    public static CursorMovementCodes getCmc() {
-        return cmc;
-    }
-    
-    public static void setCmc(CursorMovementCodes cmc) {
-        ANSITerm.cmc = cmc;
-    }
-    
-    public static CursorStylesCodes getCsc() {
-        return csc;
-    }
-    
-    public static void setCsc(CursorStylesCodes csc) {
-        ANSITerm.csc = csc;
-    }
-    
-    public EraseSecuencesCodes getEsec() {
-        return esec;
-    }
-    
-    public void setEsec(EraseSecuencesCodes esec) {
-        this.esec = esec;
-    }
-    
-    public static GeneralAsciiCodes getGac() {
-        return gac;
-    }
-    
-    public static void setGac(GeneralAsciiCodes gac) {
-        ANSITerm.gac = gac;
-    }
-    
-    public static InputModeChangesCodes getImcc() {
-        return imcc;
-    }
-    
-    public static void setImcc(InputModeChangesCodes imcc) {
-        ANSITerm.imcc = imcc;
-    }
-    
-    public static PositionCodes getVpc() {
-        return vpc;
-    }
-    
-    public static void setVpc(PositionCodes vpc) {
-        ANSITerm.vpc = vpc;
-    }
-    
-    public static TabCodes getTc() {
-        return tc;
-    }
-    
-    public static void setTc(TabCodes tc) {
-        ANSITerm.tc = tc;
-    }
-    
-    public static ViewportPositioningCodes getVposc() {
-        return vposc;
-    }
-    
-    public static void setVposc(ViewportPositioningCodes vposc) {
-        ANSITerm.vposc = vposc;
-    }
-    
+
     /**
      * Returns an ITerminal object with which we can access the low-level
      * methods of the terminal running on the current operating system.
@@ -215,8 +157,219 @@ public class ANSITerm {
     public ITerminal getOsCall(){
         return osCall;
     }
-    
-    
+
+    /**
+     * Retrieves the current value of the ColorsAndStylesCodes (COSC).
+     *
+     * @return the current ColorsAndStylesCodes instance.
+     */
+    public static ColorsAndStylesCodes getCosc() {
+        return cosc;
+    }
+
+    /**
+     * Sets the ColorsAndStylesCodes (COSC) instance.
+     *
+     * @param cosc the new ColorsAndStylesCodes instance to set
+     */
+    public static void setCosc(ColorsAndStylesCodes cosc) {
+        ANSITerm.cosc = cosc;
+    }
+
+    /**
+     * Retrieves the current value of the CSI (Control Sequence Introducer).
+     *
+     * @return the current CSI instance.
+     */
+    public static CSI getCSI() {
+        return CSI;
+    }
+
+    /**
+     * Sets the CSI (Control Sequence Introducer) instance.
+     *
+     * @param CSI the new CSI instance to set
+     */
+    public static void setCSI(CSI CSI) {
+        ANSITerm.CSI = CSI;
+    }
+
+    /**
+     * Retrieves the current value of the CursorControlCodes (CCC).
+     *
+     * @return the current CursorControlCodes instance.
+     */
+    public static CursorControlCodes getCcc() {
+        return ccc;
+    }
+
+    /**
+     * Sets the CursorControlCodes (CCC) instance.
+     *
+     * @param ccc the new CursorControlCodes instance to set
+     */
+    public static void setCcc(CursorControlCodes ccc) {
+        ANSITerm.ccc = ccc;
+    }
+
+    /**
+     * Retrieves the current value of the CursorMovementCodes (CMC).
+     *
+     * @return the current CursorMovementCodes instance.
+     */
+    public static CursorMovementCodes getCmc() {
+        return cmc;
+    }
+
+    /**
+     * Sets the CursorMovementCodes (CMC) instance.
+     *
+     * @param cmc the new CursorMovementCodes instance to set
+     */
+    public static void setCmc(CursorMovementCodes cmc) {
+        ANSITerm.cmc = cmc;
+    }
+
+    /**
+     * Retrieves the current value of the CursorStylesCodes (CSC).
+     *
+     * @return the current CursorStylesCodes instance.
+     */
+    public static ColorsAndStylesCodes getCsc() {
+        return cosc;
+    }
+
+    /**
+     * Sets the CursorStylesCodes (CSC) instance.
+     *
+     * @param cosc the new CursorStylesCodes instance to set
+     */
+    public static void setCsc(ColorsAndStylesCodes cosc) {
+        ANSITerm.cosc = cosc;
+    }
+
+    /**
+     * Retrieves the current value of the EraseSecuencesCodes (ES).
+     *
+     * @return the current EraseSecuencesCodes instance.
+     */
+    public EraseSecuencesCodes getEsec() {
+        return EraseSecuencesCodes.getInstance();
+    }
+
+    /**
+     * Sets the EraseSequencesCodes object.
+     *
+     * @param esec the EraseSequencesCodes object to be set
+     */
+    public void setEsec(EraseSecuencesCodes esec) {
+        this.esec = esec;
+    }
+
+    /**
+     * Retrieves the current value of the GeneralControlCodes (GAC).
+     *
+     * @return the current GeneralControlCodes instance.
+     */
+    public static GeneralControlCodes getGac() {
+        return gac;
+    }
+
+    public static void setGac(GeneralControlCodes gac) {
+        ANSITerm.gac = gac;
+    }
+
+    /**
+     * Retrieves the current instance of InputModeChangesCodes (IMCC).
+     *
+     * @return the current InputModeChangesCodes instance
+     */
+    public static InputModeChangesCodes getImcc() {
+        return imcc;
+    }
+
+    /**
+     * Sets the InputModeChangesCodes (IMCC) instance.
+     *
+     * @param imcc the new InputModeChangesCodes instance to set
+     */
+    public static void setImcc(InputModeChangesCodes imcc) {
+        ANSITerm.imcc = imcc;
+    }
+
+    /**
+     * Retrieves the current instance of ViewportPositioningCodes (VPC).
+     *
+     * @return the current ViewportPositioningCodes instance
+     */
+    public static PositionCodes getVpc() {
+        return vpc;
+    }
+
+    /**
+     * Sets the ViewportPositioningCodes (VPC) instance.
+     *
+     * @param vpc the new ViewportPositioningCodes instance to set
+     */
+    public static void setVpc(PositionCodes vpc) {
+        ANSITerm.vpc = vpc;
+    }
+
+    /**
+     * Retrieves the current instance of TabCodes (TC).
+     *
+     * @return the current TabCodes instance
+     */
+    public static TabCodes getTc() {
+        return tc;
+    }
+
+    /**
+     * Sets the TabCodes (TC) instance.
+     *
+     * @param tc the new TabCodes instance to set
+     */
+    public static void setTc(TabCodes tc) {
+        ANSITerm.tc = tc;
+    }
+
+    /**
+     * Retrieves the current instance of ViewportPositioningCodes (VPOS).
+     *
+     * @return the current ViewportPositioningCodes instance
+     */
+    public static ViewportPositioningCodes getVposc() {
+        return vposc;
+    }
+
+    /**
+     * Sets the ViewportPositioningCodes (VPOS) instance.
+     *
+     * @param vposc the new ViewportPositioningCodes instance to set
+     */
+    public static void setVposc(ViewportPositioningCodes vposc) {
+        ANSITerm.vposc = vposc;
+    }
+
+    /**
+     * Retrieves the current value of the CharacterSetModeCodes (CSMC).
+     *
+     * @return the current CharacterSetModeCodes instance.
+     */
+    public static CharacterSetModeCodes getCsmc() {
+        return csmc;
+    }
+
+    /**
+     * Sets the CharacterSetModeCodes (CSMC) instance.
+     *
+     * @param csmc the new CharacterSetModeCodes instance to set
+     */
+    public static void setCsmc(CharacterSetModeCodes csmc) {
+        ANSITerm.csmc = csmc;
+    }
+
+    // Methods
     /**
      * Enables 'raw' mode in the current console so that ANSI sequences can
      * be interpreted.
@@ -238,12 +391,11 @@ public class ANSITerm {
         osCall.disableRawMode();
     }
 
-    
     /**
      * Rings the terminal bell
      */
     public void bell() {
-        System.out.print(GeneralAsciiCodes.BELL);
+        System.out.print(getGac().bell());
     }
 
     /*
@@ -254,67 +406,55 @@ public class ANSITerm {
      * Causes a cursor backspace
      */
     public void backSpace() {
-        System.out.print(GeneralAsciiCodes.BS);
+        System.out.print(getGac().backSpace());
     }
 
     /**
      * Generates a tab
      */
     public void tab() {
-        System.out.print(GeneralAsciiCodes.TAB);
+        System.out.print(getGac().tab());
     }
 
     /**
      * Generates a line feed
      */
     public void linefeed() {
-        System.out.print(GeneralAsciiCodes.LF);
+        System.out.print(getGac().linefeed());
     }
 
     /**
      * Generates a vertical tab
      */
     public void verticalTab() {
-        System.out.print(GeneralAsciiCodes.VT);
+        System.out.print(getGac().verticalTab());
     }
 
     /**
      * Generates a form feed
      */
     public void formfeed() {
-        System.out.print(GeneralAsciiCodes.FF);
+        System.out.print(getGac().formfeed());
     }
 
     /**
      * Generates a carriage return
+     * In the Windows terminal it moves the cursor to the beginning of the line.
+     * To do a line break you have to do a linefeed() or use  the Java \n escape code
      */
-    public void carriagereturn() {
-        // In the Windows terminal it moves the cursor to the beginning of the line
-        // To do a line break you have to do a linefeed() or use
-        // the Java \n escape code
-        System.out.print(GeneralAsciiCodes.CR);
-    }
-
-    /**
-     * Deletes the character before the cursor position.
-     */
-    public void deleteCharacter() {
-        // Does not work on Windows.
-        char c = 127; //DEL (Delete character)
-        System.out.print(c);
-    }
+    public void carriagereturn() {System.out.print(getGac().carriagereturn()); }
 
     // Cursor functions
     /**
      * Moves the cursor to the beginning of the terminal (0,0)
      */
     public void moveCursorToBegin() {
-        System.out.print(CursorMovementCodes.CURSOR_MOVE_TO_00);
+        System.out.print(CursorMovementCodes.getSecforSetCursorToBegin());
     }
 
     /**
      * Moves the cursor to the line, column position of the terminal
-     *
+     * <p>
      * Sequence......: <ESCESC[<y>;<x>H
      * Code..........: CUP
      * Description...: Position of cursor
@@ -324,9 +464,9 @@ public class ANSITerm {
      * @param line integer with the line to move the cursor to
      * @param column integer with the column to move the cursor to
      */
-    public void moveCursorToXY(int line, int column) {
+    public void printAt(int line, int column) {
         String sec_ansi = ESC + "[" + line + ";" + column + "H";
-        System.out.print(sec_ansi);
+        System.out.print(CursorMovementCodes.getSecforSetCursorAtPosition(line, column));
     }
 
     /**
@@ -335,7 +475,7 @@ public class ANSITerm {
      * @param p Posicion object containing the position where the cursor
      * will be moved
      */
-    public void moveCursorToXY(Position p) {
+    public void printAt(Position p) {
         String sec_ansi = ESC + "[" + p.getCol() + ";" + p.getLin() + "H";
         System.out.print(sec_ansi);
     }
@@ -352,11 +492,8 @@ public class ANSITerm {
             // and that the user's keystrokes are obtained without waiting
             // for them to press ENTER (raw mode)
             this.osCall.enableRawMode();
-
-            System.out.print(CursorMovementCodes.CURSOR_GET_POSITION);
-
+            System.out.print(CursorMovementCodes.getSecForGetCursorPosition());
             return getPosition();
-
         } catch (IOException e) {
             logger.error(e.getMessage());
             System.out.println(e.getMessage());
@@ -371,36 +508,17 @@ public class ANSITerm {
      * Moves the cursor one line up
      */
     public void moveCursorUp() {
-        System.out.println(CursorMovementCodes.CURSOR_MOVE_ONE_LINE_UP);
+        System.out.println(CursorMovementCodes.getSecForMoveCursorNLinesUp(1));
     }
 
     /**
      * Moves the cursor up as many lines as indicated in the 'lines' parameter<br>
      * CODE: CUU (Cursor Up)
-     * NOTE for the methods:<br>
-     * <ul>
-     * <li>moveCursorUp(int lines)</li>
-     * <li>moveCursorDown(int lines)</li>
-     * <li>moveCursorRight(int cars)</li>
-     * <li>moveCursorLeft(int cars)</li>
-     *
-     * </ul>
-     * <ul>
-     * <li>'lines' or 'cars' represents the distance of transfer and is a
-     * parameter that is optional for the control sequence (but mandatory
-     * in the function, if you want to omit it indicate 0).</li>
-     * <li>If 'lines' or 'cars' is omitted or equals 0, it will be treated as 1.</li>
-     * <li>'lines' or 'cars' cannot be greater than 32,767 (maximum short value).</li>
-     * <li>'lines' or 'cars' cannot be negative.</li>
-     * </ul>
-     *
      *
      * @param lines an integer with the lines up where the cursor will be moved
      */
     public void moveCursorUp(int lines) {
-        // ESC[#A
-        String sec_ansi = ESC + "[" + lines + "A";
-        System.out.print(sec_ansi);
+        System.out.print(CursorMovementCodes.getSecForMoveCursorNLinesUp(lines));
     }
 
     /**
@@ -410,9 +528,7 @@ public class ANSITerm {
      * @param lines an integer with the lines down where the cursor will be moved
      */
     public void moveCursorDown(int lines) {
-        // ESC[#B
-        String sec_ansi = ESC + "[" + lines + "B";
-        System.out.print(sec_ansi);
+        System.out.print(CursorMovementCodes.getSecForMoveCursorNLinesDown(lines));
     }
 
     /**
@@ -424,9 +540,7 @@ public class ANSITerm {
      * cursor will be moved
      */
     public void moveCursorRight(int cars) {
-        // ESC[#C
-        String sec_ansi = ESC + "[" + cars + "C";
-        System.out.print(sec_ansi);
+        System.out.print(CursorMovementCodes.getSecForMoveCursorNCharsToRight(cars));
     }
 
     /**
@@ -438,9 +552,7 @@ public class ANSITerm {
      * cursor will be moved
      */
     public void moveCursorLeft(int cars) {
-        // ESC[#D
-        String sec_ansi = ESC + "[" + cars + "D";
-        System.out.print(sec_ansi);
+        System.out.print(CursorMovementCodes.getSecForMoveCursorNCharsToLeft(cars));
     }
 
     /**
@@ -591,21 +703,21 @@ public class ANSITerm {
      * Deletes everything from the cursor position to the end of the screen
      */
     public void deleteFromCursorToEndScreen() {
-        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_END_OF_SCREEN);
+        System.out.print(esec.deleteFromCursorToEndScreen());
     }
 
     /**
      * Deletes everything from the cursor position to the beginning of the screen
      */
     public void deleteFromCursorToBeginScreen() {
-        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_BEGINNING_OF_SCREEN);
+        System.out.print(esec.deleteFromCursorToBeginScreen());
     }
 
     /**
      * Erases the screen
      */
     public void clearScreen() {
-        System.out.print(EraseSecuencesCodes.CLEAR_SCREEN);
+        System.out.print(getEsec().clearScreen());
     }
 
     /**
@@ -613,7 +725,7 @@ public class ANSITerm {
      * where it is located.
      */
     public void deleteFromCursorToEndLine() {
-        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_END_OF_CURRENT_LINE);
+        System.out.print(esec.deleteFromCursorToEndLine());
     }
 
     /**
@@ -621,7 +733,7 @@ public class ANSITerm {
      * where it is located.
      */
     public void deleteFromCursorToBeginLine() {
-        System.out.print(EraseSecuencesCodes.ERASES_FROM_CURSOR_TO_BEGINNING_OF_CURRENT_LINE);
+        System.out.print(esec.deleteFromCursorToBeginLine());
     }
 
     /**
@@ -629,7 +741,7 @@ public class ANSITerm {
      * located.
      */
     public void deleteLine() {
-        System.out.print(EraseSecuencesCodes.ERASES_CURRENT_LINE);
+        System.out.print(esec.deleteLine());
     }
 
     // Colors and styles
@@ -1091,7 +1203,7 @@ public class ANSITerm {
      */
     public void printAt(String msg, int line, int col) throws ANSITermException {
         if ((msg != null && !msg.isEmpty())) {
-            moveCursorToXY(line, col);
+            printAt(line, col);
             System.out.print(msg);
         } else {
             throw new ANSITermException(EX_NO_MSG);
@@ -1111,13 +1223,29 @@ public class ANSITerm {
             throw new ANSITermException(e);
         }
     }
-    
-    
+
+    /**
+     * Moves the text up in the terminal
+     * @param lines the number of lines to move up
+     */
     public void  moveTextUp(int lines) {
         vposc.moveTextUp(lines);
     }
-    
+
+    /**
+     * Moves the text down in the terminal
+     * @param lines the number of lines to move down
+     */
     public void  moveTextDown(int lines) {
         vposc.moveTextDown(lines);
+    }
+
+    @Override
+    public String toString() {
+        return "ANSITerm{" +
+                "osCall=" + osCall +
+                ", terminalSize=" + terminalSize +
+                ", cursorPosition=" + cursorPosition +
+                '}';
     }
 }

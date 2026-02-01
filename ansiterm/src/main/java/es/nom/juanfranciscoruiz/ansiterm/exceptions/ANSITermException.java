@@ -1,18 +1,26 @@
 package es.nom.juanfranciscoruiz.ansiterm.exceptions;
 
+import java.io.Serial;
+
 /**
  * Represents a custom exception for errors related to ANSI terminal operations.
  * This exception serves as a specialized subclass of {@code Exception} and is
  * designed to handle terminal-specific error scenarios.
- *
+ * <p>
  * The class provides multiple constructors to accommodate different use cases such as:
  * - Default exception with no detail message or cause.
  * - Exception with a custom detail message.
  * - Exception with both a detail message and a cause.
  * - Exception with only a cause.
  * - Exception with advanced options like enabling suppression and writable stack trace.
+ *
+ * @author Juan F. Ruiz
  */
 public class ANSITermException extends Exception {
+
+    @Serial
+    private static final long serialVersionUID = 1396910236421704294L;
+
     /**
      * Constructs a new ANSITermException with {@code null} as its detail message.
      * The cause is not initialized and may be subsequently initialized by a
@@ -26,8 +34,7 @@ public class ANSITermException extends Exception {
      * Constructs a new ANSITermException with the specified detail message.
      * The cause is not initialized and may be subsequently initialized by a
      * call to {@link Throwable#initCause(Throwable)}.
-     *
-     * @param message
+     * @param message the detailed message explaining the reason for the exception
      */
     public ANSITermException(String message) {
         super(message);
@@ -35,7 +42,7 @@ public class ANSITermException extends Exception {
 
     /**
      * Constructs a new ANSITermException with the specified detail message and cause.
-     *
+     * <p>
      * This constructor allows for providing a custom error message and a {@code Throwable}
      * cause, enabling the chaining of exceptions for better error tracking.
      *
@@ -50,7 +57,7 @@ public class ANSITermException extends Exception {
      * Constructs a new ANSITermException with the specified cause.
      * The detail message is automatically constructed as {@code (cause == null ? null : cause.toString())},
      * which typically contains the class and detail message of the cause.
-     *
+     * <p>
      * This constructor allows for exception chaining, facilitating the propagation
      * of the original cause of the error for enhanced debugging and error reporting.
      *
@@ -63,7 +70,7 @@ public class ANSITermException extends Exception {
     /**
      * Constructs a new ANSITermException with the specified detail message, cause,
      * suppression enabled or disabled, and writable stack trace enabled or disabled.
-     *
+     * <p>
      * This constructor provides advanced options for initializing an exception with precise control
      * over its properties. It is typically used by subclasses or in scenarios where specific
      * exception behavior is required.
