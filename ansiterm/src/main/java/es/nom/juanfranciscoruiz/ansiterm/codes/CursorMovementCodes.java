@@ -22,7 +22,7 @@ public class CursorMovementCodes {
      * offered by the {@code CursorMovementCodes} class, ensuring that
      * only one instance of the class exists during the runtime of the application.
      */
-    private static CursorMovementCodes instance;
+    private static final CursorMovementCodes instance;
 
     static {
         instance = new CursorMovementCodes();
@@ -234,6 +234,10 @@ public class CursorMovementCodes {
      */
     public static String getSecForRestoreCurrentCursorPosition(){
         return CURSOR_RESTORE_CURRENT_POSITION;
+    }
+
+    public static String getSecForSaveCursorPosition() {
+        return CURSOR_SAVE_CURRENT_POSITION;
     }
 
     @Override

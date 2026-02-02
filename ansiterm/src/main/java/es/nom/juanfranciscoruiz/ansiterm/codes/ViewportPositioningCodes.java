@@ -26,7 +26,7 @@ public class ViewportPositioningCodes {
     /**
      * Singleton instance of the {@code ViewportPositioningCodes} class.
      */
-    private static ViewportPositioningCodes instance;
+    private static final ViewportPositioningCodes instance;
 
     static {
         instance = new ViewportPositioningCodes();
@@ -58,9 +58,8 @@ public class ViewportPositioningCodes {
      *
      * @param lines the number of lines to scroll
      */
-    public void moveTextUp(int lines) {
-        String sec_ansi = ESC + "[" + lines + "S";
-        System.out.print(sec_ansi);
+    public static String getEsForScrollTextUp(int lines) {
+        return (ESC + "[" + lines + "S");
     }
 
     /**
@@ -72,9 +71,8 @@ public class ViewportPositioningCodes {
      *
      * @param lines the number of lines to scroll
      */
-    public void moveTextDown(int lines) {
-        String sec_ansi = ESC + "[" + lines + "T";
-        System.out.print(sec_ansi);
+    public static String  getEsForScrollTextDown(int lines) {
+        return (ESC + "[" + lines + "T");
     }
 
     @Override

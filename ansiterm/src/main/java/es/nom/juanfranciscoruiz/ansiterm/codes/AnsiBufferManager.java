@@ -14,17 +14,17 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  *
  * @author Juan F. Ruiz
  */
-public class PositionCodes {
+public class AnsiBufferManager {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PositionCodes.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AnsiBufferManager.class);
 
     /**
      * Singleton instance of the {@code PositionCodes} class.
      */
-    private static PositionCodes instance;
+    private static final AnsiBufferManager instance;
 
     static {
-        instance = new PositionCodes();
+        instance = new AnsiBufferManager();
         if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
     }
 
@@ -49,7 +49,7 @@ public class PositionCodes {
     /**
      * Private constructor. Class can't be instantiated by the user
      */
-    private PositionCodes() {
+    private AnsiBufferManager() {
     }
 
     /**
@@ -58,7 +58,7 @@ public class PositionCodes {
      *
      * @return the singleton instance of the {@code PositionCodes} class
      */
-    public static PositionCodes getInstance() {
+    public static AnsiBufferManager getInstance() {
         return instance;
     }
 

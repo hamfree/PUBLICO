@@ -131,6 +131,9 @@ public class ColorsAndStylesCodes {
         return INSTANCE;
     }
 
+
+
+
     @Override
     public String toString() {
         return "ColorsAndStylesCodes{'ANSI escape codes for text colors and styles'}";

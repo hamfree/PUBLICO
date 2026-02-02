@@ -64,6 +64,42 @@ public class CursorControlCodes {
         return INSTANCE;
     }
 
+    /**
+     * Retrieves the ANSI escape sequence string to hide the terminal cursor.
+     *
+     * @return the ANSI escape sequence for hiding the cursor
+     */
+    public static String getScForHideCursor() {
+        return HIDES_CURSOR;
+    }
+
+    /**
+     * Retrieves the ANSI escape sequence string to show the terminal cursor.
+     *
+     * @return the ANSI escape sequence for showing the cursor
+     */
+    public static String getScForShowCursor(){
+        return SHOWS_CURSOR;
+    }
+
+    /**
+     * Retrieves the ANSI escape sequence string to enable cursor blinking.
+     *
+     * @return the ANSI escape sequence for enabling cursor blinking
+     */
+    public static String getScForEnableCursorBlink(){
+        return ENABLE_BLINK_CURSOR;
+    }
+
+    /**
+     * Retrieves the ANSI escape sequence string to disable cursor blinking.
+     *
+     * @return the ANSI escape sequence for disabling cursor blinking
+     */
+    public static String getScForDisableCursorBlink(){
+        return DISABLE_BLINK_CURSOR;
+    }
+
     @Override
     public String toString() {
         return  "CursorControlCodes{'ANSI escape codes for cursor control'}";

@@ -23,7 +23,7 @@ public class GeneralControlCodes {
     /**
      * Singleton instance of the {@code GeneralControlCodes} class.
      */
-    private static GeneralControlCodes instance;
+    private static final GeneralControlCodes instance;
 
     static {
         instance = new GeneralControlCodes();
@@ -93,7 +93,7 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code BackSpace (BS)
      */
-    public char backSpace() {
+    public static char backSpace() {
         return BS;
     }
 
@@ -103,7 +103,7 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Tab (TAB)
      */
-    public char bell() {
+    public static char bell() {
         return BELL;
     }
 
@@ -112,7 +112,7 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Tab (TAB)
      */
-    public char tab() {
+    public static char tab() {
         return TAB;
     }
 
@@ -121,7 +121,7 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Line Feed (LF)
      */
-    public char linefeed() {
+    public static char linefeed() {
         return LF;
     }
 
@@ -130,7 +130,7 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Vertical Tab (VT)
      */
-    public char verticalTab() {
+    public static char verticalTab() {
         return VT;
     }
 
@@ -139,14 +139,14 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Form Feed (FF)
      */
-    public char formfeed() {
+    public static char formfeed() {
         return FF;
     }
 
     /**
      * Returns the ASCII control code Carriage Return (CR)
      */
-    public char carriagereturn() {
+    public static char carriagereturn() {
         // In the Windows terminal it moves the cursor to the beginning of the line
         // To do a line break you have to do a linefeed() or use the Java \n escape code
         return CR;

@@ -27,7 +27,7 @@ public class EraseSecuencesCodes {
      * throughout the application, providing consistent behavior
      * for operations related to screen or text erasure.
      */
-    private static EraseSecuencesCodes INSTANCE;
+    private static final EraseSecuencesCodes INSTANCE;
 
     static {
         INSTANCE = new EraseSecuencesCodes();
@@ -82,7 +82,7 @@ public class EraseSecuencesCodes {
      * Returns a escape sequence that deletes everything from the cursor position
      * to the end of the screen
      */
-    public String deleteFromCursorToEndScreen() {
+    public static String deleteFromCursorToEndScreen() {
         return ERASES_FROM_CURSOR_TO_END_OF_SCREEN;
     }
 
@@ -90,14 +90,14 @@ public class EraseSecuencesCodes {
      * Returns a escape sequence that deletes everything from the cursor position
      * to the beginning of the screen
      */
-    public String deleteFromCursorToBeginScreen() {
+    public static String deleteFromCursorToBeginScreen() {
         return ERASES_FROM_CURSOR_TO_BEGINNING_OF_SCREEN;
     }
 
     /**
      * Returns a escape sequence that erases the entire screen
      */
-    public String clearScreen() {
+    public static String clearScreen() {
         return EraseSecuencesCodes.CLEAR_SCREEN;
     }
 
@@ -105,7 +105,7 @@ public class EraseSecuencesCodes {
      * Returns a escape sequence that deletes everything from the cursor position
      * to the end of the line where it is located.
      */
-    public String deleteFromCursorToEndLine() {
+    public static String deleteFromCursorToEndLine() {
         return ERASES_FROM_CURSOR_TO_END_OF_CURRENT_LINE;
     }
 
@@ -113,7 +113,7 @@ public class EraseSecuencesCodes {
      * Returns a escape sequence that deletes everything from the cursor position
      * to the beginning of the line where it is located.
      */
-    public String deleteFromCursorToBeginLine() {
+    public static String deleteFromCursorToBeginLine() {
         return ERASES_FROM_CURSOR_TO_BEGINNING_OF_CURRENT_LINE;
     }
 
@@ -121,7 +121,7 @@ public class EraseSecuencesCodes {
      * Returns a escape sequence that erases possible characters from the current
      * line where the cursor is located.
      */
-    public String deleteLine() {
+    public static String deleteLine() {
         return ERASES_CURRENT_LINE;
     }
 

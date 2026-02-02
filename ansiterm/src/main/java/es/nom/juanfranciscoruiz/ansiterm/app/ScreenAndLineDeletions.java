@@ -96,7 +96,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 3, columnas);
         term.printAt(6, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.deleteLine();
+        term.deleteCursorLine();
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -115,7 +115,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.delChars(20);
+        term.eraseCharacters(20);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -124,7 +124,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.delCharsWithSpaces(20);
+        term.eraseCharsWithSpaces(20);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -153,7 +153,7 @@ public class ScreenAndLineDeletions {
 
         for (int i = 1; i <= filas; i++) {
             Thread.sleep(SHORT_DELAY);
-            term.moveTextDown(1);
+            term.scrollTextDown(1);
         }
 
         Thread.sleep(FOUR_SECONDS_DELAY);
@@ -168,7 +168,7 @@ public class ScreenAndLineDeletions {
 
         for (int i = 1; i <= filas; i++) {
             Thread.sleep(SHORT_DELAY);
-            term.moveTextUp(1);
+            term.scrollTextUp(1);
         }
 
         Thread.sleep(FOUR_SECONDS_DELAY);
