@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static es.nom.juanfranciscoruiz.utiles.TestUtils.printResults;
-import static es.nom.juanfranciscoruiz.utiles.TestUtils.printTitle;
+import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MenuManagerTest {
@@ -33,31 +32,29 @@ class MenuManagerTest {
 
     @Test
     void getMenu() throws MenuException {
-        printTitle("testGetMenu()", logger);
+        printTitletoLogAndConsole("testGetMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu expectedValue = instance.getMenu();
-        printResults(expectedValue,instance.getMenu(),logger);
+        printResultsToLogAndConsole(expectedValue,instance.getMenu(),logger);
         assertNotNull(expectedValue, "Menu should not be null after initialization");
     }
 
     @Test
     void setMenu() throws MenuException, MenuManagerException {
-        printTitle("testSetMenu()", logger);
+        printTitletoLogAndConsole("testSetMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu expectedValue = new Menu();
         instance.setMenu(expectedValue);
-        printResults(expectedValue,instance.getMenu(),logger);
+        printResultsToLogAndConsole(expectedValue,instance.getMenu(),logger);
         assertEquals(expectedValue, instance.getMenu(), "Menu should be the same after setting it");
     }
     
     @Test
     void setMenuWithNull() throws MenuException, MenuManagerException {
-        printTitle("testSetMenuWithNull()", logger);
+        printTitletoLogAndConsole("testSetMenuWithNull()", logger);
         MenuManager instance = new MenuManager();
         assertThrows(MenuManagerException.class, () -> instance.setMenu(null),
-            "MenuManagerException" +
-            " " +
-            "should be thrown");
+            "MenuManagerException should be thrown");
     }
 
     /**
@@ -65,7 +62,7 @@ class MenuManagerTest {
      */
     @Test
     void showMenu() throws Exception {
-        printTitle("testShowMenu()", logger);
+        printTitletoLogAndConsole("testShowMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu menu = new Menu();
         menu.setOptions(options);
@@ -77,7 +74,7 @@ class MenuManagerTest {
         String actualValue = tapSystemOut(() -> {
             instance.showMenu(false);
         });
-        printResults(expectedValue,actualValue,logger);
+        printResultsToLogAndConsole(expectedValue,actualValue,logger);
         assertEquals(expectedValue, actualValue);
     }
 
@@ -86,7 +83,7 @@ class MenuManagerTest {
      */
     @Test
     void showInvalidMenu() throws MenuManagerException, MenuException {
-        printTitle("testShowInvalidMenu()", logger);
+        printTitletoLogAndConsole("testShowInvalidMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu menu = new Menu();
         menu.setOptions(options);
@@ -114,7 +111,7 @@ class MenuManagerTest {
     @Test
     @StdIo({"2"})
     public void testAwaitResponse(StdIn in, StdOut out) throws Exception {
-        printTitle("testAwaitResponse()", logger);
+        printTitletoLogAndConsole("testAwaitResponse()", logger);
         String msg = "";
         Menu instance = new Menu();
         instance.setOptions(options);
@@ -124,7 +121,7 @@ class MenuManagerTest {
         Long expResult = 2L;
         instance.awaitResponse(msg);
         Long result = instance.getSelectedOption();
-        printResults(expResult,result,logger);
+        printResultsToLogAndConsole(expResult,result,logger);
         assertEquals(expResult, result, "The selected option should be 2");
     }
 
@@ -146,7 +143,7 @@ class MenuManagerTest {
     @Test
     @StdIo({"notValid"})
     public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException {
-        printTitle("testAwaitResponseForInvalidResponse()",logger);
+        printTitletoLogAndConsole("testAwaitResponseForInvalidResponse()",logger);
         String msg = "";
         Menu instance = new Menu();
         instance.setOptions(generateOptionsForChildMenus());
@@ -169,7 +166,7 @@ class MenuManagerTest {
     @Test
     @StdIo({"6"})
     public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException {
-        printTitle("testAwaitResponseForResponseOutOfRange()",logger);
+        printTitletoLogAndConsole("testAwaitResponseForResponseOutOfRange()",logger);
         String msg = "";
         Menu instance = new Menu();
         instance.setOptions(generateOptionsForChildMenus());
@@ -188,7 +185,7 @@ class MenuManagerTest {
      */
     @Test
     public void testAwaitResponseForNonValidMenuObject() throws MenuException {
-        printTitle("testAwaitResponseForNonValidMenuObject()", logger);
+        printTitletoLogAndConsole("testAwaitResponseForNonValidMenuObject()", logger);
         String msg = "";
         Menu instance = new Menu();
         instance.setIsRootMenu(false); //Not include the exit option

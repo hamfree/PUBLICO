@@ -107,4 +107,9 @@ public class Errors {
    * error reporting.
    */
   public static final String ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL = "Menu is null, cannot show menu";
+  /**
+   * Error message used to indicate that ANSI is not supported when attempting to show the menu.
+   */
+  public static String ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED = "Cannot show menu " +
+      "because ANSI is not supported";
 }

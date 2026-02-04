@@ -5,6 +5,9 @@ import java.util.List;
 
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import org.junit.jupiter.api.Test;
+
+import static es.nom.juanfranciscoruiz.utiles.TestUtils.printResultsToLogAndConsole;
+import static es.nom.juanfranciscoruiz.utiles.TestUtils.printTitletoLogAndConsole;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.slf4j.Logger;
@@ -25,7 +28,7 @@ public class MenuTest {
      */
     @Test
     public void testDefaultConstructor() throws MenuException {
-        printTitle("testDefaultConstructor()");
+        printTitletoLogAndConsole("testDefaultConstructor()", logger);
         Menu instance = new Menu();
         // Verifies default constructor initializes menu properties correctly
         assertAll(
@@ -40,7 +43,7 @@ public class MenuTest {
 
     @Test
     public void testConstructorWithParamsDefaults() throws MenuException {
-        printTitle("testConstructorWithParamsDefaults()");
+        printTitletoLogAndConsole("testConstructorWithParamsDefaults()", logger);
         Menu instance = new Menu(null, "", "msg", false);
         // Verifies constructor with null title uses default title
         assertAll(
@@ -57,7 +60,7 @@ public class MenuTest {
      */
     @Test
     public void testConstructorWithParamsRootAddsExitOption() throws MenuException {
-        printTitle("testConstructorWithParamsRootAddsExitOption()");
+        printTitletoLogAndConsole("testConstructorWithParamsRootAddsExitOption()", logger);
         List<String> options = generateOptionsForChildMenus();
         Menu instance = new Menu(options, "Title", "Msg", true);
         List<String> result = instance.getOptions();
@@ -70,7 +73,7 @@ public class MenuTest {
 
     @Test
     public void testConstructorWithParamsNullMessageThrows() {
-        printTitle("testConstructorWithParamsNullMessageThrows()");
+        printTitletoLogAndConsole("testConstructorWithParamsNullMessageThrows()", logger);
         assertThrows(
             MenuException.class, () -> new Menu(new ArrayList<>(), "Title", null, false),
             "The message can't be null");
@@ -78,7 +81,7 @@ public class MenuTest {
 
     @Test
     public void testConstructorWithSubmenusRootWithParentThrows() throws MenuException {
-        printTitle("testConstructorWithSubmenusRootWithParentThrows()");
+        printTitletoLogAndConsole("testConstructorWithSubmenusRootWithParentThrows()", logger);
         Menu parent = new Menu();
         assertThrows(MenuException.class, () ->
             new Menu(generateOptionsForChildMenus(), "Title", "Msg", true,
@@ -89,7 +92,7 @@ public class MenuTest {
 
     @Test
     public void testConstructorWithSubmenusNonRootWithoutParentThrows() {
-        printTitle("testConstructorWithSubmenusNonRootWithoutParentThrows()");
+        printTitletoLogAndConsole("testConstructorWithSubmenusNonRootWithoutParentThrows()", logger);
         assertThrows(MenuException.class, () ->
             new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
                 new ArrayList<>(), null),
@@ -102,7 +105,7 @@ public class MenuTest {
      */
     @Test
     public void testConstructorWithSubmenusSetsParentAndSubmenus() throws MenuException {
-        printTitle("testConstructorWithSubmenusSetsParentAndSubmenus()");
+        printTitletoLogAndConsole("testConstructorWithSubmenusSetsParentAndSubmenus()", logger);
         Menu parent = new Menu();
         List<Menu> subMenus = new ArrayList<>();
         Menu instance = new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
@@ -118,14 +121,14 @@ public class MenuTest {
      */
     @Test
     public void testGetOptionsForRootMenu() throws MenuException {
-        printTitle("testGetOptionsForRootMenu()");
+        printTitletoLogAndConsole("testGetOptionsForRootMenu()", logger);
         Menu instance = new Menu();
         instance.setIsRootMenu(true);
         instance.setOptions(generateOptionsForChildMenus());
         List<String> expResult = generateOptionsForChildMenus();
         expResult.addFirst("0. Exit the application");
         List<String> result = instance.getOptions();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result,
             "The first option should be '0. Exit the application'");
     }
@@ -135,20 +138,20 @@ public class MenuTest {
      */
     @Test
     public void testGetOptionsForNonRootMenu() throws MenuException {
-        printTitle("testGetOptionsForNonRootMenu()");
+        printTitletoLogAndConsole("testGetOptionsForNonRootMenu()", logger);
         Menu instance = new Menu();
         instance.setIsRootMenu(false);
         instance.setOptions(generateOptionsForChildMenus());
         List<String> expResult = generateOptionsForChildMenus();
         List<String> result = instance.getOptions();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result,
             "The list of options should be the same as the one set with setOptions()");
     }
 
     @Test
     public void testGetOptionsForNonRootEmptyMenu() throws MenuException {
-        printTitle("testGetOptionsForNonRootEmptyMenu()");
+        printTitletoLogAndConsole("testGetOptionsForNonRootEmptyMenu()", logger);
         Menu instance = new Menu();
         instance.setIsRootMenu(false);
         List<String> expResult = new ArrayList<>();
@@ -162,14 +165,14 @@ public class MenuTest {
      */
     @Test
     public void testSetOptions() throws MenuException {
-        printTitle("testSetOptions()");
+        printTitletoLogAndConsole("testSetOptions()", logger);
         List<String> opciones = generateOptionsForChildMenus();
         Menu instance = new Menu();
         instance.setIsRootMenu(false);
         instance.setOptions(opciones);
         List<String> expResult = generateOptionsForChildMenus();
         List<String> result = instance.getOptions();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result,
             "The list of options should be the same as the one set with setOptions()");
     }
@@ -179,7 +182,7 @@ public class MenuTest {
      */
     @Test
     public void testSetOptionsWithNullt() throws MenuException {
-        printTitle("testSetOptionsWithEmptyList()");
+        printTitletoLogAndConsole("testSetOptionsWithEmptyList()", logger);
         Menu instance = new Menu();
         instance.setIsRootMenu(false);
         MenuException ex = assertThrows(MenuException.class, () -> instance.setOptions(null),
@@ -192,7 +195,7 @@ public class MenuTest {
      */
     @Test
     public void testSetOptionsForRootMenu() throws MenuException {
-        printTitle("testSetOptionsForRootMenu()");
+        printTitletoLogAndConsole("testSetOptionsForRootMenu()", logger);
         Menu instance = new Menu();
         // At this point the method setIsRootMenu(true) would add the first option "0. Exit the
         // application"
@@ -202,7 +205,7 @@ public class MenuTest {
         // When setting options for a root menu, the first option should be "0. Exit the application"
         List<String> expResult = generateOptionsForRootMenu();
         List<String> result = instance.getOptions();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result,
             "The first option should be '0. Exit the application' and" +
             " the list of options should be the same as the one set with setOptions()");
@@ -213,11 +216,11 @@ public class MenuTest {
      */
     @Test
     public void testGetTitleOfAnUnsettedTitleProperty() throws MenuException {
-        printTitle("testGetTitleOfAnUnsettedTitleProperty()");
+        printTitletoLogAndConsole("testGetTitleOfAnUnsettedTitleProperty()", logger);
         Menu instance = new Menu();
         String expResult = "Untitled";
         String result = instance.getTitle();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The title should be 'Untitled'");
     }
 
@@ -226,13 +229,13 @@ public class MenuTest {
      */
     @Test
     public void testSetTitle() throws MenuException {
-        printTitle("testSetTitle()");
+        printTitletoLogAndConsole("testSetTitle()", logger);
         String titulo = "Application Test";
         Menu instance = new Menu();
         instance.setTitle(titulo);
         String expResult = "Application Test";
         String result = instance.getTitle();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The title should be 'Application Test'");
     }
 
@@ -241,7 +244,7 @@ public class MenuTest {
      */
     @Test
     public void testSetTitleWithNullValue() throws MenuException {
-        printTitle("testSetTitleWithNullValue()");
+        printTitletoLogAndConsole("testSetTitleWithNullValue()", logger);
         Menu instance = new Menu();
         MenuException ex = assertThrows(MenuException.class, () -> instance.setTitle(null),
             "The method setTitle() can't accept null values and throws an MenuException");
@@ -253,11 +256,11 @@ public class MenuTest {
      */
     @Test
     public void testGetMessage() throws MenuException {
-        printTitle("testGetMessage()");
+        printTitletoLogAndConsole("testGetMessage()", logger);
         Menu instance = new Menu();
         String expResult = "";
         String result = instance.getMessage();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The message should be empty");
     }
 
@@ -266,13 +269,13 @@ public class MenuTest {
      */
     @Test
     public void testSetMessage() throws MenuException {
-        printTitle("testSetMensaje()");
+        printTitletoLogAndConsole("testSetMensaje()", logger);
         String mensaje = "Un mensaje cualquiera";
         Menu instance = new Menu();
         instance.setMessage(mensaje);
         String result = instance.getMessage();
         String expResult = "Un mensaje cualquiera";
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The message should be 'Un mensaje cualquiera'");
     }
 
@@ -281,7 +284,7 @@ public class MenuTest {
      */
     @Test
     public void testSetMessageWithNullValue() throws MenuException {
-        printTitle("testSetMessageWithNullValue()");
+        printTitletoLogAndConsole("testSetMessageWithNullValue()", logger);
         Menu instance = new Menu();
         MenuException ex = assertThrows(MenuException.class, () -> instance.setMessage(null),
             "The method setMessage() can't accept null values and throws an MenuException");
@@ -293,11 +296,11 @@ public class MenuTest {
      */
     @Test
     public void testGetSelectedOptionOfANewMenu() throws MenuException {
-        printTitle("testGetSelectedOption()");
+        printTitletoLogAndConsole("testGetSelectedOption()", logger);
         Menu instance = new Menu();
         Long result = instance.getSelectedOption();
         Long expResult = 0L;
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result,
             "The selected option should be 0 (Exit the application)");
     }
@@ -307,13 +310,13 @@ public class MenuTest {
      */
     @Test
     public void testSetSelectedOption() throws MenuException {
-        printTitle("testSetSelectedOption()");
+        printTitletoLogAndConsole("testSetSelectedOption()", logger);
         Long opcionSeleccionada = 5L;
         Menu instance = new Menu();
         instance.setSelectedOption(opcionSeleccionada);
         Long expResult = 5L;
         Long result = instance.getSelectedOption();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The selected option should be 5");
     }
 
@@ -322,11 +325,11 @@ public class MenuTest {
      */
     @Test
     public void testIsRootMenu() throws MenuException {
-        printTitle("testIsRootMenu()");
+        printTitletoLogAndConsole("testIsRootMenu()", logger);
         Menu instance = new Menu();
         boolean expResult = false;
         boolean result = instance.getIsRootMenu();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The menu should not be a root menu");
     }
 
@@ -335,13 +338,13 @@ public class MenuTest {
      */
     @Test
     public void testSetIsRootMenu() throws MenuException {
-        printTitle("testSetEsMenuInicio()");
+        printTitletoLogAndConsole("testSetEsMenuInicio()", logger);
         boolean esMenuInicio = true;
         Menu instance = new Menu();
         instance.setIsRootMenu(esMenuInicio);
         boolean expResult = true;
         boolean result = instance.getIsRootMenu();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The menu should be a root menu");
     }
 
@@ -350,7 +353,7 @@ public class MenuTest {
      */
     @Test
     public void testGenerateView() throws MenuException {
-        printTitle("testGenerateView()");
+        printTitletoLogAndConsole("testGenerateView()", logger);
         final String SL = System.lineSeparator();
         Menu instance = new Menu();
         instance.setTitle("Title");
@@ -371,7 +374,7 @@ public class MenuTest {
                 +  SL
                 + "this is the message" + SL;
         String result = instance.getMenuView();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result, "The menu view should be generated correctly");
     }
 
@@ -382,7 +385,7 @@ public class MenuTest {
      */
     @Test
     public void testToString() throws MenuException {
-        printTitle("testToString()");
+        printTitletoLogAndConsole("testToString()", logger);
         Menu instance = new Menu();
         String expResult = "Menu{" +
                 "options=" + Util.CollectionToString(instance.getOptions(), true, 10) +
@@ -396,7 +399,7 @@ public class MenuTest {
                 ", subMenus=" + Util.CollectionToString(instance.getSubMenus(), true, 10) +
                 '}';
         String result = instance.toString();
-        printResults(expResult,result);
+        printResultsToLogAndConsole(expResult,result, logger);
         assertEquals(expResult, result,
             "The toString() method should return a string " +
             "representation of the object");
@@ -462,28 +465,5 @@ public class MenuTest {
         opciones.add("0. Exit the application");
         opciones.addAll(generateOptionsForChildMenus());
         return opciones;
-    }
-
-    /**
-     * Logs a debug message with the formatted title for the given method name.
-     *
-     * @param methodName The name of the method whose title is to be printed.
-     */
-    private void printTitle(String methodName) {
-        String test = "TEST " + methodName;
-        logger.debug(test);
-    }
-
-    /**
-     * Logs the actual and expected values for debugging purposes.
-     *
-     * @param expectedValue The expected value to be compared.
-     * @param actualValue The actual value obtained.
-     */
-    private void printResults(Object expectedValue, Object actualValue) {
-        String actVal = "Return value -> " + actualValue;
-        String expVal = "Expected value -> " + expectedValue;
-        logger.debug(actVal);
-        logger.debug(expVal);
     }
 }
