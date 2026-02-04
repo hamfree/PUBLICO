@@ -504,21 +504,19 @@ public class ANSITerm {
      * terminal, will be in bold.
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setBold(String msg) throws ANSITermException {
-        return getString(msg, BOLD_START, BOLD_END);
-    }
-
-    private String getString(String msg, String styleStart, String styleEnd) throws ANSITermException {
+    public String setBold(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append(styleStart)
-                    .append(msg)
-                    .append(ESC).append(styleEnd);
+            sb.append(ESC).append(BOLD_START)
+                .append(msg)
+                .append(ESC).append(BOLD_END);
         } else {
-            throw new ANSITermException(EX_NO_MSG);
+            throw new IllegalArgumentException(EX_NO_MSG);
         }
         return sb.toString();
     }
+
+    
 
     /**
      * Sets dimmed mode for the passed string
@@ -545,8 +543,17 @@ public class ANSITerm {
      * terminal, will be in italics.
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setItalic(String msg) throws ANSITermException {
-        return getString(msg, ColorsAndStylesCodes.ITALIC_START, ColorsAndStylesCodes.ITALIC_END);
+    public String setItalic(String msg) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (msg != null && !msg.isEmpty()) {
+            sb.append(ESC).append(ITALIC_START)
+                .append(msg)
+                .append(ESC).append(ITALIC_END);
+        } else {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        return sb.toString();
     }
 
     /**
@@ -557,8 +564,17 @@ public class ANSITerm {
      * terminal, will be underlined.
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setUnderline(String msg) throws ANSITermException {
-        return getString(msg, ColorsAndStylesCodes.UNDERLINE_START, ColorsAndStylesCodes.UNDERLINE_STOP);
+    public String setUnderline(String msg) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (msg != null && !msg.isEmpty()) {
+            sb.append(ESC).append(UNDERLINE_START)
+                .append(msg)
+                .append(ESC).append(UNDERLINE_STOP);
+        } else {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        return sb.toString();
     }
 
     /**
@@ -569,8 +585,17 @@ public class ANSITerm {
      * terminal, will be blinking.
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setBlink(String msg) throws ANSITermException {
-        return getString(msg, ColorsAndStylesCodes.BLINK_START, ColorsAndStylesCodes.BLINK_END);
+    public String setBlink(String msg) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (msg != null && !msg.isEmpty()) {
+            sb.append(ESC).append(BLINK_START)
+                .append(msg)
+                .append(ESC).append(BLINK_END);
+        } else {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        return sb.toString();
     }
 
     /**
@@ -581,8 +606,17 @@ public class ANSITerm {
      * terminal, will be inverted (foreground/background color swap).
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setInverse(String msg) throws ANSITermException {
-        return getString(msg, ColorsAndStylesCodes.REVERSE_START, ColorsAndStylesCodes.REVERSE_END);
+    public String setInverse(String msg) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (msg != null && !msg.isEmpty()) {
+            sb.append(ESC).append(REVERSE_START)
+                .append(msg)
+                .append(ESC).append(REVERSE_END);
+        } else {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        return sb.toString();
     }
 
     /**
@@ -594,8 +628,17 @@ public class ANSITerm {
      * occupied by the string is taken).
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setHidden(String msg) throws ANSITermException {
-        return getString(msg, ColorsAndStylesCodes.INVISIBLE_START, ColorsAndStylesCodes.INVISIBLE_END);
+    public String setHidden(String msg) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (msg != null && !msg.isEmpty()) {
+            sb.append(ESC).append(INVISIBLE_START)
+                .append(msg)
+                .append(ESC).append(INVISIBLE_END);
+        } else {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        return sb.toString();
     }
 
     /**
@@ -606,8 +649,17 @@ public class ANSITerm {
      * terminal, will appear struck through.
      * @throws ANSITermException In case any argument is not valid.
      */
-    public String setStrikeThrough(String msg) throws ANSITermException {
-        return getString(msg, ColorsAndStylesCodes.STRIKETHROUGH_START, ColorsAndStylesCodes.STRIKETHROUGH_END);
+    public String setStrikeThrough(String msg) throws IllegalArgumentException {
+        StringBuilder sb = new StringBuilder();
+        if (msg != null && !msg.isEmpty()) {
+            sb.append(ESC).append(STRIKETHROUGH_START)
+                .append(msg)
+                .append(ESC).append(STRIKETHROUGH_END);
+        } else {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        return sb.toString();
     }
 
     /**
@@ -709,40 +761,62 @@ public class ANSITerm {
      * @throws ANSITermException In case any argument is not valid.
      */
     public String setColor(Color color, String msg) throws ANSITermException {
-        return getString(color.getAsString(),msg, color.getAsString());
+        StringBuilder sb = new StringBuilder();
+        int iColor = Integer.parseInt(color.getAsString());
+        if ((iColor >= 30 || iColor <= 37)) {
+            if ((msg != null && !msg.isEmpty())) {
+                sb.append(ESC).append("[")
+                    .append(iColor)
+                    .append("m")
+                    .append(msg)
+                    .append(ESC)
+                    .append("[")
+                    .append(Color.DEFAULT.getAsString())
+                    .append("m");
+            } else {
+                throw new IllegalArgumentException(EX_NO_MSG);
+            }
+        } else {
+            throw new IllegalArgumentException(EX_NO_COL);
+        }
+        
+        return sb.toString();
     }
-
+    
     /**
      * Sets a color code from a 256-color palette to the string passed as
      * a parameter.
-     * 
+     *
      * @param color an integer between 0 and 255 containing the color code.
      * @param msg a string that will receive the ANSI sequence to give it the
      * indicated color.
      * @return a string with the appropriate ANSI sequence to be displayed in
      * the indicated color in the terminal.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setColor256(int color, String msg) throws ANSITermException {
+    public String setColor256(int color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
-        if (color < 0 || color > 255) throw new ANSITermException(EX_NO_COL);
-        return getStringFg(color, msg, sb, FOREGROUND_COLOR256);
-    }
-
-    private String getStringFg(int color, String msg, StringBuilder sb, String foregroundColor256) throws ANSITermException {
-        if (msg == null || msg.isEmpty()) throw new ANSITermException(EX_NO_MSG);
-        sb.append(ESC);
-        sb.append(foregroundColor256);
-        sb.append(color);
-        sb.append("m");
-        sb.append(msg);
-        sb.append(ESC);
-        sb.append("[");
-        sb.append(DEFAULT.getAsString());
-        sb.append("m");
+        
+        if (color < 0 || color > 255) {
+            throw new IllegalArgumentException(EX_NO_COL);
+        }
+        
+        if (msg == null || msg.isEmpty()) {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        sb.append(ESC).append(FOREGROUND_COLOR256)
+            .append(color)
+            .append("m")
+            .append(msg)
+            .append(ESC)
+            .append("[")
+            .append(Color.DEFAULT.getAsString())
+            .append("m");
+        
         return sb.toString();
     }
-
+    
     /**
      * Sets a color code from a 256-color palette for the background of the
      * string passed as a parameter.
@@ -751,14 +825,31 @@ public class ANSITerm {
      * background the indicated color.
      * @return a string with the appropriate ANSI sequence that will show the
      * indicated color in its background in the terminal.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setBackgroundColor256(int color, String msg) throws ANSITermException {
+    public String setBackgroundColor256(int color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
-        if (color <= 0 || color > 255) throw new ANSITermException(EX_NO_COL);
-        return getStringFg(color, msg, sb, ColorsAndStylesCodes.BACKGROUND_COLOR256);
+        
+        if (color <= 0 || color > 255) {
+            throw new IllegalArgumentException(EX_NO_COL);
+        }
+        
+        if (msg == null || msg.isEmpty()) {
+            throw new IllegalArgumentException(EX_NO_MSG);
+        }
+        
+        sb.append(ESC).append(BACKGROUND_COLOR256)
+            .append(color)
+            .append("m")
+            .append(msg)
+            .append(ESC)
+            .append("[")
+            .append(Color.DEFAULT.getAsString())
+            .append("m");
+        
+        return sb.toString();
     }
-
+    
     /**
      * Sets the background color of the passed string
      *
@@ -766,30 +857,32 @@ public class ANSITerm {
      * @param msg String with the string to color
      * @return a String with the ANSI escape sequences that color the string
      * as requested
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setBackgroundColor(BGColor color, String msg) throws ANSITermException {
-        return getStringBg(msg, color.getAsString(), color);
-    }
-
-    private String getStringBg(String msg, String asString, BGColor color) throws ANSITermException {
+    public String setBackgroundColor(BGColor color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
-        int iColor = Integer.parseInt(asString);
-        if ((msg != null && !msg.isEmpty())) {
-            sb.append(ESC);
-            sb.append("[");
-            sb.append(iColor);
-            sb.append("m");
-            sb.append(msg);
-            sb.append(ESC);
-            sb.append("[");
-            sb.append(DEFAULT.getAsString());
-            sb.append("m");
+        int iColor = Integer.parseInt(color.getAsString());
+        if ((iColor >= 40 || iColor <= 47)) {
+            if ((msg != null && !msg.isEmpty())) {
+                sb.append(ESC).append("[")
+                    .append(iColor)
+                    .append("m")
+                    .append(msg)
+                    .append(ESC)
+                    .append("[")
+                    .append(DEFAULT.getAsString())
+                    .append("m");
+            } else {
+                throw new IllegalArgumentException(EX_NO_MSG);
+            }
         } else {
-            throw new ANSITermException(EX_NO_MSG);
+            throw new IllegalArgumentException(EX_NO_BACKCOL);
         }
+        
         return sb.toString();
     }
+
+
 
     /**
      * Sets the foreground and background colors of the passed string
@@ -983,9 +1076,7 @@ public class ANSITerm {
     public void setWindowWidth80Columns(){
         System.out.print(WindowWidth.getEsForWidth80Columns());
     }
-
-
-
+    
     @Override
     public String toString() {
         return "ANSITerm{" +

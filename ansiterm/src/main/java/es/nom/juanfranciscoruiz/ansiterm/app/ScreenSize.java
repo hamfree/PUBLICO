@@ -27,6 +27,7 @@ public class ScreenSize {
    * @throws Exception If an error occurs during execution.
    */
   void perform(ANSITerm term) throws Exception {
+    String msg;
     String resp = "";
     while (!resp.equals("q")) {
       term.clearScreen();
@@ -39,11 +40,8 @@ public class ScreenSize {
       Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in));
       resp = sc.nextLine();
       TerminalSize ts = term.getOsCall().getTerminalSize();
-      term.printAt("The screen size is:"
-          + ts.getLines()
-          + "lines and "
-          + ts.getColumns()
-          + " columns.", ts.getLines() - 2, 1);
+      msg = "The screen size is:%d lines and %d columns.".formatted(ts.getLines(), ts.getColumns());
+      term.printAt(msg,ts.getLines() - 2, 1);
       pauseWithMessage(0, null);
     }
   }

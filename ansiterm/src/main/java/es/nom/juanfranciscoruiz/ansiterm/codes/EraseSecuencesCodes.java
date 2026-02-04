@@ -79,7 +79,7 @@ public class EraseSecuencesCodes {
     }
 
     /**
-     * Returns a escape sequence that deletes everything from the cursor position
+     * Returns an escape sequence that deletes everything from the cursor position
      * to the end of the screen
      */
     public static String deleteFromCursorToEndScreen() {
@@ -87,7 +87,7 @@ public class EraseSecuencesCodes {
     }
 
     /**
-     * Returns a escape sequence that deletes everything from the cursor position
+     * Returns an escape sequence that deletes everything from the cursor position
      * to the beginning of the screen
      */
     public static String deleteFromCursorToBeginScreen() {
@@ -95,14 +95,14 @@ public class EraseSecuencesCodes {
     }
 
     /**
-     * Returns a escape sequence that erases the entire screen
+     * Returns an escape sequence that erases the entire screen
      */
     public static String clearScreen() {
         return EraseSecuencesCodes.CLEAR_SCREEN;
     }
 
     /**
-     * Returns a escape sequence that deletes everything from the cursor position
+     * Returns an escape sequence that deletes everything from the cursor position
      * to the end of the line where it is located.
      */
     public static String deleteFromCursorToEndLine() {
@@ -110,7 +110,7 @@ public class EraseSecuencesCodes {
     }
 
     /**
-     * Returns a escape sequence that deletes everything from the cursor position
+     * Returns an escape sequence that deletes everything from the cursor position
      * to the beginning of the line where it is located.
      */
     public static String deleteFromCursorToBeginLine() {
@@ -118,7 +118,7 @@ public class EraseSecuencesCodes {
     }
 
     /**
-     * Returns a escape sequence that erases possible characters from the current
+     * Returns an escape sequence that erases possible characters from the current
      * line where the cursor is located.
      */
     public static String deleteLine() {
@@ -126,7 +126,7 @@ public class EraseSecuencesCodes {
     }
 
     /**
-     * Returns a escape sequence that deletes a character from the current position
+     * Returns an escape sequence that deletes a character from the current position
      *
      * @return a string with the escape sequence to delete a character
      */

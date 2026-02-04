@@ -97,9 +97,4 @@ public enum Color {
     public String getAsString() {
         return String.valueOf(this.code);
     }
-
-    @Override
-    public String toString() {
-        return "Color{'ANSI escape codes for foreground colors'}";
-    }
 }

@@ -60,7 +60,7 @@ public class RecoverCursorPosition {
         pauseForMilliseconds(retardo);
         term.printAt("Cursor position: column : ", screenSize.getLines() - 2, 1);
         term.deleteFromCursorToEndLine();
-        term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLines() - 2, 31);
+        term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLines() - 2, 32);
         pauseForMilliseconds(retardo);
       }
     }
