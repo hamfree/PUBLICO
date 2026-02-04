@@ -1,5 +1,8 @@
 name: release version
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
