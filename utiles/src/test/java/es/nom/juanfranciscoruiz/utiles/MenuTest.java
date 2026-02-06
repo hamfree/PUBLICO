@@ -36,7 +36,18 @@ public class MenuTest {
             () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
             () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
             () -> assertEquals("", instance.getMessage(), "...testing default message"),
-            () -> assertEquals("", instance.getMenuView(), "...testing default menu view"),
+            () -> {
+                assertEquals("""
+                                \r
+                                *************\r
+                                  Untitled  \r
+                                *************\r
+                                \r
+                                \r
+                                \r
+                                """,
+                        instance.getMenuView(), "...testing default menu view");
+            },
             () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
         );
     }
@@ -47,11 +58,11 @@ public class MenuTest {
         Menu instance = new Menu(null, "", "msg", false);
         // Verifies constructor with null title uses default title
         assertAll(
-            () -> assertNotNull(instance.getOptions()),
-            () -> assertTrue(instance.getOptions().isEmpty()),
-            () -> assertEquals("Untitled", instance.getTitle()),
-            () -> assertEquals("msg", instance.getMessage()),
-            () -> assertFalse(instance.getIsRootMenu())
+            () -> assertNotNull(instance.getOptions(), "...testing not null options"),
+            () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
+            () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
+            () -> assertEquals("msg", instance.getMessage(), "...testing default message"),
+            () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
         );
     }
 
@@ -65,9 +76,9 @@ public class MenuTest {
         Menu instance = new Menu(options, "Title", "Msg", true);
         List<String> result = instance.getOptions();
         assertAll(
-            () -> assertEquals("0. Exit the application", result.getFirst()),
-            () -> assertEquals(4, result.size()),
-            () -> assertEquals("1. Option One", result.get(1))
+            () -> assertEquals("0. Exit the application", result.getFirst(), "...testing exit option"),
+            () -> assertEquals(4, result.size(), "...testing options size"),
+            () -> assertEquals("1. Option One", result.get(1), "...testing option one")
         );
     }
 

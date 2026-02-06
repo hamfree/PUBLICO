@@ -70,6 +70,7 @@ class MenuManagerTest {
         menu.setMessage("Select an option:");
         menu.setTitle("Testing the showMenu method");
         instance.setMenu(menu);
+        menu.generateMenuView();
         String expectedValue = menu.getMenuView();
         String actualValue = tapSystemOut(() -> {
             instance.showMenu(false);

@@ -336,4 +336,24 @@ public class UtilTest {
     }
     return array;
   }
+
+  @Test
+  void pause() {
+  }
+
+  @Test
+  void pauseWithoutMessage() {
+  }
+
+  @Test
+  void warn() {
+  }
+
+  @Test
+  void info() {
+  }
+
+  @Test
+  void error() {
+  }
 }

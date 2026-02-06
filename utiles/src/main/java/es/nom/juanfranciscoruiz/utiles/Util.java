@@ -1,11 +1,13 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import org.slf4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.*;
 
-import static es.nom.juanfranciscoruiz.utiles.IO.prtln;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
 
 /**
  * Class with various utility methods frequently used by other classes in the
@@ -14,6 +16,14 @@ import static es.nom.juanfranciscoruiz.utiles.IO.prtln;
  * @author Juan F. Ruiz
  */
 public class Util {
+    /**
+     * A constant representing an indefinite duration of time. This value can be
+     * used in methods or logic that require an infinite or undefined wait period.
+     * It is often employed as a parameter for methods to indicate that the
+     * operation should wait indefinitely or until explicitly interrupted by the
+     * user or another event.
+     */
+    public static final Long FOREVER = 0L;
     /**
      * We prevent it from being instantiated (Utility class)
      */
@@ -187,8 +197,8 @@ public class Util {
         if (msg == null || msg.isEmpty()) {
             msg = "\nPress <ENTER> to continue...";
         }
-        if (milliseconds == 0) {
-            prtln(1,msg);
+        if (milliseconds == FOREVER) {
+            prtln(2,msg);
             Scanner sc = new Scanner(new BufferedInputStream(System.in));
             sc.nextLine();
             return;
@@ -198,20 +208,86 @@ public class Util {
     }
     
     /**
-     * Pauses the program for a specified number of milliseconds. If 0 is
+     * Pauses the program for a specified number of milliseconds. If FOREVER is
      * specified, it waits for the user to press ENTER. No message is
      * displayed.
      *
-     * @param milliseconds The duration of the pause in milliseconds. If 0,
+     * @param milliseconds The duration of the pause in milliseconds. If FOREVER,
      * the function waits for the user to press ENTER.
      * @throws Exception In case of any error.
      */
     public static void pauseWithoutMessage(long milliseconds) throws Exception {
-        if (milliseconds == 0) {
+        if (milliseconds == FOREVER) {
             Scanner sc = new Scanner(new BufferedInputStream(System.in));
             sc.nextLine();
             return;
         }
         Thread.sleep(milliseconds);
+    }
+
+    /**
+     * Logs a warning message if the provided logger and message are valid. The method ensures
+     * the message is properly sanitized by trimming whitespace, removing newlines, carriage
+     * returns, and tabs, and condensing multiple spaces into a single space before logging.
+     *
+     * @param logger the logger instance to be used for logging the warning message. If null,
+     *               the method will do nothing.
+     * @param msg the warning message to log. If null or empty, the method will do nothing.
+     */
+    public static void warn(Logger logger, String msg) {
+        if (logger != null && logger.isDebugEnabled()) {
+            if (msg != null && !msg.isEmpty()) {
+                msg = msg.trim();
+                msg = msg.replaceAll("\n", " ");
+                msg = msg.replaceAll("\r", " ");
+                msg = msg.replaceAll("\t", " ");
+                msg = msg.replaceAll("  +", " ");
+                logger.warn(msg);
+            }
+        }
+    }
+
+    /**
+     * Logs an informational message if the provided logger and message are valid. The method
+     * ensures the message is properly sanitized by trimming whitespace, removing newlines,
+     * carriage returns, and tabs, and condensing multiple spaces into a single space before logging.
+     *
+     * @param logger the logger instance to be used for logging the informational message. If null,
+     *               the method will do nothing.
+     * @param msg the informational message to log. If null or empty, the method will do nothing.
+     */
+    public static void info(Logger logger, String msg) {
+        if (logger != null && logger.isDebugEnabled()) {
+            if (msg != null && !msg.isEmpty()) {
+                msg = msg.trim();
+                msg = msg.replaceAll("\n", " ");
+                msg = msg.replaceAll("\r", " ");
+                msg = msg.replaceAll("\t", " ");
+                msg = msg.replaceAll("  +", " ");
+                logger.info(msg);
+            }
+        }
+    }
+
+    /**
+     * Logs an error message if the provided logger and message are valid. The method ensures
+     * the message is properly sanitized by trimming whitespace, removing newlines, carriage
+     * returns, and tabs, and condensing multiple spaces into a single space before logging.
+     *
+     * @param logger the logger instance to be used for logging the error message. If null,
+     *               the method will do nothing.
+     * @param msg the error message to log. If null or empty, the method will do nothing.
+     */
+    public static void error(Logger logger, String msg){
+        if (logger != null && logger.isDebugEnabled()) {
+            if (msg != null && !msg.isEmpty()) {
+                msg = msg.trim();
+                msg = msg.replaceAll("\n", " ");
+                msg = msg.replaceAll("\r", " ");
+                msg = msg.replaceAll("\t", " ");
+                msg = msg.replaceAll("  +", " ");
+                logger.error(msg);
+            }
+        }
     }
 }
