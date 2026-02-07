@@ -1,6 +1,7 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,9 +11,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
+import static es.nom.juanfranciscoruiz.utiles.Util.dbg;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.slf4j.Logger;
@@ -26,7 +31,17 @@ import org.slf4j.LoggerFactory;
 public class UtilTest {
   
   public final static Logger logger = LoggerFactory.getLogger(UtilTest.class);
-  
+
+  @BeforeAll
+  static void beforeAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting UtilTest" + System.lineSeparator(), logger);
+  }
+
+  @AfterAll
+  static void afterAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Ending UtilTest" + System.lineSeparator(), logger);
+  }
+
   /**
    * Tests that features are returned as map
    */

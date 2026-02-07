@@ -1,9 +1,13 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
+import static es.nom.juanfranciscoruiz.utiles.Util.dbg;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junitpioneer.jupiter.StdIn;
@@ -11,6 +15,8 @@ import org.junitpioneer.jupiter.StdIo;
 import org.junitpioneer.jupiter.StdOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
 
 /**
  * Test class for the IO utility class.
@@ -29,7 +35,17 @@ public class IOimplTest {
   private static final String ERR_NULL = "Null parameters!";
   private static final String ERR_SOME_NULL = "One of the parameters is null!";
   private static final String ERR_LONG = "The line length is less than the message length";
-  
+
+  @BeforeAll
+  static void beforeAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting IOimplTest" + System.lineSeparator(), logger);
+  }
+
+  @AfterAll
+  static void afterAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Ending IOimplTest" + System.lineSeparator(),logger);
+  }
+
   /**
    * Tests the prt method with multiple string arguments.
    * Verifies that arguments are concatenated without separators.

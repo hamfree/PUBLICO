@@ -11,6 +11,8 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
  * The ConvertMapsToString class provides methods to convert maps into their string
  * representations, handling both simple maps and maps with more complex structures.
  * It relies on external utilities for formatting and type conversion.
+ * <p>
+ * Performs the the second and third options of the menu shown in Demo class.
  */
 public class ConvertMapsToString {
     /**

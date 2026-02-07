@@ -2,6 +2,8 @@ package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.StdIn;
@@ -11,11 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
+import static es.nom.juanfranciscoruiz.utiles.Util.dbg;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MenuManagerTest {
@@ -23,6 +27,25 @@ class MenuManagerTest {
     public final static Logger logger = LoggerFactory.getLogger(MenuManagerTest.class);
     List<String> options = new ArrayList<>();
 
+    @BeforeAll
+    static void beforeAll() {
+        printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting MenuManagerTest" + System.lineSeparator(), logger);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Ending MenuManagerTest" + System.lineSeparator(), logger);
+    }
+
+
+    public MenuManagerTest() {
+    }
+
+    /**
+     * Sets up the test fixture.
+     *
+     * Called before every test case method.
+     */
     @BeforeEach
     void setUp() {
         options.add("1. Option One");

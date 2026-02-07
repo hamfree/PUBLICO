@@ -290,4 +290,44 @@ public class Util {
             }
         }
     }
+
+    /**
+     * Logs a debug-level message after performing basic transformations to ensure readability.
+     * The method trims the input message, replaces newlines, carriage returns, tabs,
+     * and multiple spaces with a single space, and then logs the processed message using
+     * the provided logger if debug logging is enabled.
+     *
+     * @param logger the logger used to log the message; if null, logging is bypassed
+     * @param msg    the message to be logged; if null or empty, the method does nothing
+     */
+    public static void dbg(Logger logger, String msg) {
+        if (logger != null && logger.isDebugEnabled()) {
+            if (msg != null && !msg.isEmpty()) {
+                msg = msg.trim();
+                msg = msg.replaceAll("\n", " ");
+                msg = msg.replaceAll("\r", " ");
+                msg = msg.replaceAll("\t", " ");
+                msg = msg.replaceAll("  +", " ");
+                logger.debug(msg);
+            }
+        }
+    }
+
+    /**
+     * Logs a debug-level message after performing basic transformations to ensure readability.
+     * The method trims the input message, replaces newlines, carriage returns, tabs,
+     * and multiple spaces with a single space, and then logs the processed message using
+     * the provided logger if debug logging is enabled.
+     *
+     * @param logger the logger used to log the message; if null, logging is bypassed
+     * @param msg    the message to be logged; if null or empty, the method does nothing
+     * @param params the parameters to be formatted into the message
+     */
+    public static void dbg(Logger logger, String msg, Object... params) {
+        if (logger != null) {
+            logger.debug(msg, params);
+        } else {
+            System.out.println(String.format(msg, params));
+        }
+    }
 }

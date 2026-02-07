@@ -149,7 +149,7 @@ public class MenuManager {
             msg = MenuConstants.DEFAULT_MSG;
         }
 
-        IO.prt(msg);
+        prt(msg);
 
         // Reads user input from console safely
         try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {

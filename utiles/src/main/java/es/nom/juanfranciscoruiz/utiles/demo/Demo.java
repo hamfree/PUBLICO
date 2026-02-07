@@ -81,11 +81,11 @@ public class Demo {
         MenuManager mm;
         Long response = Menu.WRONG_OPTION;
         String msg = "Select an option:";
-        theOptions.add("1. Show the sample objects");
-        theOptions.add("2. Convert a simple map into its string representation");
-        theOptions.add("3. Convert a complex map into its string representation");
-        theOptions.add("4. Converting types");
-        theOptions.add("5. Miscellaneous utilities");
+        theOptions.add("Show the sample objects");
+        theOptions.add("Convert a simple map into its string representation");
+        theOptions.add("Convert a complex map into its string representation");
+        theOptions.add("Converting types");
+        theOptions.add("Miscellaneous utilities");
 
         try {
             theMenu = new Menu();

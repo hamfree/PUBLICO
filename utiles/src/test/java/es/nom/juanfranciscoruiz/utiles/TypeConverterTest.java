@@ -2,6 +2,7 @@ package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
@@ -40,7 +43,18 @@ public class TypeConverterTest {
   public final static String NULL = IOimpl.getNULL();
   public final static String SEP = IOimpl.getSEP();
   public final static String SL = IOimpl.getLS();
-  
+
+
+  @BeforeAll
+  static void beforeAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting TypeConverterTest"  + System.lineSeparator(), logger);
+  }
+
+  @AfterAll
+  static void afterAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Ending TypeConverterTest"  + System.lineSeparator(), logger);
+  }
+
   /**
    * Tests collection conversion to list
    */

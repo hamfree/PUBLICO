@@ -1,10 +1,13 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
@@ -23,6 +26,16 @@ public class TypesTest {
   public final static Logger logger = LoggerFactory.getLogger(TypesTest.class);
   
   public TypesTest() {
+  }
+
+  @BeforeAll
+  static void beforeAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting TypesTest" + System.lineSeparator(), logger);
+  }
+
+  @AfterAll
+  static void afterAll() {
+    printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Ending TypesTest" + System.lineSeparator(), logger);
   }
   
   @Test
