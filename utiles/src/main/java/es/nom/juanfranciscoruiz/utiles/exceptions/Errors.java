@@ -89,8 +89,12 @@ public class Errors {
    * error reporting.
    */
   public static final String ERR_OPTION_NULL = "The option (title) to remove can't be null or empty!";
-
-
+  /**
+   * Error message used to indicate that a null list was provided when attempting to
+   * set the submenus list for a menu.
+   */
+  public static String ERR_MENU_LISTSUBMENUS_IS_NULL = "The submenus list can't be null";
+  
   // Errors for MenuManager operations
   /**
    * Error message used to indicate that a null menu object was provided when attempting to
@@ -99,7 +103,7 @@ public class Errors {
    * error reporting.
    */
   public static final String ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL = "Menu is null, cannot read user response";
-
+  
   /**
    * Error message used to indicate that a null menu object was provided when attempting to
    * show the menu. This constant is primarily used for exception
@@ -112,4 +116,5 @@ public class Errors {
    */
   public static String ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED = "Cannot show menu " +
       "because ANSI is not supported";
+  
 }

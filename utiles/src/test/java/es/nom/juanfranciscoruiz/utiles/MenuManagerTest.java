@@ -19,7 +19,6 @@ import java.util.List;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
-import static es.nom.juanfranciscoruiz.utiles.Util.dbg;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MenuManagerTest {
@@ -43,7 +42,6 @@ class MenuManagerTest {
 
     /**
      * Sets up the test fixture.
-     *
      * Called before every test case method.
      */
     @BeforeEach
@@ -73,7 +71,7 @@ class MenuManagerTest {
     }
     
     @Test
-    void setMenuWithNull() throws MenuException, MenuManagerException {
+    void setMenuWithNull() throws MenuException {
         printTitletoLogAndConsole("testSetMenuWithNull()", logger);
         MenuManager instance = new MenuManager();
         assertThrows(MenuManagerException.class, () -> instance.setMenu(null),
@@ -106,7 +104,7 @@ class MenuManagerTest {
      * Tests exception on empty menu options
      */
     @Test
-    void showInvalidMenu() throws MenuManagerException, MenuException {
+    void showInvalidMenu() throws MenuException {
         printTitletoLogAndConsole("testShowInvalidMenu()", logger);
         MenuManager instance = new MenuManager();
         Menu menu = new Menu();
@@ -137,14 +135,17 @@ class MenuManagerTest {
     public void testAwaitResponse(StdIn in, StdOut out) throws Exception {
         printTitletoLogAndConsole("testAwaitResponse()", logger);
         String msg = "";
-        Menu instance = new Menu();
-        instance.setOptions(options);
-        instance.setIsRootMenu(true);
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
+        
+        Menu menu = new Menu();
+        menu.setOptions(options);
+        menu.setIsRootMenu(true);
+        menu.setMessage("Select an option:");
+        menu.setTitle("Testing the awaitResponse() method");
         Long expResult = 2L;
+        MenuManager instance = new MenuManager();
+        instance.setMenu(menu);
         instance.awaitResponse(msg);
-        Long result = instance.getSelectedOption();
+        Long result = menu.getSelectedOption();
         printResultsToLogAndConsole(expResult,result,logger);
         assertEquals(expResult, result, "The selected option should be 2");
     }
@@ -166,14 +167,16 @@ class MenuManagerTest {
      */
     @Test
     @StdIo({"notValid"})
-    public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException {
+    public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testAwaitResponseForInvalidResponse()",logger);
         String msg = "";
-        Menu instance = new Menu();
-        instance.setOptions(generateOptionsForChildMenus());
-        instance.setIsRootMenu(true);
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
+        Menu menu = new Menu();
+        menu.setOptions(generateOptionsForChildMenus());
+        menu.setIsRootMenu(true);
+        menu.setMessage("Select an option:");
+        menu.setTitle("Testing the awaitResponse() method");
+        MenuManager instance = new MenuManager();
+        instance.setMenu(menu);
 
         MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
                 "The user answer with an invalid response (not a number) and throws an MenuException");
@@ -189,14 +192,17 @@ class MenuManagerTest {
      */
     @Test
     @StdIo({"6"})
-    public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException {
+    public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testAwaitResponseForResponseOutOfRange()",logger);
         String msg = "";
-        Menu instance = new Menu();
-        instance.setOptions(generateOptionsForChildMenus());
-        instance.setIsRootMenu(true);
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
+        Menu menu = new Menu();
+        menu.setOptions(generateOptionsForChildMenus());
+        menu.setIsRootMenu(true);
+        menu.setMessage("Select an option:");
+        menu.setTitle("Testing the awaitResponse() method");
+        
+        MenuManager instance = new MenuManager();
+        instance.setMenu(menu);
 
         MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
                 "The user answer with an invalid response (out of range) and throws an MenuException");
@@ -208,27 +214,30 @@ class MenuManagerTest {
      * Tests exception on invalid menu object
      */
     @Test
-    public void testAwaitResponseForNonValidMenuObject() throws MenuException {
+    public void testAwaitResponseForNonValidMenuObject() throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testAwaitResponseForNonValidMenuObject()", logger);
         String msg = "";
-        Menu instance = new Menu();
-        instance.setIsRootMenu(false); //Not include the exit option
-        instance.setMessage("Select an option:");
-        instance.setTitle("Testing the awaitResponse() method");
+        Menu menu = new Menu();
+        menu.setIsRootMenu(false); //Not include the exit option
+        menu.setMessage("Select an option:");
+        menu.setTitle("Testing the awaitResponse() method");
 
+        MenuManager instance = new MenuManager();
+        instance.setMenu(menu);
+        
         /*
          We must use reflexion to bypass the private field validation. In normal cases, the
          options property should be set by the client class and validated by the constructor
-         and the setter methods. This is an exceptional case for testing purposes.
+         and the setter methods. This is an **exceptional case** for testing purposes.
          */
         if (logger.isDebugEnabled()) logger.debug("Setting options to null with api reflection!");
         try {
-            Class<?> clazz = instance.getClass();
+            Class<?> clazz = menu.getClass();
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
                 if (field.getName().equals("options")) {
                     field.setAccessible(true);
-                    field.set(instance,null); // set the List<String> of field 'options' to null
+                    field.set(menu,null); // set the List<String> of field 'options' to null
                 }
             }
         } catch (IllegalAccessException e) {
@@ -236,7 +245,7 @@ class MenuManagerTest {
         }
 
         if (logger.isDebugEnabled()) logger.debug("Value of 'options' field: {}",
-                instance.getOptions() != null ? "not null" :"null");
+                menu.getOptions() != null ? "not null" :"null");
         MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
                 "The user answer with an invalid response (not a number) and throws an MenuException");
         if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());

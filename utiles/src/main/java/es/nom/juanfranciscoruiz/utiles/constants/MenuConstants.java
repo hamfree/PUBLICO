@@ -5,6 +5,7 @@ package es.nom.juanfranciscoruiz.utiles.constants;
  */
 public class MenuConstants {
   /**
+   
    * Private constructor to prevent instantiation.
    */
   private MenuConstants() { }
@@ -26,4 +27,8 @@ public class MenuConstants {
    * Constant for the wrong option.
    */
   public static final Long WRONG_OPTION = -1L;
+  /**
+   * Constant for the option to go back to the parent menu.
+   */
+  public static final String BACKTOPARENTMENU = "0. [VOLVER]";
 }
