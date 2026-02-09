@@ -10,10 +10,27 @@ import java.util.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
 
 /**
- * Class with various utility methods frequently used by other classes in the
- * application
+ * A utility class containing various static methods for system information retrieval,
+ * collection processing, logging, and program flow control. This class is designed to
+ * prevent instantiation.
  *
- * @author Juan F. Ruiz
+ * Fields:
+ * - `FOREVER`: A constant used to specify an indefinite pause.
+ *
+ * Methods:
+ * - `getFeaturesAsMap()`: Returns system resource details including CPU cores,
+ * free memory, maximum usable memory, and total memory.
+ * - `getSystemPropertiesAsMap()`: Returns a map of system properties.
+ * - `getAllCharsets()`: Retrieves all charsets supported by the current JVM.
+ * - `CollectionToString(Object obj, boolean showValues, int maxElements)`: Processes and returns
+ * string representations of lists or maps in a specified format or detail level.
+ * - `pause(long milliseconds, String msg)`: Pauses program execution with a custom message or default prompt.
+ * - `pauseWithoutMessage(long milliseconds)`: Pauses program execution without displaying any message.
+ * - `warn(Logger logger, String msg)`: Logs a sanitized warning message using the specified logger.
+ * - `info(Logger logger, String msg)`: Logs a sanitized informational message using the specified logger.
+ * - `error(Logger logger, String msg)`: Logs a sanitized error message using the specified logger.
+ * - `dbg(Logger logger, String msg)`: Logs a sanitized debug-level message using the specified logger.
+ * - `dbg(Logger logger, String msg, Object... params)`: Logs a sanitized formatted debug-level message with parameters.
  */
 public class Util {
     /**

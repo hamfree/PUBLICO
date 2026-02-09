@@ -9,14 +9,13 @@ import es.nom.juanfranciscoruiz.utiles.*;
 import es.nom.juanfranciscoruiz.utiles.demo.options.ConvertMapsToString;
 import es.nom.juanfranciscoruiz.utiles.demo.options.ConvertTypes;
 import es.nom.juanfranciscoruiz.utiles.demo.options.MiscellaneousUtilities;
+import es.nom.juanfranciscoruiz.utiles.exceptions.MenuErrors;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
-import static es.nom.juanfranciscoruiz.utiles.exceptions.Errors.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
 
 /**
@@ -110,9 +109,9 @@ public class Demo {
             } catch (Exception e) {
                 error(logger, e.getMessage());
                 if (e instanceof MenuException) {
-                    if (e.getMessage().contains(ERR_BLANK_NULL) ||
-                            e.getMessage().contains(ERR_NO_NUMBER) ||
-                            e.getMessage().contains(ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
+                    if (e.getMessage().contains(MenuErrors.ERR_BLANK_NULL) ||
+                            e.getMessage().contains(MenuErrors.ERR_NO_NUMBER) ||
+                            e.getMessage().contains(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
                         theMenu.setMessage(e.getMessage());
                     }
                 }

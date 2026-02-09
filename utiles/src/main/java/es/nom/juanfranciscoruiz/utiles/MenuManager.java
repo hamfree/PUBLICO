@@ -1,9 +1,7 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.constants.MenuConstants;
-import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
-import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
-import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
+import es.nom.juanfranciscoruiz.utiles.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +9,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.error;
-import static es.nom.juanfranciscoruiz.utiles.exceptions.Errors.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
 
 /**
@@ -46,8 +43,8 @@ public class MenuManager {
      */
     public MenuManager(Menu menu) throws MenuManagerException {
         if (menu == null) {
-            error(logger,ERR_MENU_NULL);
-            throw new MenuManagerException(ERR_MENU_NULL);
+            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            throw new MenuManagerException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
         }
         this.menu = menu;
     }
@@ -58,8 +55,8 @@ public class MenuManager {
 
     public void setMenu(Menu menu) throws MenuManagerException {
         if (menu == null) {
-            error(logger,ERR_MENU_NULL);
-            throw new MenuManagerException(ERR_MENU_NULL);
+            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            throw new MenuManagerException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
         }
         this.menu = menu;
     }
@@ -80,19 +77,19 @@ public class MenuManager {
      */
     public void showMenu(boolean useAnsi) throws MenuManagerException {
         if (menu == null) {
-            error(logger, ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
-            throw new MenuManagerException(ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
+            error(logger, MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
+            throw new MenuManagerException(MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
         } else if (menu.getOptions().isEmpty()) {
-            error(logger, ERR_NO_OPTIONS);
-            throw new MenuManagerException(ERR_NO_OPTIONS);
+            error(logger, MenuErrors.ERR_NO_OPTIONS);
+            throw new MenuManagerException(MenuErrors.ERR_NO_OPTIONS);
         }
         menu.generateMenuView();
         if (!useAnsi) {
             prt(menu.getMenuView());
         } else {
             //TODO: Futuro uso libreria AnsiTerm. Ahora lanzará una excepción.
-            error(logger,ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
-            throw new MenuManagerException(ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
+            error(logger, MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
+            throw new MenuManagerException(MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
         }
     }
 
@@ -120,8 +117,8 @@ public class MenuManager {
      */
     public Long awaitResponse(String msg) throws MenuException, MenuManagerException {
         if (menu == null) {
-            error(logger, ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
-            throw new MenuManagerException(ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
+            error(logger, MenuManagerErrors.ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
+            throw new MenuManagerException(MenuManagerErrors.ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
         }
 
         /*
@@ -129,16 +126,16 @@ public class MenuManager {
          * client class can use reflexion api to change the value of the options property)
          */
         if (this.menu.getOptions() == null) {
-            error(logger, ERR_OPTIONS_CANNOT_BE_NULL);
-            throw new MenuException(ERR_OPTIONS_CANNOT_BE_NULL);
+            error(logger, MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            throw new MenuException(MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
         }
     /* We verify that the Menu object has at least one option declared and
         that the menuView property has the textual representation of the menu.
         If not, it will throw a MenuException.
     */
         if (this.menu.getOptions().isEmpty()) {
-            error(logger, ERR_NO_OPTIONS);
-            throw new MenuException(ERR_NO_OPTIONS);
+            error(logger, MenuErrors.ERR_NO_OPTIONS);
+            throw new MenuException(MenuErrors.ERR_NO_OPTIONS);
         }
 
         var resp = MenuConstants.WRONG_OPTION;
@@ -160,15 +157,15 @@ public class MenuManager {
         }
 
         if (Types.isNullOrEmpty(respuesta)) {
-            this.menu.setMessage(ERR_BLANK_NULL);
-            error(logger, ERR_BLANK_NULL);
-            throw new MenuException(ERR_BLANK_NULL);
+            this.menu.setMessage(MenuErrors.ERR_BLANK_NULL);
+            error(logger, MenuErrors.ERR_BLANK_NULL);
+            throw new MenuException(MenuErrors.ERR_BLANK_NULL);
         }
 
         if (!Types.isInteger(respuesta)) {
-            this.menu.setMessage(ERR_NO_NUMBER);
-            error(logger, ERR_NO_NUMBER);
-            throw new MenuException(ERR_NO_NUMBER);
+            this.menu.setMessage(MenuErrors.ERR_NO_NUMBER);
+            error(logger, MenuErrors.ERR_NO_NUMBER);
+            throw new MenuException(MenuErrors.ERR_NO_NUMBER);
         }
 
         // Extracts and validates option; throws on failure
@@ -176,13 +173,13 @@ public class MenuManager {
             resp = TypeConverter.extractLongFromString(respuesta);
             // Validates option is within allowed range; throws on failure
             if (Objects.equals(resp, MenuConstants.WRONG_OPTION)) {
-                error(logger, ERR_NOT_VALID_NUMBER);
-                this.menu.setMessage(ERR_NOT_VALID_NUMBER);
-                throw new MenuException(ERR_NOT_VALID_NUMBER);
+                error(logger, MenuErrors.ERR_NOT_VALID_NUMBER);
+                this.menu.setMessage(MenuErrors.ERR_NOT_VALID_NUMBER);
+                throw new MenuException(MenuErrors.ERR_NOT_VALID_NUMBER);
             } else if (resp < 0 || resp > opcMaxima) {
-                error(logger,ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
-                this.menu.setMessage(ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
-                throw new MenuException(ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
+                error(logger, MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
+                this.menu.setMessage(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
+                throw new MenuException(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
             }
         } catch (TypeConverterException ex) {
             error(logger, ex.getMessage());
