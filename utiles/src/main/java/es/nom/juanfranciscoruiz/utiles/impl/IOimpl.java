@@ -367,4 +367,23 @@ public class IOimpl implements IO {
         }
         return sb.toString();
     }
+    
+    /**
+     * Clears the console screen by either using ANSI escape codes or printing a large number of newlines,
+     * depending on the provided parameter.
+     *
+     * @param useANSI a boolean flag indicating whether to use ANSI escape codes for clearing the screen.
+     *                If true, ANSI escape codes will be used. If false, the screen will be cleared
+     *                by printing multiple newlines.
+     */
+    public static void clearScreen(boolean useANSI){
+        if (useANSI) {
+            System.out.print("\033[H\033[2J");
+        } else {
+            // We don't know the console size, so we'll just print enough newlines to clear it.
+            for (int i = 0; i < 150; i++) {
+                System.out.println();
+            }
+        }
+    }
 }

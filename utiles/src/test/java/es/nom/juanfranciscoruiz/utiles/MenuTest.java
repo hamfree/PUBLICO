@@ -721,11 +721,115 @@ public class MenuTest {
   }
   
   @Test
-  void TestAddOption() {
+  void TestAddOption() throws MenuException {
+    printTitletoLogAndConsole("TestAddOption()", logger);
+
+    // --- Tests for addOption(String optionText) ---
+
+    // Case 1: Add a valid option to a child menu (already has "0. [VOLVER]")
+    Menu menu1 = new Menu();
+    menu1.setIsRootMenu(false);
+    menu1.addOption("First Option");
+    
+    // Case 2: Add multiple valid options to a child menu
+    Menu menu2 = new Menu();
+    menu2.setIsRootMenu(false);
+    menu2.addOption("Option A");
+    menu2.addOption("Option B");
+    
+    // Case 3: Verify index numbering on a menu without automatic options (just created, not set as root/child yet)
+    // NOTE: new Menu() initializes options as empty, but setIsRootMenu() adds one.
+    // If we use it directly without setIsRootMenu, it's empty.
+    Menu menu3 = new Menu();
+    menu3.addOption("Zero");
+    menu3.addOption("One");
+    
+    // Case 4: Add duplicate option (should throw MenuException)
+    Menu menu4 = new Menu();
+    menu4.setIsRootMenu(false);
+    menu4.addOption("Duplicate");
+    // Expected to throw because we add exactly "Duplicate" again
+    // But wait, the first "Duplicate" was converted to "1. Duplicate"
+    // So if we add "Duplicate" again, contains("Duplicate") will be false!
+    
+    // To trigger duplicate detection, we must add the EXACT string that is already in the list
+    // Or understand that addOption adds numbers.
+    
+    // If I want to test duplicate detection in addOption(String):
+    Menu menu4b = new Menu();
+    menu4b.getOptions().add("Duplicate"); // Manually add without number
+    
+    // Case 5: Add null or empty option
+    Menu menu5 = new Menu();
+
+    // --- Tests for addOption(Menu subMenu) ---
+
+    // Case 6: Add a valid submenu to a root menu
+    Menu mainMenu = new Menu();
+    mainMenu.setIsRootMenu(true);
+    Menu subMenu = new Menu();
+    subMenu.setTitle("My SubMenu");
+    // addOption(Menu) internally sets parent and updates title of subMenu.
+    // formatOptionTextAsSubmenuOptionText converts to uppercase and adds parentheses.
+    // So "My SubMenu" becomes "(MY SUBMENU)" and then indexed "1. (MY SUBMENU)"
+    mainMenu.addOption(subMenu);
+
+    // Case 7: Add null submenu
+    Menu menu7 = new Menu();
+
+    assertAll(
+        () -> assertEquals(2, menu1.getOptions().size(), "...testing size after adding one option to child menu (includes [VOLVER])"),
+        () -> assertEquals("1. First Option", menu1.getOptions().get(1), "...testing option text with index"),
+        
+        () -> assertEquals(3, menu2.getOptions().size(), "...testing size after adding two options"),
+        () -> assertEquals("1. Option A", menu2.getOptions().get(1)),
+        () -> assertEquals("2. Option B", menu2.getOptions().get(2)),
+        
+        () -> assertEquals("0. Zero", menu3.getOptions().getFirst(), "...testing first option starts " +
+            "with 0 if menu was empty"),
+        () -> assertEquals("1. One", menu3.getOptions().get(1)),
+        
+        () -> assertThrows(MenuException.class, () -> menu4b.addOption("Duplicate"), "...testing duplicate option throws exception"),
+        
+        () -> assertThrows(MenuException.class, () -> menu5.addOption((String)null), "...testing null option throws exception"),
+        () -> assertThrows(MenuException.class, () -> menu5.addOption(""), "...testing empty option throws exception"),
+        
+        () -> assertEquals(2, mainMenu.getOptions().size(), "...testing main menu options size (Exit + Submenu)"),
+        () -> assertEquals("1. (MY SUBMENU)", mainMenu.getOptions().get(1), "...testing submenu option text and formatting"),
+        () -> assertSame(mainMenu, subMenu.getParentMenu(), "...testing submenu parent is set"),
+        
+        () -> assertThrows(MenuException.class, () -> menu7.addOption((Menu)null), "...testing null submenu object throws exception")
+    );
   }
   
   @Test
-  void TestRemoveOption() {
+  void TestRemoveOption() throws MenuException {
+    printTitletoLogAndConsole("TestRemoveOption()", logger);
+
+    // Case 1: Remove an existing option
+    Menu menu1 = new Menu();
+    menu1.addOption("Option To Remove");
+    int sizeBefore = menu1.getOptions().size();
+    menu1.removeOption("0. Option To Remove");
+    
+    // Case 2: Attempt to remove non-existent option (should not throw, but size remains same)
+    Menu menu2 = new Menu();
+    menu2.addOption("Stay");
+    int sizeBefore2 = menu2.getOptions().size();
+    menu2.removeOption("Non-Existent");
+    
+    // Case 3: Remove null or empty (should throw MenuException)
+    Menu menu3 = new Menu();
+
+    assertAll(
+        () -> assertEquals(sizeBefore - 1, menu1.getOptions().size(), "...testing option was removed"),
+        () -> assertFalse(menu1.getOptions().contains("0. Option To Remove"), "...testing option text no longer present"),
+        
+        () -> assertEquals(sizeBefore2, menu2.getOptions().size(), "...testing non-existent removal doesn't change size"),
+        
+        () -> assertThrows(MenuException.class, () -> menu3.removeOption(null), "...testing null removal throws exception"),
+        () -> assertThrows(MenuException.class, () -> menu3.removeOption(""), "...testing empty removal throws exception")
+    );
   }
   
   //--------------------------------------------------------------------------

@@ -553,8 +553,8 @@ public class Menu {
      */
     public void addOption(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {
-            error(logger, MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
-            throw new MenuException(MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
+            error(logger, MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            throw new MenuException(MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
         }
         if (this.getOptions() == null) {
             throw new MenuException(MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
@@ -641,8 +641,8 @@ public class Menu {
      */
     private String addNumbertoOptionMenu(String theOption, int index) throws MenuException {
         if (theOption == null || theOption.isEmpty()) {
-            error(logger, MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
-            throw new MenuException(MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
+            error(logger, MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            throw new MenuException(MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
         }
         //It's validates the argument 'theoption' has no number added yet.
         if (theOption.substring(1, 2).matches("\\d")) {

@@ -55,7 +55,7 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- Para comprobar clases que escriben o leen de los streams estándar -->
+        <!-- To check classes that write to or read from standard streams -->
         <dependency>
             <groupId>org.junit-pioneer</groupId>
             <artifactId>junit-pioneer</artifactId>
@@ -63,14 +63,13 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Otra librería para comprobar clases que escriben o leen de los streams estándar -->
+        <!-- Another library for checking classes that write to or read from standard streams -->
         <dependency>
             <groupId>com.github.stefanbirkner</groupId>
             <artifactId>system-lambda</artifactId>
             <version>1.2.1</version>
             <scope>test</scope>
         </dependency>
-        
         <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -87,6 +86,12 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
             <type>jar</type>
+        </dependency>
+        <!-- To access native libraries and functions we use the JNA library -->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.18.1</version>
         </dependency>
     </dependencies>
     

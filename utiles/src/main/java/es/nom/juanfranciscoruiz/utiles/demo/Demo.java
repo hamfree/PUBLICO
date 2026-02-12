@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.clearScreen;
 
 /**
  * Class that demonstrates the functionalities of the "util" library
@@ -102,8 +103,10 @@ public class Demo {
             error(logger, e.getMessage());
             throw new RuntimeException(e);
         }
+        
         do {
             try {
+                clearScreen(true);
                 mm.showMenu(false);
                 response = mm.awaitResponse(msg);
             } catch (Exception e) {
@@ -220,6 +223,7 @@ public class Demo {
      * @throws Exception if an error occurs during the generation or display of the sample objects.
      */
     private void showSampleObjects() throws Exception {
+        clearScreen(false);
         prtln(1, title("Sample objects", '*', 80));
         prtln(1, "Sample objects:");
         prtln(1, "  - Map: " + generateMap());

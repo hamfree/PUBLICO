@@ -5,6 +5,7 @@ import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.clearScreen;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
 
 /**
@@ -30,6 +31,7 @@ public class ConvertMapsToString {
      * @throws Exception if an error occurs during the conversion process
      */
     public static void convertSimpleMapToString(java.util.Map<String, Integer> map) throws Exception {
+        clearScreen(false);
         String msg = "Converting a simple map into its string representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"Map: ");
@@ -47,6 +49,7 @@ public class ConvertMapsToString {
      * @throws Exception if an error occurs during the conversion process
      */
     public static void convertComplexMapToString(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
+        clearScreen(false);
         String msg = "Converting a complex map to its textual representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"A little bit complex Map: ");

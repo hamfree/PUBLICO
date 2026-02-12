@@ -1,8 +1,7 @@
 package es.nom.juanfranciscoruiz.utiles.demo.options;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
 
 /**
  * This class provides a collection of miscellaneous utilities for demonstration purposes.
@@ -10,6 +9,7 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
  */
 public class MiscellaneousUtilities {
     public static void miscellaneousUtilities() throws Exception {
+        clearScreen(true);
         final long PAUSE_DURATION = 3000L;
         String msg = "Miscellaneous utilities...";
         prtln(2, title(msg, '*', 80));
