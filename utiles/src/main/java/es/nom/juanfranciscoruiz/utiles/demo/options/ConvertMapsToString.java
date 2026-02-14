@@ -1,11 +1,12 @@
 package es.nom.juanfranciscoruiz.utiles.demo.options;
 
+import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.TypeConverter;
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
+import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.clearScreen;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
 
 /**
@@ -16,13 +17,29 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
  * Performs the the second and third options of the menu shown in Demo class.
  */
 public class ConvertMapsToString {
+    private TermCtl tc;
+    
     /**
      * Private constructor to make this class non-instantiable
      */
     private ConvertMapsToString() {
+        tc = new TermCtlImpl();
     }
-
-
+    
+    public static final ConvertMapsToString INSTANCE = new ConvertMapsToString();
+    
+    public static ConvertMapsToString getInstance() {
+        return INSTANCE;
+    }
+    
+    public TermCtl getTc() {
+        return tc;
+    }
+    
+    public void setTc(TermCtl tc) {
+        this.tc = tc;
+    }
+    
     /**
      * Converts a simple map with String keys and Integer values into its string representation.
      * The method formats the map output using external utility methods for display purposes.
@@ -30,8 +47,8 @@ public class ConvertMapsToString {
      * @param map the simple map to be converted, where the keys are of type String and the values are of type Integer
      * @throws Exception if an error occurs during the conversion process
      */
-    public static void convertSimpleMapToString(java.util.Map<String, Integer> map) throws Exception {
-        clearScreen(false);
+    public void convertSimpleMapToString(java.util.Map<String, Integer> map) throws Exception {
+        this.getTc().clearScreen(false);
         String msg = "Converting a simple map into its string representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"Map: ");
@@ -48,8 +65,8 @@ public class ConvertMapsToString {
      * @param map2 the complex map to be converted, where the keys are of type String and the values are of type List<Integer>
      * @throws Exception if an error occurs during the conversion process
      */
-    public static void convertComplexMapToString(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
-        clearScreen(false);
+    public void convertComplexMapToString(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
+        this.getTc().clearScreen(false);
         String msg = "Converting a complex map to its textual representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"A little bit complex Map: ");

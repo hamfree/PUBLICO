@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles;
 
-import es.nom.juanfranciscoruiz.utiles.constants.MenuConstants;
+import es.nom.juanfranciscoruiz.utiles.model.MenuConstants;
 import es.nom.juanfranciscoruiz.utiles.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

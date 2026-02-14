@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.utiles.constants;
+package es.nom.juanfranciscoruiz.utiles.model;
 
 /**
  * Constants used in the Menu class.

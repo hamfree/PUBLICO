@@ -9,15 +9,16 @@ import es.nom.juanfranciscoruiz.utiles.*;
 import es.nom.juanfranciscoruiz.utiles.demo.options.ConvertMapsToString;
 import es.nom.juanfranciscoruiz.utiles.demo.options.ConvertTypes;
 import es.nom.juanfranciscoruiz.utiles.demo.options.MiscellaneousUtilities;
+import es.nom.juanfranciscoruiz.utiles.demo.options.TerminalControl;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuErrors;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
+import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.clearScreen;
 
 /**
  * Class that demonstrates the functionalities of the "util" library
@@ -31,6 +32,20 @@ public class Demo {
      */
     public final static Logger logger = LoggerFactory.getLogger(Demo.class);
 
+    private TermCtl tc;
+    
+    public Demo() {
+        tc = new TermCtlImpl();
+    }
+    
+    public TermCtl getTc() {
+        return tc;
+    }
+    
+    public void setTc(TermCtl tc) {
+        this.tc = tc;
+    }
+    
     /**
      * The entry point of the program.
      *
@@ -81,11 +96,13 @@ public class Demo {
         MenuManager mm;
         Long response = Menu.WRONG_OPTION;
         String msg = "Select an option:";
+        
         theOptions.add("Show the sample objects");
         theOptions.add("Convert a simple map into its string representation");
         theOptions.add("Convert a complex map into its string representation");
         theOptions.add("Converting types");
         theOptions.add("Miscellaneous utilities");
+        theOptions.add("Getting and setting console size");
 
         try {
             theMenu = new Menu();
@@ -106,7 +123,8 @@ public class Demo {
         
         do {
             try {
-                clearScreen(true);
+                getTc().clearScreen(true);
+                mm.getMenu().setSelectedOption(Menu.WRONG_OPTION);
                 mm.showMenu(false);
                 response = mm.awaitResponse(msg);
             } catch (Exception e) {
@@ -114,7 +132,8 @@ public class Demo {
                 if (e instanceof MenuException) {
                     if (e.getMessage().contains(MenuErrors.ERR_BLANK_NULL) ||
                             e.getMessage().contains(MenuErrors.ERR_NO_NUMBER) ||
-                            e.getMessage().contains(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
+                            e.getMessage()
+                                .contains(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
                         theMenu.setMessage(e.getMessage());
                     }
                 }
@@ -135,13 +154,20 @@ public class Demo {
                 case 5:
                     miscellaneousUtilities();
                     break;
+                case 6:
+                    gettingAndSettingConsoleSize();
+                    break;
                 default:
                     break;
             }
         } while (response != 0);
-
     }
 
+    private void gettingAndSettingConsoleSize() throws Exception {
+        TerminalControl tc = new TerminalControl();
+        tc.terminalControl();
+    }
+    
     /**
      * Provides functionality for miscellaneous utility operations within the application.
      * <p>
@@ -154,7 +180,8 @@ public class Demo {
      * part of the application's workflow, particularly when option 5 in the menu is selected.
      */
     private void miscellaneousUtilities() throws Exception {
-        MiscellaneousUtilities.miscellaneousUtilities();
+        MiscellaneousUtilities mu = MiscellaneousUtilities.getInstance();
+        mu.miscellaneousUtilities();
     }
 
     /**
@@ -165,7 +192,8 @@ public class Demo {
      * directly related to the main functionality of the application.
      */
     private void convertTypes() throws Exception {
-        ConvertTypes.convertTypes();
+        ConvertTypes ct = ConvertTypes.getInstance();
+        ct.convertTypes();
     }
 
     /**
@@ -184,7 +212,11 @@ public class Demo {
      * @throws Exception if an error occurs during map generation or conversion process
      */
     private void convertComplexMapToString() throws Exception {
-        ConvertMapsToString.convertComplexMapToString(generateMapOfLists(generateList(true), generateList(false)));
+       ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
+        cm2s.convertComplexMapToString(
+            generateMapOfLists(generateList(true),
+                generateList(false))
+        );
     }
 
     /**
@@ -199,8 +231,8 @@ public class Demo {
      * @throws Exception if an error occurs during the map generation or conversion process
      */
     private void convertSimpleMapToString() throws Exception {
-
-        ConvertMapsToString.convertSimpleMapToString(generateMap());
+        ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
+        cm2s.convertSimpleMapToString(generateMap());
     }
 
     /**
@@ -223,7 +255,8 @@ public class Demo {
      * @throws Exception if an error occurs during the generation or display of the sample objects.
      */
     private void showSampleObjects() throws Exception {
-        clearScreen(false);
+        TermCtl tc = new TermCtlImpl();
+        tc.clearScreen(false);
         prtln(1, title("Sample objects", '*', 80));
         prtln(1, "Sample objects:");
         prtln(1, "  - Map: " + generateMap());

@@ -72,9 +72,4 @@ public interface IO {
      * @throws IllegalArgumentException if the provided arguments are invalid
      */
     static String repeatCharacter(Character character, int times) throws IllegalArgumentException {return null;}
-    
-    /**
-     * Clears the screen.
-     */
-    static void clearScreen(boolean useANSI) throws Exception {}
 }
