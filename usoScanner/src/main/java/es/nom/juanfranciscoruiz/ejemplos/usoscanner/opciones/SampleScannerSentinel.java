@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ejemplos.usoscanner.opciones;
 
-import es.nom.juanfranciscoruiz.utiles.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 
 import java.util.Scanner;
 

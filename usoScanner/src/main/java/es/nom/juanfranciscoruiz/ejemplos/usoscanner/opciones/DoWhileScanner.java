@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ejemplos.usoscanner.opciones;
 
 import java.util.Scanner;
 
-import es.nom.juanfranciscoruiz.utiles.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 
 /**
  * Se usa un bucle do-while como bucle, para, al menos, que se ejecute el bucle

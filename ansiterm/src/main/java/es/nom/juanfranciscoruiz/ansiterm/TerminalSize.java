@@ -1,19 +1,21 @@
 package es.nom.juanfranciscoruiz.ansiterm;
 
 /**
- * Represents the terminal size.
+ * Represents the dimensions of a terminal, including its width in columns
+ * and height in lines.
+ *
  * @author Juan F. Ruiz
  */
 public class TerminalSize {
     /**
      * Terminal width (in characters).
      */
-   private int columnas;
+   private int columns;
    
    /**
     * Terminal height (in lines).
     */
-   private int lineas;
+   private int lines;
 
    /**
     * Creates a new TerminalSize object.
@@ -22,8 +24,8 @@ public class TerminalSize {
     * @param height terminal height (lines)
     */
     public TerminalSize(int width, int height) {
-        this.columnas = width;
-        this.lineas = height;
+        this.columns = width;
+        this.lines = height;
     }
 
     /**
@@ -31,17 +33,17 @@ public class TerminalSize {
      * 
      * @return the number of columns
      */
-    public int getColumnas() {
-        return columnas;
+    public int getColumns() {
+        return columns;
     }
 
     /**
      * Sets the number of columns.
      * 
-     * @param columnas the number of columns
+     * @param columns the number of columns
      */
-    public void setColumnas(int columnas) {
-        this.columnas = columnas;
+    public void setColumns(int columns) {
+        this.columns = columns;
     }
 
     /**
@@ -49,27 +51,30 @@ public class TerminalSize {
      * 
      * @return the number of lines
      */
-    public int getLineas() {
-        return lineas;
+    public int getLines() {
+        return lines;
     }
 
     /**
      * Sets the number of lines.
      * 
-     * @param lineas the number of lines
+     * @param lines the number of lines
      */
-    public void setLineas(int lineas) {
-        this.lineas = lineas;
+    public void setLines(int lines) {
+        this.lines = lines;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + this.columnas;
-        hash = 41 * hash + this.lineas;
+        hash = 41 * hash + this.columns;
+        hash = 41 * hash + this.lines;
         return hash;
     }
 
+    /**
+     * Implements equality check based on columns and lines
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -82,21 +87,21 @@ public class TerminalSize {
             return false;
         }
         final TerminalSize other = (TerminalSize) obj;
-        if (this.columnas != other.columnas) {
+        if (this.columns != other.columns) {
             return false;
         }
-        return this.lineas == other.lineas;
+        return this.lines == other.lines;
     }
 
+    /**
+     * Returns string representation of terminal size
+     */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("TerminalSize{");
-        sb.append("columns=").append(columnas);
-        sb.append(", lines=").append(lineas);
-        sb.append('}');
-        return sb.toString();
+        String sb = "TerminalSize{" +
+                "columns=" + columns +
+                ", lines=" + lines +
+                '}';
+        return sb;
     }
-   
-   
 }

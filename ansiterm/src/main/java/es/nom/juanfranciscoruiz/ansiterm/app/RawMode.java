@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
  * Demonstrates the use of raw terminal mode for keyboard input.
@@ -38,11 +38,11 @@ public class RawMode {
     term.printAt("------------ Keyboard RAW mode ------------", 1, 1);
     
     try {
-      pausa(2000L, null);
+      pauseWithMessage(2000L, null);
       term.getOsCall().enableRawMode();
       
       term.printAt("Press keys. Press 'q' to exit.", 2, 1);
-      term.moveCursorToXY(3, 1);
+      term.printAt(3, 1);
       
       while (true) {
         int resp = System.in.read();

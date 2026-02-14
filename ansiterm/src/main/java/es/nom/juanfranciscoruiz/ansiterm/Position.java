@@ -3,6 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm;
 /**
  * Stores the cursor position in the terminal. Used in the Terminal class
  * @see es.nom.juanfranciscoruiz.ansiterm.ANSITerm
+ *
  * @author Juan F. Ruiz
  */
 public class Position {

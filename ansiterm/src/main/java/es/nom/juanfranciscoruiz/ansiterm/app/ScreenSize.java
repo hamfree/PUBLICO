@@ -6,10 +6,10 @@ import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 
 import java.util.Scanner;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
- * Demonstrates how to obtain the current terminal screen size.
+ * Demonstrates how to get the current terminal screen size.
  *
  * @author Juan F. Ruiz
  */
@@ -27,6 +27,7 @@ public class ScreenSize {
    * @throws Exception If an error occurs during execution.
    */
   void perform(ANSITerm term) throws Exception {
+    String msg;
     String resp = "";
     while (!resp.equals("q")) {
       term.clearScreen();
@@ -39,12 +40,9 @@ public class ScreenSize {
       Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in));
       resp = sc.nextLine();
       TerminalSize ts = term.getOsCall().getTerminalSize();
-      term.printAt("The screen size is:"
-          + ts.getLineas()
-          + "lines and "
-          + ts.getColumnas()
-          + " columns.", ts.getLineas() - 2, 1);
-      pausa(0, null);
+      msg = "The screen size is:%d lines and %d columns.".formatted(ts.getLines(), ts.getColumns());
+      term.printAt(msg,ts.getLines() - 2, 1);
+      pauseWithMessage(0, null);
     }
   }
 }

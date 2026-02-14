@@ -4,36 +4,29 @@ import java.io.Console;
 import java.nio.file.FileSystems;
 import java.util.Scanner;
 
+import es.nom.juanfranciscoruiz.utiles.IO;
 import es.nom.juanfranciscoruiz.utiles.Types;
 import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*
- TODO: Make it static and convert it into a Singleton. Include more methods
- that allow doing more things, or better yet, generate an I/O interface and
- then generate a hierarchy of classes that implement it: a simple one, like
- this class, another that relies on the 'ansiterm' library, and another that
- allows performing more complex operations on the screen, etc.
- */
-
 /**
- * This class implements various utility methods and constants for input and output operations
- * while being designed to be non-instantiable and singleton-based. It provides methods for
- * retrieving constants, managing input streams, and facilitating formatted output or input tasks.
+ * Utility to print to standard output and receive characters from the user
+ * through standard input.
+ * @author Juan F. Ruiz
  */
-public class IOImpl implements es.nom.juanfranciscoruiz.utiles.IO {
+public class IOimpl implements IO {
     /**
      * Traces
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(IOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IOimpl.class);
 
     /**
      * Singleton instance
      * Private instance, so that it can be accessed by only getinstance()
      * method
      */
-    private static IOImpl instance;
+    private static IO instance;
 
     /**
      * It is the same as an InputStream, which it extends and using the
@@ -47,85 +40,46 @@ public class IOImpl implements es.nom.juanfranciscoruiz.utiles.IO {
      * Operating system line break character
      */
     private static final String LS = System.lineSeparator();
-    
     /**
      * Operating system path separator character
      */
     private static final String FS = FileSystems.getDefault().getSeparator();
-    
     /**
      * Character indicating the beginning of the content of an object in its
      * textual representation when passed through a converter function.
      */
     private static final String CHAR_INI = "[";
-    
     /**
      * Character indicating the end of an object's contents in its textual
      * representation when passed through a converter function.
      */
     private static final String CHAR_END = "]";
-    
     /**
      * Item separator character of values of an collection type object when
      * passed through a converter function.
      */
     private static final String SEP = ", ";
-    
     /**
      * Constant representing the textual value of NULL when an object is
      * converted into its textual representation.
      */
     private static final String NULL = "null";
-    
+
     /**
-     * Constant string representing an error message used when a null or incorrect
-     * parameter is provided to a method. It is primarily intended for use in exception
-     * messages or error handling scenarios across the class.
+     * Constants for error messages
      */
     private static final String ERR_PARAM = "Null or incorrect parameters!";
-    
-    /**
-     * A constant error message used to indicate that null parameters have been provided
-     * to a method or operation where they are not allowed.
-     */
     private static final String ERR_NULL = "Null parameters!";
-    
-    /**
-     * Represents an error message indicating that one or more required parameters
-     * in a method or operation are null. This constant can be used to standardize
-     * error messages across the application when a null check fails for input
-     * parameters.
-     */
     private static final String ERR_SOME_NULL = "One of the parameters is null!";
-    
-    /**
-     * Represents an error message indicating that the length of the input message
-     */
     private static final String ERR_LONG = "The line length is less than the message length";
 
     /**
      * Private constructor to make this class non-instantiable
      */
-    private IOImpl() {
+    private IOimpl() {
     }
 
-    /**
-     * Returns an instance of the IO class, ensuring thread-safe initialization.
-     *
-     * @return the singleton instance of IO
-     */
-    public IOImpl getInstance() {
-        if (instance == null) {
-            //synchronized block to remove overhead
-            synchronized (IOImpl.class) {
-                if (instance == null) {
-                    //if instance is null, initialize
-                    instance = new IOImpl();
-                }
-            }
-        }
-        return instance;
-    }
+    //Getters y Setters
 
     /**
      * Returns LS, a constant containing the line feed control character of the
@@ -210,7 +164,7 @@ public class IOImpl implements es.nom.juanfranciscoruiz.utiles.IO {
      *                    to be set as the static input stream.
      */
     public static void setInputStream(UnclosableInputStreamDecorator inputStream) {
-        IOImpl.inputStream = inputStream;
+        IOimpl.inputStream = inputStream;
     }
 
     // Methods
@@ -241,6 +195,7 @@ public class IOImpl implements es.nom.juanfranciscoruiz.utiles.IO {
         for (Object arg : args) {
             sb.append(arg.toString());
         }
+
         print(sb);
     }
 

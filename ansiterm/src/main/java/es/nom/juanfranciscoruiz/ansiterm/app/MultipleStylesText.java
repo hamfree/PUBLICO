@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
 
 /**
  * Demonstrates the use of multiple text styles combined.
@@ -57,7 +57,7 @@ public class MultipleStylesText {
     term.printAt("The following sentence will be grayed out and crossed out", 24, 5);
     term.printAt(term.setStyles(false, true, false, false, false, false, true, mensaje), 25, 10);
     
-    pausa(0, null);
+    pauseWithMessage(0, null);
     term.clearScreen();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
     
@@ -91,7 +91,7 @@ public class MultipleStylesText {
     term.printAt("The following sentence will be underlined and crossed out.", 24, 5);
     term.printAt(term.setStyles(false, false, false, true, false, false, true, mensaje), 25, 10);
     
-    pausa(0, null);
+    pauseWithMessage(0, null);
     
     term.clearScreen();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
@@ -126,7 +126,7 @@ public class MultipleStylesText {
     term.printAt("The following sentence will be reversed and crossed out", 24, 5);
     term.printAt(term.setStyles(false, false, false, false, false, true, true, mensaje), 25, 10);
     
-    pausa(0, null);
+    pauseWithMessage(0, null);
     
     term.clearScreen();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
@@ -146,6 +146,6 @@ public class MultipleStylesText {
     term.printAt("The following sentence will be crossed out", 12, 5);
     term.printAt(term.setStyles(false, false, false, false, false, false, true, mensaje), 13, 10);
     
-    pausa(0, "Press <ENTER> to return to menu");
+    pauseWithMessage(0, "Press <ENTER> to return to menu");
   }
 }

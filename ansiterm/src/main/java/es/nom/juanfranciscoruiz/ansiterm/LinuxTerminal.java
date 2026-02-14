@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  * Provides access to the raw and cooked modes of the Linux terminal as well as
  * obtaining the terminal size using ANSI escape sequences and setting the
  * raw mode so that the ANSI code does not appear on the screen.
+ *
  * @author Juan F. Ruiz
  */
 public class LinuxTerminal implements ITerminal {
@@ -52,12 +53,15 @@ public class LinuxTerminal implements ITerminal {
      * application without the user having to press ENTER. The '-echo' 
      * parameter is passed so that the characters typed do not appear 
      * on the screen.
+     * Note: The method does not verify if the 'stty' command is available.
+     * It's up to the user to ensure that the command is available in the system.
      */
     @Override
     public void enableRawMode() {
         try {
             String[] cmd = {"/bin/sh", "-c", "stty raw -echo < /dev/tty"};
-            Runtime.getRuntime().exec(cmd).waitFor();
+            Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
         } catch (InterruptedException | IOException e) {
             logger.error(e.getMessage());
         }
@@ -67,12 +71,15 @@ public class LinuxTerminal implements ITerminal {
      * Disables the 'raw' mode of the terminal and enables the 'cooked' mode, 
      * which is the one normally used (typed characters are shown and for 
      * the shell to receive our command we have to press ENTER).
+     * Note: The method does not verify if the 'stty' command is available.
+     * It's up to the user to ensure that the command is available in the system.
      */
     @Override
     public void disableRawMode() {
         try {
             String[] cmd = {"/bin/sh", "-c", "stty cooked echo < /dev/tty"};
-            Runtime.getRuntime().exec(cmd).waitFor();
+            Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
         } catch (InterruptedException | IOException e) {
             logger.error(e.getMessage());
         }
@@ -86,39 +93,32 @@ public class LinuxTerminal implements ITerminal {
     @Override
     public TerminalSize getTerminalSize() {
         Position inicialPosition = readCurrentPosition();
-        gotoXY(10000, 10000);
+        gotoXY(10000, 10000); // Trick for getting the terminal size
         Position result = readCurrentPosition();
         gotoXY(inicialPosition.getCol(), inicialPosition.getLin());
 
         return new TerminalSize(result.getCol(), result.getLin());
     }
 
-    
-    // Utility methods for the 'getTerminalSize()' method
+
+    /**
+     * Reads the current cursor position in the terminal. The method switches the terminal
+     * to 'raw' mode to process the position request, sends the appropriate ANSI escape
+     * sequence to query the cursor position, captures the terminal's response, and parses
+     * the result to create and return a {@link Position} object. If the position cannot
+     * be determined due to an error, a default {@link Position} object with values (1, 1)
+     * is returned. The terminal mode is restored to 'cooked' mode before the method exits.
+     *
+     * @return a {@link Position} object representing the current terminal cursor position,
+     *         or a default {@link Position} with values (1, 1) if the position cannot be determined
+     */
     private Position readCurrentPosition() {
+        // Executes position request; extracts or defaults on failure
         try {
             this.enableRawMode();
             System.out.print(REC_POS_CUR);
 
-            StringBuilder result = new StringBuilder();
-            int character;
-
-            do {
-                character = System.in.read();
-                if (character == 27) {
-                    result.append("^");
-                } else {
-                    result.append((char) character);
-                }
-            } while (character != 82); // 'R'
-
-            Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
-            Matcher matcher = pattern.matcher(result.toString());
-            if (matcher.matches()) {
-                return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
-            } else {
-                return new Position(1, 1);
-            }
+            return getPosition();
 
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -129,12 +129,68 @@ public class LinuxTerminal implements ITerminal {
         }
     }
 
+    /**
+     * Reads and parses the cursor position from the terminal input stream. The method listens for
+     * a specific ANSI escape sequence response, which represents the cursor's current position.
+     * If the sequence matches the expected format, the coordinates are extracted and used to
+     * create a {@link Position} object. If parsing fails, a default {@link Position} with values
+     * (1, 1) is returned.
+     *
+     * @return a {@link Position} object representing the current cursor position in the
+     *         terminal, or a default {@link Position} with values (1, 1) in case of a failure
+     *         to correctly parse the terminal response.
+     * @throws IOException if an error occurs while reading input from the terminal.
+     */
+    static Position getPosition() throws IOException {
+        StringBuilder result = new StringBuilder();
+        int character;
+
+        do {
+            character = System.in.read();
+            if (character == 27) {
+                result.append("^");
+            } else {
+                result.append((char) character);
+            }
+        } while (character != 82); // 'R'
+
+        Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
+        Matcher matcher = pattern.matcher(result.toString());
+        if (matcher.matches()) {
+            return new Position(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+        } else {
+            return new Position(1, 1);
+        }
+    }
+
+    /**
+     * Moves the cursor to the specified position in the terminal based on the provided
+     * x (column) and y (row) coordinates. The method uses an ANSI escape sequence to
+     * position the cursor within the terminal.
+     *
+     * @param x the target column number to move the cursor to. Columns are numbered starting
+     *          from 1, where 1 represents the leftmost column.
+     * @param y the target row number to move the cursor to. Rows are numbered starting
+     *          from 1, where 1 represents the topmost row.
+     */
     private void gotoXY(int x, int y) {
         System.out.printf("\u001B[%d;%dH", y, x); // CSI n ; m H
     }
 
+    /**
+     * Moves the cursor to the specified position in the terminal.
+     * The position is determined by the provided {@link Position} object,
+     * where the line and column values are used to set the cursor position.
+     *
+     * @param screenPosition a {@link Position} object containing the desired
+     *                       line and column numbers to move the cursor to.
+     */
     private void gotoXY(Position screenPosition) {
         System.out.printf("\u001B[%d;%dH", screenPosition.getLin(), screenPosition.getCol()); // CSI n ; m H
     }
 
+    @Override
+    public String toString() {
+        return "LinuxTerminal{'Access to the raw and cooked modes of the Linux terminal'}";
+    }
 }

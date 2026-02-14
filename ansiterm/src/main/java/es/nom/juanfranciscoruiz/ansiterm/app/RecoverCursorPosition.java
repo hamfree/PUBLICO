@@ -8,8 +8,8 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausa;
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pausaSinMensaje;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseForMilliseconds;
 
 /**
  * Demonstrates how to recover the current cursor position from the terminal.
@@ -22,6 +22,8 @@ public class RecoverCursorPosition {
    * Logger used for tracing and debugging.
    */
   public static final Logger logger = LoggerFactory.getLogger(RecoverCursorPosition.class);
+  
+  public static final Long DELAY = 10L;
   
   /**
    * Constructs a new RecoverCursorPosition.
@@ -43,8 +45,8 @@ public class RecoverCursorPosition {
     term.cursorShow();
     term.cursorChangeStyle(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE);
     
-    for (int lin = 2; lin < screenSize.getLineas() - 3; lin++) {
-      for (int col = 1; col <= screenSize.getColumnas(); col++) {
+    for (int lin = 2; lin < screenSize.getLines() - 3; lin++) {
+      for (int col = 1; col <= screenSize.getColumns(); col++) {
         Position p = new Position(1, 1);
         term.printAt("X", lin, col);
         try {
@@ -54,14 +56,14 @@ public class RecoverCursorPosition {
           System.out.println(e.getErrorCode());
           System.out.println(e.getMessage());
         }
-        long retardo = 250L;
-        pausaSinMensaje(retardo);
-        term.printAt("Cursor position: column : ", screenSize.getLineas() - 2, 1);
+        long retardo = DELAY;
+        pauseForMilliseconds(retardo);
+        term.printAt("Cursor position: column : ", screenSize.getLines() - 2, 1);
         term.deleteFromCursorToEndLine();
-        term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLineas() - 2, 31);
-        pausaSinMensaje(retardo);
+        term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLines() - 2, 32);
+        pauseForMilliseconds(retardo);
       }
     }
-    pausa(0, "Press <ENTER> to return to the menu");
+    pauseWithMessage(0, "Press <ENTER> to return to the menu");
   }
 }

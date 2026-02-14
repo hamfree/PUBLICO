@@ -1,7 +1,7 @@
 package es.nom.juanfranciscoruiz.ejemplos.usoscanner;
 
 import es.nom.juanfranciscoruiz.ejemplos.usoscanner.opciones.*;
-import es.nom.juanfranciscoruiz.utiles.IO;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import es.nom.juanfranciscoruiz.utiles.Menu;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import java.util.ArrayList;

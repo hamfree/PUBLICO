@@ -1,7 +1,8 @@
 package es.nom.juanfranciscoruiz.ejemplos.usoscanner.opciones;
 
 import java.util.Scanner;
-import es.nom.juanfranciscoruiz.utiles.IO;
+import es.nom.juanfranciscoruiz.utiles.IOable;
+import es.nom.juanfranciscoruiz.utiles.impl.IO;
 
 /**
  * Se controla la salida del bucle mediante el carácter de control de final de
@@ -11,8 +12,8 @@ import es.nom.juanfranciscoruiz.utiles.IO;
 public class EOFExample {
 
   public EOFExample() {
-    IO.prtln(1, this.getClass().getSimpleName());
-    IO.prtln(1, "Para terminar el bucle pulse la combinación CTRL+D en Unix/Mac o CTRL+Z en Windows para terminar)");
+    IOable.prtln(1, this.getClass().getSimpleName());
+    IOable.prtln(1, "Para terminar el bucle pulse la combinación CTRL+D en Unix/Mac o CTRL+Z en Windows para terminar)");
   }
 
   public void ejecuta() {

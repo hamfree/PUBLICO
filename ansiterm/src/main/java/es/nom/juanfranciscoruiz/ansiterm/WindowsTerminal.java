@@ -8,6 +8,7 @@ import com.sun.jna.ptr.IntByReference;
  * Provides access to the raw and cooked modes of the Windows console as well as
  * getting the console size using ANSI escape sequences and setting the
  * raw mode so that the ANSI code does not appear on the screen.
+ *
  * @author Juan F. Ruiz
  */
 public class WindowsTerminal implements ITerminal {
@@ -92,4 +93,8 @@ public class WindowsTerminal implements ITerminal {
         return new TerminalSize(info.dwSize.X, info.dwSize.Y);
     }
 
+    @Override
+    public String toString() {
+        return "WindowsTerminal{'Access to the raw and cooked modes of the Windows console with JNI API and ANSI escape sequences'}";
+    }
 }
