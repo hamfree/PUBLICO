@@ -38,7 +38,7 @@ public class ConvertTypes {
     }
     
     public void convertTypes() throws Exception {
-        getInstance().getTc().clearScreen(false);
+        getInstance().getTc().clearScreen(true);
         final long PAUSE_DURATION = 3000L;
         String msg = "Converting types";
         prtln(2, title(msg, '*', 80));

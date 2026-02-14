@@ -49,7 +49,7 @@ public class TerminalControl {
    * and output formatting.
    */
   public void terminalControl() throws Exception {
-    getTc().clearScreen(false);
+    getTc().clearScreen(true);
     String msg = "Getting and setting console size";
     IOimpl.prtln(2,title(msg,'*',80));
     System.out.println();

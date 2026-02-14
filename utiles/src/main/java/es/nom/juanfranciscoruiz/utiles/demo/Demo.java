@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import es.nom.juanfranciscoruiz.utiles.*;
-import es.nom.juanfranciscoruiz.utiles.demo.options.ConvertMapsToString;
-import es.nom.juanfranciscoruiz.utiles.demo.options.ConvertTypes;
-import es.nom.juanfranciscoruiz.utiles.demo.options.MiscellaneousUtilities;
-import es.nom.juanfranciscoruiz.utiles.demo.options.TerminalControl;
+import es.nom.juanfranciscoruiz.utiles.demo.options.*;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuErrors;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
+import es.nom.juanfranciscoruiz.utiles.helper.ObjectsGenerator;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +32,24 @@ public class Demo {
 
     private TermCtl tc;
     
+    private Map<String, Integer> theMap;
+    private Map<String, List<Integer>> theMapOfLists;
+    
+    /**
+     * Default constructor for the Demo class.
+     *
+     * This constructor initializes the `tc` field, which is an instance of a
+     * `TermCtl` implementation. The `tc` object represents a terminal control
+     * utility or functionality that is pivotal for the operations of the Demo
+     * class. The initialization of `tc` ensures the class is ready to utilize the
+     * terminal-related features provided by the `TermCtlImpl` implementation.
+     */
     public Demo() {
         tc = new TermCtlImpl();
+        theMap = ObjectsGenerator.generateMap();
+        theMapOfLists = ObjectsGenerator.generateMapOfLists(
+            ObjectsGenerator.generateList(true),
+            ObjectsGenerator.generateList(false));
     }
     
     public TermCtl getTc() {
@@ -44,6 +58,22 @@ public class Demo {
     
     public void setTc(TermCtl tc) {
         this.tc = tc;
+    }
+    
+    public Map<String, Integer> getTheMap() {
+        return theMap;
+    }
+    
+    public void setTheMap(Map<String, Integer> theMap) {
+        this.theMap = theMap;
+    }
+    
+    public Map<String, List<Integer>> getTheMapOfLists() {
+        return theMapOfLists;
+    }
+    
+    public void setTheMapOfLists(Map<String, List<Integer>> theMapOfLists) {
+        this.theMapOfLists = theMapOfLists;
     }
     
     /**
@@ -95,7 +125,7 @@ public class Demo {
         Menu theMenu;
         MenuManager mm;
         Long response = Menu.WRONG_OPTION;
-        String msg = "Select an option:";
+        String msg = "";
         
         theOptions.add("Show the sample objects");
         theOptions.add("Convert a simple map into its string representation");
@@ -214,8 +244,10 @@ public class Demo {
     private void convertComplexMapToString() throws Exception {
        ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
         cm2s.convertComplexMapToString(
-            generateMapOfLists(generateList(true),
-                generateList(false))
+            ObjectsGenerator.generateMapOfLists(
+                ObjectsGenerator.generateList(true),
+                ObjectsGenerator.generateList(false)
+            )
         );
     }
 
@@ -232,7 +264,7 @@ public class Demo {
      */
     private void convertSimpleMapToString() throws Exception {
         ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
-        cm2s.convertSimpleMapToString(generateMap());
+        cm2s.convertSimpleMapToString(ObjectsGenerator.generateMap());
     }
 
     /**
@@ -255,81 +287,12 @@ public class Demo {
      * @throws Exception if an error occurs during the generation or display of the sample objects.
      */
     private void showSampleObjects() throws Exception {
-        TermCtl tc = new TermCtlImpl();
-        tc.clearScreen(false);
-        prtln(1, title("Sample objects", '*', 80));
-        prtln(1, "Sample objects:");
-        prtln(1, "  - Map: " + generateMap());
-        prtln(1, "  - List: " + generateList(true));
-        prtln(1, "  - List: " + generateList(false));
-        prtln(1, "  - Map: " + generateMapOfLists(generateList(true), generateList(false)));
-        pause(0, "");
+        ShowSampleObjects sso = ShowSampleObjects.getInstance();
+        sso.showObjects();
     }
-
 
     //----------------------------------------------------------------------------
     //Utility methods for main()
-
-    /**
-     * Generates a map of String and Integer key/value pairs
-     *
-     * @return a map of String and Integer key/value pairs
-     */
-    private static Map<String, Integer> generateMap() {
-        HashMap<String, Integer> theMap = new HashMap<>();
-        theMap.put("One", 1);
-        theMap.put("Two", 2);
-        theMap.put("Three", 3);
-        theMap.put("Four", 4);
-        theMap.put("Five", 5);
-        theMap.put("Six", 6);
-        return theMap;
-    }
-
-    /**
-     * Generates a list of Integer values
-     *
-     * @param order If it is true the order of the integers is ascending,
-     *              otherwise the order will be descending
-     * @return a list of Integer values in ascending or descending order.
-     */
-    private static List<Integer> generateList(boolean order) {
-        int i, end, step;
-        List<Integer> theList = new ArrayList<>();
-        if (order) {
-            i = 0;
-            end = 10;
-            step = 1;
-            for (int c = i; c <= end; c += step) {
-                theList.add(c);
-            }
-        } else {
-            i = 10;
-            end = 0;
-            step = -1;
-            for (int c = i; c >= end; c += step) {
-                theList.add(c);
-            }
-        }
-        return theList;
-    }
-
-    /**
-     * Generate a little bit complex data structure, a map of Strings as keys and
-     * List of Integers as values.
-     *
-     * @param list1 A list of integers for the first pair of the map
-     * @param list2 A list of integers for the second pair of the map
-     * @return a map of Strings and Lists of Integers
-     */
-    private static Map<String, List<Integer>> generateMapOfLists(List<Integer> list1, List<Integer> list2) {
-        HashMap<String, List<Integer>> theMap = new HashMap<>();
-        theMap.put("list1", list1);
-        theMap.put("list2", list2);
-
-        return theMap;
-    }
-
     /**
      * Prints at the same time the string msg to standard output and to the logger
      *

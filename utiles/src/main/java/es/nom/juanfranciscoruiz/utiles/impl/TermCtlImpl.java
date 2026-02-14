@@ -16,21 +16,20 @@ import es.nom.juanfranciscoruiz.utiles.model.Dimensions;
  * low-level system libraries.
  */
 public class TermCtlImpl implements TermCtl {
-  private static final int STD_OUTPUT_HANDLE = -11;
   
-  /**
-   * Interface for interacting with Windows Kernel32 library functions. Provides methods for accessing
-   * system-level operations, particularly related to console-based functionality. This interface is a
-   * wrapper around native Kernel32 library functions using the Java Native Access (JNA) library.
-   */
   public interface Kernel32 extends StdCallLibrary {
-    Kernel32 INSTANCE = Platform.isWindows() ? Native.load("kernel32", Kernel32.class) : null;
+    Kernel32 INSTANCE = Native.load("kernel32", Kernel32.class);
     
     // We reuse the necessary structures
     @com.sun.jna.Structure.FieldOrder({"X", "Y"})
     class COORD extends com.sun.jna.Structure {
       public short X, Y;
       
+      public COORD() {
+        this.X = (short) 0;
+        this.Y = (short) 0;
+      }
+
       public COORD(int x, int y) {
         this.X = (short) x;
         this.Y = (short) y;
@@ -41,6 +40,13 @@ public class TermCtlImpl implements TermCtl {
     class SMALL_RECT extends com.sun.jna.Structure {
       public short Left, Top, Right, Bottom;
       
+      public SMALL_RECT() {
+        this.Left = (short) 0;
+        this.Top = (short) 0;
+        this.Right = (short) 0;
+        this.Bottom = (short) 0;
+      }
+      
       public SMALL_RECT(int left, int top, int right, int bottom) {
         this.Left = (short) left;
         this.Top = (short) top;
@@ -49,25 +55,96 @@ public class TermCtlImpl implements TermCtl {
       }
     }
     
+    // Estructura que rellena la función GetConsoleScreenBufferInfo
     @Structure.FieldOrder({"dwSize", "dwCursorPosition", "wAttributes", "srWindow", "dwMaximumWindowSize"})
     class CONSOLE_SCREEN_BUFFER_INFO extends Structure {
-      public COORD dwSize, dwCursorPosition;
+      public COORD dwSize;
+      public COORD dwCursorPosition;
       public short wAttributes;
       public SMALL_RECT srWindow;
       public COORD dwMaximumWindowSize;
-      
     }
     
-    // Change the size of the internal buffer
-    boolean SetConsoleScreenBufferSize(WinNT.HANDLE hConsoleOutput, COORD dwSize);
+    WinNT.HANDLE GetStdHandle(int nStdHandle);
     
-    // Changes the size of the physical window that the user sees
-    boolean SetConsoleWindowInfo(WinNT.HANDLE hConsoleOutput, boolean bAbsolute, SMALL_RECT lpConsoleWindow);
+    /**
+     * Retrieves information about the specified console screen buffer.
+     *
+     * @param hConsoleOutput            A handle to the console screen buffer. This handle must have the GENERIC_READ access right.
+     * @param lpConsoleScreenBufferInfo A pointer to a CONSOLE_SCREEN_BUFFER_INFO structure that receives the console
+     *                                  screen buffer information, including the size of the buffer, the cursor position,
+     *                                  the text attributes, the size of the window, and the maximum size of the window.
+     * @return {@code true} if the function succeeds; {@code false} otherwise. To get extended error information,
+     * call GetLastError.
+     */
+    boolean GetConsoleScreenBufferInfo(WinNT.HANDLE hConsoleOutput, CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
     
-    com.sun.jna.platform.win32.WinNT.HANDLE GetStdHandle(int nStdHandle);
+    /**
+     * Sets the size of the specified console screen buffer.
+     *
+     * @param hConsoleOutput A handle to the console screen buffer. The handle must have the GENERIC_WRITE access right.
+     * @param dwSize         A COORD structure that specifies the new size of the console screen buffer, in character
+     *                       columns (X) and rows (Y).
+     * @return {@code true} if the function succeeds; {@code false} otherwise. To get extended error information,
+     * call GetLastError.
+     */
+    boolean SetConsoleScreenBufferSize(WinNT.HANDLE hConsoleOutput, Kernel32.COORD dwSize);
     
-    boolean GetConsoleScreenBufferInfo(com.sun.jna.platform.win32.WinNT.HANDLE hConsoleOutput,
-                                       CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
+    /**
+     * Sets the current size and position of a console screen buffer's window.
+     *
+     * @param hConsoleOutput  A handle to the console screen buffer. This handle must have the GENERIC_WRITE access right.
+     * @param bAbsolute       Specifies whether the coordinates in the lpConsoleWindow parameter are absolute or relative
+     *                        to the current window's position. If {@code true}, the coordinates are absolute. If {@code false},
+     *                        the coordinates are relative to the current window.
+     * @param lpConsoleWindow A SMALL_RECT structure that specifies the new position and size of the console window.
+     *                        The coordinates of the structure are in character-cell columns and rows relative to the
+     *                        console screen buffer's upper-left corner.
+     * @return {@code true} if the function succeeds; {@code false} otherwise. To get extended error information, call GetLastError.
+     */
+    boolean SetConsoleWindowInfo(WinNT.HANDLE hConsoleOutput, boolean bAbsolute, Kernel32.SMALL_RECT lpConsoleWindow);
+  }
+  
+  /**
+   * Represents the standard output handle used in Windows API interactions.
+   * This constant is mapped to the value assigned by the Windows operating
+   * system for accessing the standard output (console output) buffer.
+   * It is primarily used in platform-specific operations such as console
+   * configuration, resizing, or writing directly to the standard output
+   * buffer through native system calls.
+   * <p>
+   * Value: -11, which is the predefined identifier for the standard output
+   * handle in the Windows API.
+   */
+  private static final int STD_OUTPUT_HANDLE = -11;
+  
+  /**
+   * Sets the current console dimensions.
+   *
+   * @param cols Number of columns
+   * @param rows Number of rows
+   * @return true if successful
+   */
+  public static boolean setConsoleSize(int cols, int rows) {
+    Kernel32 k32 = Kernel32.INSTANCE;
+    WinNT.HANDLE hConsole = k32.GetStdHandle(STD_OUTPUT_HANDLE);
+    
+    /*
+    1. Define the window rectangle (0-based, hence the subtraction of 1)
+    It is vital that the size is less than or equal to the current buffer size.
+    */
+    Kernel32.SMALL_RECT rect = new Kernel32.SMALL_RECT(0, 0, cols - 1, rows - 1);
+    
+    // 2. Define the buffer size
+    Kernel32.COORD size = new Kernel32.COORD(cols, rows);
+    
+    /*
+    Safe execution order in Windows: We try to adjust the buffer first to fit the window,
+    or the window first if the buffer is already large. The most robust approach is to
+    try both.
+    */
+    k32.SetConsoleScreenBufferSize(hConsole, size);
+    return k32.SetConsoleWindowInfo(hConsole, true, rect);
   }
   
   /**
@@ -80,16 +157,54 @@ public class TermCtlImpl implements TermCtl {
    * may depend on the platform being used.
    */
   public interface LibC extends Library {
+    /**
+     * A static instance of the {@link LibC} interface, representing the native C library.
+     * This instance is conditionally loaded based on the underlying platform:
+     * - On non-Windows platforms, the standard C library (libc) is dynamically loaded using
+     * the JNA (Java Native Access) library.
+     * - On Windows platforms, this instance is set to {@code null}, as libc is not available.
+     * <p>
+     * This instance provides access to native system calls defined in the libc library,
+     * enabling low-level operations such as terminal or console management.
+     * <p>
+     * Note that platform compatibility should be considered when using this instance,
+     * as certain functionality may not be available or behave differently depending on
+     * the operating system.
+     */
     LibC INSTANCE = !Platform.isWindows() ? Native.load("c", LibC.class) : null;
     
+    /**
+     * Represents the dimensions and pixel resolution of a terminal or console window.
+     * This structure is commonly used in conjunction with native system calls to retrieve
+     * or manipulate terminal window size parameters.
+     * <p>
+     * Field details:
+     * - {@code ws_row}: The number of rows (character height) in the terminal window.
+     * - {@code ws_col}: The number of columns (character width) in the terminal window.
+     * - {@code ws_xpixel}: The width of the terminal window in pixels.
+     * - {@code ws_ypixel}: The height of the terminal window in pixels.
+     * <p>
+     * This class uses the JNA (Java Native Access) library and is annotated with
+     * {@link Structure.FieldOrder} to define the order of its fields as expected by the
+     * corresponding native structure.
+     */
     @Structure.FieldOrder({"ws_row", "ws_col", "ws_xpixel", "ws_ypixel"})
     class WinSize extends Structure {
       public short ws_row, ws_col, ws_xpixel, ws_ypixel;
     }
     
-    /*
-     * The TIOCGWINSZ operation number varies depending on the OS, but 0x5413 is common
-     * in Linux x86
+    /**
+     * Executes the ioctl system call, which performs device-specific input/output operations
+     * or manipulates the parameters of a file descriptor.
+     *
+     * @param fd      The file descriptor referencing an open file, device, or terminal.
+     * @param request The request code specifying the operation to be performed. This value
+     *                is specific to the platform and the type of file or device.
+     * @param ws      A reference to a {@link WinSize} structure that is used as an input
+     *                or output buffer, depending on the specified request. This structure
+     *                may hold or receive terminal size and resolution information.
+     * @return An integer result code indicating the outcome of the operation. A return value
+     * of 0 typically indicates success, while a negative value indicates an error.
      */
     int ioctl(int fd, long request, WinSize ws);
   }
@@ -143,7 +258,7 @@ public class TermCtlImpl implements TermCtl {
    *                   {@code Dimensions} object containing the number of rows
    *                   and columns
    * @return {@code true} if the resizing operation is executed (regardless of its
-   *  outcome), or {@code false} if the provided dimensions are invalid
+   * outcome), or {@code false} if the provided dimensions are invalid
    * (e.g., non-positive values)
    */
   @Override
@@ -160,7 +275,7 @@ public class TermCtlImpl implements TermCtl {
       Kernel32 k32 = Kernel32.INSTANCE;
       WinNT.HANDLE hConsole = k32.GetStdHandle(STD_OUTPUT_HANDLE);
     
-    /*
+      /*
     1. Define the window rectangle (0-based, hence the subtraction of 1)
     It is vital that the size is less than or equal to the current buffer size.
     */
@@ -169,13 +284,14 @@ public class TermCtlImpl implements TermCtl {
       // 2. Define the buffer size
       Kernel32.COORD size = new Kernel32.COORD(cols, rows);
     
-    /*
+      /*
     Safe execution order in Windows: We try to adjust the buffer first to fit the window,
     or the window first if the buffer is already large. The most robust approach is to
     try both.
     */
-      k32.SetConsoleScreenBufferSize(hConsole, size);
-      boolean success = k32.SetConsoleWindowInfo(hConsole, true, rect);
+      boolean success = k32.SetConsoleScreenBufferSize(hConsole, size);
+      k32.SetConsoleWindowInfo(hConsole, true, rect);
+
       /*
       If it fails or we don't have JNA, we try the ANSI sequence (works in
       Windows Terminal)
@@ -196,7 +312,7 @@ public class TermCtlImpl implements TermCtl {
    * visible in the console window.
    *
    * @return a {@code Dimensions} object representing the number of rows and columns
-   *         of the console window, or {@code null} if the dimensions cannot be determined.
+   * of the console window, or {@code null} if the dimensions cannot be determined.
    */
   private static Dimensions getWinDimensions() {
     Kernel32.CONSOLE_SCREEN_BUFFER_INFO info = new Kernel32.CONSOLE_SCREEN_BUFFER_INFO();
@@ -216,7 +332,7 @@ public class TermCtlImpl implements TermCtl {
    * on Linux and macOS/BSD platforms.
    *
    * @return a {@code Dimensions} object representing the number of rows and columns of the console window,
-   *         or {@code null} if the dimensions cannot be determined.
+   * or {@code null} if the dimensions cannot be determined.
    */
   private static Dimensions getUnixDimensions() {
     LibC.WinSize ws = new LibC.WinSize();

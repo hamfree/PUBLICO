@@ -26,16 +26,41 @@ public class ConvertMapsToString {
         tc = new TermCtlImpl();
     }
     
+    /**
+     * Singleton instance of the ConvertMapsToString class.
+     */
     public static final ConvertMapsToString INSTANCE = new ConvertMapsToString();
     
+    /**
+     * Provides access to the singleton instance of the ConvertMapsToString class.
+     * This method ensures that only one instance of ConvertMapsToString exists
+     * and provides a global point of access to it.
+     *
+     * @return the singleton instance of the ConvertMapsToString class
+     */
     public static ConvertMapsToString getInstance() {
         return INSTANCE;
     }
     
+    /**
+     * Retrieves the current instance of the TermCtl interface.
+     * The TermCtl instance provides various methods for interacting
+     * with terminal properties, such as obtaining or modifying
+     * console dimensions and clearing the screen.
+     *
+     * @return the TermCtl instance associated with the class.
+     */
     public TermCtl getTc() {
         return tc;
     }
     
+    /**
+     * Sets the TermCtl instance for this class. The TermCtl instance provides
+     * various methods for interacting with terminal properties, such as obtaining
+     * or modifying console dimensions and clearing the screen.
+     *
+     * @param tc the TermCtl instance to be associated with this class
+     */
     public void setTc(TermCtl tc) {
         this.tc = tc;
     }
@@ -48,7 +73,7 @@ public class ConvertMapsToString {
      * @throws Exception if an error occurs during the conversion process
      */
     public void convertSimpleMapToString(java.util.Map<String, Integer> map) throws Exception {
-        this.getTc().clearScreen(false);
+        this.getTc().clearScreen(true);
         String msg = "Converting a simple map into its string representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"Map: ");
@@ -66,7 +91,7 @@ public class ConvertMapsToString {
      * @throws Exception if an error occurs during the conversion process
      */
     public void convertComplexMapToString(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
-        this.getTc().clearScreen(false);
+        this.getTc().clearScreen(true);
         String msg = "Converting a complex map to its textual representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"A little bit complex Map: ");
