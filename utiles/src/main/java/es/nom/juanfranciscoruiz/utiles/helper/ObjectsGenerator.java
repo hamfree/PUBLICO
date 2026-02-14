@@ -4,7 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A utility class for generating various types of objects, such as maps, lists,
+ * and more complex data structures.
+ */
 public class ObjectsGenerator {
+  /**
+   * Singleton instance of the ObjectsGenerator class.
+   */
+  private static final ObjectsGenerator INSTANCE = new ObjectsGenerator();
+
+  /**
+   * Private constructor to prevent instantiation from outside the class.
+   */
+  private ObjectsGenerator() { }
+
+  /**
+   * Provides access to the singleton instance of the ObjectsGenerator class.
+   *
+   * @return the singleton instance of the ObjectsGenerator class
+   */
+  public static ObjectsGenerator getInstance() {
+    return INSTANCE;
+  }
+
   /**
    * Generates a map of String and Integer key/value pairs
    *

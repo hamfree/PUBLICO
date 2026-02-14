@@ -5,17 +5,27 @@ Esta librería contiene utilidades para el desarrollo de aplicaciones Java.
 Dispone de varias clases como `Menu`, `MenuManager`, `Util` y `TestUtils` que 
 pueden ser utilizadas para facilitar el desarrollo de aplicaciones Java.
 
-- Menu: Esta clase permite crear y gestionar menús interactivos en la consola.
-- MenuManager: Esta clase permite crear y gestionar menús interactivos en la consola.
-- Util: Esta clase es una clase de utilidad que contiene varios métodos estáticos para la recuperación de información del sistema, procesamiento de colecciones, registro (logging) y control de flujo del programa. Esta clase está diseñada para evitar su instanciación.
-- TestUtils: Esta clase contiene métodos de utilidad para el desarrollo de aplicaciones Java.
+- **Menu**: Esta clase permite crear y gestionar menús interactivos en la consola.
+- **MenuManager**: Esta clase permite crear y gestionar menús interactivos en la consola.
+- **Util**: Esta clase es una clase de utilidad que contiene varios métodos estáticos 
+para la recuperación de información del sistema, procesamiento de colecciones, 
+registro (logging) y control de flujo del programa. Esta clase está diseñada para 
+evitar su instanciación.
+- **TestUtils**: Esta clase contiene métodos de utilidad para el desarrollo de aplicaciones Java.
+
+En el paquete `es.nom.juanfranciscoruiz.demo` se encuentran clases de ejemplo 
+que utilizan las utilidades proporcionadas por esta librería para demostrar su uso 
+y funcionamiento.
+
+## Dependencias
+
+- **JNA**: La librería Java Native Access (JNA) se utiliza para interactuar con las API nativas de Windows.
+- **JUnit**: La librería JUnit se utiliza para realizar pruebas unitarias en las clases de la librería.
+- **Log4j**: La librería Log4j se utiliza para el registro (logging) de eventos en la aplicación.
+- **System-lambda**: La librería System-lambda se utiliza para ejecutar código de forma segura y controlada.
 
 ## Licencia
 
-Esta librería está licenciada bajo la Licencia GNU General Public License v3.0. Consulta el archivo [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html) para obtener más detalles.
+Esta librería está licenciada bajo la Licencia GNU General Public License v3.0. 
 
-## Por hacer
-
-- El menú, cuando se introduce un valor incorrecto, primero navega a la última opción válida y da el error cuando vuelve de la opción. Debería dar el error inmediatamente después de que el usuario pulse <INTRO>.
-- Hacer más test a las clases `Menu` y `MenuManager`.
-- Incluir un '_borrado_' de pantalla _a lo cutre_ (imprimiendo tantos saltos de líneas como líneas tiene el buffer de pantalla). ¿Cómo saber el número de líneas que tiene la consola? Investigarlo (**_no utilizar la librería ANSITerm_**)
+Consulta el archivo [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html) para obtener más detalles.

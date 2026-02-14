@@ -84,10 +84,10 @@ public class ConvertMapsToString {
     }
 
     /**
-     * Converts a complex map with String keys and List<Integer> values into its string representation.
+     * Converts a complex map with String keys and 'List&lt;Integer&gt;' values into its string representation.
      * The method formats the map output using external utility methods for display purposes.
      *
-     * @param map2 the complex map to be converted, where the keys are of type String and the values are of type List<Integer>
+     * @param map2 the complex map to be converted, where the keys are of type String and the values are of type List&lt;Integer&gt;
      * @throws Exception if an error occurs during the conversion process
      */
     public void convertComplexMapToString(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {

@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility to print to standard output and receive characters from the user
  * through standard input.
- * <p>
- *
  * @author Juan F. Ruiz
  */
 public class IOimpl implements IO {

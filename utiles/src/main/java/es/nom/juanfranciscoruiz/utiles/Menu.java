@@ -16,10 +16,9 @@ import static es.nom.juanfranciscoruiz.utiles.Util.*;
  * this menu for output devices or streams and for getting the user's
  * response.
  * <p>
- * When you want to display the menu, assuming the Menu instance is called
- * principalMenu, it would look something like this:
- * <p>
- * IO io = new IOimpl(); io.prt(principalMenu.getMenuView());
+ * This class is used in conjunction with the class MenuManager to manage and
+ * display menus.
+ *
  *
  * @author Juan F. Ruiz
  */
@@ -92,6 +91,7 @@ public class Menu {
      * By default, the menu is not the root menu and has no title or message, but it has a default
      * value for the title property (because title is mandatory), a blank string for the message
      * property (message can't be null), and an empty list for the options property.
+     * @throws MenuException if the menu cannot be instantiated
      */
     public Menu() throws MenuException {
         this.setOptions(new ArrayList<>());
@@ -113,6 +113,7 @@ public class Menu {
      * @param isRootMenu Boolean indicating whether it is the application's main
      *                   menu, which will add the option "0. Exit the application" to the options
      *                   property.
+     * @throws MenuException In case of error
      */
     public Menu(List<String> options, String title, String message,
                 boolean isRootMenu) throws MenuException {
@@ -193,6 +194,7 @@ public class Menu {
      * Sets the menu options list
      *
      * @param options A list of strings with the new menu options.
+     * @throws MenuException If the options list is null
      */
     public void setOptions(List<String> options) throws MenuException {
         if (options == null) {
@@ -295,7 +297,9 @@ public class Menu {
 
 
     /**
-     * The parent menu of this menu, or null if this is the main menu.
+     * Retrieves the parent Menu for the current menu instance.
+     *
+     * @return the parent Menu if it exists, or null if there is no parent Menu
      */
     public Menu getParentMenu() {
         if (parentMenu == null) {
@@ -378,9 +382,11 @@ public class Menu {
      * the {@code setMenuView} method.
      * <p>
      * The menu structure includes:
-     * - A title surrounded by star borders that adjust to the title's length.
-     * - A list of options provided by the instance's {@code getOptions} method.
-     * - A concluding message provided by the instance's {@code getMessage} method.
+     * <ul>
+     * <li>- A title surrounded by star borders that adjust to the title's length.</li>
+     * <li>- A list of options provided by the instance's {@code getOptions} method.</li>
+     * <li>- A concluding message provided by the instance's {@code getMessage} method.</li>
+     * </ul>
      */
     public void generateMenuView() {
         final String LS = System.lineSeparator();
@@ -416,17 +422,24 @@ public class Menu {
      * In the case that an application has several menus, if isRootMenu is true,
      * then this is the main menu of the application and the option "0. Exit the
      * application" will be added as the first option.
+     * @return true if this is the root menu, false otherwise
      */
     public boolean isRootMenu() {
         return isRootMenu;
     }
 
+    /**
+     * Sets the root menu status.
+     *
+     * @param rootMenu A boolean indicating whether this menu should be set as the root menu.
+     */
     public void setRootMenu(boolean rootMenu) {
         isRootMenu = rootMenu;
     }
 
     /**
-     * The submenus of this menu, or null if this is a leaf menu.
+     * Gets the list of submenus for this menu.
+     * @return a list of submenus for this menu.
      */
     public List<Menu> getSubMenus() {
         return subMenus;
@@ -446,7 +459,7 @@ public class Menu {
             return;
         }
 
-        // Copia defensiva: evita listas de tamaño fijo (Arrays.asList) o no modificables
+        // Defensive copying: avoids fixed-size (Arrays.asList) or non-modifiable lists
         List<Menu> mutable = new ArrayList<>(subMenus);
 
         // The submenus will added to the options list too but renders with different
@@ -512,10 +525,12 @@ public class Menu {
      * @param childMenu The sub-menu to be removed from the current menu.
      *                  Must not be null and should exist within the current sub-menus list.
      * @throws MenuException Thrown when any of the following conditions occur:
-     *                       1. The provided sub-menu is null.
-     *                       2. The current menu's sub-menus collection is null.
-     *                       3. The sub-menu to remove is not found in the sub-menus list.
-     *                       4. Attempting to remove a root menu that contains additional sub-menus.
+     * <ul>
+     *                       <li>1. The provided sub-menu is null.</li>
+     *                       <li>2. The current menu's sub-menus collection is null.</li>
+     *                       <li>3. The sub-menu to remove is not found in the sub-menus list.</li>
+     *                       <li>4. Attempting to remove a root menu that contains additional sub-menus.</li>
+     * </ul>
      */
     public void removeSubMenu(Menu childMenu) throws MenuException {
         if (childMenu == null) {
@@ -595,6 +610,8 @@ public class Menu {
      * Removes an option from the options list.
      *
      * @param optionText The option to remove.
+     *                   Must not be null or empty.
+     * @throws MenuException If the provided option is null or empty.
      */
     public void removeOption(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {

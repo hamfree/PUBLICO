@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.utiles.exceptions;
 
+import java.io.Serial;
+
 /**
  * Thrown to indicate that the TypeConverter class has attempted to extract
  * from a string a Long or Double object, but that the string does not have the
@@ -9,6 +11,10 @@ package es.nom.juanfranciscoruiz.utiles.exceptions;
  */
 public class TypeConverterException extends RuntimeException {
 
+    /**
+     * Serial version UID for serialization purposes.
+     */
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -20,7 +26,7 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param message
+     * @param message the message to be displayed when the exception is thrown.
      */
     public TypeConverterException(String message) {
         super(message);
@@ -29,8 +35,8 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param message
-     * @param cause
+     * @param message the message to be displayed when the exception is thrown.
+     * @param cause   the cause of the exception.
      */
     public TypeConverterException(String message, Throwable cause) {
         super(message, cause);
@@ -39,7 +45,7 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param cause
+     * @param cause the cause of the exception.
      */
     public TypeConverterException(Throwable cause) {
         super(cause);
@@ -48,14 +54,12 @@ public class TypeConverterException extends RuntimeException {
     /**
      * Constructor for TypeConverterException
      *
-     * @param message
-     * @param cause
-     * @param enableSuppression
-     * @param writableStackTrace
+     * @param message            the message to be displayed when the exception is thrown.
+     * @param cause              the cause of the exception.
+     * @param enableSuppression  boolean to indicate if suppression is enabled
+     * @param writableStackTrace boolean to indicate if stack trace is writable
      */
     public TypeConverterException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-
-
 }

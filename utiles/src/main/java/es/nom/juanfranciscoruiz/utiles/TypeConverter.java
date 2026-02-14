@@ -31,6 +31,33 @@ public class TypeConverter {
     private final static Logger logger = LoggerFactory.getLogger(TypeConverter.class);
 
     /**
+     * Singleton instance of the {@code TypeConverter} class. This instance provides access
+     * to the utility methods defined within the class for type conversion operations.
+     * <p>
+     * It is initialized once as a static final field and can be accessed through the
+     * {@link TypeConverter#getInstance()} method. Ensures a single shared instance of
+     * {@code TypeConverter} is used throughout the application.
+     */
+    private static final TypeConverter INSTANCE = new TypeConverter();
+
+    /**
+     * A private constructor for the TypeConverter class. This constructor is
+     * intentionally declared as private to prevent instantiation of the class,
+     * as all methods in the class are designed to operate as static utility methods.
+     * This enforces the utility nature of the TypeConverter class.
+     */
+    private TypeConverter(){}
+
+    /**
+     * Retrieves the singleton instance of the TypeConverter class.
+     *
+     * @return the singleton instance of TypeConverter.
+     */
+    public static TypeConverter getInstance(){
+        return INSTANCE;
+    }
+
+    /**
      * Converts a generic type collection to a generic type ArrayList
      *
      * @param <T> the type of the collection

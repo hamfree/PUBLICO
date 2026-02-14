@@ -1,7 +1,6 @@
 package es.nom.juanfranciscoruiz.utiles.demo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +29,24 @@ public class Demo {
      */
     public final static Logger logger = LoggerFactory.getLogger(Demo.class);
 
+    /**
+     * Terminal control object
+     */
     private TermCtl tc;
-    
+
+    /***
+     * Sample map and list objects
+     */
     private Map<String, Integer> theMap;
+
+    /**
+     * Sample map of lists
+     */
     private Map<String, List<Integer>> theMapOfLists;
     
     /**
      * Default constructor for the Demo class.
-     *
+     * <p>
      * This constructor initializes the `tc` field, which is an instance of a
      * `TermCtl` implementation. The `tc` object represents a terminal control
      * utility or functionality that is pivotal for the operations of the Demo
@@ -51,27 +60,57 @@ public class Demo {
             ObjectsGenerator.generateList(true),
             ObjectsGenerator.generateList(false));
     }
-    
+
+    /**
+     * Retrieves the terminal control utility instance associated with this class.
+     *
+     * @return the {@code TermCtl} instance used for managing terminal-related operations.
+     */
     public TermCtl getTc() {
         return tc;
     }
-    
+
+    /**
+     * Sets the terminal control utility instance for this class.
+     *
+     * @param tc the {@code TermCtl} instance to be associated with this class.
+     */
     public void setTc(TermCtl tc) {
         this.tc = tc;
     }
-    
+
+    /**
+     * Retrieves the map stored in the class instance.
+     *
+     * @return a map with String keys and Integer values, representing the data stored in this class.
+     */
     public Map<String, Integer> getTheMap() {
         return theMap;
     }
-    
+
+    /**
+     * Sets the internal map of the class with the specified map.
+     *
+     * @param theMap a map with String keys and Integer values to be stored in the class
+     */
     public void setTheMap(Map<String, Integer> theMap) {
         this.theMap = theMap;
     }
-    
+
+    /**
+     * Retrieves the map of lists stored in the class instance.
+     *
+     * @return a map with String keys and List&lt;Integer&gt; values, representing the data stored in this class.
+     */
     public Map<String, List<Integer>> getTheMapOfLists() {
         return theMapOfLists;
     }
-    
+
+    /**
+     * Sets the map of lists stored in the class instance.
+     *
+     * @param theMapOfLists a map with String keys and List&lt;Integer&gt; values to be stored in the class
+     */
     public void setTheMapOfLists(Map<String, List<Integer>> theMapOfLists) {
         this.theMapOfLists = theMapOfLists;
     }
@@ -103,11 +142,14 @@ public class Demo {
      * invoking corresponding actions based on the selected option.
      * <p>
      * The options presented to the user are:
-     * 1. Show the sample objects.
-     * 2. Convert a simple map into its string representation.
-     * 3. Convert a complex map into its string representation.
-     * 4. Perform type conversions.
-     * 5. Access miscellaneous utilities.
+     * <ol>
+     * <li>Show the sample objects.</li>
+     * <li>Convert a simple map into its string representation.</li>
+     * <li>Convert a complex map into its string representation.</li>
+     * <li>Perform type conversions.</li>
+     * <li>Access miscellaneous utilities.</li>
+     * <li>Adjust the size and settings of the console.</li>
+     * </ol>
      * <p>
      * The method relies on the `Menu` and `MenuManager` classes to handle the
      * creation and management of the menu system. It also catches exceptions
@@ -117,7 +159,7 @@ public class Demo {
      * Note: This method operates in a loop until the user selects the exit option
      * or manually terminates the program.
      *
-     * @throws RuntimeException if an error occurs during menu creation, menu management,
+     * @throws Exception if an error occurs during menu creation, menu management,
      *                          or other processing.
      */
     public void run() throws Exception {
@@ -193,6 +235,21 @@ public class Demo {
         } while (response != 0);
     }
 
+    /**
+     * Adjusts the size and settings of the console using terminal control functionality.
+     * <p>
+     * This method interacts with an instance of `TerminalControl` class. It invokes
+     * the `terminalControl` method of the `TerminalControl` instance, potentially to
+     * retrieve or configure the size and settings of the application console. The
+     * implementation relies on the external terminal utility for any terminal
+     * state management or configuration changes.
+     * <p>
+     * The method is scoped as private and forms part of the internal logic for managing
+     * terminal-related operations, ensuring that the console operates as intended during
+     * runtime execution.
+     *
+     * @throws Exception if an error occurs during terminal control operations
+     */
     private void gettingAndSettingConsoleSize() throws Exception {
         TerminalControl tc = new TerminalControl();
         tc.terminalControl();
@@ -227,7 +284,7 @@ public class Demo {
     }
 
     /**
-     * Converts a complex map with String keys and List<Integer> values into its string representation.
+     * Converts a complex map with String keys and List&lt;Integer&gt; values into its string representation.
      * <p>
      * This method utilizes the `generateMapOfLists` utility to create a map structure
      * from two lists of integers. The lists are generated using the `generateList` method,

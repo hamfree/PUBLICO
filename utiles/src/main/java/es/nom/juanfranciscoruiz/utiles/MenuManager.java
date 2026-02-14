@@ -12,8 +12,10 @@ import static es.nom.juanfranciscoruiz.utiles.Util.error;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
 
 /**
- * Represents the manager for menu operations.
- * This class provides methods to manage menu-related functionality, including setting, displaying, and interacting with menus.
+ * The {@code MenuManager} class is responsible for managing and interacting
+ * with menu objects in an application. It provides functionality to display
+ * menus, handle user input, and manage menu lifecycles. This class ensures
+ * that menu-related errors are properly handled and logged.
  */
 public class MenuManager {
     private static final Logger logger = LoggerFactory.getLogger(Menu.class);
@@ -31,6 +33,7 @@ public class MenuManager {
      * for managing menu operations, including setting, displaying, and interacting
      * with menus within the application. The class provides utility methods for
      * customizing and handling menu-related functionality.
+     * @throws MenuException if the menu cannot be instantiated
      */
     public MenuManager() throws MenuException {
         this.menu = new Menu();
@@ -40,6 +43,8 @@ public class MenuManager {
      * Constructs a new instance of the MenuManager class with the specified menu.
      *
      * @param menu The menu to be managed by the MenuManager.
+     *             Must not be null.
+     * @throws MenuManagerException if the provided menu is null.
      */
     public MenuManager(Menu menu) throws MenuManagerException {
         if (menu == null) {
@@ -49,10 +54,23 @@ public class MenuManager {
         this.menu = menu;
     }
 
+    /**
+     * Retrieves the menu managed by the MenuManager.
+     *
+     * @return the menu managed by the MenuManager.
+     */
     public Menu getMenu() {
         return menu;
     }
 
+    /**
+     * Sets the menu to be managed by the MenuManager.
+     * If the provided menu is null, an error will be logged, and a
+     * {@code MenuManagerException} will be thrown.
+     *
+     * @param menu The {@code Menu} object to be managed. Must not be null.
+     * @throws MenuManagerException If the provided menu is null.
+     */
     public void setMenu(Menu menu) throws MenuManagerException {
         if (menu == null) {
             error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
@@ -112,8 +130,9 @@ public class MenuManager {
      * @param msg An optional string with the text to be printed to the left of
      *            the user prompt. If nothing is specified, the phrase "Make your
      *            selection: " will be printed.
-     * @throws es.nom.juanfranciscoruiz.utiles.exceptions.MenuException In case
-     *                                                                  an error is detected.
+     * @return The option selected by the user.
+     * @throws  MenuException In case an error is detected.
+     * @throws  MenuManagerException In case an error is detected.
      */
     public Long awaitResponse(String msg) throws MenuException, MenuManagerException {
         if (menu == null) {
