@@ -15,7 +15,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * scrolling margins. Scroll up and down won’t affect any lines outside the
  * scrolling margins.
  * <p>
- * The default value for <n> is 1, and the value can be optionally omitted.
+ * The default value for 'n' is 1, and the value can be optionally omitted.
  *
  * @author Juan F. Ruiz
  */
@@ -50,26 +50,28 @@ public class ViewportPositioningCodes {
     }
 
     /**
-     * Sequence......: ESC [ <n> S]
+     * Sequence......: ESC [ n S]
      * Code..........: SU
      * Description...: Scroll Up
-     * Behavior......: Scroll text up by <n>. Also known as pan down, new lines
+     * Behavior......: Scroll text up by 'n' lines. Also known as pan down, new lines
      * fill in from the bottom of the screen
      *
      * @param lines the number of lines to scroll
+     * @return the ANSI escape sequence
      */
     public static String getEsForScrollTextUp(int lines) {
         return (ESC + "[" + lines + "S");
     }
 
     /**
-     * Sequence......: ESC [ <n> T]
+     * Sequence......: ESC [ n T]
      * Code..........: SD
      * Description...: Scroll Down
-     * Behavior......: Scroll down by <n>. Also known as pan up, new lines fill
+     * Behavior......: Scroll down by n lines. Also known as pan up, new lines fill
      * in from the top of the screen
      *
-     * @param lines the number of lines to scroll
+     * @param lines the number of lines to scroll down
+     * @return the ANSI escape sequence
      */
     public static String  getEsForScrollTextDown(int lines) {
         return (ESC + "[" + lines + "T");

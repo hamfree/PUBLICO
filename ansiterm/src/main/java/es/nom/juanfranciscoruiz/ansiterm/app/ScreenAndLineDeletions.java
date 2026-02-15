@@ -11,11 +11,31 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.*;
  */
 public class ScreenAndLineDeletions {
 
+    /**
+     * A constant representing a delay of four seconds, used for timing or scheduling operations
+     * within the ScreenAndLineDeletions class.
+     */
     public final static Long FOUR_SECONDS_DELAY = 4000L;
+    /**
+     * Represents a short delay duration typically used for brief waiting periods
+     * or time intervals in execution. This constant holds the value of 100 milliseconds.
+     */
     public final static Long SHORT_DELAY = 100L;
+    /**
+     * Represents a delay duration of two seconds, often used for short pauses or timeouts.
+     */
     public final static Long TWO_SECONDS_DELAY = 2000L;
+    /**
+     * Represents a message displayed to inform the user that the process will continue automatically every 4 seconds.
+     */
     public final static String MSG = "The process will continue automatically every 4 seconds. Do not press any keys!";
+    /**
+     * Represents a title for the screen and line deletions demonstration.
+     */
     public final static String TITLE = "------------ Deleted from the cursor and scroll ------------";
+    /**
+     * Represents a message prompting the user to press Enter to return to the menu.
+     */
     public static final String PRESS_ENTER_TO_RETURN_TO_MENU = "Press <ENTER> to return to menu";
     
     /**

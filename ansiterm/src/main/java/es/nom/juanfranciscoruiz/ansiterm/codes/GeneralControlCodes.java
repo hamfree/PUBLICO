@@ -145,6 +145,7 @@ public class GeneralControlCodes {
 
     /**
      * Returns the ASCII control code Carriage Return (CR)
+     * @return the ASCII control code Carriage Return (CR)
      */
     public static char carriagereturn() {
         // In the Windows terminal it moves the cursor to the beginning of the line

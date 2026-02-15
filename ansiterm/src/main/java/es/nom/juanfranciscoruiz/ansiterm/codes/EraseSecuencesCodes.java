@@ -81,6 +81,7 @@ public class EraseSecuencesCodes {
     /**
      * Returns an escape sequence that deletes everything from the cursor position
      * to the end of the screen
+     * @return a string with the escape sequence to delete everything from the cursor position to the end of the screen
      */
     public static String deleteFromCursorToEndScreen() {
         return ERASES_FROM_CURSOR_TO_END_OF_SCREEN;
@@ -89,6 +90,7 @@ public class EraseSecuencesCodes {
     /**
      * Returns an escape sequence that deletes everything from the cursor position
      * to the beginning of the screen
+     * @return a string with the escape sequence to delete everything from the cursor position to the beginning of the screen
      */
     public static String deleteFromCursorToBeginScreen() {
         return ERASES_FROM_CURSOR_TO_BEGINNING_OF_SCREEN;
@@ -96,6 +98,7 @@ public class EraseSecuencesCodes {
 
     /**
      * Returns an escape sequence that erases the entire screen
+     * @return a string with the escape sequence to erase the entire screen
      */
     public static String clearScreen() {
         return EraseSecuencesCodes.CLEAR_SCREEN;
@@ -104,6 +107,7 @@ public class EraseSecuencesCodes {
     /**
      * Returns an escape sequence that deletes everything from the cursor position
      * to the end of the line where it is located.
+     * @return a string with the escape sequence to delete everything from the cursor position to the end of the line
      */
     public static String deleteFromCursorToEndLine() {
         return ERASES_FROM_CURSOR_TO_END_OF_CURRENT_LINE;
@@ -112,6 +116,7 @@ public class EraseSecuencesCodes {
     /**
      * Returns an escape sequence that deletes everything from the cursor position
      * to the beginning of the line where it is located.
+     * @return a string with the escape sequence to delete everything from the cursor position to the beginning of the line
      */
     public static String deleteFromCursorToBeginLine() {
         return ERASES_FROM_CURSOR_TO_BEGINNING_OF_CURRENT_LINE;
@@ -120,6 +125,7 @@ public class EraseSecuencesCodes {
     /**
      * Returns an escape sequence that erases possible characters from the current
      * line where the cursor is located.
+     * @return a string with the escape sequence to erase possible characters from the current line
      */
     public static String deleteLine() {
         return ERASES_CURRENT_LINE;

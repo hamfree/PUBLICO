@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  * having a title bar at the top or a status bar at the bottom of your
  * application.
  * <p>
- * For DECSTBM, there are two optional parameters, <t> and <b>, which are used
+ * For DECSTBM, there are two optional parameters, 't' and 'b', which are used
  * to specify the rows that represent the top and bottom lines of the scroll
- * region, inclusive. If the parameters are omitted, <t> defaults to 1 and <b>
+ * region, inclusive. If the parameters are omitted, 't' defaults to 1 and 'b'
  * defaults to the current viewport height.
  * <p>
  * Scrolling margins are per-buffer, so importantly, the Alternate Buffer and
@@ -36,15 +36,6 @@ public class ScrollingMarginsCodes {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScrollingMarginsCodes.class);
 
     /**
-     * Singleton instance of the {@code ScrollingMarginsCodes} class.
-     */
-    private static final ScrollingMarginsCodes INSTANCE;
-
-    static {
-        INSTANCE = new ScrollingMarginsCodes();
-    }
-
-    /**
      * Provides access to the singleton instance of the {@code ScrollingMarginsCodes} class.
      */
     private static final String ESC = CSI.ESC;
@@ -55,7 +46,7 @@ public class ScrollingMarginsCodes {
     private ScrollingMarginsCodes() {}
 
     /**
-     * Sequence......: ESC [ <t> ; <b> r
+     * Sequence......: ESC [ t ; b r
      * Code..........: DECSTBM
      * Description...: Set Scrolling Region
      * Behavior......: Sets the top and bottom margins which defines the scrolling

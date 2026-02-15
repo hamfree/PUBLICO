@@ -19,7 +19,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * either 'Normal' (default) or 'Application', and the 'Keypad Keys Mode' is
  * either 'Numeric' (default) or 'Application'.<br><br>
  * <p>
- * See the Cursor Keys and Numpad & Function Keys sections for the sequences
+ * See the Cursor Keys and Numpad &amp; Function Keys sections for the sequences
  * that are emitted in these modes.
  *
  * @author Juan F. Ruiz
@@ -34,7 +34,7 @@ public class InputModeChangesCodes {
      * This variable provides access to the only instance of the class,
      * ensuring that only one instance exists throughout the application.
      */
-    private static InputModeChangesCodes instance;
+    private static final InputModeChangesCodes instance;
 
     static {
         instance = new InputModeChangesCodes();

@@ -24,7 +24,7 @@ public class TabCodes {
     /**
      * Singleton instance of the {@code TabCodes} class.
      */
-    private static TabCodes tabCodes;
+    private static final TabCodes tabCodes;
 
     static {
         tabCodes = new TabCodes();
@@ -77,12 +77,12 @@ public class TabCodes {
     public static final String TAB_CLEAR_ALL_COLUMNS = ESC + "[3g";
 
     /**
-     * Sequence.......: ESC [<n>I
+     * Sequence.......: ESC [nI
      * Code...........: CHT
      * Description....: Cursor Horizontal (Forward) Tab
      * Behavior.......: Advance the cursor to the next column (in the same row)
      * with a tab stop
-     * Notes..........: For both CHT and CBT, <n> is an optional parameter that
+     * Notes..........: For both CHT and CBT, 'n' is an optional parameter that
      * (default=1) indicating how many times to advance the cursor in
      * the specified direction. If there are no tab stops set via HTS,
      * CHT and CBT will treat the first and last columns of the window
@@ -90,7 +90,8 @@ public class TabCodes {
      * cause the console to navigate to the next tab stop on the output
      * of a TAB (0x09, ‘\t’) character, in the same manner as CHT.
      *
-     * @param n number of times to advance the cursor
+     * @param n number of times to advance the cursor in the specified direction
+     * @return the ANSI escape sequence
      *
      */
     public static String set_TAB_CURSOR_HORIZONTAL_TAB(int n) {
@@ -99,13 +100,15 @@ public class TabCodes {
 
     /**
      * Move the cursor to the previous column (in the same row) with a tab stop
-     * Sequence.......: ESC [<n>Z
+     * Sequence.......: ESC [nZ
      * Code...........: CBT
      * Description....: Cursor Backwards Tab
      * Behavior.......: Move the cursor to the previous column (in the same row)
      * with a tab stop
      *
-     * @param n number of times to move the cursor
+     * @param n number of times to move the cursor in the specified direction
+     * @return the ANSI escape sequence
+     *
      */
     public static String set_TAB_CURSOR_BACKWARDS_TAB(int n) {
         return ESC + "[" + n + "Z";

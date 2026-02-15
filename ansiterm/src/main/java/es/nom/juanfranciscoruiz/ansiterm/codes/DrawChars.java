@@ -7,10 +7,11 @@ import org.slf4j.Logger;
  * It is used in conjunction with the CharacterSetModeCodes to create box layouts, tables, or borders.
  * Table for ASCII character maps to which line drawing character.
  * <table>
+ *     <caption>ASCII Character Map to Line Drawing Characters</caption>
  * <tr><th>CONSTANT NAME</th><th>Hex</th><th>ASCII</th><th>DEC</th></tr>
  * <tr><td>RIGHT_DOWN_CORNER</td><td>0x6a</td><td>j</td><td>┘</td></tr>
  * <tr><td>RIGHT_UP_CORNER</td><td>0x6b</td><td>k</td><td>┐</td></tr>
- * <tr><td>LEFT_UP_CORNER</td>td>0x6c</td><td>l</td><td>┌</td></tr>
+ * <tr><td>LEFT_UP_CORNER</td><td>0x6c</td><td>l</td><td>┌</td></tr>
  * <tr><td>LEFT_DOWN_CORNER</td><td>0x6d</td><td>m</td><td>└</td></tr>
  * <tr><td>CROSS</td><td>0x6e</td><td>n</td><td>┼</td></tr>
  * <tr><td>HORIZONTAL_LINE</td><td>0x71</td><td>q</td><td>─</td></tr>
@@ -30,7 +31,7 @@ public class DrawChars {
     /**
      * Singleton instance of the {@code DrawChars} class.
      */
-    private static DrawChars instance;
+    private static final DrawChars instance;
 
     static {
         instance = new DrawChars();

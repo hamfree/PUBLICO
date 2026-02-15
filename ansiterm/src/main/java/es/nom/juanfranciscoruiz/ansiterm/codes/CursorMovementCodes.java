@@ -39,8 +39,8 @@ public class CursorMovementCodes {
      * Sequence......: ESC[H
      * Code..........: DECXCPR
      * Description...: Specify the cursor position
-     * Behavior......: Outputs the cursor position as ESC[<r>;<c>R,
-     * where <r> is equal to the cursor row and <c> is equal to the cursor column
+     * Behavior......: Outputs the cursor position as ESC[&lt;r&gt;&lt;c&gt;R,
+     * where &lt;r&gt; is equal to the cursor row and &lt;c&gt; is equal to the cursor column
      */
     public static final String CURSOR_GET_POSITION = ESC + "[6n";
     /**
@@ -74,6 +74,11 @@ public class CursorMovementCodes {
     private CursorMovementCodes() {
     }
 
+    /**
+     * Provides access to a singleton instance of the {@code CursorMovementCodes} class.
+     *
+     * @return the singleton instance of {@code CursorMovementCodes}.
+     */
     public static CursorMovementCodes getInstance(){
         return instance;
     }
@@ -83,8 +88,8 @@ public class CursorMovementCodes {
      * Sequence......: ESC [6 n
      * Code..........: DECXCPR
      * Description...: Specify the cursor position
-     * Behavior......: Return the escape sequence to move the cursor position as ESC[<r>;<c>R,
-     * where <r> is equal to the cursor row and <c> is equal to the cursor column
+     * Behavior......: Return the escape sequence to move the cursor position as ESC['r';'c'R,
+     * where 'r' is equal to the cursor row and 'c' is equal to the cursor column
      *
      * @return a string representing the ANSI escape sequence for setting the cursor
      * to the beginning of the current line.
@@ -98,8 +103,8 @@ public class CursorMovementCodes {
      * Sequence......: ESC 6 n
      * Code..........: DECXCPR
      * Description...: Get cursor position
-     * Behavior......: Return the escape sequence to get the cursor position as ESC[<r>;<c>R,
-     * where <r> is equal to the cursor row and <c> is equal to the cursor column
+     * Behavior......: Return the escape sequence to get the cursor position as ESC['r';'c'R,
+     * where 'r' is equal to the cursor row and 'c' is equal to the cursor column
      *
      * @return a string representing the ANSI escape sequence to get the cursor position
      */
@@ -124,11 +129,11 @@ public class CursorMovementCodes {
      * Returns the escape sequence to move the cursor to the line, column position
      * of the terminal
      * <p>
-     * Sequence......: <ESC[<y>;<x>H
+     * Sequence......: ESC[y;xH
      * Code..........: CUP
      * Description...: Returns the escape sequence for positioning the cursor at
-     * the specified coordinates <x>; <y> within the  window, where <x> is the
-     * column of the row <y>
+     * the specified coordinates 'x'; 'y' within the  window, where 'x' is the
+     * column of the row 'y'
      *
      * @param line   integer with the line to move the cursor to
      * @param column integer with the column to move the cursor to
@@ -155,10 +160,10 @@ public class CursorMovementCodes {
     }
 
     /**
-     * Sequence ......: ESC[<n>A
+     * Sequence ......: ESC[nA
      * Code...........: CUU
      * Description....: Cursor Up
-     * Behaviour......: Returns the escape sequence to move the cursor up as many lines as indicated in the 'lines' parameter
+     * Behaviour......: Returns the escape sequence to move the cursor up as many 'n' lines as indicated in the 'lines' parameter
      *
      * @param lines an integer with the lines up where the cursor will be moved
      * @return a string representing the ANSI escape sequence to move the cursor up
@@ -168,10 +173,10 @@ public class CursorMovementCodes {
     }
 
     /**
-     * Sequence ......: ESC[<n>B
+     * Sequence ......: ESC[nB
      * Code...........: CUD
      * Description....: Cursor Down
-     * Behaviour......: Returns the escape sequence to move the cursor down as many lines as indicated in the lines parameter
+     * Behaviour......: Returns the escape sequence to move the cursor down as many 'n'lines as indicated in the lines parameter
      *
      * @param lines an integer with the lines down where the cursor will be moved
      * @return a string representing the ANSI escape sequence to move the cursor down
@@ -181,10 +186,10 @@ public class CursorMovementCodes {
     }
 
     /**
-     * Sequence ......: ESC[<n>C
+     * Sequence ......: ESC[nC
      * Code...........: CUF
      * Description....: Cursor Forward
-     * Behaviour......: Returns the escape sequence to move the cursor to the right as many characters as indicated in the cars parameter
+     * Behaviour......: Returns the escape sequence to move the cursor to the right as many 'n' characters as indicated in the cars parameter
      *
      * @param cars an integer with the characters to the right where the cursor will be moved
      * @return a string representing the ANSI escape sequence to move the cursor to the right
@@ -194,10 +199,10 @@ public class CursorMovementCodes {
     }
 
     /**
-     * Sequence ......: ESC[<n>D
+     * Sequence ......: ESC[nD
      * Code...........: CUB
      * Description....: Cursor Backward
-     * Behaviour......: Returns the escape sequence to move the cursor to the left as many characters as indicated in the cars parameter
+     * Behaviour......: Returns the escape sequence to move the cursor to the left as many 'n' characters as indicated in the cars parameter
      *
      * @param cars an integer specifying the number of characters to move the cursor to the left
      * @return a string representing the ANSI escape sequence to move the cursor to the left
@@ -236,6 +241,17 @@ public class CursorMovementCodes {
         return CURSOR_RESTORE_CURRENT_POSITION;
     }
 
+    /**
+     * Returns the ANSI escape sequence to save the current cursor position.
+     * <p>
+     * Sequence......: ESC 7
+     * Code..........: SCOSC
+     * Description...: Saves the current cursor position to restore it later.
+     * Behavior......: Stores the cursor's current position in memory, enabling it
+     *                 to be restored to this position using the respective restore sequence.
+     *
+     * @return a string representing the ANSI escape sequence to save the current cursor position.
+     */
     public static String getSecForSaveCursorPosition() {
         return CURSOR_SAVE_CURRENT_POSITION;
     }

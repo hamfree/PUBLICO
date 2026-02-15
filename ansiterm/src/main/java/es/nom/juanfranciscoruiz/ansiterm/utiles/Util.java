@@ -84,6 +84,7 @@ public class Util {
      * @param startLine    The starting line in the terminal.
      * @param linesToPrint The number of lines in the text block.
      * @param cols         The number of columns (characters) in each line.
+     * @throws ANSITermException If there's an error printing the text block.
      */
     public static void printRandomTextBlock(ANSITerm term, int startLine, int linesToPrint, int cols) throws ANSITermException {
         int car;
@@ -111,6 +112,7 @@ public class Util {
      * @param column       The terminal column where the string will be printed.
      * @param term         An ANSITerm object.
      * @param milliseconds The delay between printing each character in milliseconds.
+     * @throws ANSITermException If there's an error printing the string.
      */
     public static void printWithDelay(String msg,
                                       int line,

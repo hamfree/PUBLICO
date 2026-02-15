@@ -275,11 +275,11 @@ public class ANSITerm {
     /**
      * Moves the cursor to the line, column position of the terminal
      * <p>
-     * Sequence......: <ESCESC[<y>;<x>H
+     * Sequence......: &lt;[&lt;y&gt;&lt;x&gt;H
      * Code..........: CUP
      * Description...: Position of cursor
-     * The cursor moves to the coordinates <x>; <y> within the
-     * window, where <x> is the column of the row <y>
+     * The cursor moves to the coordinates &lt;x&gt; &lt;y&gt; within the
+     * window, where &lt;x&gt; is the column of the row &lt;y&gt;
      *
      * @param line integer with the line to move the cursor to
      * @param column integer with the column to move the cursor to
@@ -397,6 +397,7 @@ public class ANSITerm {
      * space characters from the right edge of the screen.
      *
      * @param cars the number of characters to delete.
+     * @throws ANSITermException if the provided number of characters is invalid (e.g., non-positive)
      */
     public void eraseCharacters(int cars) throws ANSITermException {
         if (cars > 0) {
@@ -411,6 +412,7 @@ public class ANSITerm {
      * overwriting them with a space character.
      *
      * @param cars the number of characters to delete.
+     * @throws ANSITermException if the provided number of characters is invalid (e.g., non-positive)
      */
     public void eraseCharsWithSpaces(int cars)  throws ANSITermException {
         if (cars > 0) {
@@ -426,6 +428,7 @@ public class ANSITerm {
      * will shift down.
      *
      * @param lines the number of lines to insert.
+     * @throws ANSITermException if the provided number of lines is invalid (e.g., non-positive)
      */
     public void insertLines(int lines) throws ANSITermException {
         if (lines > 0) {
@@ -440,6 +443,7 @@ public class ANSITerm {
      * the row where the cursor is located.
      *
      * @param lines the number of lines to delete.
+     * @throws ANSITermException if the provided number of lines is invalid (e.g., non-positive)
      */
     public void deleteLines(int lines) throws ANSITermException {
         if (lines > 0) {
@@ -460,9 +464,7 @@ public class ANSITerm {
     /**
      * Deletes everything from the cursor position to the beginning of the screen
      */
-    public void deleteFromCursorToBeginScreen() {
-        System.out.print(EraseSecuencesCodes.deleteFromCursorToBeginScreen());
-    }
+    public void deleteFromCursorToBeginScreen() {System.out.print(EraseSecuencesCodes.deleteFromCursorToBeginScreen()); }
 
     /**
      * Erases the screen
@@ -502,7 +504,7 @@ public class ANSITerm {
      * @param msg the string to put in bold
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be in bold.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBold(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -541,7 +543,7 @@ public class ANSITerm {
      * @param msg the string that will be put in italic mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be in italics.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setItalic(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -562,7 +564,7 @@ public class ANSITerm {
      * @param msg the string that will be put in underline mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be underlined.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setUnderline(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -583,7 +585,7 @@ public class ANSITerm {
      * @param msg the string that will be put in blink mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be blinking.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBlink(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -604,7 +606,7 @@ public class ANSITerm {
      * @param msg the string that will be put in inverse mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be inverted (foreground/background color swap).
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setInverse(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -626,7 +628,7 @@ public class ANSITerm {
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be hidden (nothing appears on the screen, but the space
      * occupied by the string is taken).
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setHidden(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -647,7 +649,7 @@ public class ANSITerm {
      * @param msg the string that will be put in strikethrough mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will appear struck through.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setStrikeThrough(String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
@@ -758,28 +760,24 @@ public class ANSITerm {
      * @param msg The string to be colored
      * @return a string with the appropriate ANSI sequence to show the text
      * with the indicated color in the console.
-     * @throws ANSITermException In case any argument is not valid.
+     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setColor(Color color, String msg) throws ANSITermException {
+    public String setColor(Color color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         int iColor = Integer.parseInt(color.getAsString());
-        if ((iColor >= 30 || iColor <= 37)) {
-            if ((msg != null && !msg.isEmpty())) {
-                sb.append(ESC).append("[")
-                    .append(iColor)
-                    .append("m")
-                    .append(msg)
-                    .append(ESC)
-                    .append("[")
-                    .append(Color.DEFAULT.getAsString())
-                    .append("m");
-            } else {
-                throw new IllegalArgumentException(EX_NO_MSG);
-            }
+        if ((msg != null && !msg.isEmpty())) {
+            sb.append(ESC).append("[")
+                .append(iColor)
+                .append("m")
+                .append(msg)
+                .append(ESC)
+                .append("[")
+                .append(Color.DEFAULT.getAsString())
+                .append("m");
         } else {
-            throw new IllegalArgumentException(EX_NO_COL);
+            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
+
         return sb.toString();
     }
     
@@ -862,23 +860,19 @@ public class ANSITerm {
     public String setBackgroundColor(BGColor color, String msg) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         int iColor = Integer.parseInt(color.getAsString());
-        if ((iColor >= 40 || iColor <= 47)) {
-            if ((msg != null && !msg.isEmpty())) {
-                sb.append(ESC).append("[")
-                    .append(iColor)
-                    .append("m")
-                    .append(msg)
-                    .append(ESC)
-                    .append("[")
-                    .append(DEFAULT.getAsString())
-                    .append("m");
-            } else {
-                throw new IllegalArgumentException(EX_NO_MSG);
-            }
+        if ((msg != null && !msg.isEmpty())) {
+            sb.append(ESC).append("[")
+                .append(iColor)
+                .append("m")
+                .append(msg)
+                .append(ESC)
+                .append("[")
+                .append(DEFAULT.getAsString())
+                .append("m");
         } else {
-            throw new IllegalArgumentException(EX_NO_BACKCOL);
+            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
+
         return sb.toString();
     }
 
@@ -952,6 +946,7 @@ public class ANSITerm {
      *
      * @param msg the string to print
      * @param p the terminal position where the string will start to be printed
+     * @throws ANSITermException In case of invalid arguments.
      */
     public void printAt(String msg, Position p) throws ANSITermException {
         try {

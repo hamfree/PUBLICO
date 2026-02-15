@@ -38,6 +38,7 @@ public class App {
    * Application entry point.
    *
    * @param args Command line arguments received from the operating system.
+   * @throws Exception In case of any error
    */
   public static void main(String[] args) throws Exception {
     logger.info("Application launch");
@@ -141,9 +142,7 @@ public class App {
           menu.setMessage("");
           app.setTerminalWidth(term);
         }
-        default -> {
-          logger.warn(menu.getMessage());
-        }
+        default -> logger.warn(menu.getMessage());
       }
     } while (menu.getSelectedOption() != 0L);
   }

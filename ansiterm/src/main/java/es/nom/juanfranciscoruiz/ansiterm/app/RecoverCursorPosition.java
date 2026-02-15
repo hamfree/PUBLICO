@@ -22,7 +22,11 @@ public class RecoverCursorPosition {
    * Logger used for tracing and debugging.
    */
   public static final Logger logger = LoggerFactory.getLogger(RecoverCursorPosition.class);
-  
+
+  /**
+   * Defines the delay duration in milliseconds used for controlling the timing
+   * of cursor position recovery operations and other related processes.
+   */
   public static final Long DELAY = 10L;
   
   /**

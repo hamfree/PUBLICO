@@ -13,6 +13,10 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
  */
 public class ShowCursorStyles {
 
+  /**
+   * Defines the delay duration in milliseconds used for controlling the timing
+   * of cursor style demonstration operations and other related processes.
+   */
   public static final long DELAY_MILLISECONDS = 100L;
 
   /**
