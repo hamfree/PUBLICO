@@ -3,14 +3,16 @@ package es.nom.juanfranciscoruiz.ansiterm.app;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 import es.nom.juanfranciscoruiz.utiles.Menu;
-import es.nom.juanfranciscoruiz.utiles.exceptions.Errors;
+import es.nom.juanfranciscoruiz.utiles.MenuManager;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
-import es.nom.juanfranciscoruiz.utiles.impl.IO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static es.nom.juanfranciscoruiz.utiles.exceptions.MenuErrors.*;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
 
 /**
  * Main application class to demonstrate the functionality of the ANSITerm library.
@@ -42,16 +44,20 @@ public class App {
     
     ANSITerm term;
     List<String> opciones;
+    App app = new App();
+    MenuManager mm;
+    Menu menu;
+    
     try {
       term = new ANSITerm();
     } catch (ANSITermException e) {
       throw new RuntimeException(e);
     }
-    App app = new App();
-    Menu menu;
+    
     try {
-      menu = new Menu();
+      mm = new MenuManager();
       opciones = getOptions();
+      menu = mm.getMenu();
       menu.setRootMenu(true);
       menu.setTitle("Testing the ANSITerm library");
       menu.setOptions(opciones);
@@ -68,15 +74,15 @@ public class App {
         menu.setMessage("Running on".concat(System.getProperty("os.name")));
       }
       menu.generateMenuView();
-      IO.prt(menu.getMenuView());
+      prt(menu.getMenuView());
       
       try {
-        menu.awaitResponse("Please choose an option: ");
+        mm.awaitResponse("Please choose an option: ");
       } catch (MenuException e) {
-        if (e.getMessage().equals(Errors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
+        if (e.getMessage().equals(ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
           menu.setSelectedOption(-1L);
           menu.setMessage(e.getMessage());
-        } else if (e.getMessage().equals(Errors.ERR_NOT_VALID_NUMBER)) {
+        } else if (e.getMessage().equals(ERR_NOT_VALID_NUMBER)) {
           menu.setSelectedOption(-1L);
           menu.setMessage(e.getMessage());
         }
@@ -129,7 +135,7 @@ public class App {
         }
         case 12 -> {
           menu.setMessage("");
-          app.showCursorAnimation(term, 200L);
+          app.showCursorAnimation(term, 100L);
         }
         case 13 -> {
           menu.setMessage("");

@@ -13,7 +13,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.BGColor.DEFAULT;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ColorsAndStylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes.*;
-import static es.nom.juanfranciscoruiz.ansiterm.exceptions.Errors.*;
+import static es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSIErrors.*;
 
 /**
  *

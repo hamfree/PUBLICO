@@ -6,7 +6,13 @@ package es.nom.juanfranciscoruiz.ansiterm.exceptions;
  *
  * @author Juan F. Ruiz
  */
-public class Errors {
+public class ANSIErrors {
+
+    /**
+     * This class is not meant to be instantiated.
+     */
+    private ANSIErrors() {}
+
     /**
      * Error message for empty or whitespace-only messages.
      */
@@ -39,9 +45,4 @@ public class Errors {
      * Error message for invalid number of lines.
      */
     public static final String EX_LINES_INVALID = "Invalid number of lines";
-
-    /**
-     * This class is not meant to be instantiated.
-     */
-    private Errors() {}
 }
