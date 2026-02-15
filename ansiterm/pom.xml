@@ -10,8 +10,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.scm.url>git://github.com/hamfree/PUBLICO.git</project.scm.url>
-        <project.scm.developerConnection>ssh://github.com/hamfree/PUBLICO.git</project.scm.developerConnection>
         <maven.compiler.release>21</maven.compiler.release>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <exec.mainClass>es.nom.juanfranciscoruiz.ansiterm.app.App</exec.mainClass>
@@ -21,8 +19,8 @@
 
 
     <scm>
-        <connection>scm:git:${project.scm.url}</connection>
-        <developerConnection>scm:git:${project.scm.developerConnection}</developerConnection>
+        <connection>scm:git:https://github.com/hamfree/PUBLICO.git</connection>
+        <developerConnection>scm:git:https://github.com/hamfree/PUBLICO.git</developerConnection>
         <url>git@github.com:hamfree/PUBLICO.git</url>
         <tag>HEAD</tag>
     </scm>
