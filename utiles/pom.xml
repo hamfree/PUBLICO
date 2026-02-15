@@ -30,7 +30,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/hamfree/PUBLICO.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/hamfree/PUBLICO.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/hamfree/PUBLICO.git</developerConnection>
         <url>https://github.com/hamfree/PUBLICO</url>
         <tag>HEAD</tag>
     </scm>
