@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.nom.juanfranciscoruiz</groupId>
     <artifactId>utiles</artifactId>
-    <version>1.4</version>
+    <version>1.3-SNAPSHOT</version>
     <name>utiles</name>
     <description>Librería de utilidades generales</description>
     
@@ -20,8 +20,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.scm.url>git://github.com/hamfree/PUBLICO.git</project.scm.url>
-        <project.scm.developerConnection>ssh://github.com/hamfree/PUBLICO.git</project.scm.developerConnection>
         <exec.mainClass>es.nom.juanfranciscoruiz.utiles.demo.Demo</exec.mainClass>
         <maven.compiler.release>21</maven.compiler.release>
         <logback.version>1.5.25</logback.version>
@@ -30,10 +28,10 @@
     </properties>
     
     <scm>
-        <connection>scm:git:${project.scm.url}</connection>
-        <developerConnection>scm:git:${project.scm.developerConnection}</developerConnection>
+        <connection>scm:git:git://github.com/hamfree/PUBLICO.git</connection>
+        <developerConnection>scm:git:ssh://github.com:hamfree/PUBLICO.git</developerConnection>
         <url>https://github.com/hamfree/PUBLICO</url>
-        <tag>v1.4</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
