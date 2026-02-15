@@ -26,13 +26,15 @@
         <slf4j.version>2.0.16</slf4j.version>
         <junit.version>5.11.4</junit.version>
     </properties>
-    
+
+
     <scm>
-        <connection>scm:git:git://github.com/hamfree/PUBLICO.git</connection>
-        <developerConnection>scm:git:ssh://github.com/hamfree/PUBLICO.git</developerConnection>
+        <connection>scm:git:https://github.com/hamfree/PUBLICO.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hamfree/PUBLICO.git</developerConnection>
         <url>https://github.com/hamfree/PUBLICO</url>
         <tag>HEAD</tag>
     </scm>
+
 
     <distributionManagement>
         <repository>
