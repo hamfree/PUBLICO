@@ -83,7 +83,7 @@ public class ConvertTypes {
      *
      * @throws Exception if an error occurs during screen clearing or pausing.
      */
-    public void convertTypes() throws Exception {
+    public void run() throws Exception {
         getInstance().getTc().clearScreen(true);
         final long PAUSE_DURATION = 3000L;
         String msg = "Converting types";

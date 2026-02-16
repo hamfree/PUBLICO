@@ -72,7 +72,7 @@ public class ConvertMapsToString {
      * @param map the simple map to be converted, where the keys are of type String and the values are of type Integer
      * @throws Exception if an error occurs during the conversion process
      */
-    public void convertSimpleMapToString(java.util.Map<String, Integer> map) throws Exception {
+    public void runConversionSimpleMap(java.util.Map<String, Integer> map) throws Exception {
         this.getTc().clearScreen(true);
         String msg = "Converting a simple map into its string representation.";
         IOimpl.prtln(2,title(msg,'*',80));
@@ -90,7 +90,7 @@ public class ConvertMapsToString {
      * @param map2 the complex map to be converted, where the keys are of type String and the values are of type List&lt;Integer&gt;
      * @throws Exception if an error occurs during the conversion process
      */
-    public void convertComplexMapToString(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
+    public void runConversionComplexMap(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
         this.getTc().clearScreen(true);
         String msg = "Converting a complex map to its textual representation.";
         IOimpl.prtln(2,title(msg,'*',80));

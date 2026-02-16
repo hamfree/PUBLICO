@@ -103,7 +103,7 @@ public class MiscellaneousUtilities {
      * @throws Exception if an error occurs during terminal control operations or
      *                   the pause process.
      */
-    public void miscellaneousUtilities() throws Exception {
+    public void run() throws Exception {
         this.getTc().clearScreen(true);
         final long PAUSE_DURATION = 3000L;
         String msg = "Miscellaneous utilities...";

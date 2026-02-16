@@ -84,7 +84,7 @@ public class TerminalControl {
    * and output formatting.
    * @throws Exception In case of errors during terminal control operations.
    */
-  public void terminalControl() throws Exception {
+  public void run() throws Exception {
     getTc().clearScreen(true);
     String msg = "Getting and setting console size";
     IOimpl.prtln(2,title(msg,'*',80));

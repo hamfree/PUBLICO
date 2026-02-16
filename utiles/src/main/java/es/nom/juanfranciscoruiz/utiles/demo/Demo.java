@@ -43,7 +43,7 @@ public class Demo {
      * Sample map of lists
      */
     private Map<String, List<Integer>> theMapOfLists;
-    
+
     /**
      * Default constructor for the Demo class.
      * <p>
@@ -57,8 +57,8 @@ public class Demo {
         tc = new TermCtlImpl();
         theMap = ObjectsGenerator.generateMap();
         theMapOfLists = ObjectsGenerator.generateMapOfLists(
-            ObjectsGenerator.generateList(true),
-            ObjectsGenerator.generateList(false));
+                ObjectsGenerator.generateList(true),
+                ObjectsGenerator.generateList(false));
     }
 
     /**
@@ -114,13 +114,13 @@ public class Demo {
     public void setTheMapOfLists(Map<String, List<Integer>> theMapOfLists) {
         this.theMapOfLists = theMapOfLists;
     }
-    
+
     /**
      * The entry point of the program.
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         info(logger, "Starting demo application...");
         Demo demo = new Demo();
         try {
@@ -160,21 +160,22 @@ public class Demo {
      * or manually terminates the program.
      *
      * @throws Exception if an error occurs during menu creation, menu management,
-     *                          or other processing.
+     *                   or other processing.
      */
     public void run() throws Exception {
         List<String> theOptions = new ArrayList<>();
         Menu theMenu;
         MenuManager mm;
-        Long response = Menu.WRONG_OPTION;
         String msg = "";
-        
+
         theOptions.add("Show the sample objects");
         theOptions.add("Convert a simple map into its string representation");
         theOptions.add("Convert a complex map into its string representation");
         theOptions.add("Converting types");
         theOptions.add("Miscellaneous utilities");
         theOptions.add("Getting and setting console size");
+        theOptions.add("Show and navigate menu hierarchical structure");
+
 
         try {
             theMenu = new Menu();
@@ -192,25 +193,24 @@ public class Demo {
             error(logger, e.getMessage());
             throw new RuntimeException(e);
         }
-        
+
         do {
             try {
                 getTc().clearScreen(true);
                 mm.getMenu().setSelectedOption(Menu.WRONG_OPTION);
                 mm.showMenu(false);
-                response = mm.awaitResponse(msg);
-            } catch (Exception e) {
-                error(logger, e.getMessage());
-                if (e instanceof MenuException) {
-                    if (e.getMessage().contains(MenuErrors.ERR_BLANK_NULL) ||
-                            e.getMessage().contains(MenuErrors.ERR_NO_NUMBER) ||
-                            e.getMessage()
-                                .contains(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
-                        theMenu.setMessage(e.getMessage());
-                    }
+                mm.awaitResponse("Select an option, please ");
+            } catch (MenuException e) {
+                String message = e.getMessage();
+                error(logger, message);
+                if (message.contains(MenuErrors.ERR_BLANK_NULL) ||
+                        message.contains(MenuErrors.ERR_NO_NUMBER) ||
+                        message.contains(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE)) {
+                    theMenu.setMessage(message);
+                    mm.getMenu().setSelectedOption(Menu.WRONG_OPTION);
                 }
             }
-            switch (response.intValue()) {
+            switch (mm.getMenu().getSelectedOption().intValue()) {
                 case 1:
                     showSampleObjects();
                     break;
@@ -229,10 +229,27 @@ public class Demo {
                 case 6:
                     gettingAndSettingConsoleSize();
                     break;
+                case 7:
+                    showAndNavigateMenuHierarchicalStructure();
+                    break;
                 default:
+                    warn(logger, "Invalid option selected. Please try again.");
                     break;
             }
-        } while (response != 0);
+        } while (mm.getMenu().getSelectedOption() != 0);
+    }
+
+    /**
+     * Displays and navigates the hierarchical structure of a menu system.
+     * <p>
+     * This method initializes an instance of the MenuDemo class and invokes its
+     * run method to display and manage a menu with hierarchical navigation.
+     *
+     * @throws Exception if an error occurs during the execution of the menu system.
+     */
+    private void showAndNavigateMenuHierarchicalStructure() throws Exception {
+        MenuDemo menuDemo = new MenuDemo();
+        menuDemo.run();
     }
 
     /**
@@ -252,9 +269,9 @@ public class Demo {
      */
     private void gettingAndSettingConsoleSize() throws Exception {
         TerminalControl tc = new TerminalControl();
-        tc.terminalControl();
+        tc.run();
     }
-    
+
     /**
      * Provides functionality for miscellaneous utility operations within the application.
      * <p>
@@ -268,7 +285,7 @@ public class Demo {
      */
     private void miscellaneousUtilities() throws Exception {
         MiscellaneousUtilities mu = MiscellaneousUtilities.getInstance();
-        mu.miscellaneousUtilities();
+        mu.run();
     }
 
     /**
@@ -280,7 +297,7 @@ public class Demo {
      */
     private void convertTypes() throws Exception {
         ConvertTypes ct = ConvertTypes.getInstance();
-        ct.convertTypes();
+        ct.run();
     }
 
     /**
@@ -299,12 +316,12 @@ public class Demo {
      * @throws Exception if an error occurs during map generation or conversion process
      */
     private void convertComplexMapToString() throws Exception {
-       ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
-        cm2s.convertComplexMapToString(
-            ObjectsGenerator.generateMapOfLists(
-                ObjectsGenerator.generateList(true),
-                ObjectsGenerator.generateList(false)
-            )
+        ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
+        cm2s.runConversionComplexMap(
+                ObjectsGenerator.generateMapOfLists(
+                        ObjectsGenerator.generateList(true),
+                        ObjectsGenerator.generateList(false)
+                )
         );
     }
 
@@ -321,7 +338,7 @@ public class Demo {
      */
     private void convertSimpleMapToString() throws Exception {
         ConvertMapsToString cm2s = ConvertMapsToString.getInstance();
-        cm2s.convertSimpleMapToString(ObjectsGenerator.generateMap());
+        cm2s.runConversionSimpleMap(ObjectsGenerator.generateMap());
     }
 
     /**
@@ -345,11 +362,12 @@ public class Demo {
      */
     private void showSampleObjects() throws Exception {
         ShowSampleObjects sso = ShowSampleObjects.getInstance();
-        sso.showObjects();
+        sso.run();
     }
 
     //----------------------------------------------------------------------------
     //Utility methods for main()
+
     /**
      * Prints at the same time the string msg to standard output and to the logger
      *

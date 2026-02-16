@@ -81,7 +81,7 @@ public class ShowSampleObjects {
    *
    * @throws Exception if an error occurs during execution.
    */
-  public void showObjects() throws Exception {
+  public void run() throws Exception {
     tc.clearScreen(true);
     prtln(1, title("Sample objects", '*', 80));
     prtln(1, "Sample objects:");
