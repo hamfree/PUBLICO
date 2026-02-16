@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.app;
+package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 
@@ -14,7 +14,7 @@ public class MultipleStylesText {
   /**
    * Constructs a new MultipleStylesText.
    */
-  MultipleStylesText() {}
+  public MultipleStylesText() {}
   
   /**
    * Performs the multiple styles demonstration.
@@ -22,7 +22,7 @@ public class MultipleStylesText {
    * @param term The ANSITerm object to use for styling.
    * @throws Exception If an error occurs during execution.
    */
-  void perform(ANSITerm term) throws Exception {
+  public void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);

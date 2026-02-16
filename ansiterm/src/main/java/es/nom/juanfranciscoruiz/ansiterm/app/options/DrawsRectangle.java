@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.app;
+package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
@@ -13,7 +13,7 @@ public class DrawsRectangle {
   /**
    * Constructs a new DrawsRectangle.
    */
-  DrawsRectangle() {}
+  public DrawsRectangle() {}
   
   /**
    * Performs the rectangle drawing demonstration.
@@ -21,7 +21,7 @@ public class DrawsRectangle {
    * @param term The ANSITerm object to use for drawing.
    * @throws Exception If an error occurs during execution.
    */
-  void perform(ANSITerm term) throws Exception {
+  public void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();
     TerminalSize ts = term.getTerminalSize();

@@ -1,7 +1,8 @@
-package es.nom.juanfranciscoruiz.ansiterm.app;
+package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
+
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.*;
 
 /**
@@ -37,12 +38,12 @@ public class ScreenAndLineDeletions {
      * Represents a message prompting the user to press Enter to return to the menu.
      */
     public static final String PRESS_ENTER_TO_RETURN_TO_MENU = "Press <ENTER> to return to menu";
-    
+
     /**
      * Constructs a new ScreenAndLineDeletions.
      */
-    ScreenAndLineDeletions() {
-    
+    public ScreenAndLineDeletions() {
+
     }
 
     /**
@@ -51,14 +52,14 @@ public class ScreenAndLineDeletions {
      * @param term The ANSITerm object to use.
      * @throws Exception If an error occurs during execution.
      */
-    void perform(ANSITerm term) throws Exception {
+    public void perform(ANSITerm term) throws Exception {
         int columnas = term.getTerminalSize().getColumns();
         int filas = term.getTerminalSize().getLines();
         term.cursorShow();
-        
+
         clearScreen(term);
         term.cursorChangeStyle(CursorStylesCodes.CURSOR_BLOCK_SHAPE);
-        printTitle(term,  "(1/12) Delete from the cursor to the beginning of the screen");
+        printTitle(term, "(1/12) Delete from the cursor to the beginning of the screen");
         showWarning(term, MSG);
         printRandomTextBlock(term, 5, filas - 5, columnas);
         term.printAt(12, 60);

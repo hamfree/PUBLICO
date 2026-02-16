@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.app;
+package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import com.sun.jna.LastErrorException;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
@@ -32,7 +32,7 @@ public class RecoverCursorPosition {
   /**
    * Constructs a new RecoverCursorPosition.
    */
-  RecoverCursorPosition() {}
+  public RecoverCursorPosition() {}
   
   /**
    * Performs the cursor position recovery demonstration.
@@ -40,7 +40,7 @@ public class RecoverCursorPosition {
    * @param term The ANSITerm object to use.
    * @throws Exception If an error occurs during execution.
    */
-  void perform(ANSITerm term) throws Exception {
+  public void perform(ANSITerm term) throws Exception {
     term.clearScreen();
     term.moveCursorToBegin();
     term.printAt("------------  Recovering the cursor position ------------ ", 1, 1);
