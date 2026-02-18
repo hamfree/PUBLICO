@@ -74,7 +74,7 @@ public class App {
 
 
         do {
-            term.clearScreen();
+            term.clearTerminal();
             term.moveCursorToBegin();
             if (menu.getMessage().isEmpty()) {
                 menu.setMessage("Running on ".concat(System.getProperty("os.name")));
@@ -324,11 +324,12 @@ public class App {
      * @param term An ANSITerm object representing the terminal whose width will be set.
      */
     private void setTerminalWidth(ANSITerm term) throws Exception {
-        term.clearScreen();
+        term.clearTerminal();
+        term.moveCursorToBegin();
         final long PAUSE_DURATION = 3000L;
         String msg = "Setting terminal width";
         prtln(2, title(msg, '*', 80));
-        prtln(3, "Setting terminal widht is  not implemented yet.");
+        prtln(3, "Setting terminal width is not implemented yet.");
         pause(PAUSE_DURATION, null);
     }
 

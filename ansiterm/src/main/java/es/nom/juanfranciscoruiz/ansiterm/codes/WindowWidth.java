@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 /**
  * This class provides ANSI escape sequences to set terminal window widths to
  * specific column sizes. It includes constants and utility methods for
@@ -15,8 +13,6 @@ import org.slf4j.Logger;
  * pre-defined constants and utility methods for terminal window management.
  */
 public class WindowWidth {
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(WindowWidth.class);
-
     /**
      * Sequence.......: ESC [ ? 3 h
      * Code...........: DECCOLM
@@ -42,7 +38,7 @@ public class WindowWidth {
      *
      * @return a {@code String} representing the ANSI escape code.
      */
-    public static String getEsForWidth132Columns() {
+    public static String setWidthTo132() {
         return WIDTH_132_COLUMNS;
     }
 
@@ -51,8 +47,7 @@ public class WindowWidth {
      *
      * @return a {@code String} representing the ANSI escape code.
      */
-    public static String getEsForWidth80Columns() {
+    public static String setWidthTo80() {
         return WIDTH_80_COLUMNS;
     }
-
 }

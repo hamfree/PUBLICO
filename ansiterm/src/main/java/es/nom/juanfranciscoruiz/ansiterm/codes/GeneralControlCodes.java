@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 /**
  * The {@code GeneralControlCodes} class provides a set of ASCII control
  * characters as constants and methods to access these characters. This class
@@ -17,18 +15,10 @@ import org.slf4j.Logger;
  * {@code getInstance()} to access its single instance.
  */
 public class GeneralControlCodes {
-
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(GeneralControlCodes.class);
-
-    /**
-     * Singleton instance of the {@code GeneralControlCodes} class.
+    /*
+    TODO: The methods used to move the cursor will cause the ANSI Term class to
+     update its 'cursorPosition' property with the new cursor position.
      */
-    private static final GeneralControlCodes instance;
-
-    static {
-        instance = new GeneralControlCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
-    }
 
     /**
      * Rings the terminal bell
@@ -74,21 +64,6 @@ public class GeneralControlCodes {
     }
 
     /**
-     * Provides access to the singleton instance of the {@code GeneralControlCodes} class.
-     * This ensures that only one instance of the class exists throughout the application.
-     *
-     * @return the singleton instance of the {@code GeneralControlCodes} class
-     */
-    public static GeneralControlCodes getInstance() {
-        return instance;
-    }
-
-  /*
-  TODO: The methods that moves the cursor has to update the 'cursorPosition' property of this
-   class.
-   */
-
-    /**
      * Returns the ASCII control code BackSpace (BS)
      *
      * @return the ASCII control code BackSpace (BS)
@@ -121,7 +96,7 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Line Feed (LF)
      */
-    public static char linefeed() {
+    public static char lineFeed() {
         return LF;
     }
 
@@ -139,15 +114,16 @@ public class GeneralControlCodes {
      *
      * @return the ASCII control code Form Feed (FF)
      */
-    public static char formfeed() {
+    public static char formFeed() {
         return FF;
     }
 
     /**
      * Returns the ASCII control code Carriage Return (CR)
+     *
      * @return the ASCII control code Carriage Return (CR)
      */
-    public static char carriagereturn() {
+    public static char carriageReturn() {
         // In the Windows terminal it moves the cursor to the beginning of the line
         // To do a line break you have to do a linefeed() or use the Java \n escape code
         return CR;

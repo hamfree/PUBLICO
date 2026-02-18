@@ -1,8 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Utility class that provides ANSI escape sequences for setting and resetting
  * scrolling margins in a terminal. These sequences define the top and bottom
@@ -31,11 +28,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ScrollingMarginsCodes {
     /**
-     * For logging
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScrollingMarginsCodes.class);
-
-    /**
      * Provides access to the singleton instance of the {@code ScrollingMarginsCodes} class.
      */
     private static final String ESC = CSI.ESC;
@@ -56,7 +48,7 @@ public class ScrollingMarginsCodes {
      * @param bottom the bottom line of the scrolling region
      * @return the ANSI escape sequence
      */
-    public static String getEsForSetScrollingMargins(int top, int bottom) {
+    public static String setScrollingMargins(int top, int bottom) {
         return ESC + "[" + top + ";" + bottom + "r";
     }
 
@@ -65,7 +57,7 @@ public class ScrollingMarginsCodes {
      *
      * @return the ANSI escape sequence
      */
-    public static String getEsForResetScrollingMargins() {
+    public static String resetScrollingMargins() {
         return ESC + "[r";
     }
 }

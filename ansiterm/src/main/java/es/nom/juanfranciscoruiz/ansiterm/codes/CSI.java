@@ -11,17 +11,6 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
  * @author Juan F. Ruiz
  */
 public class CSI {
-  /**
-   * Singleton instance of the {@code CSI} class.
-   * This variable provides access to the only instance of the class,
-   * ensuring that only one instance exists throughout the application.
-   */
-  private static CSI instance;
-
-    static {
-        instance = new CSI();
-    }
-
     /**
    * ANSI Control Sequence Introducer (CSI) for CSI sequences.
    * All CSI sequences start with ESC (0x1b or \033) followed by the character [
@@ -42,14 +31,4 @@ public class CSI {
    * Private constructor. The user can't instantiate class
    */
   private CSI() {}
-
-  /**
-   * Provides access to the singleton instance of the {@code CSI} class.
-   * This ensures that only one instance of the class exists throughout the application.
-   *
-   * @return the singleton instance of the {@code CSI} class
-   */
-  public static CSI getInstance() {
-    return instance;
-  }
 }

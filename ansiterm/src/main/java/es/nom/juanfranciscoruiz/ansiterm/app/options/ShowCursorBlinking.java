@@ -25,7 +25,7 @@ public class ShowCursorBlinking {
      * @throws Exception If an error occurs during execution.
      */
     public void perform(ANSITerm term) throws Exception {
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.cursorShow();
         term.cursorChangeStyle(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE);

@@ -134,7 +134,7 @@ public class Util {
      * @param term The ANSITerm object responsible for terminal operations.
      */
     public static void clearScreen(ANSITerm term) {
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
     }
 

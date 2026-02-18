@@ -32,7 +32,7 @@ public class ShowCursorStyles {
      * @throws Exception If an error occurs during execution.
      */
     public void perform(ANSITerm term) throws Exception {
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.cursorShow();
         term.printAt("------------ Cursor styles ------------", 1, 1);
@@ -42,7 +42,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(2/9) - Blinking bar cursor shape";
@@ -51,7 +51,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(3/9) - Stable block cursor shape";
@@ -60,7 +60,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(4/9) - Blinking block cursor shape";
@@ -69,7 +69,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(5/9) - Stable underline cursor shape";
@@ -78,7 +78,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(6/9) - Blinking underline cursor shape";
@@ -87,7 +87,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(7/9) - User-defined cursor shape";
@@ -96,7 +96,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(8/9) - Hide the cursor";
@@ -105,7 +105,7 @@ public class ShowCursorStyles {
         printWithDelay(msg, 5, 1, term, DELAY_MILLISECONDS);
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Cursor styles ------------", 1, 1);
         msg = "(9/9) - Show cursor";

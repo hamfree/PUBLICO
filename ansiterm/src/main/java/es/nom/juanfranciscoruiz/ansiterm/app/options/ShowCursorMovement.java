@@ -27,7 +27,7 @@ public class ShowCursorMovement {
     public void perform(ANSITerm term) throws Exception {
         long retardo = 50L;
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         TerminalSize screenSize = term.getTerminalSize();
         term.printAt("------------ Moving the cursor ------------", 1, 1);

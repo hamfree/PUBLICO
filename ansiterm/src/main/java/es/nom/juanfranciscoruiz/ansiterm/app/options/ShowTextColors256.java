@@ -23,7 +23,7 @@ public class ShowTextColors256 {
      * @throws Exception If an error occurs during execution.
      */
     public void perform(ANSITerm term) throws Exception {
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Displays the palette of 256 colors ------------", 1, 1);
 
@@ -35,7 +35,7 @@ public class ShowTextColors256 {
             String msg = term.setColor256(i, String.valueOf(i));
             if (j > 15) {
                 term.printAt(msg, line, col);
-                term.linefeed();
+                term.LF();
                 j = 0;
                 col = 0;
                 line = line + 1;

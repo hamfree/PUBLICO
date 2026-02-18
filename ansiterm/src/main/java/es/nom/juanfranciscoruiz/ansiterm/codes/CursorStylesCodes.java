@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -16,21 +14,6 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class CursorStylesCodes {
-
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CursorStylesCodes.class);
-
-    /**
-     * Singleton instance of the {@code CursorStylesCodes} class.
-     * This variable ensures that only one instance of the {@code CursorStylesCodes} class
-     * exists throughout the application and provides global access to it.
-     */
-    private static CursorStylesCodes instance;
-
-    static {
-        instance = new CursorStylesCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
-    }
-
     /**
      * User-set cursor shape
      */
@@ -67,21 +50,11 @@ public class CursorStylesCodes {
     }
 
     /**
-     * Provides access to the singleton instance of the {@code CursorStylesCodes} class.
-     * This ensures that only one instance of the class exists throughout the application.
-     *
-     * @return the singleton instance of the {@code CursorStylesCodes} class
-     */
-    public static CursorStylesCodes getInstance() {
-        return instance;
-    }
-
-    /**
      * Retrieves the ANSI escape sequence for the user-set cursor shape.
      *
      * @return the ANSI escape sequence for setting the user-defined cursor shape.
      */
-    public static String getCursorUserShape() {
+    public static String cursorUserShape() {
         return CURSOR_USER_SHAPE;
     }
 
@@ -90,7 +63,7 @@ public class CursorStylesCodes {
      *
      * @return the ANSI escape sequence for setting the block cursor shape.
      */
-    public static String getCursorBlockShape() {
+    public static String cursorBlockShape() {
         return CURSOR_BLOCK_SHAPE;
     }
 
@@ -99,7 +72,7 @@ public class CursorStylesCodes {
      *
      * @return the ANSI escape sequence for setting the steady block cursor shape.
      */
-    public static String getCursorSteadyBlockShape() {
+    public static String cursorSteadyBlockShape() {
         return CURSOR_STEADY_BLOCK_SHAPE;
     }
 
@@ -108,7 +81,7 @@ public class CursorStylesCodes {
      *
      * @return the ANSI escape sequence for setting the blinking underline cursor shape.
      */
-    public static String getCursorUnderlineShape() {
+    public static String cursorUnderlineShape() {
         return CURSOR_UNDERLINE_SHAPE;
     }
 
@@ -117,7 +90,7 @@ public class CursorStylesCodes {
      *
      * @return the ANSI escape sequence for setting the steady underline cursor shape.
      */
-    public static String getCursorSteadyUnderlineShape() {
+    public static String cursorSteadyUnderlineShape() {
         return CURSOR_STEADY_UNDERLINE_SHAPE;
     }
 
@@ -126,7 +99,7 @@ public class CursorStylesCodes {
      *
      * @return the ANSI escape sequence for setting the blinking bar cursor shape.
      */
-    public static String getCursorBlinkingBarShape() {
+    public static String cursorBlinkingBarShape() {
         return CURSOR_BLINKING_BAR_SHAPE;
     }
 
@@ -135,7 +108,7 @@ public class CursorStylesCodes {
      *
      * @return the ANSI escape sequence for setting the steady bar cursor shape.
      */
-    public static String getCursorSteadyBarShape() {
+    public static String cursorSteadyBarShape() {
         return CURSOR_STEADY_BAR_SHAPE;
     }
 

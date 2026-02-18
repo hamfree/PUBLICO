@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+
 /**
  * Enumeration for foreground colors with ANSI codes for the terminal
  *
@@ -75,6 +77,11 @@ public enum Color {
      * Bright white foreground color.
      */
     GLOSSY_WHITE(97),;
+
+    /**
+     * Foreground color (up to 256). Uses ESC[38;5;{0-255}m
+     */
+    public static final String FOREGROUND_COLOR256 = ESC + "[38;5;";
     
     /**
      * The ANSI color code.

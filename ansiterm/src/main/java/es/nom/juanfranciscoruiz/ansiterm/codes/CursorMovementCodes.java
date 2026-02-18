@@ -16,17 +16,6 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class CursorMovementCodes {
-    /**
-     * Singleton instance of the {@code CursorMovementCodes} class.
-     * This variable provides centralized access to the functionality
-     * offered by the {@code CursorMovementCodes} class, ensuring that
-     * only one instance of the class exists during the runtime of the application.
-     */
-    private static final CursorMovementCodes instance;
-
-    static {
-        instance = new CursorMovementCodes();
-    }
 
     /**
      * Sequence......: ESC[H
@@ -74,14 +63,6 @@ public class CursorMovementCodes {
     private CursorMovementCodes() {
     }
 
-    /**
-     * Provides access to a singleton instance of the {@code CursorMovementCodes} class.
-     *
-     * @return the singleton instance of {@code CursorMovementCodes}.
-     */
-    public static CursorMovementCodes getInstance(){
-        return instance;
-    }
 
     /**
      * Returns the ANSI escape sequence to move the cursor to the beginning of the line.
@@ -94,7 +75,7 @@ public class CursorMovementCodes {
      * @return a string representing the ANSI escape sequence for setting the cursor
      * to the beginning of the current line.
      */
-    public static String getSecforSetCursorToBegin() {
+    public static String setCursorToBegin() {
         return CURSOR_MOVE_TO_BEGIN;
     }
 
@@ -108,7 +89,7 @@ public class CursorMovementCodes {
      *
      * @return a string representing the ANSI escape sequence to get the cursor position
      */
-    public static String getSecForGetCursorPosition() {
+    public static String getCursorPosition() {
         return CURSOR_GET_POSITION;
     }
 
@@ -121,7 +102,7 @@ public class CursorMovementCodes {
      *
      * @return a string representing the ANSI escape sequence to move the cursor one line up
      */
-    public static String getSecForMoveCursorOneLineUp() {
+    public static String moveCursorOneLineUp() {
         return CURSOR_MOVE_ONE_LINE_UP;
     }
 
@@ -139,7 +120,7 @@ public class CursorMovementCodes {
      * @param column integer with the column to move the cursor to
      * @return a string representing the ANSI escape sequence to move the cursor to the position indicated by line and column
      */
-    public static String getSecforSetCursorAtPosition(int line, int column) {
+    public static String setCursorPosition(int line, int column) {
         return (ESC + "[" + line + ";" + column + "H");
     }
 
@@ -151,7 +132,7 @@ public class CursorMovementCodes {
      *          will be moved
      * @return a string representing the ANSI escape sequence to move the cursor to the position indicated by p
      */
-    public static String getSecforSetCursorAtPosition(Position p) {
+    public static String setCursorPosition(Position p) {
         if (p != null) {
             return (ESC + "[" + p.getCol() + ";" + p.getLin() + "H");
         } else {
@@ -168,7 +149,7 @@ public class CursorMovementCodes {
      * @param lines an integer with the lines up where the cursor will be moved
      * @return a string representing the ANSI escape sequence to move the cursor up
      */
-    public static String getSecForMoveCursorNLinesUp(int lines) {
+    public static String moveCursorNLinesUp(int lines) {
         return (ESC + "[" + lines + "A");
     }
 
@@ -181,7 +162,7 @@ public class CursorMovementCodes {
      * @param lines an integer with the lines down where the cursor will be moved
      * @return a string representing the ANSI escape sequence to move the cursor down
      */
-    public static String getSecForMoveCursorNLinesDown(int lines) {
+    public static String moveCursorNLinesDown(int lines) {
         return (ESC + "[" + lines + "B");
     }
 
@@ -194,7 +175,7 @@ public class CursorMovementCodes {
      * @param cars an integer with the characters to the right where the cursor will be moved
      * @return a string representing the ANSI escape sequence to move the cursor to the right
      */
-    public static String getSecForMoveCursorNCharsToRight(int cars) {
+    public static String moveCursorNCharsToRight(int cars) {
         return (ESC + "[" + cars + "C");
     }
 
@@ -207,7 +188,7 @@ public class CursorMovementCodes {
      * @param cars an integer specifying the number of characters to move the cursor to the left
      * @return a string representing the ANSI escape sequence to move the cursor to the left
      */
-    public static String getSecForMoveCursorNCharsToLeft(int cars) {
+    public static String moveCursorNCharsToLeft(int cars) {
         // ESC[#D
         return (ESC + "[" + cars + "D");
     }
@@ -223,7 +204,7 @@ public class CursorMovementCodes {
      *
      * @return a string representing the ANSI escape sequence to save the current cursor position.
      */
-    public static String getSecForSaveCurrentCursorPosition(){
+    public static String saveCursorPosition(){
         return CURSOR_SAVE_CURRENT_POSITION;
     }
 
@@ -237,23 +218,8 @@ public class CursorMovementCodes {
      *
      * @return a string representing the ANSI escape sequence to restore the current cursor position.
      */
-    public static String getSecForRestoreCurrentCursorPosition(){
+    public static String restoreCursorPosition(){
         return CURSOR_RESTORE_CURRENT_POSITION;
-    }
-
-    /**
-     * Returns the ANSI escape sequence to save the current cursor position.
-     * <p>
-     * Sequence......: ESC 7
-     * Code..........: SCOSC
-     * Description...: Saves the current cursor position to restore it later.
-     * Behavior......: Stores the cursor's current position in memory, enabling it
-     *                 to be restored to this position using the respective restore sequence.
-     *
-     * @return a string representing the ANSI escape sequence to save the current cursor position.
-     */
-    public static String getSecForSaveCursorPosition() {
-        return CURSOR_SAVE_CURRENT_POSITION;
     }
 
     @Override

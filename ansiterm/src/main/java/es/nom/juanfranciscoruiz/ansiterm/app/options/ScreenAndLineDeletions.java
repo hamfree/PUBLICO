@@ -11,7 +11,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.*;
  * @author Juan F. Ruiz
  */
 public class ScreenAndLineDeletions {
-
+    //TODO: Revisar el primer scroll
     /**
      * A constant representing a delay of four seconds, used for timing or scheduling operations
      * within the ScreenAndLineDeletions class.
@@ -64,7 +64,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, filas - 5, columnas);
         term.printAt(12, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.deleteFromCursorToBeginScreen();
+        term.eraseFromCursorToBeginScreen();
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -73,7 +73,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, filas - 5, columnas);
         term.printAt(12, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.deleteFromCursorToEndScreen();
+        term.eraseFromCursorToEndScreen();
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -82,7 +82,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.deleteFromCursorToBeginLine();
+        term.eraseFromCursorToBeginLine();
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -91,7 +91,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.deleteFromCursorToEndLine();
+        term.eraseFromCursorToEndLine();
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -109,7 +109,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 15, columnas);
         term.printAt(6, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.deleteLines(5);
+        term.eraseLines(5);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -118,7 +118,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.eraseCharacters(20);
+        term.deleteCharacters(20);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -127,7 +127,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.eraseCharsWithSpaces(20);
+        term.deleteCharsWithSpaces(20);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -136,7 +136,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 1, columnas);
         term.printAt(5, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.insertSpaces(10);
+        term.insertNSpaces(10);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);
@@ -145,7 +145,7 @@ public class ScreenAndLineDeletions {
         printRandomTextBlock(term, 5, 5, columnas);
         term.printAt(7, 60);
         Thread.sleep(FOUR_SECONDS_DELAY);
-        term.insertLines(10);
+        term.insertNLines(10);
         Thread.sleep(FOUR_SECONDS_DELAY);
 
         clearScreen(term);

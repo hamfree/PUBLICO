@@ -23,7 +23,7 @@ public class MultipleStylesText {
    * @throws Exception If an error occurs during execution.
    */
   public void perform(ANSITerm term) throws Exception {
-    term.clearScreen();
+    term.clearTerminal();
     term.moveCursorToBegin();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
     
@@ -58,7 +58,7 @@ public class MultipleStylesText {
     term.printAt(term.setStyles(false, true, false, false, false, false, true, mensaje), 25, 10);
     
     pauseWithMessage(0, null);
-    term.clearScreen();
+    term.clearTerminal();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
     
     // Italic with other styles
@@ -93,7 +93,7 @@ public class MultipleStylesText {
     
     pauseWithMessage(0, null);
     
-    term.clearScreen();
+    term.clearTerminal();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
     
     // Blinking with other styles
@@ -128,7 +128,7 @@ public class MultipleStylesText {
     
     pauseWithMessage(0, null);
     
-    term.clearScreen();
+    term.clearTerminal();
     term.printAt("------------ Multiple styles applicable to the text ------------", 1, 1);
     
     // Strikethrough with other styles

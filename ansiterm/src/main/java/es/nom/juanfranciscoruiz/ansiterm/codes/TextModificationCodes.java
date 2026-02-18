@@ -8,26 +8,10 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
  * </p>
  */
 public class TextModificationCodes {
-    
-    private static final TextModificationCodes INSTANCE;
-
-    static {
-        INSTANCE = new TextModificationCodes();
-    }
-
     /**
      * Private constructor to enforce Singleton pattern.
      */
     private TextModificationCodes() {
-    }
-
-    /**
-     * Returns the singleton instance of TextModificationCodes.
-     * 
-     * @return The singleton instance.
-     */
-    public static TextModificationCodes getInstance() {
-        return INSTANCE;
     }
 
     /**

@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -15,19 +13,6 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class AnsiBufferManager {
-
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AnsiBufferManager.class);
-
-    /**
-     * Singleton instance of the {@code PositionCodes} class.
-     */
-    private static final AnsiBufferManager instance;
-
-    static {
-        instance = new AnsiBufferManager();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
-    }
-
     /**
      * Restores the screen
      */
@@ -49,18 +34,7 @@ public class AnsiBufferManager {
     /**
      * Private constructor. Class can't be instantiated by the user
      */
-    private AnsiBufferManager() {
-    }
-
-    /**
-     * Provides access to the singleton instance of the {@code PositionCodes} class.
-     * This ensures that only one instance of the class exists throughout the application.
-     *
-     * @return the singleton instance of the {@code PositionCodes} class
-     */
-    public static AnsiBufferManager getInstance() {
-        return instance;
-    }
+    private AnsiBufferManager() {}
 
     /**
      * Retrieves the ANSI escape sequence that restores the terminal screen
@@ -68,7 +42,7 @@ public class AnsiBufferManager {
      *
      * @return the ANSI escape sequence for restoring the terminal screen
      */
-    public static String getESforRestoreScreen() {
+    public static String restoreScreen() {
         return RESTORES_SCREEN;
     }
 
@@ -79,7 +53,7 @@ public class AnsiBufferManager {
      *
      * @return the ANSI escape sequence for saving the terminal screen
      */
-    public static String getESforSaveScreen() {
+    public static String saveScreen() {
         return SAVES_SCREEN;
     }
 
@@ -90,7 +64,7 @@ public class AnsiBufferManager {
      *
      * @return the ANSI escape sequence for disabling the alternate buffer
      */
-    public static String getESforDisableAlternateBuffer() {
+    public static String disableAlternateBuffer() {
         return DISABLES_ALTERNATE_BUFFER;
     }
 
@@ -101,7 +75,7 @@ public class AnsiBufferManager {
      *
      * @return the ANSI escape sequence for enabling the alternate buffer
      */
-    public static String getESforEnableAlternateBuffer() {
+    public static String enableAlternateBuffer() {
         return ENABLES_ALTERNATE_BUFFER;
     }
 

@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+
 /**
  * Enumeration for background colors with ANSI codes for the terminal
  *
@@ -74,6 +76,12 @@ public enum BGColor {
      * Returns the background color to its default value.
      */
     DEFAULT(49);
+
+
+    /**
+     * Background color (up to 256). Uses ESC[48;5;{0-255}m
+     */
+    public static final String BACKGROUND_COLOR256 = ESC + "[48;5;";
 
     /**
      * The ANSI color code.

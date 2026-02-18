@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -15,20 +13,6 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class CursorControlCodes {
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CursorControlCodes.class);
-
-    /**
-     * Singleton instance of the {@code CursorControlCodes} class.
-     * This instance provides access to ANSI escape codes for cursor control,
-     * ensuring consistent use of these codes and preventing instantiation
-     * of multiple objects of this class.
-     */
-    public static final CursorControlCodes INSTANCE;
-
-    static {
-        INSTANCE = new CursorControlCodes() {};
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(INSTANCE.toString());
-    }
 
     /**
      * Hides the cursor (DECTCEM)
@@ -55,21 +39,11 @@ public class CursorControlCodes {
     }
 
     /**
-     * Provides access to the singleton instance of the {@code CursorControlCodes} class.
-     * This ensures that only one instance of the class exists throughout the application.
-     *
-     * @return the singleton instance of the {@code CursorControlCodes} class
-     */
-    public static CursorControlCodes getInstance() {
-        return INSTANCE;
-    }
-
-    /**
      * Retrieves the ANSI escape sequence string to hide the terminal cursor.
      *
      * @return the ANSI escape sequence for hiding the cursor
      */
-    public static String getScForHideCursor() {
+    public static String hideCursor() {
         return HIDES_CURSOR;
     }
 
@@ -78,7 +52,7 @@ public class CursorControlCodes {
      *
      * @return the ANSI escape sequence for showing the cursor
      */
-    public static String getScForShowCursor(){
+    public static String showCursor(){
         return SHOWS_CURSOR;
     }
 
@@ -87,7 +61,7 @@ public class CursorControlCodes {
      *
      * @return the ANSI escape sequence for enabling cursor blinking
      */
-    public static String getScForEnableCursorBlink(){
+    public static String enableCursorBlink(){
         return ENABLE_BLINK_CURSOR;
     }
 
@@ -96,7 +70,7 @@ public class CursorControlCodes {
      *
      * @return the ANSI escape sequence for disabling cursor blinking
      */
-    public static String getScForDisableCursorBlink(){
+    public static String disableCursorBlink(){
         return DISABLE_BLINK_CURSOR;
     }
 

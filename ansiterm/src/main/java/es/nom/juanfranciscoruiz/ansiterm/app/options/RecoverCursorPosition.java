@@ -41,7 +41,7 @@ public class RecoverCursorPosition {
    * @throws Exception If an error occurs during execution.
    */
   public void perform(ANSITerm term) throws Exception {
-    term.clearScreen();
+    term.clearTerminal();
     term.moveCursorToBegin();
     term.printAt("------------  Recovering the cursor position ------------ ", 1, 1);
     TerminalSize screenSize = term.getTerminalSize();
@@ -63,7 +63,7 @@ public class RecoverCursorPosition {
         long retardo = DELAY;
         pauseForMilliseconds(retardo);
         term.printAt("Cursor position: column : ", screenSize.getLines() - 2, 1);
-        term.deleteFromCursorToEndLine();
+        term.eraseFromCursorToEndLine();
         term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLines() - 2, 32);
         pauseForMilliseconds(retardo);
       }

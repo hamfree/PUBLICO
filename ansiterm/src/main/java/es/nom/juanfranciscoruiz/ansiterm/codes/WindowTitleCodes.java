@@ -1,8 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Utility class providing methods to generate ANSI escape sequences for setting
  * terminal window titles and icon names using Operating System Command (OSC) codes.
@@ -10,11 +7,6 @@ import org.slf4j.LoggerFactory;
  * that support ANSI escape codes.
  */
 public class WindowTitleCodes {
-    /**
-     * For logging
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WindowTitleCodes.class);
-
     /**
      * Private constructor. Class can't be instantiated by the user
      */
@@ -29,7 +21,7 @@ public class WindowTitleCodes {
      * @param title the title to set
      * @return the ANSI escape sequence
      */
-    public static String getEsForSetWindowTitle(String title) {
+    public static String setWindowTitle(String title) {
         return OSC.OSC + title + OSC.ST;
     }
 
@@ -42,8 +34,7 @@ public class WindowTitleCodes {
      * @param title the title to set
      * @return the ANSI escape sequence
      */
-    public static String getEsForSetOnlyWindowTitle(String title) {
+    public static String updateWindowTitle(String title) {
         return OSC.OSC + "2;" + title + OSC.ST;
     }
-
 }

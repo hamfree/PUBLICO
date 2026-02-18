@@ -31,7 +31,7 @@ public class ScreenSize {
         String msg;
         String resp = "";
         while (!resp.equals("q")) {
-            term.clearScreen();
+            term.clearTerminal();
             term.moveCursorToBegin();
             term.printAt("------------ Screen size ------------", 1, 1);
             term.printAt("Try resizing the terminal window.", 2, 1);

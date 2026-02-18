@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -20,33 +18,10 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class ViewportPositioningCodes {
-
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ViewportPositioningCodes.class);
-
-    /**
-     * Singleton instance of the {@code ViewportPositioningCodes} class.
-     */
-    private static final ViewportPositioningCodes instance;
-
-    static {
-        instance = new ViewportPositioningCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
-    }
-
     /**
      * Private constructor. Class can't be instantiated by the user
      */
     private ViewportPositioningCodes() {
-    }
-
-    /**
-     * Provides access to the singleton instance of the {@code ViewportPositioningCodes} class.
-     * This ensures that only one instance of the class exists throughout the application.
-     *
-     * @return the singleton instance of the {@code ViewportPositioningCodes} class
-     */
-    public static ViewportPositioningCodes getInstance() {
-        return instance;
     }
 
     /**
@@ -59,7 +34,7 @@ public class ViewportPositioningCodes {
      * @param lines the number of lines to scroll
      * @return the ANSI escape sequence
      */
-    public static String getEsForScrollTextUp(int lines) {
+    public static String scrollLinesUp(int lines) {
         return (ESC + "[" + lines + "S");
     }
 
@@ -73,7 +48,7 @@ public class ViewportPositioningCodes {
      * @param lines the number of lines to scroll down
      * @return the ANSI escape sequence
      */
-    public static String  getEsForScrollTextDown(int lines) {
+    public static String scrollLinesDown(int lines) {
         return (ESC + "[" + lines + "T");
     }
 

@@ -7,11 +7,11 @@ package es.nom.juanfranciscoruiz.ansiterm.exceptions;
  * @author Juan F. Ruiz
  */
 public class ANSIErrors {
-
     /**
      * This class is not meant to be instantiated.
      */
-    private ANSIErrors() {}
+    private ANSIErrors() {
+    }
 
     /**
      * Error message for empty or whitespace-only messages.

@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -16,20 +14,6 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class CharacterSetModeCodes {
-
-    // Constants and attributes
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CharacterSetModeCodes.class);
-    /*
-     * Singleton instance.
-     */
-    private static final CharacterSetModeCodes instance;
-
-
-    static {
-        instance = new CharacterSetModeCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
-    }
-
     /**
      * DEC Line Drawing Mode
      */
@@ -45,14 +29,6 @@ public class CharacterSetModeCodes {
     private CharacterSetModeCodes() {
     }
 
-    /**
-     * Returns an instance of CharacterSetModeCodes
-     *
-     * @return an instance of CharacterSetModeCodes
-     */
-    public static CharacterSetModeCodes getInstance() {
-        return instance;
-    }
 
     /**
      * Sequence....: ESC(0
@@ -61,7 +37,7 @@ public class CharacterSetModeCodes {
      *
      * @return the CSI sequence to enable DEC Line Drawing Mode
      */
-    public String EnableDECLineDrawing() {
+    public static String enableDECLineDrawing() {
         return DEC_LINE_DRAWING;
     }
 
@@ -72,7 +48,7 @@ public class CharacterSetModeCodes {
      *
      * @return the CSI sequence to enable ASCII Mode
      */
-    public String EnableASCII() {
+    public static String enableASCII() {
         return ASCII_MODE;
     }
 

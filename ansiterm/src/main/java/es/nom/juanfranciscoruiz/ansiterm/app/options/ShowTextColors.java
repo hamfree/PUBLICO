@@ -25,13 +25,13 @@ public class ShowTextColors {
      * @throws Exception If an error occurs during execution.
      */
     public void perform(ANSITerm term) throws Exception {
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
 
         term.printAt("------------ Colors applicable to the text and background ------------", 1, 1);
         term.printAt("Colors in the foreground", 2, 1);
 
-        term.linefeed();
+        term.LF();
         term.printAt(term.setColor(Color.YELLOW, "Phrase in yellow"), 4, 1);
         term.printAt(term.setColor(Color.BLUE, "Phrase in blue"), 5, 1);
         term.printAt(term.setColor(Color.WHITE, "Blank phrase"), 6, 1);
@@ -40,9 +40,9 @@ public class ShowTextColors {
         term.printAt(term.setColor(Color.BLACK, "Phrase in black"), 9, 1);
         term.printAt(term.setColor(Color.RED, "Phrase in red"), 10, 1);
         term.printAt(term.setColor(Color.GREEN, "Phrase in green"), 11, 1);
-        term.linefeed();
+        term.LF();
         term.printAt("Background colors", 13, 1);
-        term.linefeed();
+        term.LF();
         term.printAt(term.setBackgroundColor(BGColor.YELLOW, "Phrase with a yellow background"), 15, 1);
         term.printAt(term.setBackgroundColor(BGColor.BLUE, "Phrase with a blue background"), 16, 1);
         term.printAt(term.setBackgroundColor(BGColor.WHITE, "Phrase with a white background"), 17, 1);
@@ -53,11 +53,11 @@ public class ShowTextColors {
 
         pauseWithMessage(0, null);
 
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Colors applicable to the text and background ------------", 1, 1);
         term.printAt("Bright colors in the foreground", 2, 1);
-        term.linefeed();
+        term.LF();
         term.printAt(term.setColor(Color.GLOSSY_YELLOW, "Phrase in glossy yellow"), 4, 1);
         term.printAt(term.setColor(Color.GLOSSY_BLUE, "Phrase in glossy blue"), 5, 1);
         term.printAt(term.setColor(Color.GLOSSY_WHITE, "Glossy Blank phrase"), 6, 1);
@@ -66,9 +66,9 @@ public class ShowTextColors {
         term.printAt(term.setColor(Color.GLOSSY_BLACK, "Phrase in glossy black"), 9, 1);
         term.printAt(term.setColor(Color.GLOSSY_RED, "Phrase in glossy red"), 10, 1);
         term.printAt(term.setColor(Color.GLOSSY_GREEN, "Phrase in glossy green"), 11, 1);
-        term.linefeed();
+        term.LF();
         term.printAt("Bright colors for the background", 13, 1);
-        term.linefeed();
+        term.LF();
         term.printAt(term.setBackgroundColor(BGColor.GLOSSY_YELLOW, "Phrase in glossy yellow " +
                 "background"), 15, 1);
         term.printAt(term.setBackgroundColor(BGColor.GLOSSY_BLUE, "Phrase in glossy blue" +

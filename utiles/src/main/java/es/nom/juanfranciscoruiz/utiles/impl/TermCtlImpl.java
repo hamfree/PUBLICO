@@ -510,10 +510,7 @@ public class TermCtlImpl implements TermCtl {
         Kernel32.CONSOLE_SCREEN_BUFFER_INFO info = new Kernel32.CONSOLE_SCREEN_BUFFER_INFO();
         var hConsole = Kernel32.INSTANCE.GetStdHandle(-11); // STD_OUTPUT_HANDLE
         if (Kernel32.INSTANCE.GetConsoleScreenBufferInfo(hConsole, info)) {
-            return new Dimensions(
-                    info.srWindow.Bottom - info.srWindow.Top + 1,
-                    info.srWindow.Right - info.srWindow.Left + 1
-            );
+            return new Dimensions(info.srWindow.Bottom - info.srWindow.Top + 1, info.srWindow.Right - info.srWindow.Left + 1);
         }
         return null;
     }

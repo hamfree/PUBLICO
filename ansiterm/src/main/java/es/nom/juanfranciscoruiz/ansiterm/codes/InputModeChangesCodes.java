@@ -1,8 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -24,23 +21,12 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  *
  * @author Juan F. Ruiz
  */
-//TODO: <-- Seguramente habrá que definir las constantes de los códigos que devuelven la pulsación de teclas en los diferentes modos de entrada
+
+ /*
+TODO: It will probably be necessary to define the constants of the codes that
+ return the key presses in the different input modes
+ */
 public class InputModeChangesCodes {
-
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(InputModeChangesCodes.class);
-
-    /**
-     * Singleton instance of the {@code InputModeChangesCodes} class.
-     * This variable provides access to the only instance of the class,
-     * ensuring that only one instance exists throughout the application.
-     */
-    private static final InputModeChangesCodes instance;
-
-    static {
-        instance = new InputModeChangesCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(instance.toString());
-    }
-
     /**
      * Sequence.......: ESC =
      * Code...........: DECKPAM
@@ -80,16 +66,6 @@ public class InputModeChangesCodes {
     }
 
     /**
-     * Provides access to the singleton instance of the {@code InputModeChangesCodes} class.
-     * This ensures that only one instance of the class exists throughout the application.
-     *
-     * @return the singleton instance of the {@code InputModeChangesCodes} class
-     */
-    public static InputModeChangesCodes getInstance() {
-        return instance;
-    }
-
-    /**
      * Retrieves the ANSI escape code to enable Keypad Application Mode.
      * <p>
      * In Keypad Application Mode, the keys on the numeric keypad will emit their
@@ -98,7 +74,7 @@ public class InputModeChangesCodes {
      * @return a {@code String} representing the ANSI escape code for enabling
      * Keypad Application Mode.
      */
-    public static String getESforImEnableKeyPadAppMode() {
+    public static String enableKeypadApplicationMode() {
         return IM_ENABLE_KEYPAD_APP_MODE;
     }
 
@@ -111,7 +87,7 @@ public class InputModeChangesCodes {
      * @return a {@code String} representing the ANSI escape code for enabling
      * Keypad Numeric Mode.
      */
-    public static String getESforImEnableKeyPadNumMode() {
+    public static String enableKeypadNumericMode() {
         return IM_ENABLE_KEYPAD_NUM_MODE;
     }
 
@@ -124,7 +100,7 @@ public class InputModeChangesCodes {
      * @return a {@code String} representing the ANSI escape code for enabling
      * Cursor Keys Application Mode.
      */
-    public static String getESforImEnableCursorKeysAppMode() {
+    public static String enableCursorKeysApplicationMode() {
         return IM_ENABLE_CURSOR_KEYS_APP_MODE;
     }
 
@@ -137,7 +113,7 @@ public class InputModeChangesCodes {
      * @return a {@code String} representing the ANSI escape code for disabling
      * Cursor Keys Application Mode.
      */
-    public static String getESforImDisableCursorKeysAppMode() {
+    public static String disableCursorKeysAppMode() {
         return IM_DISABLE_CURSOR_KEYS_APP_MODE;
     }
 

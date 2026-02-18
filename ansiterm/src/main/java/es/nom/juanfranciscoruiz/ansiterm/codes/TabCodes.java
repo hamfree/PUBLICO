@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -18,34 +16,10 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class TabCodes {
-
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TabCodes.class);
-
-    /**
-     * Singleton instance of the {@code TabCodes} class.
-     */
-    private static final TabCodes tabCodes;
-
-    static {
-        tabCodes = new TabCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(tabCodes.toString());
-    }
-
     /**
      * Private constructor. Class can't be instantiated by the user
      */
     private TabCodes() {
-    }
-
-    /**
-     * Provides an instance of the {@code TabCodes} class.
-     * If no instance exists, a new instance is created and returned.
-     * Ensures that only one instance of the class is maintained.
-     *
-     * @return the singleton instance of the {@code TabCodes} class
-     */
-    public static TabCodes getInstance() {
-        return tabCodes;
     }
 
     /**
@@ -94,7 +68,7 @@ public class TabCodes {
      * @return the ANSI escape sequence
      *
      */
-    public static String set_TAB_CURSOR_HORIZONTAL_TAB(int n) {
+    public static String setTabCursorHorizontalTab(int n) {
         return ESC + "[" + n + "I";
     }
 
@@ -110,7 +84,7 @@ public class TabCodes {
      * @return the ANSI escape sequence
      *
      */
-    public static String set_TAB_CURSOR_BACKWARDS_TAB(int n) {
+    public static String setTabCursorBackwardsTab(int n) {
         return ESC + "[" + n + "Z";
     }
 

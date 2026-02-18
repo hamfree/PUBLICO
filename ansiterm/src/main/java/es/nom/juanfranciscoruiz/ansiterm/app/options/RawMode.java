@@ -34,7 +34,7 @@ public class RawMode {
      * @throws Exception If an error occurs during execution.
      */
     public void perform(ANSITerm term) throws Exception {
-        term.clearScreen();
+        term.clearTerminal();
         term.moveCursorToBegin();
         term.printAt("------------ Keyboard RAW mode ------------", 1, 1);
 

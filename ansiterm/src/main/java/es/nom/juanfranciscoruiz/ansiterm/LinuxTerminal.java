@@ -42,9 +42,7 @@ public class LinuxTerminal implements ITerminal {
     /**
      * Instantiates a LinuxTerminal object
      */
-    public LinuxTerminal(){
-        
-    }
+    public LinuxTerminal(){}
     
     /**
      * Enables the 'raw' mode of the console. It uses the 'stty' command which

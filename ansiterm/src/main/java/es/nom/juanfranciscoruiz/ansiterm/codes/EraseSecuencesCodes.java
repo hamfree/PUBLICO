@@ -1,7 +1,5 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import org.slf4j.Logger;
-
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 
 /**
@@ -15,25 +13,6 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  * @author Juan F. Ruiz
  */
 public class EraseSecuencesCodes {
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EraseSecuencesCodes.class);
-
-    /**
-     * Singleton instance of the {@code EraseSecuencesCodes} class.
-     * This object provides access to various ANSI escape sequences
-     * for clearing and erasing portions of the console screen or text.
-     * <p>
-     * The instance is created eagerly and stored as a final static field.
-     * Access to this instance ensures the same object is reused
-     * throughout the application, providing consistent behavior
-     * for operations related to screen or text erasure.
-     */
-    private static final EraseSecuencesCodes INSTANCE;
-
-    static {
-        INSTANCE = new EraseSecuencesCodes();
-        if (LOGGER.isDebugEnabled()) LOGGER.debug(INSTANCE.toString());
-    }
-
     /**
      * Escape sequence that erases from the cursor to the end of the screen
      */
@@ -67,15 +46,6 @@ public class EraseSecuencesCodes {
      * Private constructor to prevent instantiation.
      */
     private EraseSecuencesCodes() {
-    }
-
-    /**
-     * Returns the current instance of the EraseSecuencesCodes class.
-     *
-     * @return the existing instance of EraseSecuencesCodes.
-     */
-    public static EraseSecuencesCodes getInstance() {
-        return INSTANCE;
     }
 
     /**
@@ -136,7 +106,7 @@ public class EraseSecuencesCodes {
      *
      * @return a string with the escape sequence to delete a character
      */
-    public String deleteCharacter() {
+    public String deleteChar() {
         return ERASE_CHARACTER;
     }
 
