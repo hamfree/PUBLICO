@@ -12,7 +12,7 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
  * This class cannot be instantiated, as its sole purpose is to provide
  * pre-defined constants and utility methods for terminal window management.
  */
-public class WindowWidth {
+public class WindowWidthCodes {
     /**
      * Sequence.......: ESC [ ? 3 h
      * Code...........: DECCOLM
@@ -30,7 +30,7 @@ public class WindowWidth {
     /**
      * Private constructor to prevent instantiation.
      */
-    private WindowWidth() {
+    private WindowWidthCodes() {
     }
 
     /**

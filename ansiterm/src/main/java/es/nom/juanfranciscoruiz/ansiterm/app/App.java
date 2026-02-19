@@ -324,12 +324,21 @@ public class App {
      * @param term An ANSITerm object representing the terminal whose width will be set.
      */
     private void setTerminalWidth(ANSITerm term) throws Exception {
+        notImplementedYet(term, "setTerminalWidth");
+    }
+    
+    /**
+     *
+     * @param term An ANSITerm object for managing I/O for terminal
+     * @param msg A string with the name of function not implemented
+     * @throws Exception In case of error
+     */
+    private void notImplementedYet(ANSITerm term, String msg) throws Exception {
         term.clearTerminal();
         term.moveCursorToBegin();
         final long PAUSE_DURATION = 3000L;
-        String msg = "Setting terminal width";
         prtln(2, title(msg, '*', 80));
-        prtln(3, "Setting terminal width is not implemented yet.");
+        prtln(3, "This function is not implemented yet.");
         pause(PAUSE_DURATION, null);
     }
 

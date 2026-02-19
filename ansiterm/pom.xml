@@ -14,10 +14,8 @@
         <exec.mainClass>es.nom.juanfranciscoruiz.ansiterm.app.App</exec.mainClass>
         <logback.version>1.5.25</logback.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <utiles.version>1.4</utiles.version>
     </properties>
-
-
+    
     <scm>
         <connection>scm:git:https://github.com/hamfree/PUBLICO.git</connection>
         <developerConnection>scm:git:https://github.com/hamfree/PUBLICO.git</developerConnection>
@@ -36,9 +34,9 @@
     <dependencies>
         <!-- For multiple uses: input/output, menu management, etc. -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>es.nom.juanfranciscoruiz</groupId>
             <artifactId>utiles</artifactId>
-            <version>${utiles.version}</version>
+            <version>1.4</version>
         </dependency>
 
         <!-- Logging -->

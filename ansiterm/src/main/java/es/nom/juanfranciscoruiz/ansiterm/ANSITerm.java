@@ -24,8 +24,8 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.TextModificationCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ViewportPositioningCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowTitleCodes.setWindowTitle;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowTitleCodes.updateWindowTitle;
-import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowWidth.setWidthTo132;
-import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowWidth.setWidthTo80;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowWidthCodes.setWidthTo132;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowWidthCodes.setWidthTo80;
 import static es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSIErrors.*;
 
 /**
