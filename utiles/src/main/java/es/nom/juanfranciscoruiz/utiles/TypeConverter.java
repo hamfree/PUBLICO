@@ -134,6 +134,8 @@ public class TypeConverter {
     public static Double extractDoubleFromString(String src) throws TypeConverterException {
         Double theDouble = null;
         String error;
+        boolean notFound = true;
+
         if (src == null) {
             error = "Parameter is null!";
             logger.error(error);
@@ -151,7 +153,14 @@ public class TypeConverter {
 
         while (matcher.find()) {
             theDouble = Double.valueOf(matcher.group());
+            notFound = false;
+            break;
         }
+
+        if (notFound){
+            throw new TypeConverterException(String.format("Parameter '%s' does not contain a valid double value!", src));
+        }
+
         return theDouble;
     }
 

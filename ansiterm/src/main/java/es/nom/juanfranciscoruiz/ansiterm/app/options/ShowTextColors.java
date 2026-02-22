@@ -4,7 +4,7 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.codes.BGColor;
 import es.nom.juanfranciscoruiz.ansiterm.codes.Color;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Demonstrates various text and background colors.

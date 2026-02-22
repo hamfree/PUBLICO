@@ -2,7 +2,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Demonstrates the use of 256 colors.

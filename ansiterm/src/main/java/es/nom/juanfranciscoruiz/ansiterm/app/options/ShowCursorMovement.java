@@ -3,7 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Demonstrates cursor movement commands.

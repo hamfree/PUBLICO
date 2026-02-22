@@ -3,8 +3,8 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.printWithDelay;
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.printWithDelay;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Demonstrates various cursor styles and visibility.

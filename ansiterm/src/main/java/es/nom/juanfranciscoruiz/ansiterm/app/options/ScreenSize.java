@@ -6,7 +6,7 @@ import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 
 import java.util.Scanner;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Demonstrates how to get the current terminal screen size.

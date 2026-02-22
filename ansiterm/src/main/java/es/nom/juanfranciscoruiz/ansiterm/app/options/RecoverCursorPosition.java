@@ -8,8 +8,7 @@ import es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseForMilliseconds;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
 
 /**
  * Demonstrates how to recover the current cursor position from the terminal.
@@ -27,7 +26,7 @@ public class RecoverCursorPosition {
    * Defines the delay duration in milliseconds used for controlling the timing
    * of cursor position recovery operations and other related processes.
    */
-  public static final Long DELAY = 10L;
+  public static final Long DELAY = 0L;
   
   /**
    * Constructs a new RecoverCursorPosition.
@@ -41,10 +40,10 @@ public class RecoverCursorPosition {
    * @throws Exception If an error occurs during execution.
    */
   public void perform(ANSITerm term) throws Exception {
-    term.clearTerminal();
-    term.moveCursorToBegin();
-    term.printAt("------------  Recovering the cursor position ------------ ", 1, 1);
+    String title = "Recovering the cursor position";
+    String msg = "The cursor will move through all positions in the screen buffer. For each position, its row and column will be retrieved. Delay: " + DELAY + " ms";
     TerminalSize screenSize = term.getTerminalSize();
+    clearScreenAndPrintHeader(term, title, msg, screenSize.getColumns());
     
     term.cursorShow();
     term.cursorChangeStyle(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE);
@@ -61,7 +60,8 @@ public class RecoverCursorPosition {
           System.out.println(e.getMessage());
         }
         long retardo = DELAY;
-        pauseForMilliseconds(retardo);
+        if (retardo > 0)
+          pauseForMilliseconds(retardo);
         term.printAt("Cursor position: column : ", screenSize.getLines() - 2, 1);
         term.eraseFromCursorToEndLine();
         term.printAt(p.getCol() + ", row: " + p.getLin(), screenSize.getLines() - 2, 32);

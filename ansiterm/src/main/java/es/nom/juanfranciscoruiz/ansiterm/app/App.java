@@ -167,7 +167,7 @@ public class App {
         opciones.add("Cursor position recovery test");
         opciones.add("Screen size test");
         opciones.add("Rectangle drawing test");
-        opciones.add("Text deletions from the cursor");
+        opciones.add("Text deletion capabilities");
         opciones.add("Text styles");
         opciones.add("Multiple text styles");
         opciones.add("Text colors");
@@ -304,7 +304,7 @@ public class App {
      */
     private void showScreenLineDeletionCommands(ANSITerm term) throws Exception {
         ScreenAndLineDeletions screenAndLineDeletions = new ScreenAndLineDeletions();
-        screenAndLineDeletions.perform(term);
+        screenAndLineDeletions.perform();
     }
 
     /**
@@ -320,18 +320,23 @@ public class App {
 
     /**
      * Configures the terminal width based on the given ANSITerm instance.
+     * Note: Doesn't work on Windows neither Linux
      *
      * @param term An ANSITerm object representing the terminal whose width will be set.
      */
     private void setTerminalWidth(ANSITerm term) throws Exception {
-        notImplementedYet(term, "setTerminalWidth");
+        ChangeTerminalWidth changeTerminalWidth = new ChangeTerminalWidth();
+        changeTerminalWidth.perform(term);
     }
-    
+
+
     /**
+     * Placeholder method indicating functionality that has not been implemented yet.
+     * The terminal is cleared, and an informational message is displayed.
      *
-     * @param term An ANSITerm object for managing I/O for terminal
-     * @param msg A string with the name of function not implemented
-     * @throws Exception In case of error
+     * @param term An instance of ANSITerm used for terminal operations.
+     * @param msg A message to display, indicating the unimplemented status.
+     * @throws Exception In case of any error during terminal operations.
      */
     private void notImplementedYet(ANSITerm term, String msg) throws Exception {
         term.clearTerminal();

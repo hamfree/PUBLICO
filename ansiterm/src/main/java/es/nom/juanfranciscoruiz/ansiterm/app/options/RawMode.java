@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.clearScreenAndPrintHeader;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Demonstrates the use of raw terminal mode for keyboard input.
@@ -34,9 +35,10 @@ public class RawMode {
      * @throws Exception If an error occurs during execution.
      */
     public void perform(ANSITerm term) throws Exception {
-        term.clearTerminal();
-        term.moveCursorToBegin();
-        term.printAt("------------ Keyboard RAW mode ------------", 1, 1);
+        String title = "Keyboard RAW mode";
+        String msg = "Sets the keyboard of console to RAW mode. Each keystroke generates a keyboard response in the form of code.";
+        int columns = term.getTerminalSize().getColumns();
+        clearScreenAndPrintHeader(term,title,msg,columns);
 
         try {
             pauseWithMessage(2000L, null);

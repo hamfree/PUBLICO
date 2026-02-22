@@ -14,7 +14,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.BGColor.DEFAULT;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorMovementCodes.*;
-import static es.nom.juanfranciscoruiz.ansiterm.codes.EraseSecuencesCodes.*;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.EraseSequencesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.GeneralControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.resetScrollingMargins;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.setScrollingMargins;
@@ -969,7 +969,7 @@ public class ANSITerm {
      * @param lines the number of lines by which the text should be scrolled upwards
      */
     public void scrollTextUp(int lines) {
-        System.out.println(scrollLinesUp(lines));
+        System.out.print(scrollLinesUp(lines));
     }
 
     /**
@@ -977,9 +977,7 @@ public class ANSITerm {
      *
      * @param lines the number of lines to scroll the text down
      */
-    public void scrollTextDown(int lines) {
-        System.out.println(scrollLinesDown(lines));
-    }
+    public void scrollTextDown(int lines) { System.out.print(scrollLinesDown(lines)); }
 
     /**
      * Captures and saves the current state of the screen.

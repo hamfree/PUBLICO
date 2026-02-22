@@ -12,7 +12,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
  *
  * @author Juan F. Ruiz
  */
-public class EraseSecuencesCodes {
+public class EraseSequencesCodes {
     /**
      * Escape sequence that erases from the cursor to the end of the screen
      */
@@ -45,7 +45,7 @@ public class EraseSecuencesCodes {
     /**
      * Private constructor to prevent instantiation.
      */
-    private EraseSecuencesCodes() {
+    private EraseSequencesCodes() {
     }
 
     /**
@@ -71,7 +71,7 @@ public class EraseSecuencesCodes {
      * @return a string with the escape sequence to erase the entire screen
      */
     public static String clearScreen() {
-        return EraseSecuencesCodes.CLEAR_SCREEN;
+        return EraseSequencesCodes.CLEAR_SCREEN;
     }
 
     /**
@@ -106,7 +106,7 @@ public class EraseSecuencesCodes {
      *
      * @return a string with the escape sequence to delete a character
      */
-    public String deleteChar() {
+    public static String deleteChar() {
         return ERASE_CHARACTER;
     }
 
@@ -116,9 +116,15 @@ public class EraseSecuencesCodes {
      *
      * @param cars the number of characters to delete. Must be a positive integer.
      * @return a string containing the escape sequence to delete the specified number of characters.
+     * @throws IllegalArgumentException if the provided number of characters is not a positive integer.
      */
-    public String deleteChars(int cars) {
-        return ESC + "[" + cars + "X";
+    public static String deleteChars(int cars) {
+        if (cars > 0){
+            return ESC + "[" + cars + "X";
+        } else {
+            throw new IllegalArgumentException("The number of characters to delete must be a positive integer");
+        }
+
     }
 
     @Override

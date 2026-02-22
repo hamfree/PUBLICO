@@ -4,9 +4,9 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
 import es.nom.juanfranciscoruiz.ansiterm.app.options.model.Rectangle;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
-import es.nom.juanfranciscoruiz.ansiterm.utiles.Util;
 
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseForMilliseconds;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * Draws a rectangle with asterisks around the screen borders.
@@ -14,6 +14,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Util.pauseForMilliseconds
  * @author Juan F. Ruiz
  */
 public class DrawsRectangle {
+  public static final long DELAY = 10L;
   Rectangle rectangle = new Rectangle(1, 1, 1, 1, "*");
   /**
    * Constructs a new DrawsRectangle.
@@ -28,19 +29,18 @@ public class DrawsRectangle {
    */
   public void perform(ANSITerm term) throws Exception {
     long DELAY = 10L;
-    term.clearTerminal();
-    term.moveCursorToBegin();
+    String title = "Draws concentric rectangles with digits around at the screen";
+    String msg = "Concentric rectangles will be drawn on the screen. Delay: " + DELAY + " ms";
     TerminalSize ts = term.getTerminalSize();
     int widthConsole = ts.getColumns();
     int heightConsole = ts.getLines();
-    
-    term.printAt("------------ Printing text at specific coordinates ------------", 1, 1);
-    term.printAt("Concentric rectangles will be drawn on the screen:", 2, 1);
 
-    int height = ts.getLines() - 4;
-    int width = ts.getColumns() - 4;
+    clearScreenAndPrintHeader(term, title, msg, widthConsole);
+
+    int height = ts.getLines() - 5;
+    int width = ts.getColumns() - 5;
     int x = 2;
-    int y = 3;
+    int y = 5;
     int digito = 0;
 
     do {
@@ -60,7 +60,7 @@ public class DrawsRectangle {
     } while ((height > 0 && height >= heightConsole/2) && (width > 0 && width >= widthConsole/2));
 
 
-    Util.pauseWithMessage(0, "Press <ENTER> to return to menu");
+    pauseWithMessage(0, "Press <ENTER> to return to menu");
   }
 
   private void drawRectangle(ANSITerm term, Rectangle rectangle) throws ANSITermException {
