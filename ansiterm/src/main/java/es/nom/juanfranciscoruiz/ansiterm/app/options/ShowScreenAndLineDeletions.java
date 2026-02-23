@@ -11,7 +11,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
  *
  * @author Juan F. Ruiz
  */
-public class ScreenAndLineDeletions {
+public class ShowScreenAndLineDeletions {
     /**
      * A constant representing a delay of four seconds, used for timing or scheduling operations
      * within the ScreenAndLineDeletions class.
@@ -66,7 +66,7 @@ public class ScreenAndLineDeletions {
     /**
      * Constructs a new ScreenAndLineDeletions.
      */
-    public ScreenAndLineDeletions() throws ANSITermException {
+    public ShowScreenAndLineDeletions() throws ANSITermException {
         this.term = new ANSITerm();
         this.lines = term.getTerminalSize().getLines();
         this.columns = term.getTerminalSize().getColumns();

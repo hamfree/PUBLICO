@@ -97,55 +97,55 @@ public class App {
             switch (menu.getSelectedOption().intValue()) {
                 case 1 -> {
                     menu.setMessage("");
-                    app.enableRawModeKeyboard(term);
+                    app.enableRawModeKeyboard();
                 }
                 case 2 -> {
                     menu.setMessage("");
-                    app.recoverCursorPosition(term, 1L);
+                    app.recoverCursorPosition(1L);
                 }
                 case 3 -> {
                     menu.setMessage("");
-                    app.testAndShowScreenSize(term);
+                    app.testAndShowScreenSize();
                 }
                 case 4 -> {
                     menu.setMessage("");
-                    app.drawBorderedRectangle(term);
+                    app.drawBorderedRectangle();
                 }
                 case 5 -> {
                     menu.setMessage("");
-                    app.showScreenLineDeletionCommands(term);
+                    app.showScreenLineDeletionCommands();
                 }
                 case 6 -> {
                     menu.setMessage("");
-                    app.displayTextStyles(term);
+                    app.displayTextStyles();
                 }
                 case 7 -> {
                     menu.setMessage("");
-                    app.showMultipleStyles(term);
+                    app.showMultipleStyles();
                 }
                 case 8 -> {
                     menu.setMessage("");
-                    app.displayTextColors(term);
+                    app.displayTextColors();
                 }
                 case 9 -> {
                     menu.setMessage("");
-                    app.display256ColorPalette(term);
+                    app.display256ColorPalette();
                 }
                 case 10 -> {
                     menu.setMessage("");
-                    app.displayCursorStyles(term);
+                    app.displayCursorStyles();
                 }
                 case 11 -> {
                     menu.setMessage("");
-                    app.showCursorBlinkingEffect(term);
+                    app.showCursorBlinkingEffect();
                 }
                 case 12 -> {
                     menu.setMessage("");
-                    app.showCursorAnimation(term, 100L);
+                    app.showCursorAnimation(100L);
                 }
                 case 13 -> {
                     menu.setMessage("");
-                    app.setTerminalWidth(term);
+                    app.setTerminalWidth();
                 }
                 default -> menu.setMessage("Invalid option. Please, try again.");
             }
@@ -185,12 +185,11 @@ public class App {
      * Perform a keystroke capture test once the terminal's 'raw' mode is
      * enabled. Display the keys pressed in a loop until the "q" key is pressed.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void enableRawModeKeyboard(ANSITerm term) throws Exception {
-        RawMode rawMode = new RawMode();
-        rawMode.perform(term);
+    private void enableRawModeKeyboard() throws Exception {
+        ShowRawMode rawMode = new ShowRawMode();
+        rawMode.perform();
     }
 
     /**
@@ -201,9 +200,9 @@ public class App {
      * @param retardo The delay in milliseconds
      * @throws Exception In case of any error
      */
-    private void showCursorAnimation(ANSITerm term, long retardo) throws Exception {
+    private void showCursorAnimation(long retardo) throws Exception {
         ShowCursorMovement showCursorMovement = new ShowCursorMovement();
-        showCursorMovement.perform(term);
+        showCursorMovement.perform();
     }
 
     /**
@@ -214,119 +213,108 @@ public class App {
      * @param retardo The delay in milliseconds
      * @throws Exception In case of any error
      */
-    private void recoverCursorPosition(ANSITerm term, long retardo) throws Exception {
-        RecoverCursorPosition recoverCursorPosition = new RecoverCursorPosition();
-        recoverCursorPosition.perform(term);
+    private void recoverCursorPosition(long retardo) throws Exception {
+        ShowRecoverCursorPosition recoverCursorPosition = new ShowRecoverCursorPosition();
+        recoverCursorPosition.perform();
     }
 
     /**
      * Draw a rectangle with asterisks that borders the screen
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void drawBorderedRectangle(ANSITerm term) throws Exception {
-        DrawsRectangle dr = new DrawsRectangle();
-        dr.perform(term);
+    private void drawBorderedRectangle() throws Exception {
+        ShowDrawsRectangle dr = new ShowDrawsRectangle();
+        dr.perform();
     }
 
     /**
      * Tests and displays the screen size (lines and columns).
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void testAndShowScreenSize(ANSITerm term) throws Exception {
-        ScreenSize screenSize = new ScreenSize();
-        screenSize.perform(term);
+    private void testAndShowScreenSize() throws Exception {
+        ShowScreenSize screenSize = new ShowScreenSize();
+        screenSize.perform();
     }
 
     /**
      * Displays various text styles (bold, dim, italic, etc.) applicable to text.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void displayTextStyles(ANSITerm term) throws Exception {
-        TextStyles textStyles = new TextStyles();
-        textStyles.perform(term);
+    private void displayTextStyles() throws Exception {
+        ShowTextStyles textStyles = new ShowTextStyles();
+        textStyles.perform();
     }
 
     /**
      * Displays combinations of multiple text styles.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void showMultipleStyles(ANSITerm term) throws Exception {
-        MultipleStylesText multipleStylesText = new MultipleStylesText();
-        multipleStylesText.perform(term);
+    private void showMultipleStyles() throws Exception {
+        ShowMultipleStylesText multipleStylesText = new ShowMultipleStylesText();
+        multipleStylesText.perform();
     }
 
     /**
      * Displays various foreground and background text colors.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void displayTextColors(ANSITerm term) throws Exception {
+    private void displayTextColors() throws Exception {
         ShowTextColors showTextColors = new ShowTextColors();
-        showTextColors.perform(term);
+        showTextColors.perform();
     }
 
     /**
      * Displays the 256-color palette.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void display256ColorPalette(ANSITerm term) throws Exception {
+    private void display256ColorPalette() throws Exception {
         ShowTextColors256 showTextColors256 = new ShowTextColors256();
-        showTextColors256.perform(term);
+        showTextColors256.perform();
     }
 
     /**
      * Displays various cursor styles (block, bar, underline, blinking, etc.).
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void displayCursorStyles(ANSITerm term) throws Exception {
+    private void displayCursorStyles() throws Exception {
         ShowCursorStyles showCursorStyles = new ShowCursorStyles();
-        showCursorStyles.perform(term);
+        showCursorStyles.perform();
     }
 
     /**
      * Demonstrates screen and line deletion commands from the current cursor position.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void showScreenLineDeletionCommands(ANSITerm term) throws Exception {
-        ScreenAndLineDeletions screenAndLineDeletions = new ScreenAndLineDeletions();
+    private void showScreenLineDeletionCommands() throws Exception {
+        ShowScreenAndLineDeletions screenAndLineDeletions = new ShowScreenAndLineDeletions();
         screenAndLineDeletions.perform();
     }
 
     /**
      * Demonstrates enabling and disabling cursor blinking.
      *
-     * @param term An ANSITerm object
      * @throws Exception In case of any error
      */
-    private void showCursorBlinkingEffect(ANSITerm term) throws Exception {
+    private void showCursorBlinkingEffect() throws Exception {
         ShowCursorBlinking showCursorBlinking = new ShowCursorBlinking();
-        showCursorBlinking.perform(term);
+        showCursorBlinking.perform();
     }
 
     /**
      * Configures the terminal width based on the given ANSITerm instance.
      * Note: Doesn't work on Windows neither Linux
-     *
-     * @param term An ANSITerm object representing the terminal whose width will be set.
      */
-    private void setTerminalWidth(ANSITerm term) throws Exception {
-        ChangeTerminalWidth changeTerminalWidth = new ChangeTerminalWidth();
-        changeTerminalWidth.perform(term);
+    private void setTerminalWidth() throws Exception {
+        ShowChangeTerminalWidth changeTerminalWidth = new ShowChangeTerminalWidth();
+        changeTerminalWidth.perform();
     }
 
 
@@ -346,5 +334,4 @@ public class App {
         prtln(3, "This function is not implemented yet.");
         pause(PAUSE_DURATION, null);
     }
-
 }

@@ -1,6 +1,6 @@
-package es.nom.juanfranciscoruiz.ansiterm.codes;
+package es.nom.juanfranciscoruiz.ansiterm.model;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
 
 /**
  * Enumeration for background colors with ANSI codes for the terminal

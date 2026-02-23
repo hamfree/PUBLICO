@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.codes;
+package es.nom.juanfranciscoruiz.ansiterm.model;
 
 /**
  * Provides constants for Operating System Command (OSC) escape sequences.

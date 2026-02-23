@@ -1,6 +1,6 @@
-package es.nom.juanfranciscoruiz.ansiterm.codes;
+package es.nom.juanfranciscoruiz.ansiterm.model;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
 
 /**
  * Contains ANSI escape codes for text styles.
@@ -86,8 +86,8 @@ public class StylesCodes {
      * effects. Use the default color of the <code>Color</code> and
      * <code>BGColor</code> Enums to reset only colors.
      *
-     * @see es.nom.juanfranciscoruiz.ansiterm.codes.Color
-     * @see es.nom.juanfranciscoruiz.ansiterm.codes.BGColor
+     * @see Color
+     * @see BGColor
      *
      */
     public static final String RESET_COLOR_AND_STYLES = "0";

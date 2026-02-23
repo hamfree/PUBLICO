@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import es.nom.juanfranciscoruiz.ansiterm.model.CSI;
+
 /**
  * This class provides ANSI escape sequences to set terminal window widths to
  * specific column sizes. It includes constants and utility methods for

@@ -3,6 +3,8 @@ package es.nom.juanfranciscoruiz.ansiterm;
 import com.sun.jna.LastErrorException;
 import es.nom.juanfranciscoruiz.ansiterm.codes.*;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
+import es.nom.juanfranciscoruiz.ansiterm.model.BGColor;
+import es.nom.juanfranciscoruiz.ansiterm.model.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,15 +12,15 @@ import java.io.IOException;
 
 import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.getPosition;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.AnsiBufferManager.*;
-import static es.nom.juanfranciscoruiz.ansiterm.codes.BGColor.DEFAULT;
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.BGColor.DEFAULT;
+import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorMovementCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.EraseSequencesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.GeneralControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.resetScrollingMargins;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.setScrollingMargins;
-import static es.nom.juanfranciscoruiz.ansiterm.codes.StylesCodes.*;
+import static es.nom.juanfranciscoruiz.ansiterm.model.StylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.TextModificationCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ViewportPositioningCodes.*;

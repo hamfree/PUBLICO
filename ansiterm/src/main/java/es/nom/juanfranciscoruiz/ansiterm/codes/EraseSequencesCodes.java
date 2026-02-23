@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import static es.nom.juanfranciscoruiz.ansiterm.codes.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
 
 /**
  * Contains ANSI escape codes for erasing screen and line content.

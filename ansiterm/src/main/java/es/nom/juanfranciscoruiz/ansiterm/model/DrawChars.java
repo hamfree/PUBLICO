@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.codes;
+package es.nom.juanfranciscoruiz.ansiterm.model;
 
 /**
  * This class provides predefined character constants for drawing characters in terminal applications.

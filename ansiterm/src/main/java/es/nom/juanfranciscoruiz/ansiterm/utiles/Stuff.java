@@ -2,8 +2,8 @@ package es.nom.juanfranciscoruiz.ansiterm.utiles;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
-import es.nom.juanfranciscoruiz.ansiterm.codes.BGColor;
-import es.nom.juanfranciscoruiz.ansiterm.codes.Color;
+import es.nom.juanfranciscoruiz.ansiterm.model.BGColor;
+import es.nom.juanfranciscoruiz.ansiterm.model.Color;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import org.slf4j.Logger;

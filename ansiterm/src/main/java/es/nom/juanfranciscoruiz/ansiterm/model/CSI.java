@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.codes;
+package es.nom.juanfranciscoruiz.ansiterm.model;
 
 /**
  * ANSI Control Sequence Introducer (CSI) for CSI sequences.

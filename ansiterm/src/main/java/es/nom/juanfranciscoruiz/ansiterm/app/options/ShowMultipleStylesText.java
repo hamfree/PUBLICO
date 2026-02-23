@@ -1,6 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
+import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
 
@@ -9,7 +10,17 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
  *
  * @author Juan F. Ruiz
  */
-public class MultipleStylesText {
+public class ShowMultipleStylesText {
+    /**
+     * Represents an instance of the {@code ANSITerm} class used for managing
+     * terminal interactions, such as cursor blinking or printing text at
+     * specific locations on the terminal screen.
+     * <p>
+     * This object is final and assigned during class construction, ensuring
+     * consistent and reliable access throughout the lifecycle of the containing
+     * class. It provides methods and utilities for terminal display management.
+     */
+    private final ANSITerm term;
     /**
      * Represents the title text for the MultipleStylesText object.
      * This field is used to store a string that acts as the title,
@@ -40,7 +51,8 @@ public class MultipleStylesText {
     /**
      * Constructs a new MultipleStylesText.
      */
-    public MultipleStylesText() {
+    public ShowMultipleStylesText() throws ANSITermException {
+        this.term = new ANSITerm();
         this.title = "Multiple styles applicable to the text";
         this.message = "Multiple styles will be applied to the text at once.";
     }
@@ -120,18 +132,17 @@ public class MultipleStylesText {
     /**
      * Performs the multiple styles demonstration.
      *
-     * @param term The ANSITerm object to use for styling.
      * @throws Exception If an error occurs during execution.
      */
-    public void perform(ANSITerm term) throws Exception {
+    public void perform() throws Exception {
         this.setColumns(term.getTerminalSize().getColumns());
-        showTextStylesBold(term);
-        showTextStylesAttenuated(term);
-        showTextStylesCursive(term);
-        showTextStylesUnderline(term);
-        showTextStylesIntermittent(term);
-        showTextStylesInverted(term);
-        showTextStylesCrossed(term);
+        showTextStylesBold();
+        showTextStylesAttenuated();
+        showTextStylesCursive();
+        showTextStylesUnderline();
+        showTextStylesIntermittent();
+        showTextStylesInverted();
+        showTextStylesCrossed();
     }
 
     /**
@@ -140,12 +151,10 @@ public class MultipleStylesText {
      * The demonstration involves formatting specific messages and printing them
      * to the terminal using the provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for applying text styles
-     *             and printing styled content to the terminal.
      * @throws Exception If an error occurs during execution, such as issues with terminal
      *                   interaction or styling operations.
      */
-    private void showTextStylesBold(ANSITerm term) throws Exception {
+    private void showTextStylesBold() throws Exception {
         setLine(6);
         String stylizedMessage = "BOLD phrase with various styles";
         clearScreenAndPrintHeader(term, title, message, columns);
@@ -170,12 +179,10 @@ public class MultipleStylesText {
      * struck-through formatting. This method demonstrates how text can be styled and
      * displayed in an attenuated (dimmed) manner using the provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for styling text and
-     *             printing styled content to the terminal.
      * @throws Exception If an error occurs during the execution of terminal
      *                   interactions or styling methods.
      */
-    private void showTextStylesAttenuated(ANSITerm term) throws Exception {
+    private void showTextStylesAttenuated() throws Exception {
         setLine(6);
         String stylizedMessage = "ATTENUATED phrase with various styles";
         clearScreenAndPrintHeader(term, title, stylizedMessage, columns);
@@ -200,12 +207,10 @@ public class MultipleStylesText {
      * formats specific messages with these combined styles and prints them to the terminal
      * using the provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for applying text styles
-     *             and printing styled content to the terminal.
      * @throws Exception If an error occurs during execution, such as issues with terminal
      *                   interaction or styling operations.
      */
-    private void showTextStylesCursive(ANSITerm term) throws Exception {
+    private void showTextStylesCursive() throws Exception {
         setLine(6);
         String stylizedMessage = "Phrase in CURSIVE with various styles";
         clearScreenAndPrintHeader(term, title, stylizedMessage, columns);
@@ -230,12 +235,10 @@ public class MultipleStylesText {
      * specific messages with these combined styles and prints them to the terminal using the
      * provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for applying text styles and printing
-     *             styled content to the terminal.
      * @throws Exception If an error occurs during execution, such as issues with terminal
      *                   interaction or styling operations.
      */
-    private void showTextStylesUnderline(ANSITerm term) throws Exception {
+    private void showTextStylesUnderline() throws Exception {
         // Underline with other styles
         setLine(6);
         String stylizedMessage = "UNDERLINED phrase with various styles";
@@ -261,12 +264,10 @@ public class MultipleStylesText {
      * formats specific messages with these combined styles and prints them to the terminal using the
      * provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for styling text and printing
-     *             styled content to the terminal.
      * @throws Exception If an error occurs during the execution of terminal interactions or
      *                   styling methods.
      */
-    private void showTextStylesIntermittent(ANSITerm term) throws Exception {
+    private void showTextStylesIntermittent() throws Exception {
         // Blinking with other styles
         setLine(6);
         String stylizedMessage = "INTERMITTENT phrase with various styles";
@@ -292,12 +293,10 @@ public class MultipleStylesText {
      * The method demonstrates how text can be styled using inverted colors and prints
      * them to the terminal with the provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for applying text styles
-     *             and printing styled content to the terminal.
      * @throws Exception If an error occurs during execution, such as issues with terminal
      *                   interaction or styling operations.
      */
-    private void showTextStylesInverted(ANSITerm term) throws Exception {
+    private void showTextStylesInverted() throws Exception {
         // Inverse with other styles
         setLine(6);
         String stylizedMessage = "INVERTED phrase with various styles";
@@ -323,12 +322,10 @@ public class MultipleStylesText {
      * The method formats specific messages with these combined styles and prints them
      * to the terminal using the provided ANSITerm object.
      *
-     * @param term The ANSITerm object that provides methods for applying text styles
-     *             and printing styled content to the terminal.
      * @throws Exception If an error occurs during execution, such as issues with terminal
      *                   interaction or styling operations.
      */
-    private void showTextStylesCrossed(ANSITerm term) throws Exception {
+    private void showTextStylesCrossed() throws Exception {
         // Strikethrough with other styles
         setLine(6);
         String stylizedMessage = "Phrase CROSSED out in various styles";

@@ -7,11 +7,11 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.clearScreenAndPrint
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
- * Demonstrates the use of 256 colors.
+ * Demonstrates various text styles like bold, italic, etc.
  *
  * @author Juan F. Ruiz
  */
-public class ShowTextColors256 {
+public class ShowTextStyles {
     /**
      * Represents an instance of the {@code ANSITerm} class used for managing
      * terminal interactions, such as cursor blinking or printing text at
@@ -39,41 +39,38 @@ public class ShowTextColors256 {
      * Represents the number of columns used to format and display text or other content
      * within the terminal. This variable determines the width of the area allocated
      * for various visual styles and text formatting operations.
-    /**
-     * Constructs a new ShowTextColors256.
      */
-    public ShowTextColors256() throws ANSITermException {
+    private final int columns;
+    /**
+     * Represents the current line number or position within the context of the
+     * {@code MultipleStylesText} class. This variable is typically used to track
+     * or indicate which line or portion of the text is being operated on during
+     * styling or display processes.
+     */
+    private int line;
+    /**
+     * Constructs a new TextStyles.
+     */
+    public ShowTextStyles() throws ANSITermException {
         this.term = new ANSITerm();
-        this.title = "256 colors";
-        this.message = "The 256 colors are displayed in a palette";
+        this.title = "Text styles";
+        this.message = "The text can be set to bold, italic, underline, inverted, blinking, crossed, etc.";
+        this.columns = term.getTerminalSize().getColumns();
     }
 
     /**
-     * Performs the 256 colors demonstration.
+     * Performs the text styles demonstration.
      *
      * @throws Exception If an error occurs during execution.
      */
     public void perform() throws Exception {
-        clearScreenAndPrintHeader(term, title, message, term.getTerminalSize().getColumns());
-        int j = 0;
-        int line = 6;
-        int col = 0;
-        term.printAt(line, col);
-        for (int i = 0; i < 256; i++) {
-            String msg = term.setColor256(i, String.valueOf(i));
-            if (j > 15) {
-                term.printAt(msg, line, col);
-                term.LF();
-                j = 0;
-                col = 0;
-                line = line + 1;
-            } else {
-                term.printAt(msg.concat(" "), line, col);
-                col = col + 5;
-                j++;
-            }
-        }
-
+        clearScreenAndPrintHeader(term, title, message, columns);
+        term.printAt(term.setBold("Bold phrase"), 6, 10);
+        term.printAt(term.setDim("Attenuated phrase"), 7, 10);
+        term.printAt(term.setItalic("Phrase in italics"), 8, 10);
+        term.printAt(term.setBlink("Intermittent phrase"), 9, 10);
+        term.printAt(term.setInverse("Phrase with inverted colors"), 10, 10);
+        term.printAt(term.setHidden("Hidden message"), 11, 10);
         pauseWithMessage(0, "Press <ENTER> to return to menu");
     }
 }

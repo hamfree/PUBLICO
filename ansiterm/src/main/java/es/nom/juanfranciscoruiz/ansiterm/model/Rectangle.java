@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.app.options.model;
+package es.nom.juanfranciscoruiz.ansiterm.model;
 
 /**
  * Represents a rectangle with position, dimensions, and a character for drawing.

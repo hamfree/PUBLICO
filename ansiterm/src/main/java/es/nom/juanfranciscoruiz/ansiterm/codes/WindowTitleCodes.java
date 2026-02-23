@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import es.nom.juanfranciscoruiz.ansiterm.model.OSC;
+
 /**
  * Utility class providing methods to generate ANSI escape sequences for setting
  * terminal window titles and icon names using Operating System Command (OSC) codes.

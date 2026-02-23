@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import es.nom.juanfranciscoruiz.ansiterm.model.CSI;
+
 /**
  * Utility class that provides ANSI escape sequences for setting and resetting
  * scrolling margins in a terminal. These sequences define the top and bottom

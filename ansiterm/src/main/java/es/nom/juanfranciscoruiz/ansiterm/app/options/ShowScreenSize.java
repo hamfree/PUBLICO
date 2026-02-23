@@ -3,16 +3,19 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
+import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
+
+import java.util.Scanner;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.clearScreenAndPrintHeader;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
- * Demonstrates cursor movement commands.
+ * Demonstrates how to get the current terminal screen size.
  *
  * @author Juan F. Ruiz
  */
-public class ShowCursorMovement {
+public class ShowScreenSize {
     /**
      * Represents an instance of the {@code ANSITerm} class used for managing
      * terminal interactions, such as cursor blinking or printing text at
@@ -41,49 +44,30 @@ public class ShowCursorMovement {
      */
     private String msg;
     /**
-     * Defines the fixed delay duration in milliseconds used for controlling the
-     * timing of actions, such as cursor movement animations in the terminal.
-     * <p>
-     * This constant ensures consistent timing intervals across methods that
-     * involve timed operations and provides a standard reference for delay
-     * configuration within the application.
+     * Constructs a new ScreenSize.
      */
-    private static final long DELAY = 10L;
-    /**
-     * Constructs a new ShowCursorMovement.
-     */
-    public ShowCursorMovement() throws ANSITermException {
+    public ShowScreenSize() throws ANSITermException {
         this.term = new ANSITerm();
-        this.title = "Shows cursor movement";
-        this.msg = "Move the cursor along the terminal borders";
+        this.title = "Screen size";
+        this.msg = "Try resizing the terminal window, then press ENTER. The terminal size will be displayed.";
     }
     /**
-     * Performs the cursor movement demonstration.
+     * Performs the screen size demonstration.
      *
      * @throws Exception If an error occurs during execution.
      */
     public void perform() throws Exception {
-
-        TerminalSize screenSize = term.getTerminalSize();
-        clearScreenAndPrintHeader(term, title, msg, screenSize.getColumns());
-
-        term.moveCursorToBegin();
-        for (int i = 0; i < screenSize.getLines(); i++) {
-            Thread.sleep(DELAY);
-            term.moveCursorDown(1);
+        String resp = "";
+        while (!resp.equals("q")) {
+            TerminalSize screenSize = term.getTerminalSize();
+            clearScreenAndPrintHeader(term, title, msg, screenSize.getColumns());
+            term.printAt("> : ", 6, 1);
+            Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in));
+            resp = sc.nextLine();
+            TerminalSize ts = term.getOsCall().getTerminalSize();
+            msg = "The screen size is:%d lines and %d columns.".formatted(ts.getLines(), ts.getColumns());
+            term.printAt(msg, ts.getLines() - 2, 1);
+            pauseWithMessage(0, null);
         }
-        for (int i = 0; i < screenSize.getColumns(); i++) {
-            Thread.sleep(DELAY);
-            term.moveCursorRight(1);
-        }
-        for (int i = 0; i < screenSize.getLines(); i++) {
-            Thread.sleep(DELAY);
-            term.moveCursorUp(1);
-        }
-        for (int i = 0; i < screenSize.getColumns(); i++) {
-            Thread.sleep(DELAY);
-            term.moveCursorLeft(1);
-        }
-        pauseWithMessage(2000L, null);
     }
 }

@@ -1,5 +1,7 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
+import es.nom.juanfranciscoruiz.ansiterm.model.CSI;
+
 /**
  * Provides ANSI escape codes for text modification operations.
  * <p>
