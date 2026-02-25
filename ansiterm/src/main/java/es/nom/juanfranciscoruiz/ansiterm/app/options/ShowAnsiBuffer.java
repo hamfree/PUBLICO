@@ -3,6 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
@@ -39,6 +40,16 @@ public class ShowAnsiBuffer {
 
 
     /**
+     * Represents a fixed delay duration in milliseconds used for pausing or waiting
+     * operations within the {@code ShowAnsiBuffer} class.
+     * <p>
+     * This constant is utilized to introduce a consistent, predefined pause in
+     * scenarios such as displaying messages, updating terminal content, or
+     * ensuring users have sufficient time to view notifications or results.
+     */
+    public static final long DELAY = 3000L;
+
+    /**
      * Constructs a new instance of the {@code ShowAnsiBuffer} class.
      * This constructor initializes the fields {@code term}, {@code title}, and {@code message},
      * setting them to predefined default values. The {@code term} field is initialized
@@ -48,8 +59,8 @@ public class ShowAnsiBuffer {
      */
     public ShowAnsiBuffer() throws ANSITermException {
         this.term = new ANSITerm();
-        this.title = "Not implemented yet";
-        this.message = "Not implemented yet";
+        this.title = "Buffer and alternate buffer";
+        this.message = "Displays and switches between the two available console buffers.";
     }
 
     /**
@@ -66,7 +77,31 @@ public class ShowAnsiBuffer {
      *                   by the {@code notImplementedYet} method.
      */
     public void perform() throws Exception {
-        notImplementedYet(term, message);
+        int columns = term.getTerminalSize().getColumns();
+        clearScreenAndPrintHeader(term, title, message, columns);
+        // We print something to show we are in the original buffer
+        message = "This is the original buffer.";
+        term.printAt(message, 6, 1);
+        for (int line = 10; line < term.getTerminalSize().getLines() - 10; line++){
+            for (int col = 10; col < term.getTerminalSize().getColumns() - 10; col++){
+                term.printAt("1", line, col);
+            }
+        }
+        message = "The alternate buffer will be displayed in  " + DELAY + " ms.";
+        term.printAt(message, 30, 1);
+        pauseForMilliseconds(DELAY);
+        term.enableAlternativeBuffer();
+        message = "This is the alternate buffer.";
+        term.printAt(message, 6, 1);
+        // We print something different in the alternate buffer.
+        for (int line = 10; line < term.getTerminalSize().getLines() - 7; line++){
+            for (int col = 30; col < term.getTerminalSize().getColumns() - 30; col++){
+                term.printAt("2", line, col);
+            }
+        }
+        pauseWithMessage(0, "Press <ENTER> to disable this alternative buffer and recover the original buffer.");
+        term.disableAlternativeBuffer();
+        pauseWithMessage(0, "Press <ENTER> to return to menu");
     }
 
     /**

@@ -147,11 +147,17 @@ public class App {
                     menu.setMessage("");
                     app.setTerminalWidth();
                 }
+                case 14 -> {
+                    menu.setMessage("");
+                    app.setAnsiBuffer();
+                }
                 default -> menu.setMessage("Invalid option. Please, try again.");
             }
         } while (menu.getSelectedOption() != 0L);
         info(logger,"Application exit");
     }
+
+
 
 
     /**
@@ -176,6 +182,8 @@ public class App {
         opciones.add("Cursor blinking");
         opciones.add("Shows cursor movement");
         opciones.add("Setting Terminal Width");
+        opciones.add("Buffer and alternate buffer");
+
         return opciones;
     }
 
@@ -317,6 +325,24 @@ public class App {
         changeTerminalWidth.perform();
     }
 
+    /**
+     * Configures the ANSI buffer for terminal operations.
+     * <p>
+     * This method instantiates and executes the {@code ShowAnsiBuffer} class
+     * to perform the buffer setup. If an exception occurs during this process,
+     * it wraps the exception into an {@code ANSITermException} and rethrows it
+     * to signal an error specific to ANSI terminal operations.
+     *
+     * @throws ANSITermException if an error occurs while configuring the ANSI buffer
+     */
+    private void setAnsiBuffer() throws ANSITermException {
+        ShowAnsiBuffer showAnsiBuffer = new ShowAnsiBuffer();
+        try {
+            showAnsiBuffer.perform();
+        } catch (Exception e) {
+            throw new ANSITermException(e);
+        }
+    }
 
     /**
      * Placeholder method indicating functionality that has not been implemented yet.
