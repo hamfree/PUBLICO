@@ -151,15 +151,19 @@ public class App {
                     menu.setMessage("");
                     app.setAnsiBuffer();
                 }
+                case 15 -> {
+                    menu.setMessage("");
+                    app.setCharacterSet();
+                }
                 default -> menu.setMessage("Invalid option. Please, try again.");
             }
         } while (menu.getSelectedOption() != 0L);
         info(logger,"Application exit");
     }
-
-
-
-
+    
+    
+    
+    
     /**
      * Returns a list of menu options.
      *
@@ -183,6 +187,7 @@ public class App {
         opciones.add("Shows cursor movement");
         opciones.add("Setting Terminal Width");
         opciones.add("Buffer and alternate buffer");
+        opciones.add("Characters sets");
 
         return opciones;
     }
@@ -339,6 +344,25 @@ public class App {
         ShowAnsiBuffer showAnsiBuffer = new ShowAnsiBuffer();
         try {
             showAnsiBuffer.perform();
+        } catch (Exception e) {
+            throw new ANSITermException(e);
+        }
+    }
+    
+    /**
+     * Configures the character set for the terminal.
+     *
+     * This method utilizes the {@code ShowCharacterSets} class to perform the setup
+     * of the character set. If an error occurs during the execution of this operation,
+     * it wraps the exception into an {@code ANSITermException} and rethrows it, signifying
+     * an error specific to terminal character set configuration.
+     *
+     * @throws ANSITermException if an error occurs while setting up the character set
+     */
+    private void setCharacterSet() throws ANSITermException {
+        ShowCharacterSets showCharacterSets = new ShowCharacterSets();
+        try {
+            showCharacterSets.perform();
         } catch (Exception e) {
             throw new ANSITermException(e);
         }

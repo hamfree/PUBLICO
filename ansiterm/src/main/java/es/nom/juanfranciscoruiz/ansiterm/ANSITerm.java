@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.getPosition;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.AnsiBufferManager.*;
+import static es.nom.juanfranciscoruiz.ansiterm.codes.CharacterSetModeCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.model.BGColor.DEFAULT;
 import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorControlCodes.*;
@@ -29,6 +30,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowTitleCodes.updateWin
 import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowWidthCodes.setWidthTo132;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.WindowWidthCodes.setWidthTo80;
 import static es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSIErrors.*;
+import static java.lang.System.*;
 
 /**
  *
@@ -77,7 +79,7 @@ public class ANSITerm {
      * @throws ANSITermException if the operating system is unsupported.
      */
     public ANSITerm() throws ANSITermException {
-        String os = System.getProperty("os.name").toLowerCase();
+        String os = getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             osCall = new WindowsTerminal();
         } else if (os.contains("linux")) {
@@ -157,7 +159,7 @@ public class ANSITerm {
      * Rings the terminal bell
      */
     public void BELL() {
-        System.out.print(bell());
+        out.print(bell());
     }
 
     /*
@@ -168,33 +170,34 @@ public class ANSITerm {
      * Causes a cursor backspace
      */
     public void BS() {
-        System.out.print(backSpace());
+        out.print(backSpace());
     }
 
     /**
      * Generates a tab
      */
     public void TAB() {
-        System.out.print(tab());
+        out.print(tab());
     }
 
     /**
      * Generates a line feed
      */
     public void LF() {
-        System.out.print(lineFeed());
+        out.print(lineFeed());
     }
 
     /**
      * Generates a vertical tab
      */
-    public void VT() {System.out.print(verticalTab()); }
+    public void VT() {
+      out.print(verticalTab()); }
 
     /**
      * Generates a form feed
      */
     public void FF() {
-        System.out.print(formFeed());
+        out.print(formFeed());
     }
 
     /**
@@ -202,7 +205,8 @@ public class ANSITerm {
      * In the Windows terminal it moves the cursor to the beginning of the line.
      * To do a line break you have to do a linefeed() or use  the Java \n escape code
      */
-    public void CR() {System.out.print(carriageReturn()); }
+    public void CR() {
+      out.print(carriageReturn()); }
 
     /* ----------------------------- Cursor movements, getting position and printing methods -------------------------*/
     /**
@@ -217,11 +221,11 @@ public class ANSITerm {
             // and that the user's keystrokes are obtained without waiting
             // for them to press ENTER (raw mode)
             this.osCall.enableRawMode();
-            System.out.print(CursorMovementCodes.getCursorPosition());
+            out.print(CursorMovementCodes.getCursorPosition());
             return getPosition();
         } catch (IOException e) {
             logger.error(e.getMessage());
-            System.out.println(e.getMessage());
+            out.println(e.getMessage());
             return new Position(1, 1);
         } finally {
             // The console must be left in normal mode.
@@ -233,14 +237,14 @@ public class ANSITerm {
      * Moves the cursor to the beginning of the terminal (0,0)
      */
     public void moveCursorToBegin() {
-        System.out.print(setCursorToBegin());
+        out.print(setCursorToBegin());
     }
 
     /**
      * Moves the cursor one line up
      */
     public void moveCursorUp() {
-        System.out.println(moveCursorNLinesUp(1));
+        out.println(moveCursorNLinesUp(1));
     }
 
     /**
@@ -250,7 +254,7 @@ public class ANSITerm {
      * @param lines an integer with the lines up where the cursor will be moved
      */
     public void moveCursorUp(int lines) {
-        System.out.print(moveCursorNLinesUp(lines));
+        out.print(moveCursorNLinesUp(lines));
     }
 
     /**
@@ -260,7 +264,7 @@ public class ANSITerm {
      * @param lines an integer with the lines down where the cursor will be moved
      */
     public void moveCursorDown(int lines) {
-        System.out.print(moveCursorNLinesDown(lines));
+        out.print(moveCursorNLinesDown(lines));
     }
 
     /**
@@ -272,7 +276,7 @@ public class ANSITerm {
      * cursor will be moved
      */
     public void moveCursorRight(int cars) {
-        System.out.print(moveCursorNCharsToRight(cars));
+        out.print(moveCursorNCharsToRight(cars));
     }
 
     /**
@@ -283,7 +287,8 @@ public class ANSITerm {
      * @param cars an integer with the characters to the left where the
      * cursor will be moved
      */
-    public void moveCursorLeft(int cars) {System.out.print(moveCursorNCharsToLeft(cars));}
+    public void moveCursorLeft(int cars) {
+      out.print(moveCursorNCharsToLeft(cars));}
 
     /**
      * Moves the cursor to the line, column position of the terminal
@@ -299,7 +304,7 @@ public class ANSITerm {
      */
     public void printAt(int line, int column) {
         //TODO: Validar que la posicion sea valida
-        System.out.print(CursorMovementCodes.setCursorPosition(line, column));
+        out.print(CursorMovementCodes.setCursorPosition(line, column));
     }
 
     /**
@@ -310,14 +315,14 @@ public class ANSITerm {
      */
     public void printAt(Position p) {
         //TODO: Validar que la posicion sea valida
-        System.out.print(CursorMovementCodes.setCursorPosition(p.getLin(), p.getCol()));
+        out.print(CursorMovementCodes.setCursorPosition(p.getLin(), p.getCol()));
     }
 
     /**
      * Saves the cursor position
      */
     public void saveCursorPos() {
-        System.out.print(saveCursorPosition());
+        out.print(saveCursorPosition());
 
     }
 
@@ -325,7 +330,7 @@ public class ANSITerm {
      * Restores the cursor position
      */
     public void restoreCursorPos() {
-        System.out.print(restoreCursorPosition());
+        out.print(restoreCursorPosition());
     }
 
 
@@ -334,26 +339,30 @@ public class ANSITerm {
      * Hides the cursor
      * CODE: DECTCEM (Text Cursor Enable Mode Hide)
      */
-    public void cursorHide() {System.out.print(hideCursor());}
+    public void cursorHide() {
+      out.print(hideCursor());}
 
     /**
      * Shows the cursor
      * CODE: DECTCEM (Text Cursor Enable Mode Show)
      */
-    public void cursorShow() {System.out.print(showCursor());}
+    public void cursorShow() {
+      out.print(showCursor());}
     
     
     /**
      * Enables cursor blinking
      * CODE: ATT160 (Text Cursor Enable Blinking)
      */
-    public void cursorBlink() {System.out.print(enableCursorBlink());}
+    public void cursorBlink() {
+      out.print(enableCursorBlink());}
     
     /**
      * Disables cursor blinking
      * CODE: ATT160 (Text Cursor Disable Blinking)
      */
-    public void cursorNoBlink() {System.out.print(disableCursorBlink());}
+    public void cursorNoBlink() {
+      out.print(disableCursorBlink());}
 
 
     /* ---------------------------------------------- Cursor Styles methods ----------------------------------------- */
@@ -386,7 +395,7 @@ public class ANSITerm {
                 && !style.equals(CURSOR_USER_SHAPE)) {
             throw new ANSITermException(EX_STYLE_UNKNOWN);
         }
-        System.out.print(style);
+        out.print(style);
     }
 
     /* -------------------------------------------- Text modification ----------------------------------------------- */
@@ -399,7 +408,7 @@ public class ANSITerm {
      */
     public void insertNSpaces(int cars) throws ANSITermException {
         if (cars > 0) {
-            System.out.print(insertSpaces(cars));
+            out.print(insertSpaces(cars));
         } else {
             throw new ANSITermException(EX_CARS_INVALID);
         }
@@ -414,7 +423,7 @@ public class ANSITerm {
      */
     public void deleteCharacters(int cars) throws ANSITermException {
         if (cars > 0) {
-            System.out.print(eraseCharacters(cars));
+            out.print(eraseCharacters(cars));
         } else {
             throw new ANSITermException(EX_CARS_INVALID);
         }
@@ -429,7 +438,7 @@ public class ANSITerm {
      */
     public void deleteCharsWithSpaces(int cars)  throws ANSITermException {
         if (cars > 0) {
-            System.out.print(eraseCharactersWithSpaces(cars));
+            out.print(eraseCharactersWithSpaces(cars));
         } else {
             throw new ANSITermException(EX_WHITE_SPACE_INVALID);
         }
@@ -445,7 +454,7 @@ public class ANSITerm {
      */
     public void insertNLines(int lines) throws ANSITermException {
         if (lines > 0) {
-            System.out.print(insertLines(lines));
+            out.print(insertLines(lines));
         } else {
             throw new ANSITermException(EX_LINES_INVALID);
         }
@@ -460,7 +469,7 @@ public class ANSITerm {
      */
     public void eraseLines(int lines) throws ANSITermException {
         if (lines > 0) {
-            System.out.print(deleteLines(lines));
+            out.print(deleteLines(lines));
         } else {
             throw new ANSITermException(EX_LINES_INVALID);
         }
@@ -471,19 +480,20 @@ public class ANSITerm {
      * Deletes everything from the cursor position to the end of the screen
      */
     public void eraseFromCursorToEndScreen() {
-        System.out.print(deleteFromCursorToEndScreen());
+        out.print(deleteFromCursorToEndScreen());
     }
 
     /**
      * Deletes everything from the cursor position to the beginning of the screen
      */
-    public void eraseFromCursorToBeginScreen() {System.out.print(deleteFromCursorToBeginScreen()); }
+    public void eraseFromCursorToBeginScreen() {
+      out.print(deleteFromCursorToBeginScreen()); }
 
     /**
      * Erases the screen
      */
     public void clearTerminal() {
-        System.out.print(clearScreen());
+        out.print(clearScreen());
     }
 
     /**
@@ -491,7 +501,7 @@ public class ANSITerm {
      * where it is located.
      */
     public void eraseFromCursorToEndLine() {
-        System.out.print(deleteFromCursorToEndLine());
+        out.print(deleteFromCursorToEndLine());
     }
 
     /**
@@ -499,7 +509,7 @@ public class ANSITerm {
      * where it is located.
      */
     public void eraseFromCursorToBeginLine() {
-        System.out.print(deleteFromCursorToBeginLine());
+        out.print(deleteFromCursorToBeginLine());
     }
 
     /**
@@ -507,7 +517,7 @@ public class ANSITerm {
      * located.
      */
     public void deleteCursorLine() {
-        System.out.print(deleteLine());
+        out.print(deleteLine());
     }
 
     /* ----------------------------------------------- Colors and styles -------------------------------------------- */
@@ -926,7 +936,7 @@ public class ANSITerm {
      * this method when you finish using Terminal in your application.
      */
     public void resetScreen() {
-        System.out.print(RESTORES_SCREEN);
+        out.print(RESTORES_SCREEN);
     }
 
 
@@ -944,7 +954,7 @@ public class ANSITerm {
     public void printAt(String msg, int line, int col) throws ANSITermException {
         if ((msg != null && !msg.isEmpty())) {
             printAt(line, col);
-            System.out.print(msg);
+            out.print(msg);
         } else {
             throw new ANSITermException(EX_NO_MSG);
         }
@@ -971,7 +981,7 @@ public class ANSITerm {
      * @param lines the number of lines by which the text should be scrolled upwards
      */
     public void scrollTextUp(int lines) {
-        System.out.print(scrollLinesUp(lines));
+        out.print(scrollLinesUp(lines));
     }
 
     /**
@@ -979,13 +989,13 @@ public class ANSITerm {
      *
      * @param lines the number of lines to scroll the text down
      */
-    public void scrollTextDown(int lines) { System.out.print(scrollLinesDown(lines)); }
+    public void scrollTextDown(int lines) { out.print(scrollLinesDown(lines)); }
 
     /**
      * Captures and saves the current state of the screen.
      */
     public void saveScreenBuffer(){
-        System.out.print(saveScreen());
+        out.print(saveScreen());
     }
 
     /**
@@ -994,7 +1004,7 @@ public class ANSITerm {
      * from the PositionCodes utility class using the getESforRestoreScreen method.
      */
     public void restoreScreenBuffer(){
-        System.out.print(restoreScreen());
+        out.print(restoreScreen());
     }
 
     /**
@@ -1010,7 +1020,7 @@ public class ANSITerm {
      * terminal standard output.
      */
     public void enableAlternativeBuffer(){
-        System.out.print(enableAlternateBuffer());
+        out.print(enableAlternateBuffer());
     }
 
     /**
@@ -1023,7 +1033,7 @@ public class ANSITerm {
      * to accomplish this.
      */
     public void disableAlternativeBuffer(){
-        System.out.print(disableAlternateBuffer());
+        out.print(disableAlternateBuffer());
     }
 
     /* --------------------------------------------- Window Title methods ------------------------------------------- */
@@ -1033,7 +1043,7 @@ public class ANSITerm {
      * @param title the title to set for the window
      */
     public void setWinTitle(String title){
-        System.out.print(setWindowTitle(title));
+        out.print(setWindowTitle(title));
     }
 
     /**
@@ -1041,7 +1051,7 @@ public class ANSITerm {
      * @param title the title to set for the window
      */
     public void setOnlyWinTitle(String title){
-        System.out.print(updateWindowTitle(title));
+        out.print(updateWindowTitle(title));
     }
 
     /* ---------------------------------------- Scrolling Margins methods ------------------------------------------- */
@@ -1053,14 +1063,14 @@ public class ANSITerm {
      * @param bottom the size of the margin at the bottom, typically measured in pixels or rows
      */
     public void setScrollMargins(int top, int bottom){
-        System.out.print(setScrollingMargins(top, bottom));
+        out.print(setScrollingMargins(top, bottom));
     }
 
     /**
      * Resets the scrolling margins
      */
     public void resetScrollMargins(){
-        System.out.print(resetScrollingMargins());
+        out.print(resetScrollingMargins());
     }
 
     /* ---------------------------------------- Windows Witdh methods ----------------------------------------------- */
@@ -1069,14 +1079,37 @@ public class ANSITerm {
      * Sets the window width to 132 columns
      */
     public void setWindowWidth132Columns(){
-        System.out.print(setWidthTo132());
+        out.print(setWidthTo132());
     }
 
     /**
      * Sets the window width to 80 columns
      */
     public void setWindowWidth80Columns(){
-        System.out.print(setWidthTo80());
+        out.print(setWidthTo80());
+    }
+    
+    /* --------------------------------------- Character Set Mode methods  ----------------------------------------- */
+    /**
+     * Configures the output to use the DEC (Digital Equipment Corporation)
+     * line drawing character set. This method enables the usage of a specialized
+     * character set often used in terminal emulation for rendering line graphics.
+     *
+     * The DEC line drawing character set provides an alternative set
+     * of characters intended for creating simple graphical elements such as
+     * boxes and lines in a text-based environment.
+     */
+    public void setDECCharacterSet(){
+        out.print(enableDECLineDrawing());
+    }
+    
+    /**
+     * Configures the system to use the ASCII character set by enabling
+     * the ASCII mode. This method prints the enabling result to the
+     * output stream.
+     */
+    public void setASCIICharacterSet(){
+        out.print(enableASCII());
     }
     
     @Override
