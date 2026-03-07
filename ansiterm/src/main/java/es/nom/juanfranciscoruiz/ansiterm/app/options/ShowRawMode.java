@@ -49,6 +49,8 @@ public class ShowRawMode {
 
     /**
      * Constructs a new RawMode.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowRawMode() throws ANSITermException {
         this.term = new ANSITerm();

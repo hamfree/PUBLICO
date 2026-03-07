@@ -49,6 +49,8 @@ public class ShowChangeTerminalWidth {
     public static final long DELAY = 10L;
     /**
      * Constructs a new ChangeTerminalWidth object.
+     *
+     * @throws ANSITermException if an error occurs during terminal initialization
      */
     public ShowChangeTerminalWidth() throws ANSITermException {
         this.term = new ANSITerm();

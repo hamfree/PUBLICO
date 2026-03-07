@@ -41,6 +41,8 @@ public class ShowTextColors256 {
      * for various visual styles and text formatting operations.
     /**
      * Constructs a new ShowTextColors256.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowTextColors256() throws ANSITermException {
         this.term = new ANSITerm();

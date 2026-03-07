@@ -86,6 +86,11 @@ public class Rectangle {
         return width;
     }
 
+    /**
+     * Sets the width of the rectangle.
+     *
+     * @param width The new width of the rectangle.
+     */
     public void setWidth(int width) {
         this.width = width;
     }

@@ -45,6 +45,8 @@ public class ShowScreenSize {
     private String msg;
     /**
      * Constructs a new ScreenSize.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowScreenSize() throws ANSITermException {
         this.term = new ANSITerm();

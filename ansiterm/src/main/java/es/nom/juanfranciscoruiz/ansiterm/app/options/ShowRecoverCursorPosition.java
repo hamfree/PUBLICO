@@ -56,6 +56,8 @@ public class ShowRecoverCursorPosition {
 
     /**
      * Constructs a new RecoverCursorPosition.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowRecoverCursorPosition() throws ANSITermException {
         this.term = new ANSITerm();

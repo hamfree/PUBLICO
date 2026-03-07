@@ -50,6 +50,8 @@ public class ShowMultipleStylesText {
 
     /**
      * Constructs a new MultipleStylesText.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowMultipleStylesText() throws ANSITermException {
         this.term = new ANSITerm();

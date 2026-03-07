@@ -40,6 +40,7 @@ public class Stuff {
      * @param title The title text to be styled and displayed prominently at the top
      *              of the terminal.
      * @param msg   A message to be printed on the terminal at a specified position.
+     * @param columns The number of columns in the terminal.
      * @throws ANSITermException If an error occurs while interacting with the terminal.
      */
     public static void clearScreenAndPrintHeader(

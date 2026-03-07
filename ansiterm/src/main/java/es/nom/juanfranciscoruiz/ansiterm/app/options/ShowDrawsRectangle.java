@@ -14,6 +14,17 @@ import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
  * @author Juan F. Ruiz
  */
 public class ShowDrawsRectangle {
+  /**
+   * Defines a delay duration, in milliseconds, to be used in time-based operations
+   * within the {@code ShowDrawsRectangle} class.
+   *
+   * This constant value is typically utilized to introduce a pause or waiting period
+   * during the execution of rectangle drawing demonstrations or animations. By providing
+   * a fixed delay, it helps in controlling the timing and flow of visual output on the terminal.
+   *
+   * The value is set to {@code 10L} milliseconds to represent a brief interval.
+   *
+   */
   public static final long DELAY = 10L;
   /**
    * Represents an instance of the {@code ANSITerm} class used for managing
@@ -54,6 +65,8 @@ public class ShowDrawsRectangle {
   Rectangle rectangle = new Rectangle(1, 1, 1, 1, "*");
   /**
    * Constructs a new DrawsRectangle.
+   *
+   * @throws ANSITermException if an error occurs during terminal initialization
    */
   public ShowDrawsRectangle() throws ANSITermException {
     this.term = new ANSITerm();

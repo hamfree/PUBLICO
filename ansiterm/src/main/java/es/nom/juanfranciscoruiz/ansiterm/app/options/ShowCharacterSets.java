@@ -5,7 +5,6 @@ import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 import es.nom.juanfranciscoruiz.ansiterm.model.DrawChars;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
-import static es.nom.juanfranciscoruiz.utiles.IO.line;
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
@@ -14,7 +13,7 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
  * The ShowCharacterSets class is designed to manage terminal interactions
  * and demonstrates character sets or related functionality, although the core
  * functionality is not yet implemented. It utilizes the ANSITerm class to perform
- * terminal-based tasks, such as clearing the terminal, moving the cursor, and
+ * terminal-based tasks, such as clearing the terminal, moving the cursor, and  
  * displaying styled output.
  */
 public class ShowCharacterSets {
@@ -36,12 +35,6 @@ public class ShowCharacterSets {
      */
     private final String title;
     /**
-     * Represents the primary text message managed by the ShowCharacterSets class.
-     * This message is used as a content reference for various operations, including
-     * styling demonstrations and terminal-based displays.
-     */
-    private String message;
-    /**
      * Represents a fixed delay duration in milliseconds used for pausing or waiting
      */
     public static final long DELAY = 3000L;
@@ -57,7 +50,7 @@ public class ShowCharacterSets {
     public ShowCharacterSets() throws ANSITermException {
         this.term = new ANSITerm();
         this.title = "Characters sets";
-        this.message = "Shows the different character sets available in the terminal.";
+        String message = "Shows the different character sets available in the terminal.";
     }
 
     /**
@@ -81,39 +74,40 @@ public class ShowCharacterSets {
         int col = term.getTerminalSize().getColumns() - 1;
         
         // We are going to draw a box with the DEC Drawing Characters...
-        String line1 =
-            String.valueOf(DrawChars.LU_CORNER);
-        for (int i = 1; i < col; i++) {
-            line1 = line1 + String.valueOf(DrawChars.HL);
-        }
-        line1 = line1 + String.valueOf(DrawChars.RU_CORNER);
-        String line2 =
-            String.valueOf(DrawChars.VL);
-        for (int i = 1; i < col; i++) {
-            line2 = line2 + String.valueOf(" ");
-        }
-        line2 = line2 + String.valueOf(DrawChars.VL);
-        String line3 =
-            String.valueOf(DrawChars.LD_CORNER);
-        for (int i = 1; i < col; i++) {
-            line3 = line3 + String.valueOf(DrawChars.HL);
-        }
-        line3 = line3 + String.valueOf(DrawChars.RD_CORNER);
-        term.printAt(line1, 10, 1);
-        term.printAt(line2, 11, 1);
-        term.printAt(line3, 12, 1);
-        
+        StringBuilder line1 =
+                new StringBuilder(String.valueOf(DrawChars.LU_CORNER));
+        String repeat = String.valueOf(DrawChars.HL).repeat(Math.max(0, col - 1));
+        line1.append(repeat);
+        line1.append(DrawChars.RU_CORNER);
+        StringBuilder line2 =
+                new StringBuilder(String.valueOf(DrawChars.VL));
+        line2.append(" ".repeat(Math.max(0, col - 1)));
+        line2.append(DrawChars.VL);
+        StringBuilder line3 =
+                new StringBuilder(String.valueOf(DrawChars.LD_CORNER));
+        line3.append(repeat);
+        line3.append(DrawChars.RD_CORNER);
+        term.printAt(line1.toString(), 10, 1);
+        term.printAt(line2.toString(), 11, 1);
+        term.printAt(line3.toString(), 12, 1);
+
+        // Now we print the chars 32 to 255 for the DEC character set.
+        showChars(14);
+
         // We need to switch to the ASCII character set to display a readable message :-D
         term.setASCIICharacterSet();
         msg = "(2/2) - Changing the character set to ASCII Characters.";
         pauseWithMessage(0, null);
         clearScreenAndPrintHeader(term, title, msg, term.getTerminalSize().getColumns());
-        line1 = "This is the normal";
-        line2 = "ASCII characters";
-        line3 = "set.";
-        term.printAt(line1, 10, (term.getTerminalSize().getColumns() - line1.length())/2);
-        term.printAt(line2, 11, (term.getTerminalSize().getColumns() - line2.length())/2);
-        term.printAt(line3, 12, (term.getTerminalSize().getColumns() - line3.length())/2);
+        line1 = new StringBuilder("This is the normal");
+        line2 = new StringBuilder("ASCII characters");
+        line3 = new StringBuilder("set.");
+        term.printAt(line1.toString(), 10, (term.getTerminalSize().getColumns() - line1.length())/2);
+        term.printAt(line2.toString(), 11, (term.getTerminalSize().getColumns() - line2.length())/2);
+        term.printAt(line3.toString(), 12, (term.getTerminalSize().getColumns() - line3.length())/2);
+
+        // Now we print the chars 32 to 255 for the ASCII character set.
+        showChars(14);
         pauseWithMessage(0, null);
     }
 
@@ -132,5 +126,19 @@ public class ShowCharacterSets {
         prtln(2, title(msg, '*', 80));
         prtln(3, "This function is not implemented yet.");
         pause(PAUSE_DURATION, null);
+    }
+
+    private void showChars(int line) throws ANSITermException {
+        int col = 0;
+        for (int i = 32; i < 256; i++){
+            if (col < term.getTerminalSize().getColumns() - 1) {
+                col += 2;
+            } else {
+                line++;
+                col = 0;
+            }
+            term.printAt(" ", line, col);
+            term.printAt(String.valueOf((char)i), line, col);
+        }
     }
 }

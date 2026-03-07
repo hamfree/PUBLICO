@@ -51,6 +51,8 @@ public class ShowCursorMovement {
     private static final long DELAY = 10L;
     /**
      * Constructs a new ShowCursorMovement.
+     *
+     * @throws ANSITermException if an error occurs during terminal initialization
      */
     public ShowCursorMovement() throws ANSITermException {
         this.term = new ANSITerm();

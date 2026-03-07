@@ -50,6 +50,8 @@ public class ShowTextStyles {
     private int line;
     /**
      * Constructs a new TextStyles.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowTextStyles() throws ANSITermException {
         this.term = new ANSITerm();

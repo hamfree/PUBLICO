@@ -52,6 +52,8 @@ public class ShowTextColors {
     private int line;
     /**
      * Constructs a new ShowTextColors.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowTextColors() throws ANSITermException {
         this.term = new ANSITerm();

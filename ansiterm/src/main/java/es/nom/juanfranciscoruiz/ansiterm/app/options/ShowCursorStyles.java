@@ -51,6 +51,8 @@ public class ShowCursorStyles {
     private final long DELAY = 100L;
     /**
      * Constructs a new ShowCursorStyles.
+     *
+     * @throws ANSITermException if an error occurs during terminal initialization
      */
     public ShowCursorStyles() throws ANSITermException {
         this.term = new ANSITerm();

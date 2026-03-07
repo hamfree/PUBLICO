@@ -65,6 +65,8 @@ public class ShowScreenAndLineDeletions {
     private final int columns;
     /**
      * Constructs a new ScreenAndLineDeletions.
+     *
+     * @throws ANSITermException If there is an error initializing the ANSITerm object.
      */
     public ShowScreenAndLineDeletions() throws ANSITermException {
         this.term = new ANSITerm();
