@@ -21,6 +21,7 @@ import static es.nom.juanfranciscoruiz.ansiterm.codes.EraseSequencesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.GeneralControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.resetScrollingMargins;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.setScrollingMargins;
+import static es.nom.juanfranciscoruiz.ansiterm.model.RIS.RESETTOINITIALSTATE;
 import static es.nom.juanfranciscoruiz.ansiterm.model.StylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.TextModificationCodes.*;
@@ -527,16 +528,13 @@ public class ANSITerm {
      * @param msg the string to put in bold
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be in bold.
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setBold(String msg) throws IllegalArgumentException {
+    public String setBold(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(BOLD_START)
                 .append(msg)
                 .append(ESC).append(BOLD_END);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
         return sb.toString();
     }
@@ -566,18 +564,14 @@ public class ANSITerm {
      * @param msg the string that will be put in italic mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be in italics.
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setItalic(String msg) throws IllegalArgumentException {
+    public String setItalic(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(ITALIC_START)
                 .append(msg)
                 .append(ESC).append(ITALIC_END);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
         return sb.toString();
     }
 
@@ -587,18 +581,14 @@ public class ANSITerm {
      * @param msg the string that will be put in underline mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be underlined.
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setUnderline(String msg) throws IllegalArgumentException {
+    public String setUnderline(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(UNDERLINE_START)
                 .append(msg)
                 .append(ESC).append(UNDERLINE_STOP);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
         return sb.toString();
     }
 
@@ -608,18 +598,14 @@ public class ANSITerm {
      * @param msg the string that will be put in blink mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be blinking.
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setBlink(String msg) throws IllegalArgumentException {
+    public String setBlink(String msg){
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(BLINK_START)
                 .append(msg)
                 .append(ESC).append(BLINK_END);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
         return sb.toString();
     }
 
@@ -629,18 +615,14 @@ public class ANSITerm {
      * @param msg the string that will be put in inverse mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be inverted (foreground/background color swap).
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setInverse(String msg) throws IllegalArgumentException {
+    public String setInverse(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(REVERSE_START)
                 .append(msg)
                 .append(ESC).append(REVERSE_END);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
         return sb.toString();
     }
 
@@ -651,18 +633,14 @@ public class ANSITerm {
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be hidden (nothing appears on the screen, but the space
      * occupied by the string is taken).
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setHidden(String msg) throws IllegalArgumentException {
+    public String setHidden(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(INVISIBLE_START)
                 .append(msg)
                 .append(ESC).append(INVISIBLE_END);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
         return sb.toString();
     }
 
@@ -672,21 +650,18 @@ public class ANSITerm {
      * @param msg the string that will be put in strikethrough mode
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will appear struck through.
-     * @throws IllegalArgumentException In case any argument is not valid.
      */
-    public String setStrikeThrough(String msg) throws IllegalArgumentException {
+    public String setStrikeThrough(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(STRIKETHROUGH_START)
                 .append(msg)
                 .append(ESC).append(STRIKETHROUGH_END);
-        } else {
-            throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
         return sb.toString();
     }
 
+    //TODO: Make this method with few parameters. Perhaps with a new class for something like StyledString...
     /**
      * Combines several styles to the passed string. <br>
      * <b>NOTE: Not all style combinations</b> will produce the intended
@@ -936,7 +911,7 @@ public class ANSITerm {
      * this method when you finish using Terminal in your application.
      */
     public void resetScreen() {
-        out.print(RESTORES_SCREEN);
+        out.print(RESETTOINITIALSTATE);
     }
 
 
@@ -990,22 +965,6 @@ public class ANSITerm {
      * @param lines the number of lines to scroll the text down
      */
     public void scrollTextDown(int lines) { out.print(scrollLinesDown(lines)); }
-
-    /**
-     * Captures and saves the current state of the screen.
-     */
-    public void saveScreenBuffer(){
-        out.print(saveScreen());
-    }
-
-    /**
-     * Restores the screen to its previous state by outputting the appropriate
-     * escape sequence for screen restoration. The escape sequence is retrieved
-     * from the PositionCodes utility class using the getESforRestoreScreen method.
-     */
-    public void restoreScreenBuffer(){
-        out.print(restoreScreen());
-    }
 
     /**
      * Enables the alternative buffer in the terminal by sending the appropriate escape sequence.
@@ -1094,7 +1053,7 @@ public class ANSITerm {
      * Configures the output to use the DEC (Digital Equipment Corporation)
      * line drawing character set. This method enables the usage of a specialized
      * character set often used in terminal emulation for rendering line graphics.
-     *
+     * <p>
      * The DEC line drawing character set provides an alternative set
      * of characters intended for creating simple graphical elements such as
      * boxes and lines in a text-based environment.

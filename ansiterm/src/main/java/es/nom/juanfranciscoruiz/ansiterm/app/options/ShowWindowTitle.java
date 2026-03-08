@@ -3,9 +3,8 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
 /**
  * The ShowWindowTitle class provides functionality to display terminal-based
@@ -40,6 +39,14 @@ public class ShowWindowTitle {
 
 
     /**
+     * Represents the delay time in milliseconds used for pausing operations or
+     * introducing timed intervals within the application.
+     * This value can be utilized for implementing pauses in terminal interactions
+     * or other functionalities requiring a noticeable delay.
+     */
+    public static final long DELAY = 500L;
+
+    /**
      * Constructs a new instance of the {@code ShowWindowTitle} class.
      * This constructor initializes the fields {@code term}, {@code title}, and {@code message},
      * setting them to predefined default values. The {@code term} field is initialized
@@ -49,8 +56,8 @@ public class ShowWindowTitle {
      */
     public ShowWindowTitle() throws ANSITermException {
         this.term = new ANSITerm();
-        this.title = "Not implemented yet";
-        this.message = "Not implemented yet";
+        this.title = "Setting the Terminal Window Title";
+        this.message = "You can change the title of window terminal with ansi escape codes";
     }
 
     /**
@@ -67,23 +74,24 @@ public class ShowWindowTitle {
      *                   by the {@code notImplementedYet} method.
      */
     public void perform() throws Exception {
-        notImplementedYet(term, message);
-    }
-
-    /**
-     * Placeholder method indicating functionality that has not been implemented yet.
-     * The terminal is cleared, and an informational message is displayed.
-     *
-     * @param term An instance of ANSITerm used for terminal operations.
-     * @param msg  A message to display, indicating the unimplemented status.
-     * @throws Exception In case of any error during terminal operations.
-     */
-    public void notImplementedYet(ANSITerm term, String msg) throws Exception {
-        term.clearTerminal();
-        term.moveCursorToBegin();
-        final long PAUSE_DURATION = 3000L;
-        prtln(2, title(msg, '*', 80));
-        prtln(3, "This function is not implemented yet.");
-        pause(PAUSE_DURATION, null);
+        int columns = term.getTerminalSize().getColumns();
+        clearScreenAndPrintHeader(term, title, message, columns);
+        this.message = "See the title of the window terminal, please";
+        int heightScreen = term.getTerminalSize().getLines();
+        int widthScreen = term.getTerminalSize().getColumns();
+        int lengthMessage = this.message.length();
+        String line1 = "Note: For this ANSI escape sequence to work in Windows Terminal, you may ";
+        String line2 = "need to change the settings of certain parameters in the command-line ";
+        String line3 = "execution profile where this demo is running.";
+        term.printAt(line1, 7,0);
+        term.printAt(line2, 8,0);
+        term.printAt(line3, 9,0);
+        term.printAt(this.message, heightScreen/2, (widthScreen - lengthMessage)/2 );
+        String title = "The new title of the window terminal";
+        for (int i = 0; i < title.length(); i++){
+            term.setOnlyWinTitle( title.substring(0, i+1));
+            Thread.sleep(DELAY);
+        }
+        pauseWithMessage(0, "Press <ENTER> to return to menu");
     }
 }

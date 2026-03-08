@@ -14,49 +14,17 @@ import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
  */
 public class AnsiBufferManager {
     /**
-     * Restores the screen
-     */
-    public static final String RESTORES_SCREEN = ESC + "c";
-    /**
-     * Saves the screen
-     */
-    public static final String SAVES_SCREEN = ESC + "[?47h";
-    /**
      * Enables the alternate buffer
      */
     public static final String ENABLES_ALTERNATE_BUFFER = ESC + "[?1049h";
-
     /**
      * Disables the alternate buffer
      */
     public static final String DISABLES_ALTERNATE_BUFFER = ESC + "[?1049l";
-
     /**
      * Private constructor. Class can't be instantiated by the user
      */
     private AnsiBufferManager() {}
-
-    /**
-     * Retrieves the ANSI escape sequence that restores the terminal screen
-     * to its initial state.
-     *
-     * @return the ANSI escape sequence for restoring the terminal screen
-     */
-    public static String restoreScreen() {
-        return RESTORES_SCREEN;
-    }
-
-    /**
-     * Retrieves the ANSI escape sequence that saves the current state of the
-     * terminal screen. This can be used to preserve the screen for later
-     * restoration.
-     *
-     * @return the ANSI escape sequence for saving the terminal screen
-     */
-    public static String saveScreen() {
-        return SAVES_SCREEN;
-    }
-
     /**
      * Retrieves the ANSI escape sequence that disables the alternate buffer in
      * the terminal. This is typically used to restore the primary buffer after

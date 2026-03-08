@@ -4,9 +4,6 @@ import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
 
 /**
  * The {@code ShowAnsiBuffer} class provides an abstraction for working with
@@ -102,22 +99,5 @@ public class ShowAnsiBuffer {
         pauseWithMessage(0, "Press <ENTER> to disable this alternative buffer and recover the original buffer.");
         term.disableAlternativeBuffer();
         pauseWithMessage(0, "Press <ENTER> to return to menu");
-    }
-
-    /**
-     * Placeholder method indicating functionality that has not been implemented yet.
-     * The terminal is cleared, and an informational message is displayed.
-     *
-     * @param term An instance of ANSITerm used for terminal operations.
-     * @param msg  A message to display, indicating the unimplemented status.
-     * @throws Exception In case of any error during terminal operations.
-     */
-    public void notImplementedYet(ANSITerm term, String msg) throws Exception {
-        term.clearTerminal();
-        term.moveCursorToBegin();
-        final long PAUSE_DURATION = 3000L;
-        prtln(2, title(msg, '*', 80));
-        prtln(3, "This function is not implemented yet.");
-        pause(PAUSE_DURATION, null);
     }
 }

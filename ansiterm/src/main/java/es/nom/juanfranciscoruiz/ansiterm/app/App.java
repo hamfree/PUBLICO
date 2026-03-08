@@ -16,7 +16,6 @@ import java.util.List;
 import static es.nom.juanfranciscoruiz.utiles.Menu.WRONG_OPTION;
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
 
 /**
  * Main application class to demonstrate the functionality of the ANSITerm library.
@@ -155,15 +154,16 @@ public class App {
                     menu.setMessage("");
                     app.setCharacterSet();
                 }
+                case 16 -> {
+                    menu.setMessage("");
+                    app.showWindowTitle();
+                }
                 default -> menu.setMessage("Invalid option. Please, try again.");
             }
         } while (menu.getSelectedOption() != 0L);
         info(logger,"Application exit");
     }
-    
-    
-    
-    
+
     /**
      * Returns a list of menu options.
      *
@@ -188,6 +188,7 @@ public class App {
         opciones.add("Setting Terminal Width");
         opciones.add("Buffer and alternate buffer");
         opciones.add("Characters sets");
+        opciones.add("Setting the Terminal Window Title");
 
         return opciones;
     }
@@ -351,7 +352,7 @@ public class App {
     
     /**
      * Configures the character set for the terminal.
-     *
+     * <p>
      * This method utilizes the {@code ShowCharacterSets} class to perform the setup
      * of the character set. If an error occurs during the execution of this operation,
      * it wraps the exception into an {@code ANSITermException} and rethrows it, signifying
@@ -369,19 +370,16 @@ public class App {
     }
 
     /**
-     * Placeholder method indicating functionality that has not been implemented yet.
-     * The terminal is cleared, and an informational message is displayed.
+     * Displays the title of the application window.
+     * <p>
+     * This method initializes an instance of the {@code ShowWindowTitle} class and
+     * invokes its {@code perform()} method to display the window title. This functionality
+     * is part of the overall application logic for managing terminal window interactions.
      *
-     * @param term An instance of ANSITerm used for terminal operations.
-     * @param msg A message to display, indicating the unimplemented status.
-     * @throws Exception In case of any error during terminal operations.
+     * @throws Exception if an error occurs during the execution of the window title display.
      */
-    private void notImplementedYet(ANSITerm term, String msg) throws Exception {
-        term.clearTerminal();
-        term.moveCursorToBegin();
-        final long PAUSE_DURATION = 3000L;
-        prtln(2, title(msg, '*', 80));
-        prtln(3, "This function is not implemented yet.");
-        pause(PAUSE_DURATION, null);
+    private void showWindowTitle() throws Exception {
+        ShowWindowTitle showWindowTitle = new ShowWindowTitle();
+        showWindowTitle.perform();
     }
 }

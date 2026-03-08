@@ -13,6 +13,10 @@ import java.io.BufferedInputStream;
 import java.util.Random;
 import java.util.Scanner;
 
+import static es.nom.juanfranciscoruiz.utiles.Util.pause;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
+
 
 /**
  * Provides a set of utility methods for terminal operations, including clearing
@@ -295,5 +299,22 @@ public class Stuff {
     public static void dbg(Logger logger, String msg, Object... params) {
         if (logger != null) logger.debug(msg, params);
         else System.out.printf((msg) + "%n", params);
+    }
+
+    /**
+     * Placeholder method indicating functionality that has not been implemented yet.
+     * The terminal is cleared, and an informational message is displayed.
+     *
+     * @param term An instance of ANSITerm used for terminal operations.
+     * @param msg  A message to display, indicating the unimplemented status.
+     * @throws Exception In case of any error during terminal operations.
+     */
+    public static void notImplementedYet(ANSITerm term, String msg) throws Exception {
+        term.clearTerminal();
+        term.moveCursorToBegin();
+        final long PAUSE_DURATION = 3000L;
+        prtln(2, title(msg, '*', 80));
+        prtln(3, "This function is not implemented yet.");
+        pause(PAUSE_DURATION, null);
     }
 }

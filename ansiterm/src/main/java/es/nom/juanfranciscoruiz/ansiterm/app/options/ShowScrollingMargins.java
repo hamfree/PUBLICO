@@ -3,9 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
-import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.notImplementedYet;
 
 /**
  * The {@code ShowScrollingMargins} class demonstrates functionality related to
@@ -28,13 +26,6 @@ public class ShowScrollingMargins {
      */
     private final ANSITerm term;
     /**
-     * Represents the title text for the ShowScrollingMargins object.
-     * This field is used to store a string that acts as the title,
-     * often styled and displayed prominently in terminal-based
-     * demonstrations or other text-based UI elements of the class.
-     */
-    private final String title;
-    /**
      * Represents the primary text message managed by the ShowScrollingMargins class.
      * This message is used as a content reference for various operations, including
      * styling demonstrations and terminal-based displays.
@@ -52,7 +43,7 @@ public class ShowScrollingMargins {
      */
     public ShowScrollingMargins() throws ANSITermException {
         this.term = new ANSITerm();
-        this.title = "Not implemented yet";
+        String title = "Not implemented yet";
         this.message = "Not implemented yet";
     }
 
@@ -71,22 +62,5 @@ public class ShowScrollingMargins {
      */
     public void perform() throws Exception {
         notImplementedYet(term, message);
-    }
-
-    /**
-     * Placeholder method indicating functionality that has not been implemented yet.
-     * The terminal is cleared, and an informational message is displayed.
-     *
-     * @param term An instance of ANSITerm used for terminal operations.
-     * @param msg  A message to display, indicating the unimplemented status.
-     * @throws Exception In case of any error during terminal operations.
-     */
-    public void notImplementedYet(ANSITerm term, String msg) throws Exception {
-        term.clearTerminal();
-        term.moveCursorToBegin();
-        final long PAUSE_DURATION = 3000L;
-        prtln(2, title(msg, '*', 80));
-        prtln(3, "This function is not implemented yet.");
-        pause(PAUSE_DURATION, null);
     }
 }
