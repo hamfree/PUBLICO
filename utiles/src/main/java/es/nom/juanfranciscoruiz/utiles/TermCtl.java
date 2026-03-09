@@ -1,6 +1,7 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import es.nom.juanfranciscoruiz.utiles.model.Dimensions;
+import es.nom.juanfranciscoruiz.utiles.model.Using;
 
 /**
  * Interface for terminal control operations.
@@ -23,9 +24,15 @@ public interface TermCtl {
   boolean setConsoleSize(Dimensions dimensions);
 
   /**
-   * Clears the terminal screen.
+   * Clears the terminal screen based on the specified usage mode.
+   * <p>
+   * This method provides an abstraction for clearing the terminal screen,
+   * allowing different implementations or approaches depending on the specified
+   * usage mode.
    *
-   * @param useANSI whether to use ANSI escape codes for clearing the screen
+   * @param use the usage mode specifying how the screen should be cleared.
+   *            It is represented by a {@link Using} enum which can include
+   *            options like SO, ANSI, API, or JAVA.
    */
-  void clearScreen(boolean useANSI);
+  void clearScreen(Using use);
 }

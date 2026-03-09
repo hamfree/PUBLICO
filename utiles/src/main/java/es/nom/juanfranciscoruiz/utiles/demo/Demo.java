@@ -11,6 +11,7 @@ import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
 import es.nom.juanfranciscoruiz.utiles.helper.ObjectsGenerator;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
+import es.nom.juanfranciscoruiz.utiles.model.Using;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,6 +150,7 @@ public class Demo {
      * <li>Perform type conversions.</li>
      * <li>Access miscellaneous utilities.</li>
      * <li>Adjust the size and settings of the console.</li>
+     * <li>Show and navigate menu hierarchical structure.</li>
      * </ol>
      * <p>
      * The method relies on the `Menu` and `MenuManager` classes to handle the
@@ -196,10 +198,10 @@ public class Demo {
 
         do {
             try {
-                getTc().clearScreen(true);
+                getTc().clearScreen(Using.ANSI);
                 mm.getMenu().setSelectedOption(Menu.WRONG_OPTION);
                 mm.showMenu(false);
-                mm.awaitResponse("Select an option, please ");
+                mm.awaitResponse("Select an option, please : ");
             } catch (MenuException e) {
                 String message = e.getMessage();
                 error(logger, message);

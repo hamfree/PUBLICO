@@ -8,6 +8,9 @@ import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.win32.StdCallLibrary;
 import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.model.Dimensions;
+import es.nom.juanfranciscoruiz.utiles.model.Using;
+
+import java.io.IOException;
 
 /**
  * Implementation of the TermCtl interface providing terminal control for clearing the screen,
@@ -16,6 +19,7 @@ import es.nom.juanfranciscoruiz.utiles.model.Dimensions;
  * low-level system libraries.
  */
 public class TermCtlImpl implements TermCtl {
+
 
     /**
      * Interface that provides access to native Kernel32 library functions for managing the console screen buffer on
@@ -31,7 +35,8 @@ public class TermCtlImpl implements TermCtl {
          * Kernel32 contains methods for interacting with low-level system resources, such as file I/O,
          * console management, and process handling in the Windows operating system.
          */
-        Kernel32 INSTANCE = Native.load("kernel32", Kernel32.class);
+        // It only loads kernel32 if we are on Windows. Otherwise, it leaves it null.
+        Kernel32 INSTANCE = Platform.isWindows() ? Native.load("kernel32", Kernel32.class) : null;
 
         // We reuse the necessary structures
 
@@ -293,6 +298,8 @@ public class TermCtlImpl implements TermCtl {
      */
     private static final int STD_OUTPUT_HANDLE = -11;
 
+    private static final String ANSI_ED = "\033[H\033[2J";
+
     /**
      * Constructs a new instance of the TermCtlImpl class.
      */
@@ -307,25 +314,50 @@ public class TermCtlImpl implements TermCtl {
      * @return true if successful
      */
     public static boolean setConsoleSize(int cols, int rows) {
-        Kernel32 k32 = Kernel32.INSTANCE;
-        WinNT.HANDLE hConsole = k32.GetStdHandle(STD_OUTPUT_HANDLE);
-    
-    /*
+
+        String os = System.getProperty("os.name").toLowerCase();
+
+        return adjustTerminalSize(cols, rows);
+    }
+
+    private static boolean adjustTerminalSize(int cols, int rows) {
+        if (cols <= 0 || rows <= 0) {
+            return false;
+        }
+
+        if (Platform.isWindows()) {
+            Kernel32 k32 = Kernel32.INSTANCE;
+            WinNT.HANDLE hConsole = k32.GetStdHandle(STD_OUTPUT_HANDLE);
+
+      /*
     1. Define the window rectangle (0-based, hence the subtraction of 1)
     It is vital that the size is less than or equal to the current buffer size.
     */
-        Kernel32.SMALL_RECT rect = new Kernel32.SMALL_RECT(0, 0, cols - 1, rows - 1);
+            Kernel32.SMALL_RECT rect = new Kernel32.SMALL_RECT(0, 0, cols - 1, rows - 1);
 
-        // 2. Define the buffer size
-        Kernel32.COORD size = new Kernel32.COORD(cols, rows);
-    
-    /*
+            // 2. Define the buffer size
+            Kernel32.COORD size = new Kernel32.COORD(cols, rows);
+
+      /*
     Safe execution order in Windows: We try to adjust the buffer first to fit the window,
     or the window first if the buffer is already large. The most robust approach is to
     try both.
     */
-        k32.SetConsoleScreenBufferSize(hConsole, size);
-        return k32.SetConsoleWindowInfo(hConsole, true, rect);
+            boolean success = k32.SetConsoleScreenBufferSize(hConsole, size);
+            k32.SetConsoleWindowInfo(hConsole, true, rect);
+
+      /*
+      If it fails or we don't have JNA, we try the ANSI sequence (works in
+      Windows Terminal)
+       */
+            if (!success) {
+                sendAnsiResize(cols, rows);
+            }
+        } else {
+            // We are not in Windows, trying to use ANSI Escape Codes...
+            sendAnsiResize(cols, rows);
+        }
+        return true;
     }
 
     /**
@@ -419,27 +451,6 @@ public class TermCtlImpl implements TermCtl {
     }
 
     /**
-     * Clears the console or terminal screen by using either ANSI escape codes or
-     * by printing a sufficient amount of blank lines to simulate a cleared screen.
-     *
-     * @param useANSI a boolean value indicating whether to use ANSI escape codes
-     *                for clearing the screen. If {@code true}, ANSI codes will
-     *                attempt to clear the screen. If {@code false}, the screen
-     *                will be cleared by printing multiple blank lines.
-     */
-    @Override
-    public void clearScreen(boolean useANSI) {
-        if (useANSI) {
-            System.out.print("\033[H\033[2J");
-        } else {
-            // We don't know the console size, so we'll just print enough newlines to clear it.
-            for (int i = 0; i < 150; i++) {
-                System.out.println();
-            }
-        }
-    }
-
-    /**
      * Adjusts the size of the console or terminal window to the specified dimensions.
      * The method determines the operating system and uses platform-specific mechanisms
      * to attempt to resize the console. For Windows, it uses native Kernel32 functions
@@ -453,48 +464,46 @@ public class TermCtlImpl implements TermCtl {
      * outcome), or {@code false} if the provided dimensions are invalid
      * (e.g., non-positive values)
      */
-    @Override
+
     public boolean setConsoleSize(Dimensions dimensions) {
         String os = System.getProperty("os.name").toLowerCase();
         int cols = dimensions.columns();
         int rows = dimensions.rows();
 
-        if (cols <= 0 || rows <= 0) {
-            return false;
+
+        return adjustTerminalSize(cols, rows);
+    }
+
+    /**
+     * Clears the terminal or console screen based on the specified method.
+     * <p>
+     * The behavior of this method depends on the {@code Using} parameter:
+     * - {@code ANSI}: Clears the screen using ANSI escape sequences.
+     * - {@code API} and {@code SO}: Throws an {@code UnsupportedOperationException} because these methods are not implemented.
+     * - {@code JAVA}: Clears the screen by printing a specified number of newlines.
+     *
+     * @param use an instance of the {@code Using} enumeration specifying the method to use for clearing the screen
+     *            (e.g., {@code ANSI}, {@code API}, {@code SO}, {@code JAVA})
+     */
+    @Override
+    public void clearScreen(Using use) {
+        switch (use) {
+            case ANSI:
+                System.out.print(ANSI_ED);
+                break;
+            case OS:
+                String os = System.getProperty("os.name");
+                if (os.contains("Windows")){
+                   clearScreenOnWindows();
+                } else if (os.contains("Linux") || os.contains("Mac")) {
+                    clearScreenOnLinuxOrMac();
+                }
+            case JAVA:
+                IOimpl.prtln(80, "");
+                break;
+            default:
         }
 
-        if (os.contains("win")) {
-            Kernel32 k32 = Kernel32.INSTANCE;
-            WinNT.HANDLE hConsole = k32.GetStdHandle(STD_OUTPUT_HANDLE);
-    
-      /*
-    1. Define the window rectangle (0-based, hence the subtraction of 1)
-    It is vital that the size is less than or equal to the current buffer size.
-    */
-            Kernel32.SMALL_RECT rect = new Kernel32.SMALL_RECT(0, 0, cols - 1, rows - 1);
-
-            // 2. Define the buffer size
-            Kernel32.COORD size = new Kernel32.COORD(cols, rows);
-    
-      /*
-    Safe execution order in Windows: We try to adjust the buffer first to fit the window,
-    or the window first if the buffer is already large. The most robust approach is to
-    try both.
-    */
-            boolean success = k32.SetConsoleScreenBufferSize(hConsole, size);
-            k32.SetConsoleWindowInfo(hConsole, true, rect);
-
-      /*
-      If it fails or we don't have JNA, we try the ANSI sequence (works in
-      Windows Terminal)
-       */
-            if (!success) {
-                sendAnsiResize(cols, rows);
-            }
-        } else {
-            sendAnsiResize(cols, rows);
-        }
-        return true;
     }
 
     /**
@@ -539,9 +548,31 @@ public class TermCtlImpl implements TermCtl {
      * Send the CSI (Control Sequence Introducer) sequence to resize.
      * \033[8;rows;columns;t
      */
-    private void sendAnsiResize(int cols, int rows) {
+    private static void sendAnsiResize(int cols, int rows) {
         // \033 is the octal escape, [8 is the size command, ;t is the closing.
-        System.out.print(String.format("\033[8;%d;%dt", rows, cols));
+        System.out.printf("\033[8;%d;%dt", rows, cols);
         System.out.flush();
+    }
+
+    private void clearScreenOnLinuxOrMac(){
+        try {
+            new ProcessBuilder("clear")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+        } catch (IOException | InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private void clearScreenOnWindows(){
+        try {
+            new ProcessBuilder("cmd", "/c", "cls")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+        } catch (IOException | InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

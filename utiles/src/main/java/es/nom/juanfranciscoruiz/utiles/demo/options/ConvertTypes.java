@@ -2,6 +2,7 @@ package es.nom.juanfranciscoruiz.utiles.demo.options;
 
 import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
+import es.nom.juanfranciscoruiz.utiles.model.Using;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
@@ -84,7 +85,7 @@ public class ConvertTypes {
      * @throws Exception if an error occurs during screen clearing or pausing.
      */
     public void run() throws Exception {
-        getInstance().getTc().clearScreen(true);
+        getInstance().getTc().clearScreen(Using.ANSI);
         final long PAUSE_DURATION = 3000L;
         String msg = "Converting types";
         prtln(2, title(msg, '*', 80));

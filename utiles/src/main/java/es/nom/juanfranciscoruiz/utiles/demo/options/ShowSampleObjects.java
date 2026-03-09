@@ -3,6 +3,7 @@ package es.nom.juanfranciscoruiz.utiles.demo.options;
 import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.helper.ObjectsGenerator;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
+import es.nom.juanfranciscoruiz.utiles.model.Using;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.FOREVER;
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
@@ -82,7 +83,7 @@ public class ShowSampleObjects {
    * @throws Exception if an error occurs during execution.
    */
   public void run() throws Exception {
-    tc.clearScreen(true);
+    tc.clearScreen(Using.ANSI);
     prtln(1, title("Sample objects", '*', 80));
     prtln(1, "Sample objects:");
     prtln(1, "  - Map: " + ObjectsGenerator.generateMap());

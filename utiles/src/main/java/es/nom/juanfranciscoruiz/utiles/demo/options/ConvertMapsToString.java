@@ -4,6 +4,7 @@ import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.TypeConverter;
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
+import es.nom.juanfranciscoruiz.utiles.model.Using;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.Util.pause;
@@ -73,7 +74,7 @@ public class ConvertMapsToString {
      * @throws Exception if an error occurs during the conversion process
      */
     public void runConversionSimpleMap(java.util.Map<String, Integer> map) throws Exception {
-        this.getTc().clearScreen(true);
+        this.getTc().clearScreen(Using.ANSI);
         String msg = "Converting a simple map into its string representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"Map: ");
@@ -91,7 +92,7 @@ public class ConvertMapsToString {
      * @throws Exception if an error occurs during the conversion process
      */
     public void runConversionComplexMap(java.util.Map<String, java.util.List<Integer>> map2) throws Exception {
-        this.getTc().clearScreen(true);
+        this.getTc().clearScreen(Using.ANSI);
         String msg = "Converting a complex map to its textual representation.";
         IOimpl.prtln(2,title(msg,'*',80));
         IOimpl.prtln(1,"A little bit complex Map: ");
