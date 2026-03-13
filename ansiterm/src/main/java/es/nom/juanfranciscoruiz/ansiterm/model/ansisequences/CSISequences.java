@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.model;
+package es.nom.juanfranciscoruiz.ansiterm.model.ansisequences;
 
 /**
  * ANSI Control Sequence Introducer (CSI) for CSI sequences.
@@ -10,7 +10,7 @@ package es.nom.juanfranciscoruiz.ansiterm.model;
  *
  * @author Juan F. Ruiz
  */
-public class CSI {
+public class CSISequences {
     /**
    * ANSI Control Sequence Introducer (CSI) for CSI sequences.
    * All CSI sequences start with ESC (0x1b or \033) followed by the character [
@@ -26,9 +26,16 @@ public class CSI {
    * </ul>
    */
   public static final String ESC = "\033";
+    /**
+     * ANSI Control Sequence Introducer (CSI) for Control Sequence Introducer (CSI) sequences.
+     * CSI sequences are a subset of ANSI escape codes used to control text formatting,
+     * cursor movement, and other terminal behaviors. The CSI sequence starts with the
+     * ESC character followed by the left square bracket '['.
+     */
+  public static final String CSI = "\033[";
   
   /**
    * Private constructor. The user can't instantiate class
    */
-  private CSI() {}
+  private CSISequences() {}
 }

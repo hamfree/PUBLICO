@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import es.nom.juanfranciscoruiz.ansiterm.model.CSI;
+import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences;
 
 /**
  * Utility class that provides ANSI escape sequences for setting and resetting
@@ -32,7 +32,7 @@ public class ScrollingMarginsCodes {
     /**
      * Provides access to the singleton instance of the {@code ScrollingMarginsCodes} class.
      */
-    private static final String ESC = CSI.ESC;
+    private static final String ESC = CSISequences.ESC;
 
     /**
      * Private constructor. Class can't be instantiated by the user

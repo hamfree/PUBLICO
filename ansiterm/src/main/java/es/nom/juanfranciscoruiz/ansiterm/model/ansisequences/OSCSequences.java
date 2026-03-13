@@ -1,15 +1,15 @@
-package es.nom.juanfranciscoruiz.ansiterm.model;
+package es.nom.juanfranciscoruiz.ansiterm.model.ansisequences;
 
 /**
  * Provides constants for Operating System Command (OSC) escape sequences.
  * OSC escape sequences are part of the ANSI escape codes and are used to control
  * terminal functions, such as setting window titles or clipboard management.
  */
-public class OSC {
+public class OSCSequences {
     /**
      * Private constructor. Class can't be instantiated by the user
      */
-    private OSC() {
+    private OSCSequences() {
     }
 
     /**

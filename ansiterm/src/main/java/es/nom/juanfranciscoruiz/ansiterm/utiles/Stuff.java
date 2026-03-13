@@ -93,6 +93,7 @@ public class Stuff {
             sc.nextLine();
             return;
         }
+        t.printAt(" ".repeat(ts.getColumns()), lastLine - 1, 1);
         t.printAt("The program will continue in " + milliseconds + " milliseconds...",
                 lastLine - 1, 1);
         Thread.sleep(milliseconds);

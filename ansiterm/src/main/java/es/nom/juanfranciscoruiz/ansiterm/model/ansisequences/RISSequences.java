@@ -1,4 +1,4 @@
-package es.nom.juanfranciscoruiz.ansiterm.model;
+package es.nom.juanfranciscoruiz.ansiterm.model.ansisequences;
 
 /**
  * The RIS (Reset to Initial State) class provides a constant for the RIS ANSI escape sequence.
@@ -12,7 +12,7 @@ package es.nom.juanfranciscoruiz.ansiterm.model;
  * - CSI (Control Sequence Introducer)
  * - ANSI terminal sequences
  */
-public class RIS {
+public class RISSequences {
     /**
      * Represents the ANSI escape sequence for RIS (Reset to Initial State).
      * Using this sequence in a terminal resets the terminal to its default
@@ -23,10 +23,10 @@ public class RIS {
      * In the context of control sequences, RIS is constructed using the ESC
      * character followed by 'c', as per the ANSI specification.
      */
-    public static final String RESETTOINITIALSTATE =   CSI.ESC + 'c';
+    public static final String RIS =   CSISequences.ESC + 'c';
 
     /**
      * Private constructor. The user can't instantiate class
      */
-    private RIS() {}
+    private RISSequences() {}
 }

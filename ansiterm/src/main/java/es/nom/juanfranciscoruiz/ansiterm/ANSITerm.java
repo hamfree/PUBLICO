@@ -14,14 +14,15 @@ import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.getPosition;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.AnsiBufferManager.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CharacterSetModeCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.model.BGColor.DEFAULT;
-import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences.CSI;
+import static es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences.ESC;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorMovementCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.EraseSequencesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.GeneralControlCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.resetScrollingMargins;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.ScrollingMarginsCodes.setScrollingMargins;
-import static es.nom.juanfranciscoruiz.ansiterm.model.RIS.RESETTOINITIALSTATE;
+import static es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.RISSequences.RIS;
 import static es.nom.juanfranciscoruiz.ansiterm.model.StylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.CursorStylesCodes.*;
 import static es.nom.juanfranciscoruiz.ansiterm.codes.TextModificationCodes.*;
@@ -52,7 +53,7 @@ public class ANSITerm {
      * For logging
      */
     public static final Logger logger = LoggerFactory.getLogger(ANSITerm.class);
-    
+
     /**
      * ITerminal object to make calls to the OS functions where the program is
      * running and enable/disable console capabilities not available from Java
@@ -70,6 +71,7 @@ public class ANSITerm {
 
 
     // Constructors
+
     /**
      * Constructor for the ANSITerm class.
      * <p>
@@ -85,7 +87,7 @@ public class ANSITerm {
             osCall = new WindowsTerminal();
         } else if (os.contains("linux")) {
             osCall = new LinuxTerminal();
-        }  else {
+        } else {
             throw new ANSITermException("Unsupported operating system");
         }
         this.terminalSize = osCall.getTerminalSize();
@@ -93,23 +95,26 @@ public class ANSITerm {
     }
 
     // Getters and setters
+
     /**
      * Returns terminal size
+     *
      * @return a TerminalSize object with the current lines and columns of
      * the terminal.
-     *
      * @see TerminalSize
      */
-    public TerminalSize getTerminalSize(){
+    public TerminalSize getTerminalSize() {
         return osCall.getTerminalSize();
     }
 
     /**
-     * Sets the size of the terminal.
+     * Sets the size of the property terminalSize
      *
-     * @param terminalSize the new size to set for the terminal
+     * @param terminalSize the new size to set for the property terminalSize
      */
-    public void setTerminalSize(TerminalSize terminalSize) {this.terminalSize = terminalSize;}
+    public void setTerminalSize(TerminalSize terminalSize) {
+        this.terminalSize = terminalSize;
+    }
 
     /**
      * Sets the cursor position.
@@ -123,23 +128,24 @@ public class ANSITerm {
     /**
      * Returns an ITerminal object with which we can access the low-level
      * methods of the terminal running on the current operating system.
+     *
      * @return an ITerminal object with the appropriate low-level methods of
      * the operating system where our program is running.
      */
-    public ITerminal getOsCall(){
+    public ITerminal getOsCall() {
         return osCall;
     }
 
 
-
     // Methods
     /* ------------------------------------------ Console capabilities methods ---------------------------------------*/
+
     /**
      * Enables 'raw' mode in the current console so that ANSI sequences can
      * be interpreted.
      *
      * @throws LastErrorException In case an error occurs in the call, or it
-     * is not running on Microsoft Windows.
+     *                            is not running on Microsoft Windows.
      */
     public void enableRawMode() throws LastErrorException {
         osCall.enableRawMode();
@@ -149,13 +155,14 @@ public class ANSITerm {
      * Disables 'raw' mode (and enables 'cooked' mode) in the current console.
      *
      * @throws LastErrorException In case an error occurs in the call, or it
-     * is not running on Microsoft Windows.
+     *                            is not running on Microsoft Windows.
      */
     public void disableRawMode() throws LastErrorException {
         osCall.disableRawMode();
     }
 
     /* ------------------------------------------ ANSI control sequences methods -------------------------------------*/
+
     /**
      * Rings the terminal bell
      */
@@ -165,8 +172,9 @@ public class ANSITerm {
 
     /*
     TODO: The methods that moves the cursor has to update the 'cursorPosition' property of this
-     class.
+     class. I need to locate this methods for calling the getCursorPosition() method after the move of the cursor.
      */
+
     /**
      * Causes a cursor backspace
      */
@@ -192,7 +200,8 @@ public class ANSITerm {
      * Generates a vertical tab
      */
     public void VT() {
-      out.print(verticalTab()); }
+        out.print(verticalTab());
+    }
 
     /**
      * Generates a form feed
@@ -207,9 +216,11 @@ public class ANSITerm {
      * To do a line break you have to do a linefeed() or use  the Java \n escape code
      */
     public void CR() {
-      out.print(carriageReturn()); }
+        out.print(carriageReturn());
+    }
 
     /* ----------------------------- Cursor movements, getting position and printing methods -------------------------*/
+
     /**
      * Returns the cursor position on the screen
      *
@@ -261,8 +272,9 @@ public class ANSITerm {
     /**
      * Moves the cursor down as many lines as indicated in the lines parameter
      * CODE: CUD (Cursor Down)
-     * @see #moveCursorUp(int)
+     *
      * @param lines an integer with the lines down where the cursor will be moved
+     * @see #moveCursorUp(int)
      */
     public void moveCursorDown(int lines) {
         out.print(moveCursorNLinesDown(lines));
@@ -272,9 +284,10 @@ public class ANSITerm {
      * Moves the cursor to the right as many characters as indicated in the
      * cars parameter
      * CODE: CUF (Cursor Forward)
-     * @see #moveCursorUp(int)
+     *
      * @param cars an integer with the characters to the right where the
-     * cursor will be moved
+     *             cursor will be moved
+     * @see #moveCursorUp(int)
      */
     public void moveCursorRight(int cars) {
         out.print(moveCursorNCharsToRight(cars));
@@ -284,12 +297,14 @@ public class ANSITerm {
      * Moves the cursor to the left as many characters as indicated in the
      * cars parameter
      * CODE: CUB (Cursor Backward)
-     * @see #moveCursorUp(int)
+     *
      * @param cars an integer with the characters to the left where the
-     * cursor will be moved
+     *             cursor will be moved
+     * @see #moveCursorUp(int)
      */
     public void moveCursorLeft(int cars) {
-      out.print(moveCursorNCharsToLeft(cars));}
+        out.print(moveCursorNCharsToLeft(cars));
+    }
 
     /**
      * Moves the cursor to the line, column position of the terminal
@@ -300,7 +315,7 @@ public class ANSITerm {
      * The cursor moves to the coordinates &lt;x&gt; &lt;y&gt; within the
      * window, where &lt;x&gt; is the column of the row &lt;y&gt;
      *
-     * @param line integer with the line to move the cursor to
+     * @param line   integer with the line to move the cursor to
      * @param column integer with the column to move the cursor to
      */
     public void printAt(int line, int column) {
@@ -312,7 +327,7 @@ public class ANSITerm {
      * Moves the cursor to the terminal position indicated by p
      *
      * @param p Posicion object containing the position where the cursor
-     * will be moved
+     *          will be moved
      */
     public void printAt(Position p) {
         //TODO: Validar que la posicion sea valida
@@ -336,37 +351,43 @@ public class ANSITerm {
 
 
     /* ----------------------------------------- Cursor control codes methods --------------------------------------- */
+
     /**
      * Hides the cursor
      * CODE: DECTCEM (Text Cursor Enable Mode Hide)
      */
     public void cursorHide() {
-      out.print(hideCursor());}
+        out.print(hideCursor());
+    }
 
     /**
      * Shows the cursor
      * CODE: DECTCEM (Text Cursor Enable Mode Show)
      */
     public void cursorShow() {
-      out.print(showCursor());}
-    
-    
+        out.print(showCursor());
+    }
+
+
     /**
      * Enables cursor blinking
      * CODE: ATT160 (Text Cursor Enable Blinking)
      */
     public void cursorBlink() {
-      out.print(enableCursorBlink());}
-    
+        out.print(enableCursorBlink());
+    }
+
     /**
      * Disables cursor blinking
      * CODE: ATT160 (Text Cursor Disable Blinking)
      */
     public void cursorNoBlink() {
-      out.print(disableCursorBlink());}
+        out.print(disableCursorBlink());
+    }
 
 
     /* ---------------------------------------------- Cursor Styles methods ----------------------------------------- */
+
     /**
      * Sets the cursor style.
      * Implements the following ANSI sequences:
@@ -379,8 +400,9 @@ public class ANSITerm {
      * <li>ESC [ 5 SP q, DECSCUSR, Blinking Bar</li>
      * <li>ESC [ 6 SP q, DECSCUSR, Steady Bar</li>
      * </ul>
+     *
      * @param style One of the available cursor styles (Class with static
-     * constants)
+     *              constants)
      * @throws ANSITermException In case any argument is not valid.
      */
     public void cursorChangeStyle(String style) throws ANSITermException {
@@ -437,7 +459,7 @@ public class ANSITerm {
      * @param cars the number of characters to delete.
      * @throws ANSITermException if the provided number of characters is invalid (e.g., non-positive)
      */
-    public void deleteCharsWithSpaces(int cars)  throws ANSITermException {
+    public void deleteCharsWithSpaces(int cars) throws ANSITermException {
         if (cars > 0) {
             out.print(eraseCharactersWithSpaces(cars));
         } else {
@@ -477,6 +499,7 @@ public class ANSITerm {
     }
 
     /* ------------------------------------------ Erase functions --------------------------------------------------- */
+
     /**
      * Deletes everything from the cursor position to the end of the screen
      */
@@ -488,7 +511,8 @@ public class ANSITerm {
      * Deletes everything from the cursor position to the beginning of the screen
      */
     public void eraseFromCursorToBeginScreen() {
-      out.print(deleteFromCursorToBeginScreen()); }
+        out.print(deleteFromCursorToBeginScreen());
+    }
 
     /**
      * Erases the screen
@@ -522,6 +546,7 @@ public class ANSITerm {
     }
 
     /* ----------------------------------------------- Colors and styles -------------------------------------------- */
+
     /**
      * Sets bold mode for the passed string
      *
@@ -533,13 +558,12 @@ public class ANSITerm {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(BOLD_START)
-                .append(msg)
-                .append(ESC).append(BOLD_END);
+                    .append(msg)
+                    .append(ESC).append(BOLD_END);
         }
         return sb.toString();
     }
 
-    
 
     /**
      * Sets dimmed mode for the passed string
@@ -569,8 +593,8 @@ public class ANSITerm {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(ITALIC_START)
-                .append(msg)
-                .append(ESC).append(ITALIC_END);
+                    .append(msg)
+                    .append(ESC).append(ITALIC_END);
         }
         return sb.toString();
     }
@@ -586,8 +610,8 @@ public class ANSITerm {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(UNDERLINE_START)
-                .append(msg)
-                .append(ESC).append(UNDERLINE_STOP);
+                    .append(msg)
+                    .append(ESC).append(UNDERLINE_STOP);
         }
         return sb.toString();
     }
@@ -599,12 +623,12 @@ public class ANSITerm {
      * @return a String with the ANSI sequence that, if shown in the
      * terminal, will be blinking.
      */
-    public String setBlink(String msg){
+    public String setBlink(String msg) {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(BLINK_START)
-                .append(msg)
-                .append(ESC).append(BLINK_END);
+                    .append(msg)
+                    .append(ESC).append(BLINK_END);
         }
         return sb.toString();
     }
@@ -620,8 +644,8 @@ public class ANSITerm {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(REVERSE_START)
-                .append(msg)
-                .append(ESC).append(REVERSE_END);
+                    .append(msg)
+                    .append(ESC).append(REVERSE_END);
         }
         return sb.toString();
     }
@@ -638,8 +662,8 @@ public class ANSITerm {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(INVISIBLE_START)
-                .append(msg)
-                .append(ESC).append(INVISIBLE_END);
+                    .append(msg)
+                    .append(ESC).append(INVISIBLE_END);
         }
         return sb.toString();
     }
@@ -655,34 +679,35 @@ public class ANSITerm {
         StringBuilder sb = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
             sb.append(ESC).append(STRIKETHROUGH_START)
-                .append(msg)
-                .append(ESC).append(STRIKETHROUGH_END);
+                    .append(msg)
+                    .append(ESC).append(STRIKETHROUGH_END);
         }
         return sb.toString();
     }
 
     //TODO: Make this method with few parameters. Perhaps with a new class for something like StyledString...
+
     /**
      * Combines several styles to the passed string. <br>
      * <b>NOTE: Not all style combinations</b> will produce the intended
      * results in <i>some terminals</i>.
      *
-     * @param isBold If true, puts the string in bold
-     * @param isDim If true, puts the string in dimmed mode
-     * @param isItalic If true, puts the string in italics
-     * @param isUnderline If true, puts the string underlined
-     * @param isBlink If true, puts the string blinking
-     * @param isInverse If true, puts the string in inverse mode
+     * @param isBold          If true, puts the string in bold
+     * @param isDim           If true, puts the string in dimmed mode
+     * @param isItalic        If true, puts the string in italics
+     * @param isUnderline     If true, puts the string underlined
+     * @param isBlink         If true, puts the string blinking
+     * @param isInverse       If true, puts the string in inverse mode
      * @param isStrikeThrough If true, puts the string with a strikethrough.
-     * @param msg the string to which styles will be applied
+     * @param msg             the string to which styles will be applied
      * @return a String with the ANSI sequences necessary so that, if later
      * printed in the terminal, it appears with the requested styles.
      * @throws ANSITermException In case any argument is not valid.
      */
     public String setStyles(boolean isBold, boolean isDim,
-            boolean isItalic, boolean isUnderline,
-            boolean isBlink, boolean isInverse,
-            boolean isStrikeThrough, String msg) throws ANSITermException {
+                            boolean isItalic, boolean isUnderline,
+                            boolean isBlink, boolean isInverse,
+                            boolean isStrikeThrough, String msg) throws ANSITermException {
 
         StringBuilder sb = new StringBuilder();
         boolean isMessageAdded = false;
@@ -694,8 +719,8 @@ public class ANSITerm {
             if (isDim) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        DIM_START).append(ESC +
-                        DIM_END);
+                            DIM_START).append(ESC +
+                            DIM_END);
                 } else {
                     sb.append(setDim(msg));
                     isMessageAdded = true;
@@ -704,8 +729,8 @@ public class ANSITerm {
             if (isItalic) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        ITALIC_START).append(ESC +
-                        ITALIC_END);
+                            ITALIC_START).append(ESC +
+                            ITALIC_END);
                 } else {
                     sb.append(setItalic(msg));
                     isMessageAdded = true;
@@ -714,8 +739,8 @@ public class ANSITerm {
             if (isUnderline) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        UNDERLINE_START).append(ESC +
-                        UNDERLINE_STOP);
+                            UNDERLINE_START).append(ESC +
+                            UNDERLINE_STOP);
                 } else {
                     sb.append(setUnderline(msg));
                     isMessageAdded = true;
@@ -724,8 +749,8 @@ public class ANSITerm {
             if (isBlink) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        BLINK_START).append(ESC +
-                        BLINK_END);
+                            BLINK_START).append(ESC +
+                            BLINK_END);
                 } else {
                     sb.append(setBlink(msg));
                     isMessageAdded = true;
@@ -734,8 +759,8 @@ public class ANSITerm {
             if (isInverse) {
                 if (isMessageAdded) {
                     sb.insert(0, ESC +
-                        REVERSE_START).append(ESC +
-                        REVERSE_END);
+                            REVERSE_START).append(ESC +
+                            REVERSE_END);
                 } else {
                     sb.append(setInverse(msg));
                     isMessageAdded = true;
@@ -754,156 +779,146 @@ public class ANSITerm {
 
     /**
      * Sets text color
+     *
      * @param color A Color enum constant with the color
-     * @param msg The string to be colored
+     * @param msg   The string to be colored
      * @return a string with the appropriate ANSI sequence to show the text
      * with the indicated color in the console.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setColor(Color color, String msg) throws IllegalArgumentException {
-        StringBuilder sb = new StringBuilder();
-        int iColor = Integer.parseInt(color.getAsString());
+        StringBuilder ansi = new StringBuilder();
         if ((msg != null && !msg.isEmpty())) {
-            sb.append(ESC).append("[")
-                .append(iColor)
-                .append("m")
-                .append(msg)
-                .append(ESC)
-                .append("[")
-                .append(Color.DEFAULT.getAsString())
-                .append("m");
+            ansi.append(CSI)
+                    .append(color.getAsString())
+                    .append("m")
+                    .append(msg)
+                    .append(CSI)
+                    .append(Color.DEFAULT.getAsString())
+                    .append("m");
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
 
-        return sb.toString();
+        return ansi.toString();
     }
-    
+
     /**
      * Sets a color code from a 256-color palette to the string passed as
      * a parameter.
      *
      * @param color an integer between 0 and 255 containing the color code.
-     * @param msg a string that will receive the ANSI sequence to give it the
-     * indicated color.
+     * @param msg   a string that will receive the ANSI sequence to give it the
+     *              indicated color.
      * @return a string with the appropriate ANSI sequence to be displayed in
      * the indicated color in the terminal.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setColor256(int color, String msg) throws IllegalArgumentException {
-        StringBuilder sb = new StringBuilder();
-        
+        StringBuilder ansi = new StringBuilder();
+
         if (color < 0 || color > 255) {
             throw new IllegalArgumentException(EX_NO_COL);
         }
-        
+
         if (msg == null || msg.isEmpty()) {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
-        sb.append(ESC).append(FOREGROUND_COLOR256)
-            .append(color)
-            .append("m")
-            .append(msg)
-            .append(ESC)
-            .append("[")
-            .append(Color.DEFAULT.getAsString())
-            .append("m");
-        
-        return sb.toString();
+
+        ansi.append(ESC).append(FOREGROUND_COLOR256)
+                .append(color)
+                .append("m")
+                .append(msg)
+                .append(CSI)
+                .append(Color.DEFAULT.getAsString())
+                .append("m");
+
+        return ansi.toString();
     }
-    
+
     /**
      * Sets a color code from a 256-color palette for the background of the
      * string passed as a parameter.
+     *
      * @param color an integer between 0 and 255 containing the color code.
-     * @param msg a string that will receive the ANSI sequence to give its
-     * background the indicated color.
+     * @param msg   a string that will receive the ANSI sequence to give its
+     *              background the indicated color.
      * @return a string with the appropriate ANSI sequence that will show the
      * indicated color in its background in the terminal.
      * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBackgroundColor256(int color, String msg) throws IllegalArgumentException {
-        StringBuilder sb = new StringBuilder();
-        
+        StringBuilder ansi = new StringBuilder();
+
         if (color <= 0 || color > 255) {
             throw new IllegalArgumentException(EX_NO_COL);
         }
-        
+
         if (msg == null || msg.isEmpty()) {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
-        
-        sb.append(ESC).append(BACKGROUND_COLOR256)
-            .append(color)
-            .append("m")
-            .append(msg)
-            .append(ESC)
-            .append("[")
-            .append(Color.DEFAULT.getAsString())
-            .append("m");
-        
-        return sb.toString();
+
+        ansi.append(ESC).append(BACKGROUND_COLOR256)
+                .append(color)
+                .append("m")
+                .append(msg)
+                .append(CSI)
+                .append(Color.DEFAULT.getAsString())
+                .append("m");
+
+        return ansi.toString();
     }
-    
+
     /**
      * Sets the background color of the passed string
      *
      * @param color Enum with the background color
-     * @param msg String with the string to color
+     * @param msg   String with the string to color
      * @return a String with the ANSI escape sequences that color the string
      * as requested
      * @throws IllegalArgumentException In case any argument is not valid.
      */
     public String setBackgroundColor(BGColor color, String msg) throws IllegalArgumentException {
-        StringBuilder sb = new StringBuilder();
-        int iColor = Integer.parseInt(color.getAsString());
+        StringBuilder ansi = new StringBuilder();
         if (msg != null && !msg.isEmpty()) {
-            sb.append(ESC).append("[")
-                .append(iColor)
-                .append("m")
-                .append(msg)
-                .append(ESC)
-                .append("[")
-                .append(DEFAULT.getAsString())
-                .append("m");
+            ansi.append(CSI)
+                    .append(color.getAsString())
+                    .append("m")
+                    .append(msg)
+                    .append(CSI)
+                    .append(DEFAULT.getAsString())
+                    .append("m");
         } else {
             throw new IllegalArgumentException(EX_NO_MSG);
         }
 
-        return sb.toString();
+        return ansi.toString();
     }
 
     /**
      * Sets the foreground and background colors of the passed string
      *
-     * @param color Enum with the foreground color
+     * @param color           Enum with the foreground color
      * @param backgroundColor Enum with the background color
-     * @param msg String with the string to color
+     * @param msg             String with the string to color
      * @return a String with the ANSI escape sequences that color the string
      * as requested
      * @throws ANSITermException In case any argument is not valid.
      */
     public String setColors(Color color, BGColor backgroundColor, String msg) throws ANSITermException {
-        StringBuilder sb = new StringBuilder();
-        int iColor = Integer.parseInt(color.getAsString());
-        int bColor = Integer.parseInt(backgroundColor.getAsString());
-        if (iColor < 30 || iColor > 37) throw new ANSITermException(EX_NO_COL);
-        if (bColor < 40) throw new ANSITermException(EX_NO_BACKCOL);
+        StringBuilder ansi = new StringBuilder();
         if ((msg == null || msg.isEmpty())) throw new ANSITermException(EX_NO_MSG);
 
-        sb.append(ESC);
-        sb.append("[");
-        sb.append(color);
-        sb.append(";");
-        sb.append(backgroundColor);
-        sb.append("m");
-        sb.append(msg);
-        sb.append(ESC);
-        sb.append("[");
-        sb.append(RESET_COLOR_AND_STYLES);
-        sb.append("m");
-        return sb.toString();
+        ansi.append(CSI);
+        ansi.append(color.getAsString());
+        ansi.append(";");
+        ansi.append(backgroundColor.getAsString());
+        ansi.append("m");
+        ansi.append(msg);
+        ansi.append(CSI);
+        ansi.append(RESET_COLOR_AND_STYLES);
+        ansi.append("m");
+        return ansi.toString();
     }
 
     /**
@@ -911,19 +926,20 @@ public class ANSITerm {
      * this method when you finish using Terminal in your application.
      */
     public void resetScreen() {
-        out.print(RESETTOINITIALSTATE);
+        out.print(RIS);
     }
 
 
 
     /* ----------------------------------------------- Position functions -------------------------------------------- */
+
     /**
      * Prints the msg string at the terminal position indicated by the
      * integers line and col (the column)
      *
-     * @param msg the string to print
+     * @param msg  the string to print
      * @param line the line where it will be printed
-     * @param col the column from which the string will be printed
+     * @param col  the column from which the string will be printed
      * @throws ANSITermException In case of invalid arguments.
      */
     public void printAt(String msg, int line, int col) throws ANSITermException {
@@ -939,7 +955,7 @@ public class ANSITerm {
      * Prints the msg string at position p in the terminal
      *
      * @param msg the string to print
-     * @param p the terminal position where the string will start to be printed
+     * @param p   the terminal position where the string will start to be printed
      * @throws ANSITermException In case of invalid arguments.
      */
     public void printAt(String msg, Position p) throws ANSITermException {
@@ -964,7 +980,9 @@ public class ANSITerm {
      *
      * @param lines the number of lines to scroll the text down
      */
-    public void scrollTextDown(int lines) { out.print(scrollLinesDown(lines)); }
+    public void scrollTextDown(int lines) {
+        out.print(scrollLinesDown(lines));
+    }
 
     /**
      * Enables the alternative buffer in the terminal by sending the appropriate escape sequence.
@@ -978,7 +996,7 @@ public class ANSITerm {
      * the {@code PositionCodes.getESforEnableAlternateBuffer()} method and outputs it to the
      * terminal standard output.
      */
-    public void enableAlternativeBuffer(){
+    public void enableAlternativeBuffer() {
         out.print(enableAlternateBuffer());
     }
 
@@ -991,7 +1009,7 @@ public class ANSITerm {
      * {@code PositionCodes.getESforDisableAlternateBuffer()} method
      * to accomplish this.
      */
-    public void disableAlternativeBuffer(){
+    public void disableAlternativeBuffer() {
         out.print(disableAlternateBuffer());
     }
 
@@ -999,17 +1017,19 @@ public class ANSITerm {
 
     /**
      * Sets the window title
+     *
      * @param title the title to set for the window
      */
-    public void setWinTitle(String title){
+    public void setWinTitle(String title) {
         out.print(setWindowTitle(title));
     }
 
     /**
      * Sets only the window title
+     *
      * @param title the title to set for the window
      */
-    public void setOnlyWinTitle(String title){
+    public void setOnlyWinTitle(String title) {
         out.print(updateWindowTitle(title));
     }
 
@@ -1017,19 +1037,77 @@ public class ANSITerm {
 
     /**
      * Sets the scrolling margins for the top and bottom of the display or viewport.
+     * TODO: Validate input parameters: must be INSIDE the viewport boundaries
      *
      * @param top    the size of the margin at the top, typically measured in pixels or rows
      * @param bottom the size of the margin at the bottom, typically measured in pixels or rows
      */
-    public void setScrollMargins(int top, int bottom){
+    public void setScrollMargins(int top, int bottom) {
         out.print(setScrollingMargins(top, bottom));
     }
 
     /**
      * Resets the scrolling margins
      */
-    public void resetScrollMargins(){
+    public void resetScrollMargins() {
         out.print(resetScrollingMargins());
+    }
+
+    /**
+     * Scrolls the viewport content upwards by a specified number of lines within the defined boundaries.
+     * TODO: Validate input parameters: must be INSIDE the viewport boundaries
+     *
+     * @param left   The left boundary of the scrollable area.
+     * @param top    The top boundary of the scrollable area.
+     * @param width  The width of the scrollable area.
+     * @param height The height of the scrollable area.
+     * @param lines  The number of lines to scroll upwards.
+     */
+    public void scrollUp(int left, int top, int width, int height, int lines) {
+        out.printf(ViewportPositioningCodes.scrollUp(left, top, width, height, lines));
+    }
+
+    /**
+     * Scrolls down the content within a specified rectangular area of a viewport.
+     * TODO: Validate input parameters: must be INSIDE the viewport boundaries
+     *
+     * @param left   The x-coordinate of the top-left corner of the region to scroll.
+     * @param top    The y-coordinate of the top-left corner of the region to scroll.
+     * @param width  The width of the region to scroll.
+     * @param height The height of the region to scroll.
+     * @param lines  The number of lines to scroll downward.
+     */
+    public void scrollDown(int left, int top, int width, int height, int lines) {
+        out.printf(ViewportPositioningCodes.scrollDown(left, top, width, height, lines));
+    }
+
+    /**
+     * Scrolls a specified rectangular region of the viewport to the right by a given number
+     * of lines. This operation shifts the contents within the region horizontally.
+     * TODO: Validate input parameters: must be INSIDE the viewport boundaries
+     *
+     * @param left   the x-coordinate of the left boundary of the region to scroll
+     * @param top    the y-coordinate of the top boundary of the region to scroll
+     * @param width  the width of the region to scroll
+     * @param height the height of the region to scroll
+     * @param lines  the number of lines to scroll to the right
+     */
+    public void scrollRight(int left, int top, int width, int height, int lines) {
+        out.printf(ViewportPositioningCodes.scrollRight(left, top, width, height, lines));
+    }
+
+    /**
+     * Scrolls a section of the viewport to the left by a specified number of lines.
+     * TODO: Validate input parameters: must be INSIDE the viewport boundaries
+     *
+     * @param left   The left coordinate of the region to be scrolled.
+     * @param top    The top coordinate of the region to be scrolled.
+     * @param width  The width of the region to be scrolled.
+     * @param height The height of the region to be scrolled.
+     * @param lines  The number of lines to scroll the region to the left.
+     */
+    public void scrollLeft(int left, int top, int width, int height, int lines) {
+        out.printf(ViewportPositioningCodes.scrollLeft(left, top, width, height, lines));
     }
 
     /* ---------------------------------------- Windows Witdh methods ----------------------------------------------- */
@@ -1037,18 +1115,19 @@ public class ANSITerm {
     /**
      * Sets the window width to 132 columns
      */
-    public void setWindowWidth132Columns(){
+    public void setWindowWidth132Columns() {
         out.print(setWidthTo132());
     }
 
     /**
      * Sets the window width to 80 columns
      */
-    public void setWindowWidth80Columns(){
+    public void setWindowWidth80Columns() {
         out.print(setWidthTo80());
     }
-    
+
     /* --------------------------------------- Character Set Mode methods  ----------------------------------------- */
+
     /**
      * Configures the output to use the DEC (Digital Equipment Corporation)
      * line drawing character set. This method enables the usage of a specialized
@@ -1058,19 +1137,19 @@ public class ANSITerm {
      * of characters intended for creating simple graphical elements such as
      * boxes and lines in a text-based environment.
      */
-    public void setDECCharacterSet(){
+    public void setDECCharacterSet() {
         out.print(enableDECLineDrawing());
     }
-    
+
     /**
      * Configures the system to use the ASCII character set by enabling
      * the ASCII mode. This method prints the enabling result to the
      * output stream.
      */
-    public void setASCIICharacterSet(){
+    public void setASCIICharacterSet() {
         out.print(enableASCII());
     }
-    
+
     @Override
     public String toString() {
         return "ANSITerm{" +

@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.model;
 
-import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences.ESC;
 
 /**
  * Contains ANSI escape codes for text styles.

@@ -158,11 +158,17 @@ public class App {
                     menu.setMessage("");
                     app.showWindowTitle();
                 }
+                case 17 -> {
+                    menu.setMessage("");
+                    app.showScrollingMargins();
+                }
                 default -> menu.setMessage("Invalid option. Please, try again.");
             }
         } while (menu.getSelectedOption() != 0L);
         info(logger,"Application exit");
     }
+
+
 
     /**
      * Returns a list of menu options.
@@ -189,6 +195,7 @@ public class App {
         opciones.add("Buffer and alternate buffer");
         opciones.add("Characters sets");
         opciones.add("Setting the Terminal Window Title");
+        opciones.add("Scrolling margins");
 
         return opciones;
     }
@@ -381,5 +388,25 @@ public class App {
     private void showWindowTitle() throws Exception {
         ShowWindowTitle showWindowTitle = new ShowWindowTitle();
         showWindowTitle.perform();
+    }
+
+    /**
+     * Demonstrates the use of scrolling margins in the terminal by invoking the
+     * {@code ShowScrollingMargins} class. This method initializes an instance of
+     * {@code ShowScrollingMargins} and executes its {@code perform()} method.
+     * <p>
+     * If an error occurs during the execution, the exception is caught, wrapped in an
+     * {@code ANSITermException}, and rethrown to indicate an error specific to terminal
+     * scrolling margin operations.
+     *
+     * @throws ANSITermException if an error occurs while displaying the scrolling margins
+     */
+    private void showScrollingMargins() throws ANSITermException {
+        ShowScrollingMargins showScrollingMargins = new ShowScrollingMargins();
+        try {
+            showScrollingMargins.perform();
+        } catch (Exception e) {
+            throw new ANSITermException(e);
+        }
     }
 }

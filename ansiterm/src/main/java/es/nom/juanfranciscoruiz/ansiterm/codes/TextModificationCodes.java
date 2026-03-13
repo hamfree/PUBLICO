@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import es.nom.juanfranciscoruiz.ansiterm.model.CSI;
+import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences;
 
 /**
  * Provides ANSI escape codes for text modification operations.
@@ -27,7 +27,7 @@ public class TextModificationCodes {
      * @return The ANSI escape sequence.
      */
     public static String insertSpaces(int n) {
-        return CSI.ESC + "[" + n + "@";
+        return CSISequences.ESC + "[" + n + "@";
     }
 
     /**
@@ -41,7 +41,7 @@ public class TextModificationCodes {
      * @return The ANSI escape sequence.
      */
     public static String eraseCharacters(int n) {
-        return CSI.ESC + "[" + n + "P";
+        return CSISequences.ESC + "[" + n + "P";
     }
 
     /**
@@ -55,7 +55,7 @@ public class TextModificationCodes {
      * @return The ANSI escape sequence.
      */
     public static String eraseCharactersWithSpaces(int n) {
-        return CSI.ESC + "[" + n + "X";
+        return CSISequences.ESC + "[" + n + "X";
     }
 
     /**
@@ -68,7 +68,7 @@ public class TextModificationCodes {
      * @return The ANSI escape sequence.
      */
     public static String insertLines(int n) {
-        return CSI.ESC + "[" + n + "L";
+        return CSISequences.ESC + "[" + n + "L";
     }
 
     /**
@@ -81,7 +81,7 @@ public class TextModificationCodes {
      * @return The ANSI escape sequence.
      */
     public static String deleteLines(int n) {
-        return CSI.ESC + "[" + n + "M";
+        return CSISequences.ESC + "[" + n + "M";
     }
 
 }

@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import es.nom.juanfranciscoruiz.ansiterm.model.OSC;
+import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.OSCSequences;
 
 /**
  * Utility class providing methods to generate ANSI escape sequences for setting
@@ -24,7 +24,7 @@ public class WindowTitleCodes {
      * @return the ANSI escape sequence
      */
     public static String setWindowTitle(String title) {
-        return OSC.OSC + title + OSC.ST;
+        return OSCSequences.OSC + title + OSCSequences.ST;
     }
 
     /**
@@ -37,6 +37,6 @@ public class WindowTitleCodes {
      * @return the ANSI escape sequence
      */
     public static String updateWindowTitle(String title) {
-        return OSC.OSC + "2;" + title + OSC.ST;
+        return OSCSequences.OSC + "2;" + title + OSCSequences.ST;
     }
 }

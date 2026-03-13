@@ -1,6 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.codes;
 
-import es.nom.juanfranciscoruiz.ansiterm.model.CSI;
+import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences;
 
 /**
  * This class provides ANSI escape sequences to set terminal window widths to
@@ -20,14 +20,14 @@ public class WindowWidthCodes {
      * Code...........: DECCOLM
      * Description....: Sets the terminal width to 132 columns.
      */
-    public static final String WIDTH_132_COLUMNS = CSI.ESC + "[?3h";
+    public static final String WIDTH_132_COLUMNS = CSISequences.ESC + "[?3h";
 
     /**
      * Sequence.......: ESC [ ? 3 l
      * Code...........: DECCOLM
      * Description....: Sets the terminal width to 80 columns.
      */
-    public static final String WIDTH_80_COLUMNS = CSI.ESC + "[?3l";
+    public static final String WIDTH_80_COLUMNS = CSISequences.ESC + "[?3l";
 
     /**
      * Private constructor to prevent instantiation.

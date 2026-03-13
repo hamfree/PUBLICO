@@ -3,7 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm.codes;
 
 import es.nom.juanfranciscoruiz.ansiterm.Position;
 
-import static es.nom.juanfranciscoruiz.ansiterm.model.CSI.ESC;
+import static es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.CSISequences.ESC;
 
 /**
  * Contains ANSI escape codes for cursor movement.
