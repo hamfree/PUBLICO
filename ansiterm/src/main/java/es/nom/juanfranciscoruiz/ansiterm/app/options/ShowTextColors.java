@@ -58,7 +58,9 @@ public class ShowTextColors {
     public ShowTextColors() throws ANSITermException {
         this.term = new ANSITerm();
         this.title = "Colors applicable to the text and background";
-        this.message = "Multiple styles will be applied to the text at once.";
+        this.message = "Shows the different colors available for foreground and background in the" +
+            " " +
+            "terminal.";
         this.columns = term.getTerminalSize().getColumns();
     }
 

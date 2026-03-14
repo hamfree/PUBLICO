@@ -51,7 +51,8 @@ public class ShowScreenSize {
     public ShowScreenSize() throws ANSITermException {
         this.term = new ANSITerm();
         this.title = "Screen size";
-        this.msg = "Try resizing the terminal window, then press ENTER. The terminal size will be displayed.";
+        this.msg = "Try resizing the terminal window, then press ENTER. The terminal size will be" +
+            " displayed. Enter 'q' to exit to menu.";
     }
     /**
      * Performs the screen size demonstration.
@@ -60,6 +61,7 @@ public class ShowScreenSize {
      */
     public void perform() throws Exception {
         String resp = "";
+        String screenSizeStatus = "";
         while (!resp.equals("q")) {
             TerminalSize screenSize = term.getTerminalSize();
             clearScreenAndPrintHeader(term, title, msg, screenSize.getColumns());
@@ -67,8 +69,8 @@ public class ShowScreenSize {
             Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in));
             resp = sc.nextLine();
             TerminalSize ts = term.getOsCall().getTerminalSize();
-            msg = "The screen size is:%d lines and %d columns.".formatted(ts.getLines(), ts.getColumns());
-            term.printAt(msg, ts.getLines() - 2, 1);
+            screenSizeStatus = "The screen size is:%d lines and %d columns.".formatted(ts.getLines(), ts.getColumns());
+            term.printAt(screenSizeStatus, ts.getLines() - 2, 1);
             pauseWithMessage(0, null);
         }
     }

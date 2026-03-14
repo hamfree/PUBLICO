@@ -55,7 +55,9 @@ public class ShowRawMode {
     public ShowRawMode() throws ANSITermException {
         this.term = new ANSITerm();
         this.title = "Raw console mode test";
-        this.message = "Sets the keyboard of console to RAW mode. Each keystroke generates a keyboard response in the form of code.";
+        this.message = "Sets the keyboard of console to RAW mode. " +
+            "Each keystroke generates a " +
+            "keyboard response in the form of code. Press 'q' to exit.";
         this.columns = term.getTerminalSize().getColumns();
     }
 
