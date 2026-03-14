@@ -298,6 +298,17 @@ public class TermCtlImpl implements TermCtl {
      */
     private static final int STD_OUTPUT_HANDLE = -11;
 
+    /**
+     * ANSI escape sequence used to clear the terminal screen and move the cursor
+     * to the home position (top-left corner). This sequence is platform-independent
+     * and is commonly supported by terminal emulators that interpret ANSI codes.
+     * <p>
+     * Value: "\033[H\033[2J"
+     * - "\033[H" moves the cursor to the home position (row 1, column 1).
+     * - "\033[2J" clears the screen from the cursor's current position.
+     * <p>
+     * Mainly used in methods that require clearing the terminal screen functionality.
+     */
     private static final String ANSI_ED = "\033[H\033[2J";
 
     /**
@@ -320,6 +331,17 @@ public class TermCtlImpl implements TermCtl {
         return adjustTerminalSize(cols, rows);
     }
 
+    /**
+     * Adjusts the size of the terminal window to the specified number of columns and rows.
+     * This method uses platform-specific mechanisms to attempt resizing. On Windows, it utilizes
+     * native Kernel32 functions and ANSI escape sequences as a fallback. On non-Windows platforms,
+     * it relies on ANSI escape codes.
+     *
+     * @param cols the desired number of columns for the terminal window; must be greater than zero.
+     * @param rows the desired number of rows for the terminal window; must be greater than zero.
+     * @return {@code true} if the resizing operation was executed, or {@code false} if the provided
+     *         dimensions are invalid (e.g., non-positive values for columns or rows).
+     */
     private static boolean adjustTerminalSize(int cols, int rows) {
         if (cols <= 0 || rows <= 0) {
             return false;
@@ -545,8 +567,12 @@ public class TermCtlImpl implements TermCtl {
     }
 
     /**
-     * Send the CSI (Control Sequence Introducer) sequence to resize.
-     * \033[8;rows;columns;t
+     * Sends an ANSI escape sequence to resize the terminal window to the specified number of columns and rows.
+     * This method uses the ANSI escape code format "\033[8;<rows>;<cols>t" to instruct the terminal
+     * to adjust its dimensions.
+     *
+     * @param cols the desired number of columns for the terminal window; must be greater than zero
+     * @param rows the desired number of rows for the terminal window; must be greater than zero
      */
     private static void sendAnsiResize(int cols, int rows) {
         // \033 is the octal escape, [8 is the size command, ;t is the closing.
@@ -554,6 +580,21 @@ public class TermCtlImpl implements TermCtl {
         System.out.flush();
     }
 
+    /**
+     * Clears the terminal screen on Linux or macOS systems.
+     * <p>
+     * This method attempts to clear the screen by executing the `clear` command
+     * via a {@code ProcessBuilder}, which is a commonly supported mechanism on
+     * Unix-based systems. It inherits the current process's I/O streams to achieve
+     * immediate screen-clearing behavior.
+     * <p>
+     * If an {@link IOException} or {@link InterruptedException} occurs during the
+     * execution of the command, the method logs the error message to
+     * {@code System.err}.
+     * <p>
+     * Note: This method is platform-specific and is intended to work on Unix-based
+     * systems. It will not function correctly on non-Unix platforms.
+     */
     private void clearScreenOnLinuxOrMac(){
         try {
             new ProcessBuilder("clear")
@@ -565,6 +606,18 @@ public class TermCtlImpl implements TermCtl {
         }
     }
 
+    /**
+     * Clears the terminal screen on Windows operating systems.
+     * <p>
+     * This method executes the `cls` command using a {@code ProcessBuilder} to clear
+     * the console screen. It inherits the current process's I/O streams for immediate
+     * screen-clearing behavior.
+     * <p>
+     * If an {@link IOException} or {@link InterruptedException} occurs during execution,
+     * the error message is logged to {@code System.err}.
+     * <p>
+     * Note: This method is platform-specific and is only intended for Windows-based systems.
+     */
     private void clearScreenOnWindows(){
         try {
             new ProcessBuilder("cmd", "/c", "cls")

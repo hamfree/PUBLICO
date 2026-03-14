@@ -76,7 +76,7 @@ public class TerminalControl {
      * <p>
      * The method performs the following tasks:
      * <ul>
-     * <li>ears the terminal screen.</li>
+     * <li>1. Clears the terminal screen.</li>
      * <li>2. Retrieves the current console dimensions and displays them.</li>
      * <li>3. Sets the console size to specific values (25 rows x 80 columns) if a valid console is detected.</li>
      * <li>4. Restores the console to its original size after the operations are completed.</li>
