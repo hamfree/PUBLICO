@@ -1,12 +1,13 @@
 package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
-import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
-import es.nom.juanfranciscoruiz.ansiterm.TerminalSize;
+import com.sun.jna.Platform;
+import es.nom.juanfranciscoruiz.ansiterm.*;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
-import es.nom.juanfranciscoruiz.utiles.UnclosableInputStreamDecorator;
 
-import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.*;
+import static es.nom.juanfranciscoruiz.ansiterm.WindowsTerminal.*;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.clearScreenAndPrintHeader;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
@@ -43,6 +44,18 @@ public class ShowScreenSize {
      * represents a textual message to guide users or complement the demonstration.
      */
     private String msg;
+
+    /**
+     * Represents a flag indicating whether the application is currently running.
+     * <p>
+     * The value is stored in an {@code AtomicBoolean} to support thread-safe
+     * operations, ensuring consistent behavior in multi-threaded environments.
+     * This variable can be dynamically updated and is used as a control mechanism
+     * to manage the lifecycle of terminal-based demonstrations or other tasks
+     * where execution needs to be paused or stopped gracefully.
+     */
+    private final AtomicBoolean running = new AtomicBoolean(true);
+
     /**
      * Constructs a new ScreenSize.
      *
@@ -60,18 +73,56 @@ public class ShowScreenSize {
      * @throws Exception If an error occurs during execution.
      */
     public void perform() throws Exception {
-        String resp = "";
-        String screenSizeStatus = "";
-        while (!resp.equals("q")) {
-            TerminalSize screenSize = term.getTerminalSize();
-            clearScreenAndPrintHeader(term, title, msg, screenSize.getColumns());
-            term.printAt("> : ", 6, 1);
-            Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in));
-            resp = sc.nextLine();
-            TerminalSize ts = term.getOsCall().getTerminalSize();
-            screenSizeStatus = "The screen size is:%d lines and %d columns.".formatted(ts.getLines(), ts.getColumns());
-            term.printAt(screenSizeStatus, ts.getLines() - 2, 1);
-            pauseWithMessage(0, null);
+        ITerminal termctl;
+        String screenSizeStatus;
+
+        if (Platform.isWindows()) {
+            termctl = WindowsTerminal.getInstance();
+        } else if (Platform.isLinux() || Platform.isMac()) {
+            termctl = LinuxTerminal.getInstance();
+        } else {
+            throw new Exception("Platform not supported");
         }
+
+        clearScreenAndPrintHeader(term, title, msg, term.getTerminalSize().getColumns());
+        pauseWithMessage(0, "Press any key to start the demo. Resize the terminal to see the size in lines and cols printed. Press 'q' to end the demo");
+
+        // Enabling the raw mode of console (no need to press <INTRO> to pass the key to the program)
+        termctl.enableRawMode();
+
+        // Start the thread monitor of resize events of console
+        termctl.resizeConsoleMonitor();
+        try {
+            while (running.get()) {
+                String key;
+
+                // Read the key press of the user (if any)
+                if (Platform.isWindows()) {
+                    // The OS is Windows, we use the Microsoft C Runtime API function getch() (via JNA)
+                    int c = MSVCRT.INSTANCE._getch();
+                    if (c == 'q') break;
+                    if (c == 0 || c == 0xE0) {
+                        int extra = MSVCRT.INSTANCE._getch();
+                        key = "\u001B[" + (char)extra;
+                    } else {
+                        key = String.valueOf((char)c);
+                    }
+                } else {
+                    // The OS is Windows, we use the GNU LibC Runtime API function read() (via JNA)
+                    byte[] buf = new byte[16];
+                    int n = LibC.INSTANCE.read(0, buf, buf.length);
+                    if (n <= 0) continue;
+                    key = new String(buf, 0, n);
+                    if (key.equals("q")) break;
+                }
+            }
+        } finally {
+            // Stops the thread monitor
+            running.set(false);
+
+            // Enable the canonical mode of console (need to press <INTRO> to pass the key to the program)
+            termctl.disableRawMode();
+        }
+        pauseWithMessage(0, "Press <ENTER> to return to menu");
     }
 }

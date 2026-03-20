@@ -59,7 +59,7 @@ public class ANSITerm {
      * running and enable/disable console capabilities not available from Java
      * or ANSI control sequences.
      */
-    private final ITerminal osCall;
+    private ITerminal osCall;
     /**
      * Terminal size
      */
@@ -84,9 +84,9 @@ public class ANSITerm {
     public ANSITerm() throws ANSITermException {
         String os = getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
-            osCall = new WindowsTerminal();
+            osCall = WindowsTerminal.getInstance();
         } else if (os.contains("linux")) {
-            osCall = new LinuxTerminal();
+            osCall = LinuxTerminal.getInstance();
         } else {
             throw new ANSITermException("Unsupported operating system");
         }

@@ -54,9 +54,6 @@ public class Stuff {
             int columns) throws ANSITermException {
         term.clearTerminal();
         term.moveCursorToBegin();
-        title = term.setBold(title);
-        title = term.setColor(Color.GLOSSY_YELLOW,title);
-        title = term.setBackgroundColor(BGColor.GLOSSY_RED,title);
         title = IOimpl.title(title, '*', columns);
         printTitle(term, title);
         msg = term.setItalic(msg);

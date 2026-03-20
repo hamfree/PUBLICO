@@ -5,7 +5,6 @@ package es.nom.juanfranciscoruiz.ansiterm;
  * @author Juan F. Ruiz
  */
 public interface ITerminal {
-
     /**
      * Enables the 'raw' mode of the terminal
      */
@@ -24,4 +23,12 @@ public interface ITerminal {
      * @see es.nom.juanfranciscoruiz.ansiterm.TerminalSize
      */
     TerminalSize getTerminalSize();
+
+    /**
+     * Thread launched in background that monitors the user console resizes to reflect changes in the terminal's size.
+     * This method should be invoked whenever the terminal dimensions are altered,
+     * ensuring that the console monitor dynamically adjusts to the new width
+     * and height of the terminal.
+     */
+    void resizeConsoleMonitor();
 }
