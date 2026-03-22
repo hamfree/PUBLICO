@@ -1,17 +1,17 @@
 package es.nom.juanfranciscoruiz.ansiterm.app.options;
 
 import com.sun.jna.Platform;
-import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
-import es.nom.juanfranciscoruiz.ansiterm.ITerminal;
-import es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal;
-import es.nom.juanfranciscoruiz.ansiterm.WindowsTerminal;
+import es.nom.juanfranciscoruiz.ansiterm.*;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
+import es.nom.juanfranciscoruiz.ansiterm.model.BGColor;
+import es.nom.juanfranciscoruiz.ansiterm.model.Color;
+import es.nom.juanfranciscoruiz.ansiterm.model.Rectangle;
+import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.TextColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.*;
 import static es.nom.juanfranciscoruiz.ansiterm.WindowsTerminal.*;
@@ -57,7 +57,6 @@ public class ShowRawMode {
      * for various visual styles and text formatting operations.
      */
     private final int columns;
-
     /**
      * Represents a mapping of key-value pairs where both keys and values are strings.
      * This map is utilized to store and retrieve specific string associations that
@@ -73,17 +72,46 @@ public class ShowRawMode {
      * during the execution of the program.
      */
     private final Map<String, String> keyMap = new HashMap<>();
-
     /**
-     * Represents a flag indicating whether the application is currently running.
+     * Defines a Rectangle object to represent the dimensions, position, and drawing
+     * character for terminal-based visual elements.
      * <p>
-     * The value is stored in an {@code AtomicBoolean} to support thread-safe
-     * operations, ensuring consistent behavior in multi-threaded environments.
-     * This variable can be dynamically updated and is used as a control mechanism
-     * to manage the lifecycle of terminal-based demonstrations or other tasks
-     * where execution needs to be paused or stopped gracefully.
+     * This field is used to draw and manage a rectangular area on the terminal,
+     * typically for creating shapes, UI elements, or visual indicators during
+     * terminal interactions.
      */
-    private final AtomicBoolean running = new AtomicBoolean(true);
+    private Rectangle rectangle;
+    /**
+     * Represents the text color configuration used to define foreground
+     * and background color properties for terminal-based text output.
+     * <p>
+     * The variable is an instance of {@link TextColor}, which encapsulates
+     * both the ANSI foreground and background color settings.
+     * <p>
+     * This field is typically utilized for styling terminal elements such as
+     * text or graphic components with specific color combinations.
+     */
+    private TextColor tc;
+    /**
+     * Represents the height of the screen in a terminal-based application.
+     * This field typically stores the number of rows or lines available
+     * on the terminal screen and is used for managing layout, drawing
+     * operations, and ensuring proper content positioning.
+     */
+    private int heightScreen;
+    /**
+     * Represents the width of the terminal screen in columns.
+     * This variable stores the number of columns available in the
+     * terminal display and is typically used in operations that
+     * involve layout calculations or rendering of elements
+     * relative to the screen size.
+     * <p>
+     * It is initialized and/or updated based on the terminal's
+     * current configuration or dimensions and may be used
+     * throughout the class to ensure correct alignment and
+     * positioning of content in a terminal-based application.
+     */
+    private int widthScreen;
 
     /**
      * Constructs a new RawMode.
@@ -94,12 +122,20 @@ public class ShowRawMode {
         this.term = new ANSITerm();
         this.title = "Raw console mode test";
         this.message = "Sets the keyboard of console to RAW mode. " +
-            "Each keystroke generates a " +
-            "keyboard response (scan codes). Press 'q' to exit";
+                "Each keystroke generates a " +
+                "keyboard response (scan codes). Press 'q' to exit";
         this.columns = term.getTerminalSize().getColumns();
+        this.tc = new TextColor(Color.RED, BGColor.YELLOW);
+        this.heightScreen = this.term.getTerminalSize().getLines();
+        this.widthScreen = this.term.getTerminalSize().getColumns();
+        this.rectangle = new Rectangle(0, 0, 0, 0, " ");
+        this.rectangle.setWidth(widthScreen / 2);
+        this.rectangle.setHeight(heightScreen / 2);
+        this.rectangle.setX((widthScreen - rectangle.getWidth()) / 2);
+        this.rectangle.setY((heightScreen - rectangle.getHeight()) / 2);
+
         setupKeys();
     }
-
 
     /**
      * Performs the raw mode demonstration.
@@ -107,55 +143,111 @@ public class ShowRawMode {
      * @throws Exception If an error occurs during execution.
      */
     public void perform() throws Exception {
-
         ITerminal termctl;
-        String screenSizeStatus;
-
         if (Platform.isWindows()) {
             termctl = WindowsTerminal.getInstance();
+            performInWindows(termctl);
         } else if (Platform.isLinux() || Platform.isMac()) {
             termctl = LinuxTerminal.getInstance();
+            performInLinuxOrMac(termctl);
         } else {
             throw new Exception("Platform not supported");
         }
+        pauseWithMessage(0, "Press <ENTER> to return to menu");
+    }
 
-        clearScreenAndPrintHeader(term,title,message,columns);
-        // In raw mode we MUST to enter return carriage after the sentence to go next line
-        System.out.println("\n\n");
+    /**
+     * Executes functionality in a Windows environment using raw mode terminal controls.
+     * This method handles user input in real-time, processes special keys or ANSI sequences,
+     * and updates the terminal display accordingly. It depends on Windows-specific
+     * terminal behavior and leverages the MSVCRT library for capturing key presses.
+     *
+     * @param termctl The ITerminal instance responsible for managing terminal
+     *                control operations, such as enabling or disabling raw mode.
+     * @throws Exception If an error occurs during terminal operations or key handling.
+     */
+    public void performInWindows(ITerminal termctl) throws Exception {
+        String msg;
+        String key;
+        int x = rectangle.getX() + 1;
+        int y = rectangle.getY() + rectangle.getHeight() - 1;
+
+        clearScreenAndPrintHeader(term, title, message, columns);
+        drawRectangle(rectangle, tc);
+
         try {
-            while (running.get()) {
-                String key;
-                if (Platform.isWindows()) {
-                    int c = MSVCRT.INSTANCE._getch();
-                    if (c == 'q') {
-                        term.clearTerminal();
-                        System.out.printf("Pressed the 'q' key!, the key integer value: %d\n", c);
-                        break;
-                    }
-                    if (c == 0 || c == 194) {
-                        int extra = MSVCRT.INSTANCE._getch();
-
-                        System.out.printf("Value was '0' or '194', getting the next scan code: %d\n", extra);
-                        key = "\u001B[" + (char)extra;
-                    } else {
-                        System.out.printf("key integer value: %d\n", c);
-                        key = String.valueOf((char)c);
-                    }
-                } else {
-                    byte[] buf = new byte[16];
-                    int n = LibC.INSTANCE.read(0, buf, buf.length);
-                    if (n <= 0) continue;
-                    key = new String(buf, 0, n);
-                    if (key.equals("q")) break;
+            while (true) {
+                int c = MSVCRT.INSTANCE._getch();
+                if (c == 'q') {
+                    term.clearTerminal();
+                    msg = String.format("Pressed the 'q' key!, the key integer value: %d\n", c);
+                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    break;
                 }
-
-                processInput(key);
+                if (c == 0 || c == 194) {
+                    int extra = MSVCRT.INSTANCE._getch();
+                    msg = String.format("Value was '0' or '194', getting the next scan code: %d\n", extra);
+                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    key = "\u001B[" + (char) extra;
+                } else {
+                    msg = String.format("key integer value: %d\n", c);
+                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    key = String.valueOf((char) c);
+                }
+                if (key.startsWith("\u001B")) {
+                    String keyDetected = keyMap.getOrDefault(key, "ANSI sequence: " + key.replace("\u001B", "ESC"));
+                    msg = String.format("Detected: %s\n", keyDetected);
+                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                }
             }
         } finally {
-            running.set(false);
             termctl.disableRawMode();
         }
-        pauseWithMessage(0, "Press <ENTER> to return to menu");
+    }
+
+    /**
+     * Executes functionality in a Linux or macOS environment using raw mode terminal controls.
+     * This method captures and processes user input in real-time, identifies control keys or
+     * regular keystrokes, and updates the terminal display accordingly based on the captured input.
+     * If the user presses the 'q' key, the method terminates execution.
+     *
+     * @param termctl The ITerminal instance responsible for managing terminal control operations,
+     *                such as enabling or disabling raw mode.
+     * @throws Exception If an error occurs during terminal operations or input handling.
+     */
+    public void performInLinuxOrMac(ITerminal termctl) throws Exception {
+        String msg;
+        String key;
+        int x = rectangle.getX() + 1;
+        int y = rectangle.getY() + rectangle.getHeight() - 1;
+
+        clearScreenAndPrintHeader(term, title, message, columns);
+        drawRectangle(rectangle, tc);
+
+        try {
+            while (true) {
+                byte[] buf = new byte[16];
+                int n = LibC.INSTANCE.read(0, buf, buf.length);
+                if (n <= 0) continue;
+                key = new String(buf, 0, n);
+                char c = key.charAt(0);
+                if (c == 'q') {
+                    break;
+                }
+                if (c < 32) {
+                    msg = String.format("Control: CTRL + %c\n", (char) (c + 64));
+                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                } else {
+                    int car = key.charAt(0);
+                    if (car != 0xE0) {
+                        msg = String.format("Keystroke: %s\n", key);
+                        cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    }
+                }
+            }
+        } finally {
+            termctl.disableRawMode();
+        }
     }
 
     /**
@@ -181,34 +273,58 @@ public class ShowRawMode {
         keyMap.put("\u001B[D", "LEFT_ARROW");
         keyMap.put("\u001B[H", "HOME");
         keyMap.put("\u001B[F", "END");
-        keyMap.put("\u001BOP", "F1"); keyMap.put("\u001BOQ", "F2");
-        keyMap.put("\u001BOR", "F3"); keyMap.put("\u001BOS", "F4");
-        keyMap.put("\u001B[15~", "F5"); keyMap.put("\u001B[17~", "F6");
+        keyMap.put("\u001BOP", "F1");
+        keyMap.put("\u001BOQ", "F2");
+        keyMap.put("\u001BOR", "F3");
+        keyMap.put("\u001BOS", "F4");
+        keyMap.put("\u001B[15~", "F5");
+        keyMap.put("\u001B[17~", "F6");
         keyMap.put("\u001B[24~", "F12");
     }
 
     /**
-     * Processes the input received from the terminal and determines its type.
-     * Differentiates between ANSI escape sequences, control characters,
-     * and regular keystrokes, then outputs the processed result to the console.
+     * Draws a rectangle on the terminal using the specified dimensions, position, and colors.
      *
-     * @param input The string input received, typically representing a keypress
-     *              or control sequence. It may start with an ANSI escape sequence,
-     *              a control character, or a standard visible character.
+     * @param rectangle The Rectangle object containing the position (x, y),
+     *                  dimensions (width, height), and character properties
+     *                  to define the appearance and location of the rectangle.
+     * @param tc        The TextColor object containing the foreground and
+     *                  background color information to be applied while drawing the rectangle.
+     * @throws ANSITermException If an error occurs while performing terminal operations.
      */
-    private void processInput(String input) {
-        if (input.startsWith("\u001B")) {
-            System.out.println("Detected: " + keyMap.getOrDefault(input, "ANSI sequence: " + input.replace("\u001B", "ESC")));
-        } else {
-            char c = input.charAt(0);
-            if (c < 32) {
-                System.out.printf("Control: CTRL + %c\n", (char)(c + 64));
-            } else {
-                int car = input.charAt(0);
-                if ( car != 0xE0) {
-                    System.out.printf("Keystroke: %s\n", input);
-                }
+    private void drawRectangle(Rectangle rectangle, TextColor tc) throws ANSITermException {
+        int contador = 0;
+        String character = term.setColors(tc.getColor(), tc.getBgColor(), rectangle.getCharacter());
+        int x = rectangle.getX();
+        int y = rectangle.getY();
+        int width = rectangle.getWidth();
+        int height = rectangle.getHeight();
+
+        for (int line = y; line < y + height; line++) {
+            for (int col = x; col < x + width; col++) {
+                term.printAt(character, line, col);
             }
         }
+    }
+
+    /**
+     * Clears the specified line on the terminal and prints a message at the specified position.
+     *
+     * @param msg The message to be displayed on the terminal.
+     * @param y   The line number where the message will be printed.
+     * @param x   The column number where the message will start from.
+     * @param rec The color and background colors to be applied to the message.
+     * @throws ANSITermException If an error occurs during terminal operations.
+     */
+    private void cleanLineAndPrintMessage(String msg, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
+        msg = term.setColor(tc.getColor(), msg);
+        msg = term.setBackgroundColor(tc.getBgColor(), msg);
+        String lineaVacia = " ".repeat(rec.getWidth() - 1);
+        lineaVacia = term.setColors(tc.getColor(), tc.getBgColor(), lineaVacia);
+
+        term.setCursorPosition(new Position(y, x));
+        term.printAt(lineaVacia, y, x);
+        term.printAt(msg, y, x);
+        term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
     }
 }

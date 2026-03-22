@@ -190,6 +190,16 @@ public class WindowsTerminal implements ITerminal {
              * within the console buffer when interacting with Windows API functions.
              */
             public short X, Y;
+
+            /**
+             * Default constructor for the COORD structure.
+             * This constructor initializes a new instance of the COORD structure,
+             * which represents a coordinate (X, Y) in the console screen buffer.
+             * The structure is typically utilized when working with Windows API functions
+             * that interact with the console screen buffer, such as manipulating cursor positions
+             * or querying buffer geometry.
+             */
+            public COORD(){}
         }
 
         /**
@@ -218,6 +228,16 @@ public class WindowsTerminal implements ITerminal {
              * Represents the horizontal starting position of the rectangle within the console screen buffer.
              */
             public short Left, Top, Right, Bottom;
+
+            /**
+             * Default constructor for the SMALL_RECT class.
+             * <p>
+             * Initializes an instance of the SMALL_RECT structure, representing
+             * a rectangular region in the console screen buffer. The fields of the
+             * rectangle (Left, Top, Right, Bottom) should be explicitly set after
+             * instantiation to define the desired region.
+             */
+            public SMALL_RECT(){}
         }
 
         /**

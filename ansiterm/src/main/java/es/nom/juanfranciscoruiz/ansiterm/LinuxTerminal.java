@@ -55,7 +55,7 @@ public class LinuxTerminal implements ITerminal {
      * terminal's state, ensuring that changes such as enabling raw mode can be
      * reverted when necessary.
      */
-    private Object originalConfig;
+    private static Object originalConfig;
     /**
      * A flag used to control the state of terminal-related operations, such as the resize monitoring thread.
      * When set to {@code true}, operations that depend on this flag (e.g., terminal monitoring) are allowed
@@ -67,7 +67,7 @@ public class LinuxTerminal implements ITerminal {
      * As an {@link AtomicBoolean}, this ensures thread-safe updates and visibility across threads, making it
      * suitable for use in concurrent programming environments.
      */
-    private final AtomicBoolean running = new AtomicBoolean(true);
+    private static final AtomicBoolean running = new AtomicBoolean(true);
     /**
      * A mapping of key-value pairs where both keys and values are strings.
      * The keyMap is used internally within the LinuxTerminal class for managing
@@ -87,7 +87,7 @@ public class LinuxTerminal implements ITerminal {
      * initialization has been performed. This value is dynamically updated
      * during terminal size monitoring to reflect the current number of columns.
      */
-    private int lastCols = -1;
+    private static int lastCols = -1;
     /**
      * Represents the number of rows processed or tracked most recently.
      * <p>
@@ -96,7 +96,7 @@ public class LinuxTerminal implements ITerminal {
      * A default value of -1 indicates that no specific count has been set
      * or that the count is uninitialized.
      */
-    private int lastRows = -1;
+    private static int lastRows = -1;
 
     /**
      * Represents the terminal attributes and settings structure used in Unix-based systems.
@@ -199,6 +199,12 @@ public class LinuxTerminal implements ITerminal {
          * the speed at which data is transmitted from the terminal.
          */
         public int c_ospeed;
+        /**
+         * Constructs a new instance of the Termios class.
+         */
+        public Termios() {
+            super();
+        }
     }
 
     /**
@@ -237,6 +243,12 @@ public class LinuxTerminal implements ITerminal {
          * graphical representation of the terminal's appearance.
          */
         public short ws_ypixel;
+        /**
+         * Constructs a new instance of the WinSize class.
+         */
+        public WinSize() {
+            super();
+        }
     }
 
     /**
