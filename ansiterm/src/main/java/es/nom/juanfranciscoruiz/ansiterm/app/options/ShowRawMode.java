@@ -95,7 +95,7 @@ public class ShowRawMode {
         this.title = "Raw console mode test";
         this.message = "Sets the keyboard of console to RAW mode. " +
             "Each keystroke generates a " +
-            "keyboard response in the form of code. Press 'q' to exit.";
+            "keyboard response (scan codes). Press 'q' to exit";
         this.columns = term.getTerminalSize().getColumns();
         setupKeys();
     }
@@ -120,17 +120,25 @@ public class ShowRawMode {
         }
 
         clearScreenAndPrintHeader(term,title,message,columns);
-
+        // In raw mode we MUST to enter return carriage after the sentence to go next line
+        System.out.println("\n\n");
         try {
             while (running.get()) {
                 String key;
                 if (Platform.isWindows()) {
                     int c = MSVCRT.INSTANCE._getch();
-                    if (c == 'q') break;
-                    if (c == 0 || c == 0xE0) {
+                    if (c == 'q') {
+                        term.clearTerminal();
+                        System.out.printf("Pressed the 'q' key!, the key integer value: %d\n", c);
+                        break;
+                    }
+                    if (c == 0 || c == 194) {
                         int extra = MSVCRT.INSTANCE._getch();
+
+                        System.out.printf("Value was '0' or '194', getting the next scan code: %d\n", extra);
                         key = "\u001B[" + (char)extra;
                     } else {
+                        System.out.printf("key integer value: %d\n", c);
                         key = String.valueOf((char)c);
                     }
                 } else {
@@ -196,7 +204,10 @@ public class ShowRawMode {
             if (c < 32) {
                 System.out.printf("Control: CTRL + %c\n", (char)(c + 64));
             } else {
-                System.out.printf("Keystroke: %s\n", input);
+                int car = input.charAt(0);
+                if ( car != 0xE0) {
+                    System.out.printf("Keystroke: %s\n", input);
+                }
             }
         }
     }
