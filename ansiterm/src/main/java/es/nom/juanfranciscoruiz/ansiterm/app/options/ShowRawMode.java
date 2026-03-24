@@ -3,9 +3,7 @@ package es.nom.juanfranciscoruiz.ansiterm.app.options;
 import com.sun.jna.Platform;
 import es.nom.juanfranciscoruiz.ansiterm.*;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
-import es.nom.juanfranciscoruiz.ansiterm.model.BGColor;
-import es.nom.juanfranciscoruiz.ansiterm.model.Color;
-import es.nom.juanfranciscoruiz.ansiterm.model.Rectangle;
+import es.nom.juanfranciscoruiz.ansiterm.model.*;
 import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.TextColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +13,7 @@ import java.util.Map;
 
 import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.*;
 import static es.nom.juanfranciscoruiz.ansiterm.WindowsTerminal.*;
+import static es.nom.juanfranciscoruiz.ansiterm.model.DrawChars.*;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.clearScreenAndPrintHeader;
 import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
 
@@ -113,6 +112,8 @@ public class ShowRawMode {
      */
     private int widthScreen;
 
+    private ASCIICharacterSetExtended ascii;
+
     /**
      * Constructs a new RawMode.
      *
@@ -129,10 +130,12 @@ public class ShowRawMode {
         this.heightScreen = this.term.getTerminalSize().getLines();
         this.widthScreen = this.term.getTerminalSize().getColumns();
         this.rectangle = new Rectangle(0, 0, 0, 0, " ");
-        this.rectangle.setWidth(widthScreen / 2);
-        this.rectangle.setHeight(heightScreen / 2);
+        this.rectangle.setWidth(widthScreen - 10);
+        this.rectangle.setHeight(heightScreen - 16);
         this.rectangle.setX((widthScreen - rectangle.getWidth()) / 2);
         this.rectangle.setY((heightScreen - rectangle.getHeight()) / 2);
+
+        this.ascii = new ASCIICharacterSetExtended();
 
         setupKeys();
     }
@@ -169,10 +172,12 @@ public class ShowRawMode {
     public void performInWindows(ITerminal termctl) throws Exception {
         String msg;
         String key;
-        int x = rectangle.getX() + 1;
+        int x = rectangle.getX();
         int y = rectangle.getY() + rectangle.getHeight() - 1;
 
         clearScreenAndPrintHeader(term, title, message, columns);
+        Rectangle br = new Rectangle(rectangle.getX() - 1, rectangle.getY() - 1, rectangle.getWidth() + 2, rectangle.getHeight() + 2, " ");
+        drawBorderRectangle(br, new TextColor(Color.GLOSSY_GREEN, BGColor.GLOSSY_WHITE));
         drawRectangle(rectangle, tc);
 
         try {
@@ -184,13 +189,18 @@ public class ShowRawMode {
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     break;
                 }
-                if (c == 0 || c == 194) {
+                if (c == 0 || c == 194 || c == 224) {
                     int extra = MSVCRT.INSTANCE._getch();
-                    msg = String.format("Value was '0' or '194', getting the next scan code: %d\n", extra);
+                    msg = String.format("Value was '0', '194' or '224', getting the next scan code: %d\n", extra);
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
-                    key = "\u001B[" + (char) extra;
+                    key = "\u001B[" + ascii.getChar(extra).getCharacter();
                 } else {
-                    msg = String.format("key integer value: %d\n", c);
+                    if (c < 32){
+                        msg = String.format("Control character: + %s\n", ascii.getChar(c).getDescription());
+                        cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                        continue;
+                    }
+                    msg = String.format("key integer value: %d, key char value: '%c'\n", c, ascii.getChar(c).getCharacter());
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     key = String.valueOf((char) c);
                 }
@@ -326,5 +336,37 @@ public class ShowRawMode {
         term.printAt(lineaVacia, y, x);
         term.printAt(msg, y, x);
         term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
+    }
+
+    /**
+     * Draws a border rectangle on the terminal with the specified dimensions, position, and colors.
+     * The method creates a rectangular border consisting of custom characters
+     * and applies the provided foreground and background colors to the border.
+     *
+     * @param rec The Rectangle object containing the position (x, y), dimensions (width, height),
+     *            and character properties that define the appearance and location of the rectangle border.
+     * @param tc  The TextColor object containing the foreground and background color information
+     *            to be applied to the border.
+     * @throws ANSITermException If an error occurs during terminal operations,
+     *                           such as setting character sets or printing lines.
+     */
+    private void drawBorderRectangle(Rectangle rec, TextColor tc) throws ANSITermException {
+        String line, upperLine, intermediateLine, lowerLine;
+
+        term.setDECCharacterSet();
+        line = String.valueOf(LU_CORNER);
+        String repeat = String.valueOf(HL).repeat(rec.getWidth() - 2);
+        line = line + repeat + RU_CORNER;
+        upperLine = term.setColors(tc.getColor(),tc.getBgColor(), line);
+        term.printAt(upperLine, rec.getY(), rec.getX());
+        for (int currentY = rec.getY() + 1; currentY < rec.getY() + rec.getHeight() - 1; currentY++){
+            line = VL + " ".repeat(rec.getWidth() - 2) + VL;
+            intermediateLine = term.setColors(tc.getColor(),tc.getBgColor(), line);
+            term.printAt(intermediateLine, currentY, rec.getX());
+        }
+        line = LD_CORNER + repeat + RD_CORNER;
+        lowerLine = term.setColors(tc.getColor(),tc.getBgColor(), line);
+        term.printAt(lowerLine, rec.getY() + rec.getHeight() - 1, rec.getX());
+        term.setASCIICharacterSet();
     }
 }
