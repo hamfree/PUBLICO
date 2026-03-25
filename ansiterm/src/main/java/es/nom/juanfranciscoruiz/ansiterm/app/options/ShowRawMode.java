@@ -111,7 +111,17 @@ public class ShowRawMode {
      * positioning of content in a terminal-based application.
      */
     private int widthScreen;
-
+    /**
+     * Represents an instance of the extended ASCII character set, which includes
+     * both the standard ASCII characters (codes 0-127) and additional extended
+     * characters (codes 128-255). The `ascii` field provides access to metadata
+     * about each character, such as its code, symbol, and description.
+     * <p>
+     * This field is utilized to support operations that require extended ASCII
+     * character set functionalities, such as terminal rendering, graphical displays,
+     * or interpreting encoded data. It acts as the primary reference for all extended
+     * ASCII-related data within the `ShowRawMode` class.
+     */
     private ASCIICharacterSetExtended ascii;
 
     /**
@@ -174,6 +184,8 @@ public class ShowRawMode {
         String key;
         int x = rectangle.getX();
         int y = rectangle.getY() + rectangle.getHeight() - 1;
+        int c;
+        int extra = 0;
 
         clearScreenAndPrintHeader(term, title, message, columns);
         Rectangle br = new Rectangle(rectangle.getX() - 1, rectangle.getY() - 1, rectangle.getWidth() + 2, rectangle.getHeight() + 2, " ");
@@ -182,15 +194,15 @@ public class ShowRawMode {
 
         try {
             while (true) {
-                int c = MSVCRT.INSTANCE._getch();
+                c = MSVCRT.INSTANCE._getch();
                 if (c == 'q') {
                     term.clearTerminal();
-                    msg = String.format("Pressed the 'q' key!, the key integer value: %d\n", c);
+                    msg = String.format("Pressed the 'q' key! (%d)\n", c);
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     break;
                 }
                 if (c == 0 || c == 194 || c == 224) {
-                    int extra = MSVCRT.INSTANCE._getch();
+                    extra = MSVCRT.INSTANCE._getch();
                     msg = String.format("Value was '0', '194' or '224', getting the next scan code: %d\n", extra);
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     key = "\u001B[" + ascii.getChar(extra).getCharacter();
@@ -200,13 +212,14 @@ public class ShowRawMode {
                         cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                         continue;
                     }
-                    msg = String.format("key integer value: %d, key char value: '%c'\n", c, ascii.getChar(c).getCharacter());
+                    msg = String.format("key integer value: %d, key char value: '%c', description: %s\n",
+                            c, ascii.getChar(c).getCharacter(), ascii.getChar(c).getDescription());
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     key = String.valueOf((char) c);
                 }
                 if (key.startsWith("\u001B")) {
                     String keyDetected = keyMap.getOrDefault(key, "ANSI sequence: " + key.replace("\u001B", "ESC"));
-                    msg = String.format("Detected: %s\n", keyDetected);
+                    msg = String.format("Detected: %s, key integer value: %d\n", keyDetected, extra);
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                 }
             }
@@ -277,6 +290,9 @@ public class ShowRawMode {
      * the terminal can be correctly identified and processed.
      */
     private void setupKeys() {
+        // Change the values because they do not correspond to your keystrokes.
+        // The ANSI codes and the keys that generate them when pressed must be
+        // noted in a file to then redefine the keyMap variable map.
         keyMap.put("\u001B[A", "UP_ARROW");
         keyMap.put("\u001B[B", "DOWN ARROW");
         keyMap.put("\u001B[C", "RIGHT_ARROW");
@@ -290,6 +306,27 @@ public class ShowRawMode {
         keyMap.put("\u001B[15~", "F5");
         keyMap.put("\u001B[17~", "F6");
         keyMap.put("\u001B[24~", "F12");
+    }
+
+    /**
+     * Clears the specified line on the terminal and prints a message at the specified position.
+     *
+     * @param msg The message to be displayed on the terminal.
+     * @param y   The line number where the message will be printed.
+     * @param x   The column number where the message will start from.
+     * @param rec The color and background colors to be applied to the message.
+     * @throws ANSITermException If an error occurs during terminal operations.
+     */
+    private void cleanLineAndPrintMessage(String msg, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
+        msg = term.setColor(tc.getColor(), msg);
+        msg = term.setBackgroundColor(tc.getBgColor(), msg);
+        String lineaVacia = " ".repeat(rec.getWidth() - 1);
+        lineaVacia = term.setColors(tc.getColor(), tc.getBgColor(), lineaVacia);
+
+        term.setCursorPosition(new Position(y, x));
+        term.printAt(lineaVacia, y, x);
+        term.printAt(msg, y, x);
+        term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
     }
 
     /**
@@ -315,27 +352,6 @@ public class ShowRawMode {
                 term.printAt(character, line, col);
             }
         }
-    }
-
-    /**
-     * Clears the specified line on the terminal and prints a message at the specified position.
-     *
-     * @param msg The message to be displayed on the terminal.
-     * @param y   The line number where the message will be printed.
-     * @param x   The column number where the message will start from.
-     * @param rec The color and background colors to be applied to the message.
-     * @throws ANSITermException If an error occurs during terminal operations.
-     */
-    private void cleanLineAndPrintMessage(String msg, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
-        msg = term.setColor(tc.getColor(), msg);
-        msg = term.setBackgroundColor(tc.getBgColor(), msg);
-        String lineaVacia = " ".repeat(rec.getWidth() - 1);
-        lineaVacia = term.setColors(tc.getColor(), tc.getBgColor(), lineaVacia);
-
-        term.setCursorPosition(new Position(y, x));
-        term.printAt(lineaVacia, y, x);
-        term.printAt(msg, y, x);
-        term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
     }
 
     /**
