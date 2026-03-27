@@ -203,23 +203,23 @@ public class ShowRawMode {
                 }
                 if (c == 0 || c == 194 || c == 224) {
                     extra = MSVCRT.INSTANCE._getch();
-                    msg = String.format("Value was '0', '194' or '224', getting the next scan code: %d\n", extra);
+                    msg = String.format("Two codes keystroke: (%d), (%d)\n", c, extra);
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     key = "\u001B[" + ascii.getChar(extra).getCharacter();
                 } else {
                     if (c < 32){
-                        msg = String.format("Control character: + %s\n", ascii.getChar(c).getDescription());
+                        msg = String.format("Control character: + '%s' (code: %d)\n", ascii.getChar(c).getDescription(), c);
                         cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                         continue;
                     }
-                    msg = String.format("key integer value: %d, key char value: '%c', description: %s\n",
+                    msg = String.format("(%d), character: '%c', description: %s\n",
                             c, ascii.getChar(c).getCharacter(), ascii.getChar(c).getDescription());
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     key = String.valueOf((char) c);
                 }
                 if (key.startsWith("\u001B")) {
                     String keyDetected = keyMap.getOrDefault(key, "ANSI sequence: " + key.replace("\u001B", "ESC"));
-                    msg = String.format("Detected: %s, key integer value: %d\n", keyDetected, extra);
+                    msg = String.format("Detected: '%s', (%d)\n", keyDetected, extra);
                     cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                 }
             }
@@ -320,7 +320,7 @@ public class ShowRawMode {
     private void cleanLineAndPrintMessage(String msg, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
         msg = term.setColor(tc.getColor(), msg);
         msg = term.setBackgroundColor(tc.getBgColor(), msg);
-        String lineaVacia = " ".repeat(rec.getWidth() - 1);
+        String lineaVacia = " ".repeat(rec.getWidth());
         lineaVacia = term.setColors(tc.getColor(), tc.getBgColor(), lineaVacia);
 
         term.setCursorPosition(new Position(y, x));
