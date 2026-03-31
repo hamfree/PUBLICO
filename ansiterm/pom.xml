@@ -12,8 +12,8 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <exec.mainClass>es.nom.juanfranciscoruiz.ansiterm.app.App</exec.mainClass>
-        <logback.version>1.5.25</logback.version>
-        <slf4j.version>2.0.16</slf4j.version>
+        <logback.version>1.5.32</logback.version>
+        <slf4j.version>2.0.17</slf4j.version>
     </properties>
     
     <scm>
@@ -199,6 +199,14 @@
                                     <exclude>META-INF/MANIFEST.MF</exclude>
                                 </excludes>
                             </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>es.nom.juanfranciscoruiz:utiles</artifact>
+                                    <excludes>
+                                        <exclude>logback.xml</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                             <minimizeJar>true</minimizeJar>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>uberjar</shadedClassifierName>

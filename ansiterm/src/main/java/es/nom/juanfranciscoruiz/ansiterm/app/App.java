@@ -1,5 +1,6 @@
 package es.nom.juanfranciscoruiz.ansiterm.app;
 
+import ch.qos.logback.classic.ClassicConstants;
 import es.nom.juanfranciscoruiz.ansiterm.ANSITerm;
 import es.nom.juanfranciscoruiz.ansiterm.app.options.*;
 import es.nom.juanfranciscoruiz.ansiterm.exceptions.ANSITermException;
@@ -25,6 +26,15 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
  * @author Juan F. Ruiz
  */
 public class App {
+
+    static {
+        if (System.getProperty(ClassicConstants.CONFIG_FILE_PROPERTY) == null) {
+            var configUrl = App.class.getResource("/ansiterm-logback.xml");
+            if (configUrl != null) {
+                System.setProperty(ClassicConstants.CONFIG_FILE_PROPERTY, configUrl.toExternalForm());
+            }
+        }
+    }
 
     /**
      * Instantiates a new App object.
@@ -162,6 +172,10 @@ public class App {
                     menu.setMessage("");
                     app.showScrollingMargins();
                 }
+                case 18 -> {
+                    menu.setMessage("");
+                    app.showMappedKeys();
+                }
                 default -> menu.setMessage("Invalid option. Please, try again.");
             }
         } while (menu.getSelectedOption() != 0L);
@@ -169,14 +183,12 @@ public class App {
     }
 
 
-
     /**
-     * Returns a list of menu options.
+     * Retrieves a list of textual options representing various terminal-related capabilities or tests.
      *
-     * @return A list of menu options.
+     * @return a list of strings, where each string corresponds to a terminal test or feature description.
      */
     private static List<String> getOptions() {
-        //TODO: Incluir las demos que faltan (creando las clases de demostración, etc.)
         List<String> opciones = new ArrayList<>();
 
         opciones.add("Raw console mode test");
@@ -196,12 +208,13 @@ public class App {
         opciones.add("Characters sets");
         opciones.add("Setting the Terminal Window Title");
         opciones.add("Scrolling margins");
+        opciones.add("Show Mapped Keys");
+
 
         return opciones;
     }
 
     // Useful methods for displaying functionalities.
-
     /**
      * Perform a keystroke capture test once the terminal's 'raw' mode is
      * enabled. Display the keys pressed in a loop until the "q" key is pressed.
@@ -408,5 +421,23 @@ public class App {
         } catch (Exception e) {
             throw new ANSITermException(e);
         }
+    }
+
+    /**
+     * Displays all the mapped keyboard scan codes and their corresponding names
+     * on the terminal.
+     *
+     * This method initializes an instance of the {@code ShowMappedKeys} class and
+     * invokes its {@code perform()} method to display the key mappings. It manages
+     * the output within the terminal, presenting the associations between key
+     * sequences and their designated names.
+     *
+     * @throws Exception If an error occurs during the initialization or execution
+     *                   of the {@code ShowMappedKeys} operation.
+     */
+    private void showMappedKeys() throws Exception {
+        ShowMappedKeys showMappedKeys = new ShowMappedKeys();
+        showMappedKeys.perform();
+
     }
 }

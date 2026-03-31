@@ -8,14 +8,11 @@ import es.nom.juanfranciscoruiz.ansiterm.model.ansisequences.TextColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static es.nom.juanfranciscoruiz.ansiterm.LinuxTerminal.*;
 import static es.nom.juanfranciscoruiz.ansiterm.WindowsTerminal.*;
 import static es.nom.juanfranciscoruiz.ansiterm.model.DrawChars.*;
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.clearScreenAndPrintHeader;
-import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.pauseWithMessage;
+import static es.nom.juanfranciscoruiz.ansiterm.utiles.Stuff.*;
+import static java.lang.String.format;
 
 /**
  * Demonstrates the use of raw terminal mode for keyboard input.
@@ -57,21 +54,6 @@ public class ShowRawMode {
      */
     private final int columns;
     /**
-     * Represents a mapping of key-value pairs where both keys and values are strings.
-     * This map is utilized to store and retrieve specific string associations that
-     * are relevant to the functionality of the containing class.
-     * <p>
-     * The content of this map is managed internally by the class, and it is not
-     * intended to be modified or accessed directly by external consumers. It is
-     * used to support operations such as mapping key inputs to corresponding
-     * functionality or messages within the application.
-     * <p>
-     * This field is final, ensuring that the map instance cannot be reassigned after
-     * initialization. However, the contents of the map can be dynamically modified
-     * during the execution of the program.
-     */
-    private final Map<String, String> keyMap = new HashMap<>();
-    /**
      * Defines a Rectangle object to represent the dimensions, position, and drawing
      * character for terminal-based visual elements.
      * <p>
@@ -79,7 +61,7 @@ public class ShowRawMode {
      * typically for creating shapes, UI elements, or visual indicators during
      * terminal interactions.
      */
-    private Rectangle rectangle;
+    private final Rectangle rectangle;
     /**
      * Represents the text color configuration used to define foreground
      * and background color properties for terminal-based text output.
@@ -90,27 +72,7 @@ public class ShowRawMode {
      * This field is typically utilized for styling terminal elements such as
      * text or graphic components with specific color combinations.
      */
-    private TextColor tc;
-    /**
-     * Represents the height of the screen in a terminal-based application.
-     * This field typically stores the number of rows or lines available
-     * on the terminal screen and is used for managing layout, drawing
-     * operations, and ensuring proper content positioning.
-     */
-    private int heightScreen;
-    /**
-     * Represents the width of the terminal screen in columns.
-     * This variable stores the number of columns available in the
-     * terminal display and is typically used in operations that
-     * involve layout calculations or rendering of elements
-     * relative to the screen size.
-     * <p>
-     * It is initialized and/or updated based on the terminal's
-     * current configuration or dimensions and may be used
-     * throughout the class to ensure correct alignment and
-     * positioning of content in a terminal-based application.
-     */
-    private int widthScreen;
+    private final TextColor tc;
     /**
      * Represents an instance of the extended ASCII character set, which includes
      * both the standard ASCII characters (codes 0-127) and additional extended
@@ -122,41 +84,92 @@ public class ShowRawMode {
      * or interpreting encoded data. It acts as the primary reference for all extended
      * ASCII-related data within the `ShowRawMode` class.
      */
-    private ASCIICharacterSetExtended ascii;
+    private final ASCIICharacterSetExtended ascii;
+
+    /**
+     * Represents the key codes mapping configuration used for interpreting
+     * and handling input events in raw mode terminal operations.
+     * <p>
+     * This field contains mappings of specific key codes to their respective
+     * functionalities or interpretations, enabling the system to detect and
+     * respond to both single and multi-code keystrokes, such as arrow keys,
+     * function keys, or control sequences.
+     * <p>
+     * The `keyCodes` variable is an integral part of the raw mode implementation
+     * and is utilized for processing user input in a terminal session across
+     * different platforms such as Windows, Linux, and macOS.
+     */
+    private final KeyCodes keyCodes;
 
     /**
      * Constructs a new RawMode.
      *
-     * @throws ANSITermException If there is an error initializing the ANSITerm object.
+     * @throws Exception If there is an error initializing the ANSITerm object.
      */
-    public ShowRawMode() throws ANSITermException {
-        this.term = new ANSITerm();
-        this.title = "Raw console mode test";
-        this.message = "Sets the keyboard of console to RAW mode. " +
-                "Each keystroke generates a " +
-                "keyboard response (scan codes). Press 'q' to exit";
-        this.columns = term.getTerminalSize().getColumns();
-        this.tc = new TextColor(Color.RED, BGColor.YELLOW);
-        this.heightScreen = this.term.getTerminalSize().getLines();
-        this.widthScreen = this.term.getTerminalSize().getColumns();
-        this.rectangle = new Rectangle(0, 0, 0, 0, " ");
-        this.rectangle.setWidth(widthScreen - 10);
-        this.rectangle.setHeight(heightScreen - 16);
-        this.rectangle.setX((widthScreen - rectangle.getWidth()) / 2);
-        this.rectangle.setY((heightScreen - rectangle.getHeight()) / 2);
-
-        this.ascii = new ASCIICharacterSetExtended();
-
-        setupKeys();
+    public ShowRawMode() throws Exception {
+        this(new ANSITerm(), new KeyCodes(), new ASCIICharacterSetExtended());
+        info(logger, "Initializing " + ShowRawMode.class.getSimpleName());
     }
 
     /**
-     * Performs the raw mode demonstration.
+     * Constructs a new RawMode with provided dependencies.
+     * This applies the Dependency Inversion Principle (SOLID).
      *
-     * @throws Exception If an error occurs during execution.
+     * @param term     The terminal instance to be used.
+     * @param keyCodes The key codes mapping configuration.
+     * @param ascii    The extended ASCII character set configuration.
+     */
+    public ShowRawMode(ANSITerm term, KeyCodes keyCodes, ASCIICharacterSetExtended ascii) {
+        info(logger, "Initializing " + ShowRawMode.class.getSimpleName());
+        try {
+            this.term = term;
+            this.title = "Raw console mode test";
+            this.message = """
+                    Sets the keyboard of console to RAW mode.
+                    Each keystroke generates a keyboard response (scan codes). Press 'q' to exit
+                    """;
+            this.columns = term.getTerminalSize().getColumns();
+            this.tc = new TextColor(Color.RED, BGColor.YELLOW);
+            int heightScreen = this.term.getTerminalSize().getLines();
+            int widthScreen = this.term.getTerminalSize().getColumns();
+            this.rectangle = new Rectangle(0, 0, 0, 0, " ");
+            this.rectangle.setWidth(widthScreen - 10);
+            this.rectangle.setHeight(heightScreen - 16);
+            this.rectangle.setX((widthScreen - rectangle.getWidth()) / 2);
+            this.rectangle.setY((heightScreen - rectangle.getHeight()) / 2);
+
+            this.ascii = ascii;
+            this.keyCodes = keyCodes;
+            info(logger, format("KeyCodes configuration loaded: %s", this.keyCodes));
+        } catch (RuntimeException e) {
+            error(logger, format("Unable to initialize %s, %s", ShowRawMode.class.getSimpleName(), e.getMessage()));
+            throw e;
+        }
+    }
+
+    /**
+     * Executes the main functionality of the raw mode demonstration based on the
+     * underlying platform. This method determines the operating system type
+     * (Windows, Linux, or macOS) and delegates the execution to the corresponding
+     * platform-specific handler. If the platform is unsupported, it logs an error
+     * and throws an exception.
+     * <p>
+     * For supported platforms:<br>
+     * - Windows: Executes logic specific to terminal behavior in Windows environments.<br>
+     * - Linux/macOS: Executes logic specific to terminal behavior in Unix-based environments.<br>
+     * <p>
+     * The terminal control instance (`ITerminal`) is initialized based on the
+     * platform type and passed to the respective handler for processing.
+     * <p>
+     * After execution, the method pauses, prompting the user to press &lt;ENTER&gt;
+     * to return to the menu.
+     *
+     * @throws Exception If the platform is not supported, or if an error occurs
+     *                   during terminal handling or execution.
      */
     public void perform() throws Exception {
         ITerminal termctl;
+        info(logger, format("Starting raw mode demo on platform %s", Platform.RESOURCE_PREFIX));
         if (Platform.isWindows()) {
             termctl = WindowsTerminal.getInstance();
             performInWindows(termctl);
@@ -164,6 +177,7 @@ public class ShowRawMode {
             termctl = LinuxTerminal.getInstance();
             performInLinuxOrMac(termctl);
         } else {
+            error(logger, "Platform not supported");
             throw new Exception("Platform not supported");
         }
         pauseWithMessage(0, "Press <ENTER> to return to menu");
@@ -187,6 +201,9 @@ public class ShowRawMode {
         int c;
         int extra = 0;
 
+        info(logger, keyCodes.getMapping());
+
+
         clearScreenAndPrintHeader(term, title, message, columns);
         Rectangle br = new Rectangle(rectangle.getX() - 1, rectangle.getY() - 1, rectangle.getWidth() + 2, rectangle.getHeight() + 2, " ");
         drawBorderRectangle(br, new TextColor(Color.GLOSSY_GREEN, BGColor.GLOSSY_WHITE));
@@ -197,30 +214,22 @@ public class ShowRawMode {
                 c = MSVCRT.INSTANCE._getch();
                 if (c == 'q') {
                     term.clearTerminal();
-                    msg = String.format("Pressed the 'q' key! (%d)\n", c);
-                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    cleanLineAndShowMessage(c, extra, y, x, rectangle, tc);
                     break;
                 }
-                if (c == 0 || c == 194 || c == 224) {
+                if (c == 0 || c == 194 || c == 195 || c == 224) {
                     extra = MSVCRT.INSTANCE._getch();
-                    msg = String.format("Two codes keystroke: (%d), (%d)\n", c, extra);
-                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
                     key = "\u001B[" + ascii.getChar(extra).getCharacter();
                 } else {
-                    if (c < 32){
-                        msg = String.format("Control character: + '%s' (code: %d)\n", ascii.getChar(c).getDescription(), c);
-                        cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    if (c < 32) {
+                        cleanLineAndShowMessage(c, extra, y, x, rectangle, tc);
                         continue;
                     }
-                    msg = String.format("(%d), character: '%c', description: %s\n",
-                            c, ascii.getChar(c).getCharacter(), ascii.getChar(c).getDescription());
-                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    cleanLineAndShowMessage(c, extra, y, x, rectangle, tc);
                     key = String.valueOf((char) c);
                 }
                 if (key.startsWith("\u001B")) {
-                    String keyDetected = keyMap.getOrDefault(key, "ANSI sequence: " + key.replace("\u001B", "ESC"));
-                    msg = String.format("Detected: '%s', (%d)\n", keyDetected, extra);
-                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    cleanLineAndShowMessage(c, extra, y, x, rectangle, tc);
                 }
             }
         } finally {
@@ -258,13 +267,11 @@ public class ShowRawMode {
                     break;
                 }
                 if (c < 32) {
-                    msg = String.format("Control: CTRL + %c\n", (char) (c + 64));
-                    cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                    cleanLineAndShowMessage(c, 0, y, x, rectangle, tc);
                 } else {
                     int car = key.charAt(0);
                     if (car != 0xE0) {
-                        msg = String.format("Keystroke: %s\n", key);
-                        cleanLineAndPrintMessage(msg, y, x, rectangle, tc);
+                        cleanLineAndShowMessage(c, 0, y, x, rectangle, tc);
                     }
                 }
             }
@@ -274,57 +281,39 @@ public class ShowRawMode {
     }
 
     /**
-     * Configures mappings between ANSI escape sequences and their corresponding
-     * key representations. This method sets up a predefined mapping of terminal
-     * escape sequences to readable names for various keys such as arrow keys,
-     * function keys, and control keys. The mappings are stored in the {@code keyMap}
-     * field for use in identifying keypress inputs.
-     * <p>
-     * Mappings include:
-     * - Arrow keys (e.g., UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW)
-     * - Control keys (e.g., HOME, END)
-     * - Function keys (e.g., F1, F2, F12)
-     * <p>
-     * This method is typically invoked to initialize the key mapping once
-     * during the lifecycle of the class, ensuring that input received from
-     * the terminal can be correctly identified and processed.
-     */
-    private void setupKeys() {
-        // Change the values because they do not correspond to your keystrokes.
-        // The ANSI codes and the keys that generate them when pressed must be
-        // noted in a file to then redefine the keyMap variable map.
-        keyMap.put("\u001B[A", "UP_ARROW");
-        keyMap.put("\u001B[B", "DOWN ARROW");
-        keyMap.put("\u001B[C", "RIGHT_ARROW");
-        keyMap.put("\u001B[D", "LEFT_ARROW");
-        keyMap.put("\u001B[H", "HOME");
-        keyMap.put("\u001B[F", "END");
-        keyMap.put("\u001BOP", "F1");
-        keyMap.put("\u001BOQ", "F2");
-        keyMap.put("\u001BOR", "F3");
-        keyMap.put("\u001BOS", "F4");
-        keyMap.put("\u001B[15~", "F5");
-        keyMap.put("\u001B[17~", "F6");
-        keyMap.put("\u001B[24~", "F12");
-    }
-
-    /**
-     * Clears the specified line on the terminal and prints a message at the specified position.
+     * Clears a specific line in the terminal, displays a message, and adjusts the terminal scroll.
+     * The method handles single and two-code keystrokes, formats a message accordingly,
+     * and updates the terminal with the new content and styling at the specified position.
      *
-     * @param msg The message to be displayed on the terminal.
-     * @param y   The line number where the message will be printed.
-     * @param x   The column number where the message will start from.
-     * @param rec The color and background colors to be applied to the message.
-     * @throws ANSITermException If an error occurs during terminal operations.
+     * @param key   The primary key code representing a keystroke.
+     * @param extra An additional key code for multi-code keystrokes (e.g., complex inputs like arrow keys).
+     * @param y     The row position (vertical) in the terminal where the line should be cleared and the message displayed.
+     * @param x     The column position (horizontal) in the terminal where the line and message operations start.
+     * @param rec   A Rectangle object defining the dimensions of the region to scroll and clear.
+     * @param tc    A TextColor object specifying the foreground and background colors for the message and cleared line.
+     * @throws ANSITermException If an error occurs while interacting with the terminal, such as setting colors or cursor positions.
      */
-    private void cleanLineAndPrintMessage(String msg, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
+    private void cleanLineAndShowMessage(int key, int extra, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
+        String msg;
+        int[] codes = new int[2];
+        int[] code = new int[1];
+
+        if (key == 0 || key == 194 || key == 195 || key == 224) {
+            codes[0] = key;
+            codes[1] = extra;
+            msg = format("Two code keystroke: (%d, %d), keycode: %s\n", key, extra, this.keyCodes.getKeyName(codes));
+        } else {
+            code[0] = key;
+            msg = format("One code keystroke: (%d), keycode: %s\n", key, this.keyCodes.getKeyName(code));
+        }
+
         msg = term.setColor(tc.getColor(), msg);
         msg = term.setBackgroundColor(tc.getBgColor(), msg);
-        String lineaVacia = " ".repeat(rec.getWidth());
-        lineaVacia = term.setColors(tc.getColor(), tc.getBgColor(), lineaVacia);
+        String emptyline = " ".repeat(rec.getWidth());
+        emptyline = term.setColors(tc.getColor(), tc.getBgColor(), emptyline);
 
         term.setCursorPosition(new Position(y, x));
-        term.printAt(lineaVacia, y, x);
+        term.printAt(emptyline, y, x);
         term.printAt(msg, y, x);
         term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
     }
@@ -373,15 +362,15 @@ public class ShowRawMode {
         line = String.valueOf(LU_CORNER);
         String repeat = String.valueOf(HL).repeat(rec.getWidth() - 2);
         line = line + repeat + RU_CORNER;
-        upperLine = term.setColors(tc.getColor(),tc.getBgColor(), line);
+        upperLine = term.setColors(tc.getColor(), tc.getBgColor(), line);
         term.printAt(upperLine, rec.getY(), rec.getX());
-        for (int currentY = rec.getY() + 1; currentY < rec.getY() + rec.getHeight() - 1; currentY++){
+        for (int currentY = rec.getY() + 1; currentY < rec.getY() + rec.getHeight() - 1; currentY++) {
             line = VL + " ".repeat(rec.getWidth() - 2) + VL;
-            intermediateLine = term.setColors(tc.getColor(),tc.getBgColor(), line);
+            intermediateLine = term.setColors(tc.getColor(), tc.getBgColor(), line);
             term.printAt(intermediateLine, currentY, rec.getX());
         }
         line = LD_CORNER + repeat + RD_CORNER;
-        lowerLine = term.setColors(tc.getColor(),tc.getBgColor(), line);
+        lowerLine = term.setColors(tc.getColor(), tc.getBgColor(), line);
         term.printAt(lowerLine, rec.getY() + rec.getHeight() - 1, rec.getX());
         term.setASCIICharacterSet();
     }

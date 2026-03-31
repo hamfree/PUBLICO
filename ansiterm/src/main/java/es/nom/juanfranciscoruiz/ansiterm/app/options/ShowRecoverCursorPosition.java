@@ -52,7 +52,7 @@ public class ShowRecoverCursorPosition {
      * Defines the delay duration in milliseconds used for controlling the timing
      * of cursor position recovery operations and other related processes.
      */
-    public static final Long DELAY = 0L;
+    public static final Long DELAY = 5L;
 
     /**
      * Constructs a new RecoverCursorPosition.
@@ -62,7 +62,9 @@ public class ShowRecoverCursorPosition {
     public ShowRecoverCursorPosition() throws ANSITermException {
         this.term = new ANSITerm();
         this.title = "Cursor position recovery";
-        this.msg = "The cursor will move through all positions in the screen buffer. For each position, its row and column will be retrieved. Delay: " + DELAY + " ms";
+        this.msg = """
+                The cursor will move through all positions in the screen buffer.
+                For each position, its row and column will be retrieved. Delay:\s""" + DELAY + " ms";
     }
 
     /**
@@ -78,7 +80,7 @@ public class ShowRecoverCursorPosition {
         term.cursorChangeStyle(CursorStylesCodes.CURSOR_STEADY_BLOCK_SHAPE);
 
         // We start on line 6 so as not to delete the header...
-        for (int lin = 6; lin < screenSize.getLines() - 3; lin++) {
+        for (int lin = 7; lin < screenSize.getLines() - 3; lin++) {
             for (int col = 1; col <= screenSize.getColumns(); col++) {
                 Position p = new Position(1, 1);
                 term.printAt("X", lin, col);
