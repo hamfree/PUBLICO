@@ -13,10 +13,10 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
  * A utility class containing various static methods for system information retrieval,
  * collection processing, logging, and program flow control. This class is designed to
  * prevent instantiation.
- *
+ * <p>
  * Fields:
  * - `FOREVER`: A constant used to specify an indefinite pause.
- *
+ * <p>
  * Methods:
  * - `getFeaturesAsMap()`: Returns system resource details including CPU cores,
  * free memory, maximum usable memory, and total memory.
@@ -252,12 +252,12 @@ public class Util {
      * @param msg the warning message to log. If null or empty, the method will do nothing.
      */
     public static void warn(Logger logger, String msg) {
-        if (logger != null && logger.isDebugEnabled()) {
+        if (logger != null && logger.isWarnEnabled()) {
             if (msg != null && !msg.isEmpty()) {
                 msg = msg.trim();
-                msg = msg.replaceAll("\n", " ");
-                msg = msg.replaceAll("\r", " ");
-                msg = msg.replaceAll("\t", " ");
+                msg = msg.replace("\n", " ");
+                msg = msg.replace("\r", " ");
+                msg = msg.replace("\t", " ");
                 msg = msg.replaceAll("  +", " ");
                 logger.warn(msg);
             }
@@ -274,12 +274,12 @@ public class Util {
      * @param msg the informational message to log. If null or empty, the method will do nothing.
      */
     public static void info(Logger logger, String msg) {
-        if (logger != null && logger.isDebugEnabled()) {
+        if (logger != null && logger.isInfoEnabled()) {
             if (msg != null && !msg.isEmpty()) {
                 msg = msg.trim();
-                msg = msg.replaceAll("\n", " ");
-                msg = msg.replaceAll("\r", " ");
-                msg = msg.replaceAll("\t", " ");
+                msg = msg.replace("\n", " ");
+                msg = msg.replace("\r", " ");
+                msg = msg.replace("\t", " ");
                 msg = msg.replaceAll("  +", " ");
                 logger.info(msg);
             }
@@ -296,12 +296,12 @@ public class Util {
      * @param msg the error message to log. If null or empty, the method will do nothing.
      */
     public static void error(Logger logger, String msg){
-        if (logger != null && logger.isDebugEnabled()) {
+        if (logger != null && logger.isErrorEnabled()) {
             if (msg != null && !msg.isEmpty()) {
                 msg = msg.trim();
-                msg = msg.replaceAll("\n", " ");
-                msg = msg.replaceAll("\r", " ");
-                msg = msg.replaceAll("\t", " ");
+                msg = msg.replace("\n", " ");
+                msg = msg.replace("\r", " ");
+                msg = msg.replace("\t", " ");
                 msg = msg.replaceAll("  +", " ");
                 logger.error(msg);
             }
@@ -321,9 +321,9 @@ public class Util {
         if (logger != null && logger.isDebugEnabled()) {
             if (msg != null && !msg.isEmpty()) {
                 msg = msg.trim();
-                msg = msg.replaceAll("\n", " ");
-                msg = msg.replaceAll("\r", " ");
-                msg = msg.replaceAll("\t", " ");
+                msg = msg.replace("\n", " ");
+                msg = msg.replace("\r", " ");
+                msg = msg.replace("\t", " ");
                 msg = msg.replaceAll("  +", " ");
                 logger.debug(msg);
             }
@@ -341,10 +341,15 @@ public class Util {
      * @param params the parameters to be formatted into the message
      */
     public static void dbg(Logger logger, String msg, Object... params) {
-        if (logger != null) {
-            logger.debug(msg, params);
-        } else {
-            System.out.println(String.format(msg, params));
+        if (logger != null && logger.isDebugEnabled()) {
+            if (msg != null && !msg.isEmpty()){
+                msg = msg.trim();
+                msg = msg.replace("\n", " ");
+                msg = msg.replace("\r", " ");
+                msg = msg.replace("\t", " ");
+                msg = msg.replaceAll("  +", " ");
+                logger.debug(msg, params);
+            }
         }
     }
 }

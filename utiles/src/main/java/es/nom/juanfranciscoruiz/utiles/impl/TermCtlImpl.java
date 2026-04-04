@@ -340,7 +340,7 @@ public class TermCtlImpl implements TermCtl {
      * @param cols the desired number of columns for the terminal window; must be greater than zero.
      * @param rows the desired number of rows for the terminal window; must be greater than zero.
      * @return {@code true} if the resizing operation was executed, or {@code false} if the provided
-     *         dimensions are invalid (e.g., non-positive values for columns or rows).
+     * dimensions are invalid (e.g., non-positive values for columns or rows).
      */
     private static boolean adjustTerminalSize(int cols, int rows) {
         if (cols <= 0 || rows <= 0) {
@@ -351,27 +351,24 @@ public class TermCtlImpl implements TermCtl {
             Kernel32 k32 = Kernel32.INSTANCE;
             WinNT.HANDLE hConsole = k32.GetStdHandle(STD_OUTPUT_HANDLE);
 
-      /*
-    1. Define the window rectangle (0-based, hence the subtraction of 1)
-    It is vital that the size is less than or equal to the current buffer size.
-    */
+            /*
+            1. Define the window rectangle (0-based, hence the subtraction of 1)
+            It is vital that the size is less than or equal to the current buffer size.
+            */
             Kernel32.SMALL_RECT rect = new Kernel32.SMALL_RECT(0, 0, cols - 1, rows - 1);
 
             // 2. Define the buffer size
             Kernel32.COORD size = new Kernel32.COORD(cols, rows);
 
-      /*
-    Safe execution order in Windows: We try to adjust the buffer first to fit the window,
-    or the window first if the buffer is already large. The most robust approach is to
-    try both.
-    */
+            /*
+            Safe execution order in Windows: We try to adjust the buffer first to fit the window,
+            or the window first if the buffer is already large. The most robust approach is to
+            try both.
+            */
             boolean success = k32.SetConsoleScreenBufferSize(hConsole, size);
             k32.SetConsoleWindowInfo(hConsole, true, rect);
 
-      /*
-      If it fails or we don't have JNA, we try the ANSI sequence (works in
-      Windows Terminal)
-       */
+            // If it fails or we don't have JNA, we try the ANSI sequence (works in Windows Terminal)
             if (!success) {
                 sendAnsiResize(cols, rows);
             }
@@ -515,8 +512,8 @@ public class TermCtlImpl implements TermCtl {
                 break;
             case OS:
                 String os = System.getProperty("os.name");
-                if (os.contains("Windows")){
-                   clearScreenOnWindows();
+                if (os.contains("Windows")) {
+                    clearScreenOnWindows();
                 } else if (os.contains("Linux") || os.contains("Mac")) {
                     clearScreenOnLinuxOrMac();
                 }
@@ -595,7 +592,7 @@ public class TermCtlImpl implements TermCtl {
      * Note: This method is platform-specific and is intended to work on Unix-based
      * systems. It will not function correctly on non-Unix platforms.
      */
-    private void clearScreenOnLinuxOrMac(){
+    private void clearScreenOnLinuxOrMac() {
         try {
             new ProcessBuilder("clear")
                     .inheritIO()
@@ -618,7 +615,7 @@ public class TermCtlImpl implements TermCtl {
      * <p>
      * Note: This method is platform-specific and is only intended for Windows-based systems.
      */
-    private void clearScreenOnWindows(){
+    private void clearScreenOnWindows() {
         try {
             new ProcessBuilder("cmd", "/c", "cls")
                     .inheritIO()
