@@ -426,7 +426,7 @@ public class App {
     /**
      * Displays all the mapped keyboard scan codes and their corresponding names
      * on the terminal.
-     *
+     * <p>
      * This method initializes an instance of the {@code ShowMappedKeys} class and
      * invokes its {@code perform()} method to display the key mappings. It manages
      * the output within the terminal, presenting the associations between key

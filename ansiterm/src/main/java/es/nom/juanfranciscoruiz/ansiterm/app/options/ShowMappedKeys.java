@@ -67,7 +67,7 @@ public class ShowMappedKeys {
         int columns = term.getTerminalSize().getColumns();
         AtomicInteger line = new AtomicInteger(6);
         AtomicInteger index = new AtomicInteger(1);
-        Map<KeySequence, String> mappings = keyCodes.getKeycodes();
+        Map<KeySequence, String> mappings = keyCodes.getMapKeycodes();
 
         clearScreenAndPrintHeader(term, title, message, columns);
 

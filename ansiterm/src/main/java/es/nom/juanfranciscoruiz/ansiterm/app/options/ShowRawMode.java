@@ -140,6 +140,11 @@ public class ShowRawMode {
 
             this.ascii = ascii;
             this.keyCodes = keyCodes;
+
+            if (!this.keyCodes.isInitialized()){
+                this.keyCodes.initialize();
+            }
+
             info(logger, format("KeyCodes configuration loaded: %s", this.keyCodes));
         } catch (RuntimeException e) {
             error(logger, format("Unable to initialize %s, %s", ShowRawMode.class.getSimpleName(), e.getMessage()));
@@ -291,31 +296,36 @@ public class ShowRawMode {
      * @param x     The column position (horizontal) in the terminal where the line and message operations start.
      * @param rec   A Rectangle object defining the dimensions of the region to scroll and clear.
      * @param tc    A TextColor object specifying the foreground and background colors for the message and cleared line.
-     * @throws ANSITermException If an error occurs while interacting with the terminal, such as setting colors or cursor positions.
+     * @throws Exception If an error occurs while interacting with the terminal, such as setting colors or cursor positions.
      */
-    private void cleanLineAndShowMessage(int key, int extra, int y, int x, Rectangle rec, TextColor tc) throws ANSITermException {
+    private void cleanLineAndShowMessage(int key, int extra, int y, int x, Rectangle rec, TextColor tc) throws Exception {
         String msg;
         int[] codes = new int[2];
         int[] code = new int[1];
 
-        if (key == 0 || key == 194 || key == 195 || key == 224) {
-            codes[0] = key;
-            codes[1] = extra;
-            msg = format("Two code keystroke: (%d, %d), keycode: %s\n", key, extra, this.keyCodes.getKeyName(codes));
-        } else {
-            code[0] = key;
-            msg = format("One code keystroke: (%d), keycode: %s\n", key, this.keyCodes.getKeyName(code));
+        try {
+
+            if (key == 0 || key == 194 || key == 195 || key == 224) {
+                codes[0] = key;
+                codes[1] = extra;
+                msg = format("Two code keystroke: (%d, %d), keycode: %s\n", key, extra, this.keyCodes.getKeyName(codes));
+            } else {
+                code[0] = key;
+                msg = format("One code keystroke: (%d), keycode: %s\n", key, this.keyCodes.getKeyName(code));
+            }
+
+            msg = term.setColor(tc.getColor(), msg);
+            msg = term.setBackgroundColor(tc.getBgColor(), msg);
+            String emptyline = " ".repeat(rec.getWidth());
+            emptyline = term.setColors(tc.getColor(), tc.getBgColor(), emptyline);
+
+            term.setCursorPosition(new Position(y, x));
+            term.printAt(emptyline, y, x);
+            term.printAt(msg, y, x);
+            term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
-
-        msg = term.setColor(tc.getColor(), msg);
-        msg = term.setBackgroundColor(tc.getBgColor(), msg);
-        String emptyline = " ".repeat(rec.getWidth());
-        emptyline = term.setColors(tc.getColor(), tc.getBgColor(), emptyline);
-
-        term.setCursorPosition(new Position(y, x));
-        term.printAt(emptyline, y, x);
-        term.printAt(msg, y, x);
-        term.scrollUp(rec.getY(), rec.getX(), rec.getWidth(), rec.getHeight(), 1);
     }
 
     /**
