@@ -51,7 +51,7 @@ public class Demo {
      * This constructor initializes the `tc` field, which is an instance of a
      * `TermCtl` implementation. The `tc` object represents a terminal control
      * utility or functionality that is pivotal for the operations of the Demo
-     * class. The initialization of `tc` ensures the class is ready to utilize the
+     * class. The initialization of `tc` ensures the class is ready to use the
      * terminal-related features provided by the `TermCtlImpl` implementation.
      */
     public Demo() {
@@ -305,7 +305,7 @@ public class Demo {
     /**
      * Converts a complex map with String keys and List&lt;Integer&gt; values into its string representation.
      * <p>
-     * This method utilizes the `generateMapOfLists` utility to create a map structure
+     * This method uses the `generateMapOfLists` utility to create a map structure
      * from two lists of integers. The lists are generated using the `generateList` method,
      * with one constructed in ascending order and the other in descending order, based on the
      * boolean argument passed. The resulting map is then passed to the

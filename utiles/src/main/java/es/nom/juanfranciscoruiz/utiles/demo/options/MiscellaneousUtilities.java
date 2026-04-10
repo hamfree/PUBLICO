@@ -16,7 +16,7 @@ public class MiscellaneousUtilities {
      * Represents an instance of the TermCtl interface used for terminal control operations
      * such as clearing the screen, retrieving console size, and setting console dimensions.
      * <p>
-     * The `tc` variable is primarily utilized within classes to perform actions related to
+     * The `tc` variable is primarily used within classes to perform actions related to
      * terminal manipulation. It provides abstraction over the platform-specific terminal
      * control logic, enabling consistent functionality across different environments.
      */
