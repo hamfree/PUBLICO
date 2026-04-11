@@ -1,6 +1,7 @@
 package es.nom.juanfranciscoruiz.utiles;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.nio.charset.Charset;
@@ -34,6 +35,12 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
  */
 public class Util {
     /**
+     * A static, final logger instance used for logging messages throughout
+     * the utility class. It is initialized with the logging configuration
+     * for the {@code Util} class.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(Util.class);
+    /**
      * A constant representing an indefinite duration of time. This value can be
      * used in methods or logic that require an infinite or undefined wait period.
      * It is often employed as a parameter for methods to indicate that the
@@ -41,6 +48,47 @@ public class Util {
      * user or another event.
      */
     public static final Long FOREVER = 0L;
+    /**
+     * Represents the system's line separator.
+     * <p>
+     * This constant retrieves the platform-specific line separator using
+     * {@link System#lineSeparator()}. It ensures consistent newline behavior
+     * across different operating systems.
+     */
+    public static final String SL = System.lineSeparator();
+    /**
+     * A static instance of {@link ResourceBundle} used to fetch internationalized messages
+     * from a properties file. This allows the application to support multiple languages
+     * and serves as a centralized resource management utility for localization.
+     * <p>
+     * The ResourceBundle is typically initialized with a specific base name for the
+     * properties file containing localized strings and is used across the
+     * application to resolve message keys to their localized values.
+     */
+    private static ResourceBundle messages;
+
+    static {
+        try {
+            messages = ResourceBundle.getBundle("messages");
+        } catch (MissingResourceException e) {
+            logger.warn("ResourceBundle 'messages' not found. Falling back to default messages.");
+            messages = null;
+        }
+    }
+
+    /**
+     * Helper method to fetch internationalized messages, falling back to default if not found.
+     *
+     * @param key            The ResourceBundle key
+     * @param defaultMessage The default message if key or bundle is not available
+     * @return The resolved message
+     */
+    private static String getMessage(String key, String defaultMessage) {
+        if (messages != null && messages.containsKey(key)) {
+            return messages.getString(key);
+        }
+        return defaultMessage;
+    }
     /**
      * We prevent it from being instantiated (Utility class)
      */
@@ -212,7 +260,7 @@ public class Util {
      */
     public static void pause(long milliseconds, String msg) throws Exception {
         if (msg == null || msg.isEmpty()) {
-            msg = "\nPress <ENTER> to continue...";
+            msg = getMessage("msg.util.pause.default", "\nPress <ENTER> to continue...");
         }
         if (milliseconds == FOREVER) {
             prtln(2,msg);
@@ -220,7 +268,8 @@ public class Util {
             sc.nextLine();
             return;
         }
-        prtln(1,"The program will continue in " + milliseconds + " milliseconds...");
+        String continueMsg = getMessage("msg.util.pause.continue", "The program will continue in %d milliseconds...");
+        prtln(1, String.format(continueMsg, milliseconds));
         Thread.sleep(milliseconds);
     }
     

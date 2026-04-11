@@ -5,7 +5,9 @@ import es.nom.juanfranciscoruiz.utiles.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.MissingResourceException;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.error;
@@ -18,7 +20,31 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
  * that menu-related errors are properly handled and logged.
  */
 public class MenuManager {
-    private static final Logger logger = LoggerFactory.getLogger(Menu.class);
+    private static final Logger logger = LoggerFactory.getLogger(MenuManager.class);
+    private static ResourceBundle messages;
+
+    static {
+        try {
+            messages = ResourceBundle.getBundle("messages");
+        } catch (MissingResourceException e) {
+            logger.warn("ResourceBundle 'messages' not found. Falling back to default messages.");
+            messages = null;
+        }
+    }
+
+    /**
+     * Helper method to fetch internationalized messages, falling back to default if not found.
+     *
+     * @param key            The ResourceBundle key
+     * @param defaultMessage The default message if key or bundle is not available
+     * @return The resolved message
+     */
+    private static String getMessage(String key, String defaultMessage) {
+        if (messages != null && messages.containsKey(key)) {
+            return messages.getString(key);
+        }
+        return defaultMessage;
+    }
 
     /**
      * Represents the menu associated with the MenuManager class.
@@ -48,8 +74,9 @@ public class MenuManager {
      */
     public MenuManager(Menu menu) throws MenuManagerException {
         if (menu == null) {
-            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
-            throw new MenuManagerException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            error(logger, msg);
+            throw new MenuManagerException(msg);
         }
         this.menu = menu;
     }
@@ -73,8 +100,9 @@ public class MenuManager {
      */
     public void setMenu(Menu menu) throws MenuManagerException {
         if (menu == null) {
-            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
-            throw new MenuManagerException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            error(logger, msg);
+            throw new MenuManagerException(msg);
         }
         this.menu = menu;
     }
@@ -95,19 +123,22 @@ public class MenuManager {
      */
     public void showMenu(boolean useAnsi) throws MenuManagerException {
         if (menu == null) {
-            error(logger, MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
-            throw new MenuManagerException(MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
+            String msg = getMessage("err.menu.manager.show.null", MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_MENU_IS_NULL);
+            error(logger, msg);
+            throw new MenuManagerException(msg);
         } else if (menu.getOptions().isEmpty()) {
-            error(logger, MenuErrors.ERR_NO_OPTIONS);
-            throw new MenuManagerException(MenuErrors.ERR_NO_OPTIONS);
+            String msg = getMessage("err.menu.no.options", MenuErrors.ERR_NO_OPTIONS);
+            error(logger, msg);
+            throw new MenuManagerException(msg);
         }
         menu.generateMenuView();
         if (!useAnsi) {
             prt(menu.getMenuView());
         } else {
             //TODO: Futuro uso libreria AnsiTerm. Ahora lanzará una excepción.
-            error(logger, MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
-            throw new MenuManagerException(MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
+            String msg = getMessage("err.menu.manager.ansi", MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED);
+            error(logger, msg);
+            throw new MenuManagerException(msg);
         }
     }
 
@@ -136,8 +167,9 @@ public class MenuManager {
      */
     public Long awaitResponse(String msg) throws MenuException, MenuManagerException {
         if (menu == null) {
-            error(logger, MenuManagerErrors.ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
-            throw new MenuManagerException(MenuManagerErrors.ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
+            String errMsg = getMessage("err.menu.manager.read.null", MenuManagerErrors.ERR_CANNOT_READ_USER_RESPONSE_MENU_IS_NULL);
+            error(logger, errMsg);
+            throw new MenuManagerException(errMsg);
         }
 
         /*
@@ -145,16 +177,18 @@ public class MenuManager {
          * client class can use reflexion api to change the value of the options property)
          */
         if (this.menu.getOptions() == null) {
-            error(logger, MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
-            throw new MenuException(MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            String errMsg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            error(logger, errMsg);
+            throw new MenuException(errMsg);
         }
-    /* We verify that the Menu object has at least one option declared and
-        that the menuView property has the textual representation of the menu.
-        If not, it will throw a MenuException.
-    */
+        /* We verify that the Menu object has at least one option declared and
+            that the menuView property has the textual representation of the menu.
+            If not, it will throw a MenuException.
+        */
         if (this.menu.getOptions().isEmpty()) {
-            error(logger, MenuErrors.ERR_NO_OPTIONS);
-            throw new MenuException(MenuErrors.ERR_NO_OPTIONS);
+            String errMsg = getMessage("err.menu.no.options", MenuErrors.ERR_NO_OPTIONS);
+            error(logger, errMsg);
+            throw new MenuException(errMsg);
         }
 
         var resp = MenuConstants.WRONG_OPTION;
@@ -162,7 +196,7 @@ public class MenuManager {
         int opcMaxima = this.menu.getOptions().size() - 1;
 
         if (msg == null || msg.isEmpty()) {
-            msg = MenuConstants.DEFAULT_MSG;
+            msg = getMessage("msg.menu.default", MenuConstants.DEFAULT_MSG);
         }
 
         prt(msg);
@@ -171,20 +205,22 @@ public class MenuManager {
         try (Scanner sc = new Scanner(new UnclosableInputStreamDecorator(System.in))) {
             respuesta = sc.nextLine();
         } catch (Exception ex) {
-            error(logger,ex.getMessage());
+            error(logger, ex.getMessage());
             throw new MenuException(ex.getMessage());
         }
 
         if (Types.isNullOrEmpty(respuesta)) {
-            this.menu.setMessage(MenuErrors.ERR_BLANK_NULL);
-            error(logger, MenuErrors.ERR_BLANK_NULL);
-            throw new MenuException(MenuErrors.ERR_BLANK_NULL);
+            String errMsg = getMessage("err.menu.blank", MenuErrors.ERR_BLANK_NULL);
+            this.menu.setMessage(errMsg);
+            error(logger, errMsg);
+            throw new MenuException(errMsg);
         }
 
         if (!Types.isInteger(respuesta)) {
-            this.menu.setMessage(MenuErrors.ERR_NO_NUMBER);
-            error(logger, MenuErrors.ERR_NO_NUMBER);
-            throw new MenuException(MenuErrors.ERR_NO_NUMBER);
+            String errMsg = getMessage("err.menu.no.number", MenuErrors.ERR_NO_NUMBER);
+            this.menu.setMessage(errMsg);
+            error(logger, errMsg);
+            throw new MenuException(errMsg);
         }
 
         // Extracts and validates option; throws on failure
@@ -192,13 +228,15 @@ public class MenuManager {
             resp = TypeConverter.extractLongFromString(respuesta);
             // Validates option is within allowed range; throws on failure
             if (Objects.equals(resp, MenuConstants.WRONG_OPTION)) {
-                error(logger, MenuErrors.ERR_NOT_VALID_NUMBER);
-                this.menu.setMessage(MenuErrors.ERR_NOT_VALID_NUMBER);
-                throw new MenuException(MenuErrors.ERR_NOT_VALID_NUMBER);
+                String errMsg = getMessage("err.menu.not.valid.number", MenuErrors.ERR_NOT_VALID_NUMBER);
+                error(logger, errMsg);
+                this.menu.setMessage(errMsg);
+                throw new MenuException(errMsg);
             } else if (resp < 0 || resp > opcMaxima) {
-                error(logger, MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
-                this.menu.setMessage(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
-                throw new MenuException(MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
+                String errMsg = getMessage("err.menu.out.of.range", MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE);
+                error(logger, errMsg);
+                this.menu.setMessage(errMsg);
+                throw new MenuException(errMsg);
             }
         } catch (TypeConverterException ex) {
             error(logger, ex.getMessage());

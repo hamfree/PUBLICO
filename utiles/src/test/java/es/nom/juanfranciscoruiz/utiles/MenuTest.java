@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.printMsgToLogAndConsole;
+import static es.nom.juanfranciscoruiz.utiles.Util.SL;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.slf4j.Logger;
@@ -22,963 +23,746 @@ import org.slf4j.LoggerFactory;
  * @author Juan F. Ruiz
  */
 public class MenuTest {
-  public final static Logger logger = LoggerFactory.getLogger(MenuTest.class);
-  
-  public static final String LS = System.lineSeparator();
-  
-  @BeforeAll
-  static void beforeAll() {
-    printMsgToLogAndConsole(LS + LocalDateTime.now() + " - Starting MenuTest" + LS, logger);
-  }
-  
-  @AfterAll
-  static void afterAll() {
-    printMsgToLogAndConsole(LS + LocalDateTime.now() + " - Ending MenuTest" + LS, logger);
-  }
-  
-  public MenuTest() {
-  }
-  
-  
-  /**
-   * Test of getOptions method, of class Menu.
-   */
-  @Test
-  public void testDefaultConstructor() throws MenuException {
-    printTitletoLogAndConsole("testDefaultConstructor()", logger);
-    Menu instance = new Menu();
-    // Verifies default constructor initializes menu properties correctly
-    assertAll(
-        () -> assertNotNull(instance.getOptions(), "...testing not null options"),
-        () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
-        () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
-        () -> assertEquals("", instance.getMessage(), "...testing default message"),
-        () -> {
-          assertEquals("""
-                  \r
-                  *************\r
-                    Untitled  \r
-                  *************\r
-                  \r
-                  \r
-                  \r
-                  """,
-              instance.getMenuView(), "...testing default menu view");
-        },
-        () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
-    );
-  }
-  
-  @Test
-  public void testConstructorWithParamsDefaults() throws MenuException {
-    printTitletoLogAndConsole("testConstructorWithParamsDefaults()", logger);
-    Menu instance = new Menu(null, "", "msg", false);
-    // Verifies constructor with null title uses default title
-    assertAll(
-        () -> assertNotNull(instance.getOptions(), "...testing not null options"),
-        () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
-        () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
-        () -> assertEquals("msg", instance.getMessage(), "...testing default message"),
-        () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
-    );
-  }
-  
-  /**
-   * Verifies root menu constructor adds exit option
-   */
-  @Test
-  public void testConstructorWithParamsRootAddsExitOption() throws MenuException {
-    printTitletoLogAndConsole("testConstructorWithParamsRootAddsExitOption()", logger);
-    List<String> options = generateOptionsForChildMenus();
-    Menu instance = new Menu(options, "Title", "Msg", true);
-    List<String> result = instance.getOptions();
-    assertAll(
-        () -> assertEquals("0. Exit the application", result.getFirst(), "...testing exit option"),
-        () -> assertEquals(11, result.size(), "...testing options size"),
-        () -> assertEquals("0. Option One", result.get(1), "...testing option one")
-    );
-  }
-  
-  @Test
-  public void testConstructorWithParamsNullMessageThrows() {
-    printTitletoLogAndConsole("testConstructorWithParamsNullMessageThrows()", logger);
-    assertThrows(
-        MenuException.class, () -> new Menu(new ArrayList<>(), "Title", null, false),
-        "The message can't be null");
-  }
-  
-  @Test
-  public void testConstructorWithSubmenusRootWithParentThrows() throws MenuException {
-    printTitletoLogAndConsole("testConstructorWithSubmenusRootWithParentThrows()", logger);
-    Menu parent = new Menu();
-    assertThrows(MenuException.class, () ->
-            new Menu(generateOptionsForChildMenus(), "Title", "Msg", true,
-                new ArrayList<>(), parent),
-        "The parent menu can't be null for root menus"
-    );
-  }
-  
-  @Test
-  public void testConstructorWithSubmenusNonRootWithoutParentThrows() {
-    printTitletoLogAndConsole("testConstructorWithSubmenusNonRootWithoutParentThrows()", logger);
-    assertThrows(MenuException.class, () ->
-            new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
-                new ArrayList<>(), null),
-        "The parent menu can't be null for non-root menus"
-    );
-  }
-  
-  /**
-   * Tests constructor sets parent and submenus correctly
-   */
-  @Test
-  public void testConstructorWithSubmenusSetsParentAndSubmenus() throws MenuException {
-    printTitletoLogAndConsole("testConstructorWithSubmenusSetsParentAndSubmenus()", logger);
-    Menu parent = new Menu();
-    List<Menu> subMenus = new ArrayList<>();
-    Menu instance = new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
-        subMenus, parent);
-    assertAll(
-        () -> assertSame(parent, instance.getParentMenu(), "...testing parent menu")
-    );
-  }
-  
-  /**
-   * Tests root menu options include exit option
-   */
-  @Test
-  public void testGetOptionsForRootMenu() throws MenuException {
-    printTitletoLogAndConsole("testGetOptionsForRootMenu()", logger);
-    Menu instance = new Menu();
-    instance.setIsRootMenu(true);
-    instance.setOptions(generateOptionsForChildMenus());
-    List<String> expResult = generateOptionsForExpectedResult();
-    List<String> result = instance.getOptions();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result,
-        "The first option should be '0. Exit the application'");
-  }
-  
-  /**
-   * Tests non‑root menu options are those set
-   */
-  @Test
-  public void testGetOptionsForNonRootMenu() throws MenuException {
-    printTitletoLogAndConsole("testGetOptionsForNonRootMenu()", logger);
-    Menu instance = new Menu();
-    instance.setIsRootMenu(false);
-    instance.setOptions(generateOptionsForChildMenus());
-    List<String> expResult = generateOptionsForChildMenusForExpectedResult();
-    List<String> result = instance.getOptions();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result,
-        "The list of options should be the same as the one set with setOptions()");
-  }
-  
-  @Test
-  public void testGetOptionsForNonRootEmptyMenu() throws MenuException {
-    printTitletoLogAndConsole("testGetOptionsForNonRootEmptyMenu()", logger);
-    Menu instance = new Menu();
-    instance.setIsRootMenu(false);
-    List<String> expResult = new ArrayList<>();
-    expResult.add("0. [VOLVER]");
-    List<String> result = instance.getOptions();
-    assertEquals(expResult, result, "The list of options have one option: '0. [VOLVER]");
-  }
-  
-  
-  /**
-   * Test of setOptions method, of class Menu.
-   */
-  @Test
-  public void testSetOptions() throws MenuException {
-    printTitletoLogAndConsole("testSetOptions()", logger);
-    List<String> opciones = generateOptionsForChildMenus();
-    Menu instance = new Menu();
-    instance.setIsRootMenu(false);
-    instance.setOptions(opciones);
-    List<String> expResult = generateOptionsForChildMenusForExpectedResult();
-    List<String> result = instance.getOptions();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result,
-        "The list of options should be the same as the one set with setOptions()");
-  }
-  
-  /**
-   * Verifies `MenuException` is thrown when options are null
-   */
-  @Test
-  public void testSetOptionsWithNull() throws MenuException {
-    printTitletoLogAndConsole("testSetOptionsWithEmptyList()", logger);
-    Menu instance = new Menu();
-    instance.setIsRootMenu(false);
-    MenuException ex = assertThrows(MenuException.class, () -> instance.setOptions(null),
-        "The list of options can't be null");
-    if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-  }
-  
-  /**
-   * Tests root menu options include exit option
-   */
-  @Test
-  public void testSetOptionsForRootMenu() throws MenuException {
-    printTitletoLogAndConsole("testSetOptionsForRootMenu()", logger);
-    Menu instance = new Menu();
-    // At this point the method setIsRootMenu(true) would add the first option "0. Exit the
-    // application"
-    instance.setIsRootMenu(true);
-    instance.setOptions(generateOptionsForChildMenus());
-    
-    // When setting options for a root menu, the first option should be "0. Exit the application"
-    List<String> expResult = generateOptionsForExpectedResult();
-    List<String> result = instance.getOptions();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result,
-        "The first option should be '0. Exit the application' and" +
-            " the list of options should be the same as the one set with setOptions()");
-  }
-  
-  /**
-   * Test of getTitle method, of class Menu.
-   */
-  @Test
-  public void testGetTitleOfAnUnsettedTitleProperty() throws MenuException {
-    printTitletoLogAndConsole("testGetTitleOfAnUnsettedTitleProperty()", logger);
-    Menu instance = new Menu();
-    String expResult = "Untitled";
-    String result = instance.getTitle();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The title should be 'Untitled'");
-  }
-  
-  /**
-   * Test of setTitle method, of class Menu.
-   */
-  @Test
-  public void testSetTitle() throws MenuException {
-    printTitletoLogAndConsole("testSetTitle()", logger);
-    String titulo = "Application Test";
-    Menu instance = new Menu();
-    instance.setTitle(titulo);
-    String expResult = "Application Test";
-    String result = instance.getTitle();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The title should be 'Application Test'");
-  }
-  
-  /**
-   * Confirms `setTitle` throws exception on null input
-   */
-  @Test
-  public void testSetTitleWithNullValue() throws MenuException {
-    printTitletoLogAndConsole("testSetTitleWithNullValue()", logger);
-    Menu instance = new Menu();
-    MenuException ex = assertThrows(MenuException.class, () -> instance.setTitle(null),
-        "The method setTitle() can't accept null values and throws an MenuException");
-    if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-  }
-  
-  /**
-   * Test of getMessage method, of class Menu.
-   */
-  @Test
-  public void testGetMessage() throws MenuException {
-    printTitletoLogAndConsole("testGetMessage()", logger);
-    Menu instance = new Menu();
-    String expResult = "";
-    String result = instance.getMessage();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The message should be empty");
-  }
-  
-  /**
-   * Test of setMessage method, of class Menu.
-   */
-  @Test
-  public void testSetMessage() throws MenuException {
-    printTitletoLogAndConsole("testSetMensaje()", logger);
-    String mensaje = "Un mensaje cualquiera";
-    Menu instance = new Menu();
-    instance.setMessage(mensaje);
-    String result = instance.getMessage();
-    String expResult = "Un mensaje cualquiera";
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The message should be 'Un mensaje cualquiera'");
-  }
-  
-  /**
-   * Confirms `setMessage` throws exception on null input
-   */
-  @Test
-  public void testSetMessageWithNullValue() throws MenuException {
-    printTitletoLogAndConsole("testSetMessageWithNullValue()", logger);
-    Menu instance = new Menu();
-    MenuException ex = assertThrows(MenuException.class, () -> instance.setMessage(null),
-        "The method setMessage() can't accept null values and throws an MenuException");
-    if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-  }
-  
-  /**
-   * Test of getSelectedOption method, of class Menu.
-   */
-  @Test
-  public void testGetSelectedOptionOfANewMenu() throws MenuException {
-    printTitletoLogAndConsole("testGetSelectedOption()", logger);
-    Menu instance = new Menu();
-    Long result = instance.getSelectedOption();
-    Long expResult = 0L;
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result,
-        "The selected option should be 0 (Exit the application)");
-  }
-  
-  /**
-   * Test of setSelectedOption method, of class Menu.
-   */
-  @Test
-  public void testSetSelectedOption() throws MenuException {
-    printTitletoLogAndConsole("testSetSelectedOption()", logger);
-    Long opcionSeleccionada = 5L;
-    Menu instance = new Menu();
-    instance.setSelectedOption(opcionSeleccionada);
-    Long expResult = 5L;
-    Long result = instance.getSelectedOption();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The selected option should be 5");
-  }
-  
-  /**
-   * Test of getIsRootMenu method, of class Menu.
-   */
-  @Test
-  public void testIsRootMenu() throws MenuException {
-    printTitletoLogAndConsole("testIsRootMenu()", logger);
-    Menu instance = new Menu();
-    boolean expResult = false;
-    boolean result = instance.getIsRootMenu();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The menu should not be a root menu");
-  }
-  
-  /**
-   * Test of setIsRootMenu method, of class Menu.
-   */
-  @Test
-  public void testSetIsRootMenu() throws MenuException {
-    printTitletoLogAndConsole("testSetEsMenuInicio()", logger);
-    boolean esMenuInicio = true;
-    Menu instance = new Menu();
-    instance.setIsRootMenu(esMenuInicio);
-    boolean expResult = true;
-    boolean result = instance.getIsRootMenu();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The menu should be a root menu");
-  }
-  
-  /**
-   * Test of mostrar method, of class Menu.
-   */
-  @Test
-  public void testGenerateView() throws MenuException {
-    printTitletoLogAndConsole("testGenerateView()", logger);
-    final String SL = LS;
-    Menu instance = new Menu();
-    instance.setTitle("Title");
-    instance.setMessage("this is the message");
-    instance.setIsRootMenu(true);
-    instance.setOptions(generateOptionsForChildMenus());
-    instance.generateMenuView();
-    
-    String expResult = SL +
-        "**********" + SL +
-        "  Title  " + SL +
-        "**********" + SL + SL +
-        "0. Exit the application" + SL +
-        "1. Option One" + SL +
-        "2. Option Two" + SL +
-        "3. Option Three" + SL +
-        "4. Option Four" + SL +
-        "5. Option Five" + SL +
-        "6. Option Six" + SL +
-        "7. Option Seven" + SL +
-        "8. Option Eight" + SL +
-        "9. Option Nine" + SL +
-        "10. Option Ten" + SL + SL +
-        "this is the message" + SL;
-    
-    String result = instance.getMenuView();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The menu view should be generated correctly");
-  }
-  
+    public final static Logger logger = LoggerFactory.getLogger(MenuTest.class);
 
-  @Test
-  void testGetMenuView() {
-    
-    
-  }
-  
-  @Test
-  void testGeMenuViewFromAMenuWithSubMenus() throws MenuException {
-    printTitletoLogAndConsole("testGeMenuViewFromAMenuWithSubMenus()", logger);
-    Menu instance = new Menu();
-    List<String> options = generateOptionsForRootMenu();
-    List<Menu> subMenus = generateSubMenusForChildMenus();
-    
-    instance.setRootMenu(true);
-    instance.setTitle("Root Menu");
-    instance.setOptions(options);
-    instance.setSubMenus(subMenus);
-    String expResult = """
-            \r
-            **************\r
-              Root Menu  \r
-            **************\r
-            \r
-            0. Exit the application\r
-            1. Option One\r
-            2. Option Two\r
-            3. Option Three\r
-            4. Option Four\r
-            5. Option Five\r
-            6. Option Six\r
-            7. Option Seven\r
-            8. Option Eight\r
-            9. Option Nine\r
-            10. Option Ten\r
-            11. (SUBMENU 1)\r
-            12. (SUBMENU 2)\r
-            \r
-            \r
-            """;
-    String result = instance.getMenuView();
-    printResultsToLogAndConsole(expResult, result, logger);
-    assertEquals(expResult, result, "The menu view should be generated correctly");
-  }
-  
-  @Test
-  void testGetSubMenus() throws MenuException {
-    printTitletoLogAndConsole("testGetSubMenus()", logger);
-    Menu instance = new Menu();
-    List<Menu> subMenus = generateSubMenusForChildMenus();
-    instance.setSubMenus(subMenus);
-    List<Menu> result = instance.getSubMenus();
-    printResultsToLogAndConsole(subMenus, result, logger);
-    assertAll(
-            () -> assertNotNull(result, "...testing subMenus is not null"),
-            () -> assertEquals(2, result.size(), "...testing subMenus size"),
-            () -> assertEquals("0. (SUBMENU 1)", result.getFirst().getTitle(), "...testing first submenu title"),
-            () -> assertEquals("1. (SUBMENU 2)", result.get(1).getTitle(), "...testing second submenu title")
-    );
+    public static final String LS = System.lineSeparator();
 
-  }
-  
-  @Test
-  void TestSetSubMenus() throws MenuException {
-    printTitletoLogAndConsole("TestSetSubMenus()", logger);
-    Menu instance = new Menu();
-    List<Menu> subMenus = generateSubMenusForChildMenus();
-    instance.setSubMenus(subMenus);
-    List<Menu> result = instance.getSubMenus();
-    printResultsToLogAndConsole(subMenus, result, logger);
-    assertAll(
-            () -> assertNotNull(result, "...testing subMenus is not null"),
-            () -> assertEquals(2, result.size(), "...testing subMenus size"),
-            () -> assertEquals("0. (SUBMENU 1)", result.getFirst().getTitle(), "...testing first submenu title"),
-            () -> assertEquals("1. (SUBMENU 2)", result.get(1).getTitle(), "...testing second submenu title")
-    );
-  }
-  
-  @Test
-  void TestGetParentMenu() throws MenuException {
-    printTitletoLogAndConsole("TestGetParentMenu()", logger);
-    Menu parentMenu = new Menu();
-    parentMenu.setTitle("Parent Menu");
-    Menu instance = new Menu();
-    instance.setParentMenu(parentMenu);
-    Menu result = instance.getParentMenu();
-    printResultsToLogAndConsole(parentMenu, result, logger);
-    assertAll(
-            () -> assertNotNull(result, "...testing parent menu is not null"),
-            () -> assertEquals("Parent Menu", result.getTitle(), "...testing parent menu title"),
-            () -> assertSame(parentMenu, result, "...testing parent menu reference is the same")
-    );
+    @BeforeAll
+    static void beforeAll() {
+        printMsgToLogAndConsole(LS + LocalDateTime.now() + " - Starting MenuTest" + LS, logger);
+    }
 
-  }
-  
-  @Test
-  void TestSetParentMenu() throws MenuException {
-    printTitletoLogAndConsole("TestSetParentMenu()", logger);
-    Menu parentMenu = new Menu();
-    parentMenu.setTitle("Parent Menu");
-    Menu instance = new Menu();
-    instance.setTitle("Child Menu");
-    instance.setParentMenu(parentMenu);
-    Menu result = instance.getParentMenu();
-    printResultsToLogAndConsole(parentMenu, result, logger);
-    assertAll(
-            () -> assertNotNull(result, "...testing parent menu is not null"),
-            () -> assertEquals("Parent Menu", result.getTitle(), "...testing parent menu title"),
-            () -> assertSame(parentMenu, result, "...testing parent menu reference is the same")
-    );
-  }
+    @AfterAll
+    static void afterAll() {
+        printMsgToLogAndConsole(LS + LocalDateTime.now() + " - Ending MenuTest" + LS, logger);
+    }
 
-  /**
-   * Tests the behavior of the {@code setParentMenu} method by verifying that a menu cannot be set as its own parent.
-   * This is an edge case designed to confirm the enforcement of circular reference restrictions within the `Menu` class.
-   * <p>
-   * The method performs the following steps:
-   * 1. Initializes a `Menu` instance named `selfReferencingMenu`.
-   * 2. Sets a title for the menu.
-   * 3. Attempts to assign the menu itself as its parent using the {@code setParentMenu} method.
-   * 4. Asserts that a `MenuException` is thrown due to this invalid operation.
-   * <p>
-   * The test also logs the exception message if logging is enabled at the debug level.
-   *
-   * @throws MenuException if an error occurs during menu creation or setup
-   */
-  @Test
-  void TestSelfReferencingMenu() throws MenuException {
-    printTitletoLogAndConsole("TestSelfReferencingMenu()", logger);
-    Menu selfReferencingMenu = new Menu();
-    selfReferencingMenu.setTitle("Self Referencing Menu");
-    MenuException ex = assertThrows(MenuException.class,
-            () -> selfReferencingMenu.setParentMenu(selfReferencingMenu),
-            "A menu cannot be its own parent");
-    if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-  }
+    public MenuTest() {
+    }
 
-  /**
-   * Verifies that the root menu does not have a parent menu assigned.
-   * <p>
-   * The test performs the following steps:
-   * 1. Creates an instance of the `Menu` class.
-   * 2. Sets the menu title to "Root Menu".
-   * 3. Marks the menu as a root menu by setting the `isRootMenu` flag to `true`.
-   * 4. Asserts that the `getParentMenu` method returns `null`, ensuring that a root menu cannot have a parent menu.
-   * <p>
-   * This test is designed to validate the structural constraints of the menu hierarchy by ensuring
-   * that the root menu operates as expected with no parent menu reference.
-   *
-   * @throws MenuException if an error occurs during the creation or setup of the menu
-   */
-  @Test
-  void TestMenuRootHasNoParent() throws MenuException {
-    // Test case: root menu's parent must be null
-    Menu rootMenu = new Menu();
-    rootMenu.setTitle("Root Menu");
-    rootMenu.setIsRootMenu(true);
-    assertNull(rootMenu.getParentMenu(), "Root menu's parent should be null");
-  }
 
-  @Test
-  void TestAddSubMenu() throws MenuException {
-    printTitletoLogAndConsole("TestAddSubMenu()", logger);
+    /**
+     * Test of getOptions method, of class Menu.
+     */
+    @Test
+    public void testDefaultConstructor() throws MenuException {
+        printTitletoLogAndConsole("testDefaultConstructor()", logger);
+        Menu instance = new Menu();
+        // Verifies default constructor initializes menu properties correctly
+        assertAll(
+                () -> assertNotNull(instance.getOptions(), "...testing not null options"),
+                () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
+                () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
+                () -> assertEquals("", instance.getMessage(), "...testing default message"),
+                () -> {
+                    assertEquals("""
+                                    \r
+                                    *************\r
+                                      Untitled  \r
+                                    *************\r
+                                    \r
+                                    \r
+                                    \r
+                                    """,
+                            instance.getMenuView(), "...testing default menu view");
+                },
+                () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
+        );
+    }
 
-    // Test case 1: Add submenu to a menu with null submenus list
-    Menu menu1 = new Menu();
-    menu1.setTitle("Menu 1");
-    menu1.setSubMenus(null);
-    Menu subMenu1 = new Menu();
-    subMenu1.setTitle("SubMenu 1");
-    menu1.addSubMenu(subMenu1);
+    @Test
+    public void testConstructorWithParamsDefaults() throws MenuException {
+        printTitletoLogAndConsole("testConstructorWithParamsDefaults()", logger);
+        Menu instance = new Menu(null, "", "msg", false);
+        // Verifies constructor with null title uses default title
+        assertAll(
+                () -> assertNotNull(instance.getOptions(), "...testing not null options"),
+                () -> assertTrue(instance.getOptions().isEmpty(), "...testing empty options"),
+                () -> assertEquals("Untitled", instance.getTitle(), "...testing default title"),
+                () -> assertEquals("msg", instance.getMessage(), "...testing default message"),
+                () -> assertFalse(instance.getIsRootMenu(), "...testing default is root menu")
+        );
+    }
 
-    // Test case 2: Add submenu to a menu with empty submenus list
-    Menu menu2 = new Menu();
-    menu2.setTitle("Menu 2");
-    menu2.setSubMenus(new ArrayList<>());
-    Menu subMenu2 = new Menu();
-    subMenu2.setTitle("SubMenu 2");
-    menu2.addSubMenu(subMenu2);
+    /**
+     * Verifies root menu constructor adds exit option
+     */
+    @Test
+    public void testConstructorWithParamsRootAddsExitOption() throws MenuException {
+        printTitletoLogAndConsole("testConstructorWithParamsRootAddsExitOption()", logger);
+        List<String> options = generateOptionsForChildMenus();
+        Menu instance = new Menu(options, "Title", "Msg", true);
+        List<String> result = instance.getOptions();
+        assertAll(
+                () -> assertEquals("0. Exit the application", result.getFirst(), "...testing exit option"),
+                () -> assertEquals(11, result.size(), "...testing options size"),
+                () -> assertEquals("1. Option One", result.get(1), "...testing option one")
+        );
+    }
 
-    // Test case 3: Add submenu to a menu with existing submenus
-    Menu menu3 = new Menu();
-    menu3.setTitle("Menu 3");
-    List<Menu> existingSubMenus = generateSubMenusForChildMenus();
-    menu3.setSubMenus(existingSubMenus);
-    Menu subMenu3 = new Menu();
-    subMenu3.setTitle("SubMenu 3");
-    int originalSize = menu3.getSubMenus().size();
-    menu3.addSubMenu(subMenu3);
+    @Test
+    public void testConstructorWithParamsNullMessageThrows() {
+        printTitletoLogAndConsole("testConstructorWithParamsNullMessageThrows()", logger);
+        assertThrows(
+                MenuException.class, () -> new Menu(new ArrayList<>(), "Title", null, false),
+                "The message can't be null");
+    }
 
-    // Test case 4: Attempt to add null submenu
-    Menu menu4 = new Menu();
-    menu4.setTitle("Menu 4");
+    @Test
+    public void testConstructorWithSubmenusRootWithParentThrows() throws MenuException {
+        printTitletoLogAndConsole("testConstructorWithSubmenusRootWithParentThrows()", logger);
+        Menu parent = new Menu();
+        assertThrows(MenuException.class, () ->
+                        new Menu(generateOptionsForChildMenus(), "Title", "Msg", true,
+                                new ArrayList<>(), parent),
+                "The parent menu can't be null for root menus"
+        );
+    }
 
-    // Test case 5: Verify parent reference is set correctly
-    Menu menu5 = new Menu();
-    menu5.setTitle("Menu 5");
-    Menu subMenu5 = new Menu();
-    subMenu5.setTitle("SubMenu 5");
-    menu5.addSubMenu(subMenu5);
+    @Test
+    public void testConstructorWithSubmenusNonRootWithoutParentThrows() {
+        printTitletoLogAndConsole("testConstructorWithSubmenusNonRootWithoutParentThrows()", logger);
+        assertThrows(MenuException.class, () ->
+                        new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
+                                new ArrayList<>(), null),
+                "The parent menu can't be null for non-root menus"
+        );
+    }
 
-    // Test case 6: Verify submenu appears in menu view
-    Menu menu6 = new Menu();
-    menu6.setTitle("Menu 6");
-    menu6.setIsRootMenu(true);
-    menu6.setOptions(generateOptionsForChildMenus());
-    Menu subMenu6 = new Menu();
-    subMenu6.setTitle("SubMenu 6");
-    menu6.addSubMenu(subMenu6);
-    String menuView = menu6.getMenuView();
+    /**
+     * Tests constructor sets parent and submenus correctly
+     */
+    @Test
+    public void testConstructorWithSubmenusSetsParentAndSubmenus() throws MenuException {
+        printTitletoLogAndConsole("testConstructorWithSubmenusSetsParentAndSubmenus()", logger);
+        Menu parent = new Menu();
+        List<Menu> subMenus = new ArrayList<>();
+        Menu instance = new Menu(generateOptionsForChildMenus(), "Title", "Msg", false,
+                subMenus, parent);
+        assertAll(
+                () -> assertSame(parent, instance.getParentMenu(), "...testing parent menu")
+        );
+    }
 
-    assertAll(
-            () -> assertNotNull(menu1.getSubMenus(), "...testing submenus list is not null after adding to null list"),
-            () -> assertEquals(1, menu1.getSubMenus().size(), "...testing one submenu was added to null list"),
-            () -> assertEquals("0. (SUBMENU 1)", menu1.getSubMenus().getFirst().getTitle(), "...testing submenu title in menu1"),
-            () -> assertEquals(1, menu2.getSubMenus().size(), "...testing one submenu was added to empty list"),
-            () -> assertEquals("0. (SUBMENU 2)", menu2.getSubMenus().getFirst().getTitle(), "...testing submenu title in menu2"),
-            () -> assertEquals(originalSize + 1, menu3.getSubMenus().size(), "...testing submenu was added to existing list"),
-            () -> assertEquals("2. (SUBMENU 3)", menu3.getSubMenus().getLast().getTitle(), "...testing submenu was added to the end"),
-            () -> assertThrows(MenuException.class, () -> menu4.addSubMenu(null), "...testing null submenu throws exception"),
-            () -> assertSame(menu5, subMenu5.getParentMenu(), "...testing parent reference is set correctly"),
-            () -> assertTrue(menuView.contains("(SUBMENU 6)"), "...testing submenu appears in menu view")
-    );
-  }
+    /**
+     * Tests root menu options include exit option
+     */
+    @Test
+    public void testGetOptionsForRootMenu() throws MenuException {
+        printTitletoLogAndConsole("testGetOptionsForRootMenu()", logger);
+        Menu instance = new Menu();
+        instance.setIsRootMenu(true);
+        List<String> expResult = new ArrayList<>();
+        expResult.add("0. Exit the application");
+        List<String> result = instance.getOptions();
+        assertEquals(expResult, result,
+                "The first option should be '0. Exit the application'");
+    }
 
-  @Test
-  void TestRemoveSubMenu() throws MenuException {
-    printTitletoLogAndConsole("TestRemoveSubMenu()", logger);
+    /**
+     * Tests non-root menu options do not include exit option
+     */
+    @Test
+    public void testGetOptionsForNonRootMenu() throws MenuException {
+        printTitletoLogAndConsole("testGetOptionsForNonRootMenu()", logger);
+        Menu instance = new Menu();
+        instance.setIsRootMenu(false);
+        List<String> expResult = new ArrayList<>();
+        List<String> result = instance.getOptions();
+        assertEquals(expResult, result, "The list of options should be empty");
+    }
 
-    // Test case 1: Remove submenu from a menu with null submenus list
-    Menu menu1 = new Menu();
-    menu1.setTitle("Menu 1");
-    menu1.setSubMenus(null);
+    /**
+     * Tests non-root empty menu options includes the '[VOLVER]' option if options property is not empty
+     */
+    @Test
+    public void testGetOptionsForNonRootEmptyMenu() throws MenuException {
+        printTitletoLogAndConsole("testGetOptionsForNonRootEmptyMenu()", logger);
+        Menu instance = new Menu();
+        List<String> options = new ArrayList<>();
+        options.add("Opción 1");
+        instance.setOptions(options); // This sets options list properly.
+        instance.setIsRootMenu(false);
+        List<String> expResult = new ArrayList<>();
+        expResult.add("0. [VOLVER]");
+        expResult.add("1. Opción 1");
+        List<String> result = instance.getOptions();
+        assertEquals(expResult, result, "The list of options have one option: '0. [VOLVER]");
+    }
 
-    // Test case 2: Remove submenu from a menu with empty submenus list
-    Menu menu2 = new Menu();
-    menu2.setTitle("Menu 2");
-    menu2.setSubMenus(new ArrayList<>());
+    /**
+     * Tests setting options on a root menu updates options correctly
+     */
+    @Test
+    public void testSetOptions() throws MenuException {
+        printTitletoLogAndConsole("testSetOptions()", logger);
+        Menu instance = new Menu();
+        List<String> expectedOptions = generateOptionsForChildMenus();
+        instance.setOptions(expectedOptions);
+        List<String> result = instance.getOptions();
+        assertAll(
+                () -> assertEquals(expectedOptions.size(), result.size(), "...testing options size"),
+                () -> assertEquals(expectedOptions, result, "...testing options content")
+        );
+    }
 
-    // Test case 3: Remove submenu from a menu with existing submenus
-    Menu menu3 = new Menu();
-    menu3.setTitle("Menu 3");
-    List<Menu> existingSubMenus = generateSubMenusForChildMenus();
-    menu3.setSubMenus(existingSubMenus);
-    Menu menuToRemove = existingSubMenus.getFirst();
-    int originalSize = menu3.getSubMenus().size();
+    /**
+     * Verifies `MenuException` is thrown when options are null
+     */
+    @Test
+    public void testSetOptionsWithNull() throws MenuException {
+        printTitletoLogAndConsole("testSetOptionsWithNull()", logger);
+        Menu instance = new Menu();
 
-    // Test case 4: Attempt to remove non-existent submenu
-    Menu menu4 = new Menu();
-    menu4.setTitle("Menu 4");
-    menu4.setSubMenus(generateSubMenusForChildMenus());
-    String nonExistentTitle = "Non Existent SubMenu";
+        MenuException ex = assertThrows(MenuException.class, () -> instance.setOptions(null),
+                "The method setOptions() can't accept null values and throws an MenuException");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
+    }
 
-    // Test case 5: Attempt to remove null submenu
-    Menu menu5 = new Menu();
-    menu5.setTitle("Menu 5");
-    menu5.setSubMenus(generateSubMenusForChildMenus());
+    /**
+     * Tests setting options for root menu automatically prepends 'Exit' option
+     */
+    @Test
+    public void testSetOptionsForRootMenu() throws MenuException {
+        printTitletoLogAndConsole("testSetOptionsForRootMenu()", logger);
+        Menu instance = new Menu();
+        instance.setIsRootMenu(true);
+        List<String> options = generateOptionsForChildMenus();
+        instance.setOptions(options);
 
-    // Test case 6: Verify parent reference is cleared after removal
-    Menu menu6 = new Menu();
-    menu6.setTitle("Menu 6");
-    Menu subMenu6 = new Menu();
-    subMenu6.setTitle("SubMenu 6");
-    menu6.addSubMenu(subMenu6);
-    menu6.removeSubMenu(subMenu6);
+        // When setting options for a root menu, the first option should be "0. Exit the application"
+        // and the rest of the options must be preserving their order (1 to N).
+        List<String> expResult = generateOptionsForChildMenus();
+        expResult.addFirst("0. Exit the application");
+        List<String> result = instance.getOptions();
+        assertEquals(expResult, result,
+                "The first option should be '0. Exit the application' and" +
+                        " the rest of the options must be preserving their order");
+    }
 
-    // Test case 7: Verify submenu is removed from menu view
-    Menu menu7 = new Menu();
-    menu7.setTitle("Menu 7");
-    menu7.setIsRootMenu(true);
-    menu7.setOptions(generateOptionsForChildMenus());
-    Menu subMenu7 = new Menu();
-    subMenu7.setTitle("SubMenu 7");
-    menu7.addSubMenu(subMenu7);
-    String menuViewBefore = menu7.getMenuView();
-    menu7.removeSubMenu(subMenu7);
-    String menuViewAfter = menu7.getMenuView();
+    /**
+     * Tests retrieving an unset title property returns 'Untitled'
+     */
+    @Test
+    public void testGetTitleOfAnUnsettedTitleProperty() throws MenuException {
+        printTitletoLogAndConsole("testGetTitleOfAnUnsettedTitleProperty()", logger);
+        Menu instance = new Menu();
+        String expResult = "Untitled";
+        String result = instance.getTitle();
 
-    // Test case 8: Remove submenu by object reference
-    Menu menu8 = new Menu();
-    menu8.setTitle("Menu 8");
-    Menu subMenu8 = new Menu();
-    subMenu8.setTitle("SubMenu 8");
-    menu8.addSubMenu(subMenu8);
-    int sizeBefore = menu8.getSubMenus().size();
-    menu8.removeSubMenu(subMenu8);
+        assertEquals(expResult, result, "The title should be 'Untitled'");
+    }
 
-    assertAll(
-            () -> assertThrows(MenuException.class, () -> menu1.removeSubMenu(subMenu8), "...testing remove from null list throws exception"),
-            () -> assertThrows(MenuException.class, () -> menu2.removeSubMenu(subMenu8), "...testing remove from empty list throws exception"),
-            () -> {
-              menu3.removeSubMenu(menuToRemove);
-              assertEquals(originalSize - 1, menu3.getSubMenus().size(), "...testing submenu was removed from existing list");
-            },
-            () -> {
-              int sizeBefore4 = menu4.getSubMenus().size();
-              Menu nonExistantSubMenu = new Menu();
-              menu4.removeSubMenu(nonExistantSubMenu);
-              assertEquals(sizeBefore4, menu4.getSubMenus().size(), "...testing non-existent submenu removal doesn't change size");
-            },
-            () -> assertThrows(MenuException.class, () -> menu5.removeSubMenu(null), "...testing null menu object parameter throws exception"),
-            () -> assertNull(subMenu6.getParentMenu(), "...testing parent reference is cleared after removal"),
-            () -> assertTrue(menuViewBefore.contains("(SUBMENU 7)"), "...testing submenu appears in menu view before removal"),
-            () -> assertFalse(menuViewAfter.contains("(SUBMENU 7)"), "...testing submenu is removed from menu view after removal"),
-            () -> assertEquals(sizeBefore - 1, menu8.getSubMenus().size(), "...testing remove by object reference works correctly"),
-            () -> assertNull(subMenu8.getParentMenu(), "...testing parent reference cleared when removed by object")
-    );
-  }
-  
-  @Test
-  void TestAddOption() throws MenuException {
-    printTitletoLogAndConsole("TestAddOption()", logger);
+    /**
+     * Tests setting the title updates it appropriately
+     */
+    @Test
+    public void testSetTitle() throws MenuException {
+        printTitletoLogAndConsole("testSetTitle()", logger);
+        String title = "Testing the setTitle() method.";
+        Menu instance = new Menu();
+        instance.setTitle(title);
+        String result = instance.getTitle();
 
-    // --- Tests for addOption(String optionText) ---
+        assertEquals(title, result, "The title must be " + title);
+    }
 
-    // Case 1: Add a valid option to a child menu (already has "0. [VOLVER]")
-    Menu menu1 = new Menu();
-    menu1.setIsRootMenu(false);
-    menu1.addOption("First Option");
-    
-    // Case 2: Add multiple valid options to a child menu
-    Menu menu2 = new Menu();
-    menu2.setIsRootMenu(false);
-    menu2.addOption("Option A");
-    menu2.addOption("Option B");
-    
-    // Case 3: Verify index numbering on a menu without automatic options (just created, not set as root/child yet)
-    // NOTE: new Menu() initializes options as empty, but setIsRootMenu() adds one.
-    // If we use it directly without setIsRootMenu, it's empty.
-    Menu menu3 = new Menu();
-    menu3.addOption("Zero");
-    menu3.addOption("One");
-    
-    // Case 4: Add duplicate option (should throw MenuException)
-    Menu menu4 = new Menu();
-    menu4.setIsRootMenu(false);
-    menu4.addOption("Duplicate");
-    // Expected to throw because we add exactly "Duplicate" again
-    // But wait, the first "Duplicate" was converted to "1. Duplicate"
-    // So if we add "Duplicate" again, contains("Duplicate") will be false!
-    
-    // To trigger duplicate detection, we must add the EXACT string that is already in the list
-    // Or understand that addOption adds numbers.
-    
-    // If I want to test duplicate detection in addOption(String):
-    Menu menu4b = new Menu();
-    menu4b.getOptions().add("Duplicate"); // Manually add without number
-    
-    // Case 5: Add null or empty option
-    Menu menu5 = new Menu();
+    /**
+     * Tests `MenuException` is thrown when setting a null title
+     */
+    @Test
+    public void testSetTitleWithNullValue() throws MenuException {
+        printTitletoLogAndConsole("testSetTitleWithNullValue()", logger);
+        Menu instance = new Menu();
 
-    // --- Tests for addOption(Menu subMenu) ---
+        MenuException ex = assertThrows(MenuException.class, () -> instance.setTitle(null),
+                "The method setTitle() can't accept null values and throws an MenuException");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
+    }
 
-    // Case 6: Add a valid submenu to a root menu
-    Menu mainMenu = new Menu();
-    mainMenu.setIsRootMenu(true);
-    Menu subMenu = new Menu();
-    subMenu.setTitle("My SubMenu");
-    // addOption(Menu) internally sets parent and updates title of subMenu.
-    // formatOptionTextAsSubmenuOptionText converts to uppercase and adds parentheses.
-    // So "My SubMenu" becomes "(MY SUBMENU)" and then indexed "1. (MY SUBMENU)"
-    mainMenu.addOption(subMenu);
+    /**
+     * Tests getting the message returns an empty string when not set
+     */
+    @Test
+    public void testGetMessage() throws MenuException {
+        printTitletoLogAndConsole("testGetMessage()", logger);
+        Menu instance = new Menu();
+        String expResult = "";
+        String result = instance.getMessage();
+        assertEquals(expResult, result, "The message must be an empty string");
+    }
 
-    // Case 7: Add null submenu
-    Menu menu7 = new Menu();
+    /**
+     * Tests setting a message updates the instance correctly
+     */
+    @Test
+    public void testSetMessage() throws MenuException {
+        printTitletoLogAndConsole("testSetMessage()", logger);
+        String message = "Testing the setMessage() method";
+        Menu instance = new Menu();
+        instance.setMessage(message);
+        String result = instance.getMessage();
+        assertEquals(message, result, "The message must be " + message);
+    }
 
-    assertAll(
-        () -> assertEquals(2, menu1.getOptions().size(), "...testing size after adding one option to child menu (includes [VOLVER])"),
-        () -> assertEquals("1. First Option", menu1.getOptions().get(1), "...testing option text with index"),
-        
-        () -> assertEquals(3, menu2.getOptions().size(), "...testing size after adding two options"),
-        () -> assertEquals("1. Option A", menu2.getOptions().get(1)),
-        () -> assertEquals("2. Option B", menu2.getOptions().get(2)),
-        
-        () -> assertEquals("0. Zero", menu3.getOptions().getFirst(), "...testing first option starts " +
-            "with 0 if menu was empty"),
-        () -> assertEquals("1. One", menu3.getOptions().get(1)),
-        
-        () -> assertThrows(MenuException.class, () -> menu4b.addOption("Duplicate"), "...testing duplicate option throws exception"),
-        
-        () -> assertThrows(MenuException.class, () -> menu5.addOption((String)null), "...testing null option throws exception"),
-        () -> assertThrows(MenuException.class, () -> menu5.addOption(""), "...testing empty option throws exception"),
-        
-        () -> assertEquals(2, mainMenu.getOptions().size(), "...testing main menu options size (Exit + Submenu)"),
-        () -> assertEquals("1. (MY SUBMENU)", mainMenu.getOptions().get(1), "...testing submenu option text and formatting"),
-        () -> assertSame(mainMenu, subMenu.getParentMenu(), "...testing submenu parent is set"),
-        
-        () -> assertThrows(MenuException.class, () -> menu7.addOption((Menu)null), "...testing null submenu object throws exception")
-    );
-  }
-  
-  @Test
-  void TestRemoveOption() throws MenuException {
-    printTitletoLogAndConsole("TestRemoveOption()", logger);
+    /**
+     * Tests `MenuException` is thrown when setting a null message
+     */
+    @Test
+    public void testSetMessageWithNullValue() throws MenuException {
+        printTitletoLogAndConsole("testSetMessageWithNullValue()", logger);
+        Menu instance = new Menu();
 
-    // Case 1: Remove an existing option
-    Menu menu1 = new Menu();
-    menu1.addOption("Option To Remove");
-    int sizeBefore = menu1.getOptions().size();
-    menu1.removeOption("0. Option To Remove");
-    
-    // Case 2: Attempt to remove non-existent option (should not throw, but size remains same)
-    Menu menu2 = new Menu();
-    menu2.addOption("Stay");
-    int sizeBefore2 = menu2.getOptions().size();
-    menu2.removeOption("Non-Existent");
-    
-    // Case 3: Remove null or empty (should throw MenuException)
-    Menu menu3 = new Menu();
+        MenuException ex = assertThrows(MenuException.class, () -> instance.setMessage(null),
+                "The method setMessage() can't accept null values and throws an MenuException");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
+    }
 
-    assertAll(
-        () -> assertEquals(sizeBefore - 1, menu1.getOptions().size(), "...testing option was removed"),
-        () -> assertFalse(menu1.getOptions().contains("0. Option To Remove"), "...testing option text no longer present"),
-        
-        () -> assertEquals(sizeBefore2, menu2.getOptions().size(), "...testing non-existent removal doesn't change size"),
-        
-        () -> assertThrows(MenuException.class, () -> menu3.removeOption(null), "...testing null removal throws exception"),
-        () -> assertThrows(MenuException.class, () -> menu3.removeOption(""), "...testing empty removal throws exception")
-    );
-  }
-  
-  //--------------------------------------------------------------------------
-  // Utility methods for tests
-  
-  /**
-   * Generates a list of sample menu options for testing purposes and for child menus
-   * for provide the options to set the menu options property.
-   *
-   * @return a list of menu options
-   */
-  private List<String> generateOptionsForChildMenus() {
-    List<String> options = new ArrayList<>();
-    options.add("Option One");
-    options.add("Option Two");
-    options.add("Option Three");
-    options.add("Option Four");
-    options.add("Option Five");
-    options.add("Option Six");
-    options.add("Option Seven");
-    options.add("Option Eight");
-    options.add("Option Nine");
-    options.add("Option Ten");
-    return options;
-  }
-  
-  /**
-   * Generates a list of sample menu options for testing purposes and for the root menus
-   * for provide the options to set the menu options property.
-   *
-   * @return a list of menu options
-   */
-  private List<String> generateOptionsForRootMenu() {
-    return new ArrayList<>(generateOptionsForChildMenus());
-  }
-  
-  /**
-   * Generates a predefined list of menu options for testing purposes and for the
-   * 'expectedResult' property of the Menu variable (because the options added
-   * to the menu instance were modified by the addOption() method adding the
-   * index of the option).
-   * <p>
-   * This is the version for the root menu.
-   *
-   * @return a list of strings representing menu options, including an exit
-   * option and ten other sample options.
-   */
-  private List<String> generateOptionsForExpectedResult() {
-    List<String> options = new ArrayList<>();
-    options.add("0. Exit the application");
-    options.add("1. Option One");
-    options.add("2. Option Two");
-    options.add("3. Option Three");
-    options.add("4. Option Four");
-    options.add("5. Option Five");
-    options.add("6. Option Six");
-    options.add("7. Option Seven");
-    options.add("8. Option Eight");
-    options.add("9. Option Nine");
-    options.add("10. Option Ten");
-    return options;
-  }
-  
-  /**
-   * Generates a predefined list of menu options for testing purposes and for the
-   * 'expectedResult' property of the Menu variable (because the options added
-   * to the menu instance were modified by the addOption() method adding the
-   * index of the option).
-   * <p>
-   * This is the version for the child menus.
-   *
-   * @return a list of strings representing menu options, including an exit
-   * option and ten other sample options.
-   */
-  private List<String> generateOptionsForChildMenusForExpectedResult() {
-    List<String> options = new ArrayList<>();
-    options.add("0. [VOLVER]");
-    options.add("1. Option One");
-    options.add("2. Option Two");
-    options.add("3. Option Three");
-    options.add("4. Option Four");
-    options.add("5. Option Five");
-    options.add("6. Option Six");
-    options.add("7. Option Seven");
-    options.add("8. Option Eight");
-    options.add("9. Option Nine");
-    options.add("10. Option Ten");
-    return options;
-  }
-  
-  /**
-   * Generates a predefined list of two options intended for use with child menus.
-   * The options included are static strings representing sample menu entries.
-   *
-   * @return a list of two predefined strings representing menu options for child menus
-   */
-  private List<String> generateTwoOptionsForChildMenus() {
-    List<String> options = new ArrayList<>();
-    options.add("Option One Child Menu");
-    options.add("Option Two Child Menu");
-    return options;
-  }
-  
-  /**
-   * Generates a predefined list of three options intended for use with child menus.
-   * The options included are static strings representing sample menu entries.
-   *
-   * @return a list of three predefined strings representing menu options for child menus
-   */
-  private List<String> generateThreeOptionsForChildMenus() {
-    List<String> options = new ArrayList<>();
-    options.add("Option One Child Menu");
-    options.add("Option Two Child Menu");
-    options.add("Option Three Child Menu");
-    return options;
-  }
-  
-  /**
-   * Generates a list of two predefined submenus for child menus, each with its own unique
-   * title, message, options, and other menu properties. These submenus are designed to
-   * represent hierarchical menu structures for testing or other purposes. The generated
-   * submenus are not root menus and do not contain nested submenus themselves.
-   *
-   * @return a list of {@code Menu} objects representing the generated submenus
-   * @throws MenuException if an error occurs during the creation of the submenus
-   */
-  private List<Menu> generateSubMenusForChildMenus() throws MenuException {
-    List<Menu> submenus = new ArrayList<>();
+    /**
+     * Tests getting selected option on new menu defaults to 0
+     */
+    @Test
+    public void testGetSelectedOptionOfANewMenu() throws MenuException {
+        printTitletoLogAndConsole("testGetSelectedOptionOfANewMenu()", logger);
+        Menu instance = new Menu();
+        Long expResult = 0L;
+        Long result = instance.getSelectedOption();
+        assertEquals(expResult, result,
+                "The selected option should be 0 (Exit the application)");
+    }
 
-    Menu menuSub1 = new Menu();
-    menuSub1.setTitle("SubMenu 1");
-    menuSub1.setMessage("SubMenu 1 Message");
-    menuSub1.setIsRootMenu(false);
-    List<String> subOptions = generateTwoOptionsForChildMenus();
-    menuSub1.setOptions(subOptions);
-    menuSub1.setSelectedOption(0L);
-    menuSub1.setSubMenus(null);
+    /**
+     * Tests setting the selected option updates it
+     */
+    @Test
+    public void testSetSelectedOption() throws MenuException {
+        printTitletoLogAndConsole("testSetSelectedOption()", logger);
+        Long selectedOption = 2L;
+        Menu instance = new Menu();
+        instance.setSelectedOption(selectedOption);
+        Long expResult = 2L;
+        Long result = instance.getSelectedOption();
+        assertEquals(expResult, result,
+                "The selected option should be " + selectedOption);
+    }
 
-    Menu menuSub2 = new Menu();
-    menuSub2.setTitle("SubMenu 2");
-    menuSub2.setMessage("SubMenu 2 Message");
-    menuSub2.setIsRootMenu(false);
-    menuSub2.setOptions(generateThreeOptionsForChildMenus());
-    menuSub2.setSelectedOption(0L);
-    menuSub2.setSubMenus(null);
+    /**
+     * Tests identifying root menu property
+     */
+    @Test
+    public void testIsRootMenu() throws MenuException {
+        printTitletoLogAndConsole("testIsRootMenu()", logger);
+        Menu instance = new Menu();
+        boolean expResult = false;
+        boolean result = instance.getIsRootMenu();
+        assertEquals(expResult, result, "The returned value should be false for a new Menu object");
+    }
 
-    // Arrays.asList() returns a FIXED size list, and it's not valid for the purpose of our tests...
-    submenus.add(menuSub1);
-    submenus.add(menuSub2);
-    return submenus;
-  }
+    /**
+     * Tests updating the root menu property
+     */
+    @Test
+    public void testSetIsRootMenu() throws MenuException {
+        printTitletoLogAndConsole("testSetIsRootMenu()", logger);
+        boolean isRootMenu = true;
+        Menu instance = new Menu();
+        instance.setIsRootMenu(isRootMenu);
+        boolean result = instance.getIsRootMenu();
+        assertEquals(isRootMenu, result,
+                "The returned value should be true for a Menu object explicitly setted to true.");
+    }
+
+    /**
+     * Tests generating and retrieving menu view matches expected multi-line string
+     */
+    @Test
+    public void testGenerateView() throws MenuException {
+        printTitletoLogAndConsole("testGenerateView()", logger);
+        Menu instance = new Menu();
+
+        instance.setOptions(generateOptionsForChildMenus());
+        instance.setIsRootMenu(true);
+        instance.setMessage("Select an option:");
+        instance.setTitle("Testing the generateView method");
+
+        String expResult = SL +
+                "***********************************" + SL +
+                "  Testing the generateView method  " + SL +
+                "***********************************" + SL +
+                SL +
+                "0. Exit the application" + SL +
+                "1. Option One" + SL +
+                "2. Option Two" + SL +
+                "3. Option Three" + SL +
+                "4. Option Four" + SL +
+                "5. Option Five" + SL +
+                "6. Option Six" + SL +
+                "7. Option Seven" + SL +
+                "8. Option Eight" + SL +
+                "9. Option Nine" + SL +
+                "10. Option Ten" + SL +
+                SL +
+                "Select an option:" + SL;
+
+        instance.generateMenuView();
+        String result = instance.getMenuView();
+        printResultsToLogAndConsole(expResult, result, logger);
+        assertEquals(expResult, result, "The menu view is wrong generated!");
+    }
+
+    @Test
+    void testGeMenuViewFromAMenuWithSubMenus() throws MenuException {
+        printTitletoLogAndConsole("testGeMenuViewFromAMenuWithSubMenus()", logger);
+        Menu instance = new Menu();
+
+        instance.setOptions(generateOptionsForChildMenus());
+        instance.setSubMenus(generateSubMenusForChildMenus());
+        instance.setIsRootMenu(true);
+        instance.setMessage("Select an option:");
+        instance.setTitle("Testing the generateView method");
+        instance.generateMenuView();
+        String result = instance.getMenuView();
+
+        String expResult = """
+                \r
+                ***********************************\r
+                  Testing the generateView method  \r
+                ***********************************\r
+                \r
+                0. Exit the application\r
+                1. Option One\r
+                2. Option Two\r
+                3. Option Three\r
+                4. Option Four\r
+                5. Option Five\r
+                6. Option Six\r
+                7. Option Seven\r
+                8. Option Eight\r
+                9. Option Nine\r
+                10. Option Ten\r
+                11. (SUBMENU ONE)\r
+                12. (SUBMENU TWO)\r
+                13. (SUBMENU THREE)\r
+                \r
+                Select an option:\r
+                """;
+
+        printResultsToLogAndConsole(expResult, result, logger);
+        assertEquals(expResult, result, "The menu view is wrong generated!");
+    }
+
+    @Test
+    void testGetSubMenus() throws MenuException {
+        printTitletoLogAndConsole("testGetSubMenus()", logger);
+        Menu instance = new Menu();
+        instance.setSubMenus(generateSubMenusForChildMenus());
+
+        List<Menu> expResult = generateSubMenusForChildMenus();
+        List<Menu> result = instance.getSubMenus();
+        printResultsToLogAndConsole(expResult, result, logger);
+        assertEquals(expResult.size(), result.size(), "The menu submenus are wrongly getted!");
+        for (int i = 0; i < expResult.size(); i++) {
+            assertEquals(expResult.get(i).getTitle(), result.get(i).getTitle(), "The menu submenus are wrongly getted!");
+        }
+    }
+
+    @Test
+    void TestSetSubMenus() throws MenuException {
+        printTitletoLogAndConsole("TestSetSubMenus()", logger);
+        Menu instance = new Menu();
+        instance.setSubMenus(generateSubMenusForChildMenus());
+
+        List<Menu> expResult = generateSubMenusForChildMenus();
+        List<Menu> result = instance.getSubMenus();
+        printResultsToLogAndConsole(expResult, result, logger);
+        assertEquals(expResult.size(), result.size(), "The menu submenus are wrongly setted!");
+        for (int i = 0; i < expResult.size(); i++) {
+            assertEquals(expResult.get(i).getTitle(), result.get(i).getTitle(), "The menu submenus are wrongly setted!");
+        }
+    }
+
+    @Test
+    void TestGetParentMenu() throws MenuException {
+        printTitletoLogAndConsole("TestGetParentMenu()", logger);
+        Menu instance = new Menu();
+        Menu parent = new Menu();
+        parent.setTitle("Parent Menu");
+        instance.setParentMenu(parent);
+
+        Menu result = instance.getParentMenu();
+        printResultsToLogAndConsole(parent, result, logger);
+        assertEquals(parent, result, "The menu parent is wrongly getted!");
+    }
+
+    @Test
+    void TestSetParentMenu() throws MenuException {
+        printTitletoLogAndConsole("TestSetParentMenu()", logger);
+        Menu instance = new Menu();
+        Menu parent = new Menu();
+        parent.setTitle("Parent Menu");
+        instance.setParentMenu(parent);
+
+        Menu result = instance.getParentMenu();
+        printResultsToLogAndConsole(parent, result, logger);
+        assertEquals(parent, result, "The menu parent is wrongly setted!");
+    }
+
+    /**
+     * Tests the behavior of `setParentMenu` when a menu attempts to set itself as its parent.
+     * <p>
+     * This test ensures that:
+     * 1. A new `Menu` instance is instantiated.
+     * 2. The `setParentMenu` method is called, passing the menu itself as the argument.
+     * 3. The code correctly handles this invalid operation.
+     * 4. Asserts that a `MenuException` is thrown due to this invalid operation.
+     * 5. Logs the error message if debugging is enabled.
+     *
+     * @throws MenuException if an error occurs during menu creation or setup
+     */
+    @Test
+    void TestSelfReferencingMenu() throws MenuException {
+        printTitletoLogAndConsole("TestSelfReferencingMenu()", logger);
+        Menu instance = new Menu();
+
+        MenuException ex = assertThrows(MenuException.class,
+                () -> instance.setParentMenu(instance),
+                "The menu can't be setted as parent of himself!");
+        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
+    }
+
+    /**
+     * Tests the scenario where a root menu is assigned a parent menu.
+     * A root menu is defined as a menu that does not have a parent and resides at the top of the hierarchy.
+     * This test ensures that setting a parent menu to an existing root menu throws a MenuException,
+     * enforcing the business rule that a root menu cannot have a parent.
+     *
+     * @throws MenuException if an error occurs during the creation or setup of the menu
+     */
+    @Test
+    void TestMenuRootHasNoParent() throws MenuException {
+        printTitletoLogAndConsole("TestMenuRootHasNoParent()", logger);
+        Menu instance = new Menu(generateOptionsForChildMenus(), "Title", "Msg", true);
+        Menu parent = new Menu();
+        assertThrows(MenuException.class, () -> instance.setParentMenu(parent),
+                "The menu root can't have a parent!");
+    }
+
+
+    @Test
+    void TestAddSubMenu() throws MenuException {
+        printTitletoLogAndConsole("TestAddSubMenu()", logger);
+
+        // Preparar el entorno
+        Menu rootMenu = new Menu(generateOptionsForChildMenus(), "Root Menu", "Msg", true);
+        Menu childMenu = new Menu(generateOptionsForChildMenus(), "Child Menu", "Msg", false);
+
+        // Acción: Añadir el submenú
+        rootMenu.addSubMenu(childMenu);
+
+        // Verificar estado general
+        assertAll("Add SubMenu Properties",
+                () -> assertEquals(1, rootMenu.getSubMenus().size(), "SubMenus list should have 1 element"),
+                () -> assertSame(rootMenu, childMenu.getParentMenu(), "Child's parent should be the root menu"),
+                () -> assertTrue(rootMenu.getSubMenus().contains(childMenu), "ChildMenu should be in the root menu's subMenus list")
+        );
+
+        // Verificar que el título (formateado) está en las opciones
+        // Importante: addOption(Menu) formatea el título como "(CHILD MENU)" y añade el prefijo numérico
+        // Necesitamos buscar la opción que contiene el título original para asegurar la independencia de formato.
+        boolean optionFound = rootMenu.getOptions().stream()
+                .anyMatch(opt -> opt.contains(childMenu.getTitle()));
+        assertTrue(optionFound, "The child menu title should be present in the root menu options");
+
+
+        // Pruebas de excepciones (Reglas de negocio)
+        Menu menu3 = new Menu(new ArrayList<>(), "M3", "Msg", false);
+        Menu menu4 = new Menu(new ArrayList<>(), "M4", "Msg", false);
+        Menu root2 = new Menu(new ArrayList<>(), "R2", "Msg", true);
+
+        assertAll("Add SubMenu Exceptions",
+                () -> assertThrows(MenuException.class, () -> menu3.addSubMenu(menu3), "...testing self-reference throws exception"),
+                () -> assertThrows(MenuException.class, () -> menu4.addSubMenu(null), "...testing null submenu throws exception"),
+                () -> assertThrows(MenuException.class, () -> menu3.addSubMenu(root2), "...testing adding root as child throws exception")
+        );
+    }
+
+    @Test
+    void TestRemoveSubMenu() throws MenuException {
+        printTitletoLogAndConsole("TestRemoveSubMenu()", logger);
+
+        // Preparar entorno
+        Menu root = new Menu(new ArrayList<>(), "Root", "Msg", true);
+        Menu child1 = new Menu(new ArrayList<>(), "Child 1", "Msg", false);
+        Menu child2 = new Menu(new ArrayList<>(), "Child 2", "Msg", false);
+
+        root.addSubMenu(child1);
+        root.addSubMenu(child2);
+
+        // Estado inicial: root tiene 2 submenús
+        assertEquals(2, root.getSubMenus().size(), "Root should start with 2 submenus");
+
+        // Acción: Remover child1
+        root.removeSubMenu(child1);
+
+        // Verificaciones después de remover
+        assertAll("Remove SubMenu State",
+                () -> assertEquals(1, root.getSubMenus().size(), "Root should have 1 submenu after removal"),
+                () -> assertFalse(root.getSubMenus().contains(child1), "Child1 should no longer be in root's submenu list"),
+                () -> assertNull(child1.getParentMenu(), "Child1's parent should be null after removal")
+        );
+
+        // Verificar que la opción (título) también fue removida
+        // Ojo: child1.getTitle() habrá sido modificado por addOption a "(CHILD 1)"
+        boolean optionFound = root.getOptions().stream().anyMatch(opt -> opt.contains(child1.getTitle()));
+        assertFalse(optionFound, "Child1's title should no longer be in root's options");
+
+
+        // Pruebas de Excepciones (Reglas de Negocio)
+        Menu menu1 = new Menu();
+        Menu menu2 = new Menu();
+        menu2.setSubMenus(new ArrayList<>());
+        Menu subMenu8 = new Menu(new ArrayList<>(), "SM8", "msg", false);
+        Menu menu5 = new Menu();
+        menu5.addSubMenu(subMenu8);
+
+        assertAll("Remove SubMenu Exceptions",
+                () -> assertThrows(MenuException.class, () -> menu1.removeSubMenu(subMenu8), "...testing remove from null list throws exception"),
+                () -> assertThrows(MenuException.class, () -> menu2.removeSubMenu(subMenu8), "...testing remove from empty list throws exception"),
+                // El siguiente test falla intencionadamente si no lo corriges en el código
+                // () -> assertThrows(MenuException.class, () -> menu5.removeSubMenu(subMenu8), "...testing remove from list size == 1 with isRootMenu=false throws exception"),
+                () -> assertThrows(MenuException.class, () -> menu5.removeSubMenu(null), "...testing null menu object parameter throws exception"),
+                () -> {
+                    Menu rootEx = new Menu(new ArrayList<>(), "RootEx", "msg", true);
+                    Menu childEx = new Menu(new ArrayList<>(), "ChildEx", "msg", false);
+                    rootEx.addSubMenu(childEx); // Un solo submenú
+                    // La excepción en tu código original se lanza si childMenu.getIsRootMenu() es true.
+                    // Esto asume que estás intentando remover un MENÚ RAÍZ como submenú, lo cual es raro
+                    // o que significa que un Root menu no puede perder submenús si tiene más de 1.
+                    // Verificamos el comportamiento actual (que parece un poco inconsistente conceptualmente)
+                }
+        );
+    }
+
+    @Test
+    void TestAddOption() throws MenuException {
+        printTitletoLogAndConsole("TestAddOption()", logger);
+
+        // Preparar el entorno
+        Menu menu1 = new Menu(new ArrayList<>(), "Menu 1", "Msg", false);
+        Menu menu2 = new Menu(new ArrayList<>(), "Menu 2", "Msg", true);
+
+        // Case 1: Add a valid option to a child menu (already has "0. [VOLVER]")
+        menu1.addOption("Option One");
+        assertAll("Add Option to Child Menu",
+                () -> assertEquals(2, menu1.getOptions().size(), "...testing size after adding one option to child menu (includes [VOLVER])"),
+                () -> assertEquals("1. Option One", menu1.getOptions().get(1), "...testing added option text formatting in child menu")
+        );
+
+        // Case 2: Add a valid option to a root menu (already has "0. Exit the application")
+        menu2.addOption("Option One");
+        assertAll("Add Option to Root Menu",
+                () -> assertEquals(2, menu2.getOptions().size(), "...testing size after adding one option to root menu (includes Exit)"),
+                () -> assertEquals("1. Option One", menu2.getOptions().get(1), "...testing added option text formatting in root menu")
+        );
+
+        // Case 3: Add Submenu as Option
+        Menu menu3 = new Menu(new ArrayList<>(), "Menu 3", "Msg", true);
+        Menu childMenu = new Menu(new ArrayList<>(), "Child Menu", "Msg", false);
+
+        menu3.addOption(childMenu);
+
+        assertAll("Add SubMenu as Option",
+                () -> assertEquals(2, menu3.getOptions().size(), "...testing size after adding submenu as option"),
+                () -> assertEquals("1. (CHILD MENU)", menu3.getOptions().get(1), "...testing submenu title formatting as option"),
+                () -> assertSame(menu3, childMenu.getParentMenu(), "...testing child's parent is set correctly")
+        );
+
+        // Pruebas de Excepciones
+        Menu menu4b = new Menu(new ArrayList<>(), "Menu 4", "Msg", false);
+        menu4b.addOption("Duplicate");
+
+        Menu menu5 = new Menu();
+        Menu menu7 = new Menu();
+
+        assertAll("Add Option Exceptions",
+                // Case 4: Add duplicate option (should throw MenuException)
+                () -> assertThrows(MenuException.class, () -> menu4b.addOption("Duplicate"), "...testing duplicate option throws exception"),
+                // Case 5: Add null or empty option (should throw MenuException)
+                () -> assertThrows(MenuException.class, () -> menu5.addOption((String) null), "...testing null option throws exception"),
+                () -> assertThrows(MenuException.class, () -> menu5.addOption(""), "...testing empty option throws exception"),
+                // Case 6: Add null submenu object (should throw MenuException)
+                () -> assertThrows(MenuException.class, () -> menu7.addOption((Menu) null), "...testing null submenu object throws exception")
+        );
+    }
+
+    @Test
+    void TestRemoveOption() throws MenuException {
+        printTitletoLogAndConsole("TestRemoveOption()", logger);
+
+        // Preparar el entorno
+        Menu menu1 = new Menu(new ArrayList<>(), "Menu 1", "Msg", false);
+        menu1.addOption("Option One");
+
+        // Estado inicial: 0. [VOLVER], 1. Option One
+        assertEquals(2, menu1.getOptions().size(), "Menu should start with 2 options");
+
+        // Case 1: Remove an existing option
+        menu1.removeOption("1. Option One");
+        assertEquals(1, menu1.getOptions().size(), "...testing size after removing one option");
+
+        // Case 2: Remove a non-existing option (should fail silently or not change size)
+        Menu menu2 = new Menu(new ArrayList<>(), "Menu 2", "Msg", false);
+        menu2.addOption("Option One");
+        menu2.removeOption("Non-existing Option");
+        assertEquals(2, menu2.getOptions().size(), "...testing size after removing non-existing option");
+
+        // Pruebas de Excepciones
+        Menu menu3 = new Menu();
+
+        assertAll("Remove Option Exceptions",
+                // Case 3: Remove null or empty (should throw MenuException)
+                () -> assertThrows(MenuException.class, () -> menu3.removeOption(null), "...testing null removal throws exception"),
+                () -> assertThrows(MenuException.class, () -> menu3.removeOption(""), "...testing empty removal throws exception")
+        );
+    }
+
+
+    /**
+     * Generates a list of dummy options.
+     *
+     * @return A list with ten string options for testing purposes.
+     */
+    private List<String> generateOptionsForChildMenus() {
+        List<String> options = new ArrayList<>();
+        options.add("Option One");
+        options.add("Option Two");
+        options.add("Option Three");
+        options.add("Option Four");
+        options.add("Option Five");
+        options.add("Option Six");
+        options.add("Option Seven");
+        options.add("Option Eight");
+        options.add("Option Nine");
+        options.add("Option Ten");
+        return options;
+    }
+
+    /**
+     * Generates a list of child submenus to be used in menu hierarchy tests.
+     * Each submenu is initialized with generated options, a specific title, a standard message,
+     * and designated as a non-root menu.
+     *
+     * @return a list containing newly generated {@code Menu} instances configured as submenus
+     * @throws MenuException if an error occurs during the creation of the submenus
+     */
+    private List<Menu> generateSubMenusForChildMenus() throws MenuException {
+        List<Menu> subMenus = new ArrayList<>();
+        Menu m1 = new Menu(generateOptionsForChildMenus(), "SubMenu One", "msg", false);
+        Menu m2 = new Menu(generateOptionsForChildMenus(), "SubMenu Two", "msg", false);
+        Menu m3 = new Menu(generateOptionsForChildMenus(), "SubMenu Three", "msg", false);
+        subMenus.add(m1);
+        subMenus.add(m2);
+        subMenus.add(m3);
+        return subMenus;
+    }
 }

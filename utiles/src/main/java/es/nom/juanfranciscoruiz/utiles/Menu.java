@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import static es.nom.juanfranciscoruiz.utiles.Util.*;
 
@@ -28,6 +30,30 @@ public class Menu {
      * For debugging.
      */
     private final static Logger logger = LoggerFactory.getLogger(Menu.class);
+    private static ResourceBundle messages;
+
+    static {
+        try {
+            messages = ResourceBundle.getBundle("messages");
+        } catch (MissingResourceException e) {
+            logger.warn("ResourceBundle 'messages' not found. Falling back to default messages.");
+            messages = null;
+        }
+    }
+
+    /**
+     * Helper method to fetch internationalized messages, falling back to default if not found.
+     *
+     * @param key            The ResourceBundle key
+     * @param defaultMessage The default message if key or bundle is not available
+     * @return The resolved message
+     */
+    private static String getMessage(String key, String defaultMessage) {
+        if (messages != null && messages.containsKey(key)) {
+            return messages.getString(key);
+        }
+        return defaultMessage;
+    }
 
     /**
      * Default value for the title property of a Menu Object.
@@ -97,7 +123,7 @@ public class Menu {
         this.setOptions(new ArrayList<>());
         this.setSubMenus(new ArrayList<>());
         this.setRootMenu(false);
-        this.setTitle(MenuConstants.NO_TITLE);
+        this.setTitle(getMessage("msg.menu.no.title", MenuConstants.NO_TITLE));
         this.setMessage("");
         this.menuView = "";
         this.setSelectedOption(0L);
@@ -130,13 +156,13 @@ public class Menu {
         if (title != null && !title.isEmpty()) {
             this.setTitle(title);
         } else {
-            this.setTitle(MenuConstants.NO_TITLE);
+            this.setTitle(getMessage("msg.menu.no.title", MenuConstants.NO_TITLE));
         }
         this.setMessage(message);
 
         this.setRootMenu(isRootMenu);
         if (this.isRootMenu()) {
-            this.getOptions().addFirst(MenuConstants.EXITOPT);
+            this.getOptions().addFirst(getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT));
         }
     }
 
@@ -163,18 +189,21 @@ public class Menu {
                 List<Menu> subMenus, Menu parentMenu) throws MenuException {
         this(options, title, message, isRootMenu);
         if (subMenus == null) {
-            throw new MenuException(MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.submenus.null", MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         this.setSubMenus(subMenus);
         if (isRootMenu) {
             if (parentMenu != null) {
-                throw new MenuException(MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
+                String msg = getMessage("err.menu.root.no.parent", MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
+                throw new MenuException(msg);
             }
         } else {
             if (parentMenu != null) {
                 this.setParentMenu(parentMenu);
             } else {
-                throw new MenuException(MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
+                String msg = getMessage("err.menu.submenu.must.have.parent", MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
+                throw new MenuException(msg);
             }
         }
     }
@@ -198,7 +227,8 @@ public class Menu {
      */
     public void setOptions(List<String> options) throws MenuException {
         if (options == null) {
-            throw new MenuException(MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         int i = 0;
         int index = 1;
@@ -214,8 +244,9 @@ public class Menu {
             this.options = options;
         }
 
-        if (this.isRootMenu() && !this.getOptions().contains(MenuConstants.EXITOPT)) {
-            this.options.addFirst(MenuConstants.EXITOPT);
+        String exitOpt = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
+        if (this.isRootMenu() && !this.getOptions().contains(exitOpt)) {
+            this.options.addFirst(exitOpt);
         }
     }
 
@@ -237,7 +268,8 @@ public class Menu {
      */
     public void setTitle(String title) throws MenuException {
         if (title == null) {
-            throw new MenuException(MenuErrors.ERR_TITLE_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.title.null", MenuErrors.ERR_TITLE_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         this.title = title;
     }
@@ -260,7 +292,8 @@ public class Menu {
      */
     public void setMessage(String message) throws MenuException {
         if (message == null) {
-            throw new MenuException(MenuErrors.ERR_MESSAGE_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.message.null", MenuErrors.ERR_MESSAGE_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         this.message = message;
     }
@@ -317,7 +350,8 @@ public class Menu {
      */
     public void setParentMenu(Menu parentMenu) throws MenuException {
         if (this.isRootMenu) {
-            throw new MenuException(MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
+            String msg = getMessage("err.menu.root.no.parent", MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
+            throw new MenuException(msg);
         }
 
         if (parentMenu == null) {
@@ -325,8 +359,8 @@ public class Menu {
             return;
         }
         if (parentMenu.equals(this)) {
-
-            throw new MenuException(MenuErrors.ERR_MENU_CANNOT_HAVE_ITSELF_AS_PARENT);
+            String msg = getMessage("err.menu.cannot.have.itself.parent", MenuErrors.ERR_MENU_CANNOT_HAVE_ITSELF_AS_PARENT);
+            throw new MenuException(msg);
         }
         this.parentMenu = parentMenu;
     }
@@ -344,7 +378,8 @@ public class Menu {
      */
     public void setIsRootMenu(boolean isRootMenu) throws MenuException {
         if (this.getParentMenu() != null) {
-            throw new MenuException(MenuErrors.ERR_SUBMENU_SET_AS_ROOT);
+            String msg = getMessage("err.menu.submenu.set.root", MenuErrors.ERR_SUBMENU_SET_AS_ROOT);
+            throw new MenuException(msg);
         }
         this.setRootMenu(isRootMenu);
 
@@ -352,11 +387,13 @@ public class Menu {
             this.setOptions(new ArrayList<>());
         }
 
+        String exitOpt = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
+        String backOpt = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
         if (this.isRootMenu()) {
-            this.getOptions().addFirst(MenuConstants.EXITOPT);
+            this.getOptions().addFirst(exitOpt);
         } else {
-            this.getOptions().remove(MenuConstants.EXITOPT);
-            this.getOptions().addFirst(MenuConstants.BACKTOPARENTMENU);
+            this.getOptions().remove(exitOpt);
+            this.getOptions().addFirst(backOpt);
             this.setTitle("(" + this.getTitle() + ")");
         }
     }
@@ -482,18 +519,21 @@ public class Menu {
      */
     public void addSubMenu(Menu childMenu) throws MenuException {
         if (childMenu == null) {
-            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
-            throw new MenuException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
 
         // Regla: Evitar ciclos y asegurar padre único
         if (childMenu == this) {
-            error(logger, MenuErrors.ERR_MENU_CANNOT_POINT_TO_ITSELF);
-            throw new MenuException(MenuErrors.ERR_MENU_CANNOT_POINT_TO_ITSELF);
+            String msg = getMessage("err.menu.point.itself", MenuErrors.ERR_MENU_CANNOT_POINT_TO_ITSELF);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         if (childMenu.getIsRootMenu()) {
-            error(logger, MenuErrors.ERR_ROOTMENU_CANT_POINT_TO_ANOTHER_MENU);
-            throw new MenuException(MenuErrors.ERR_ROOTMENU_CANT_POINT_TO_ANOTHER_MENU);
+            String msg = getMessage("err.menu.root.point.another", MenuErrors.ERR_ROOTMENU_CANT_POINT_TO_ANOTHER_MENU);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
 
         // Asegura lista inicializada y mutable
@@ -534,26 +574,30 @@ public class Menu {
      */
     public void removeSubMenu(Menu childMenu) throws MenuException {
         if (childMenu == null) {
-            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
-            throw new MenuException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         if (this.subMenus == null) {
-            error(logger, MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
-            throw new MenuException(MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.submenus.null", MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         if (this.subMenus.isEmpty()) {
-            error(logger, MenuErrors.ERR_SUBMENU_NOT_FOUND);
-            throw new MenuException(MenuErrors.ERR_SUBMENU_NOT_FOUND);
+            String msg = getMessage("err.menu.submenu.not.found", MenuErrors.ERR_SUBMENU_NOT_FOUND);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
 
         if (!this.subMenus.contains(childMenu)) {
-            warn(logger, MenuErrors.ERR_SUBMENU_NOT_FOUND);
+            warn(logger, getMessage("err.menu.submenu.not.found", MenuErrors.ERR_SUBMENU_NOT_FOUND));
             return;
         }
 
         if (childMenu.getIsRootMenu() && this.subMenus.size() > 1) {
-            error(logger, MenuErrors.ERR_ROOTMENU_WITH_SUBMENUS_CANT_BE_REMOVED);
-            throw new MenuException(MenuErrors.ERR_ROOTMENU_WITH_SUBMENUS_CANT_BE_REMOVED);
+            String msg = getMessage("err.menu.root.with.submenus.removed", MenuErrors.ERR_ROOTMENU_WITH_SUBMENUS_CANT_BE_REMOVED);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         childMenu.setParentMenu(null); //Needs to remove the reference to this in the child menu, too.
         this.removeOption(childMenu.getTitle());
@@ -568,15 +612,18 @@ public class Menu {
      */
     public void addOption(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {
-            error(logger, MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
-            throw new MenuException(MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            String msg = getMessage("err.menu.option.null.or.empty", MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         if (this.getOptions() == null) {
-            throw new MenuException(MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         if (this.getOptions().contains(optionText)) {
-            error(logger, MenuErrors.ERR_OPTION_ALREADY_EXISTS);
-            throw new MenuException(MenuErrors.ERR_OPTION_ALREADY_EXISTS);
+            String msg = getMessage("err.menu.option.exists", MenuErrors.ERR_OPTION_ALREADY_EXISTS);
+            error(logger, msg);
+            throw new MenuException(msg);
         } else {
             optionText = addNumbertoOptionMenu(optionText, this.getOptions().size());
         }
@@ -593,8 +640,9 @@ public class Menu {
      */
     public void addOption(Menu subMenu) throws MenuException {
         if (subMenu == null) {
-            error(logger, MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
-            throw new MenuException(MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            String msg = getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         if (this.getOptions() == null) {
             this.setOptions(new ArrayList<>());
@@ -615,8 +663,9 @@ public class Menu {
      */
     public void removeOption(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {
-            error(logger, MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
-            throw new MenuException(MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
+            String msg = getMessage("err.menu.option.to.remove.null.or.empty", MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         this.getOptions().remove(optionText);
     }
@@ -658,8 +707,9 @@ public class Menu {
      */
     private String addNumbertoOptionMenu(String theOption, int index) throws MenuException {
         if (theOption == null || theOption.isEmpty()) {
-            error(logger, MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
-            throw new MenuException(MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            String msg = getMessage("err.menu.option.null.or.empty", MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            error(logger, msg);
+            throw new MenuException(msg);
         }
         //It's validates the argument 'theoption' has no number added yet.
         if (theOption.substring(1, 2).matches("\\d")) {
@@ -693,7 +743,8 @@ public class Menu {
      */
     private static String formatOptionTextAsSubmenuOptionText(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {
-            throw new MenuException(MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            String msg = getMessage("err.menu.option.null.or.empty", MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            throw new MenuException(msg);
         }
         if (!optionText.contains("(")) {
             optionText = "(" + optionText;

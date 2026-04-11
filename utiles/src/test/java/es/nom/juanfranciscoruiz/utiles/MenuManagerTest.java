@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
@@ -25,10 +26,16 @@ class MenuManagerTest {
 
     public final static Logger logger = LoggerFactory.getLogger(MenuManagerTest.class);
     List<String> options = new ArrayList<>();
+    private static ResourceBundle messages;
 
     @BeforeAll
     static void beforeAll() {
         printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting MenuManagerTest" + System.lineSeparator(), logger);
+        try {
+            messages = ResourceBundle.getBundle("messages");
+        } catch (Exception e) {
+            messages = null;
+        }
     }
 
     @AfterAll
@@ -46,9 +53,9 @@ class MenuManagerTest {
      */
     @BeforeEach
     void setUp() {
-        options.add("1. Option One");
-        options.add("2. Option Two");
-        options.add("3. Option Three");
+        options.add("Option One");
+        options.add("Option Two");
+        options.add("Option Three");
     }
 
     @Test
@@ -119,7 +126,10 @@ class MenuManagerTest {
             instance.showMenu(false);
             fail("Expected MenuException not thrown");
         } catch (MenuManagerException e) {
-            assertEquals("There are no defined options in this menu", e.getMessage());
+            String expectedMessage = messages != null && messages.containsKey("err.menu.no.options") 
+                ? messages.getString("err.menu.no.options") 
+                : "There are no defined options in this menu";
+            assertEquals(expectedMessage, e.getMessage());
         }
     }
 
@@ -152,9 +162,9 @@ class MenuManagerTest {
 
     private List<String> generateOptionsForChildMenus() {
         List<String> opciones = new ArrayList<>();
-        opciones.add("1. Option One");
-        opciones.add("2. Option Two");
-        opciones.add("3. Option Three");
+        opciones.add("Option One");
+        opciones.add("Option Two");
+        opciones.add("Option Three");
         return opciones;
     }
 
