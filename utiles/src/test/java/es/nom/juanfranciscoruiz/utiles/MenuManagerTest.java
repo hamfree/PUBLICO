@@ -71,7 +71,7 @@ class MenuManagerTest {
     void setMenu() throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testSetMenu()", logger);
         MenuManager instance = new MenuManager();
-        Menu expectedValue = new Menu();
+        Menu expectedValue = Menu.getInstance();
         instance.setMenu(expectedValue);
         printResultsToLogAndConsole(expectedValue,instance.getMenu(),logger);
         assertEquals(expectedValue, instance.getMenu(), "Menu should be the same after setting it");
@@ -92,7 +92,7 @@ class MenuManagerTest {
     void showMenu() throws Exception {
         printTitletoLogAndConsole("testShowMenu()", logger);
         MenuManager instance = new MenuManager();
-        Menu menu = new Menu();
+        Menu menu = Menu.getInstance();
         menu.setOptions(options);
         menu.setIsRootMenu(true);
         menu.setMessage("Select an option:");
@@ -111,10 +111,10 @@ class MenuManagerTest {
      * Tests exception on empty menu options
      */
     @Test
-    void showInvalidMenu() throws MenuException {
+    void showInvalidMenu() throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testShowInvalidMenu()", logger);
         MenuManager instance = new MenuManager();
-        Menu menu = new Menu();
+        Menu menu = Menu.getInstance();
         menu.setOptions(options);
         menu.setIsRootMenu(true);
         menu.setMessage("Select an option:");
@@ -122,6 +122,9 @@ class MenuManagerTest {
 
         // Clear options to simulate an invalid menu
         menu.getOptions().clear();
+
+        instance.setMenu(menu);
+
         try {
             instance.showMenu(false);
             fail("Expected MenuException not thrown");
@@ -146,7 +149,7 @@ class MenuManagerTest {
         printTitletoLogAndConsole("testAwaitResponse()", logger);
         String msg = "";
         
-        Menu menu = new Menu();
+        Menu menu = Menu.getInstance();
         menu.setOptions(options);
         menu.setIsRootMenu(true);
         menu.setMessage("Select an option:");
@@ -180,7 +183,7 @@ class MenuManagerTest {
     public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testAwaitResponseForInvalidResponse()",logger);
         String msg = "";
-        Menu menu = new Menu();
+        Menu menu = Menu.getInstance();
         menu.setOptions(generateOptionsForChildMenus());
         menu.setIsRootMenu(true);
         menu.setMessage("Select an option:");
@@ -205,7 +208,7 @@ class MenuManagerTest {
     public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testAwaitResponseForResponseOutOfRange()",logger);
         String msg = "";
-        Menu menu = new Menu();
+        Menu menu = Menu.getInstance();
         menu.setOptions(generateOptionsForChildMenus());
         menu.setIsRootMenu(true);
         menu.setMessage("Select an option:");
@@ -227,7 +230,7 @@ class MenuManagerTest {
     public void testAwaitResponseForNonValidMenuObject() throws MenuException, MenuManagerException {
         printTitletoLogAndConsole("testAwaitResponseForNonValidMenuObject()", logger);
         String msg = "";
-        Menu menu = new Menu();
+        Menu menu = Menu.getInstance();
         menu.setIsRootMenu(false); //Not include the exit option
         menu.setMessage("Select an option:");
         menu.setTitle("Testing the awaitResponse() method");

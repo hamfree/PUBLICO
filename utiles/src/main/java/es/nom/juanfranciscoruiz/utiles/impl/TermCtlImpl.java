@@ -325,9 +325,7 @@ public class TermCtlImpl implements TermCtl {
      * @return true if successful
      */
     public static boolean setConsoleSize(int cols, int rows) {
-
         String os = System.getProperty("os.name").toLowerCase();
-
         return adjustTerminalSize(cols, rows);
     }
 

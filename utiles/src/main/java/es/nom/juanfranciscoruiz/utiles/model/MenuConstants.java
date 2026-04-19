@@ -15,6 +15,15 @@ public class MenuConstants {
    */
   public static final String NO_TITLE = "Untitled";
   /**
+   * Represents the predefined text for the "RETURN" option in a menu system.
+   * <p>
+   * This constant is typically used to display an option that allows the user
+   * to navigate back to the previous menu or context. The format "0. [RETURN]"
+   * includes an option number ("0") followed by the label "[RETURN]" to indicate
+   * going back.
+   */
+  public static final String BACKOPT = "0. [RETURN]";
+  /**
    * For a Menu object that is the Home Menu this is the option 0 of the menu
    * for exiting the application.
    */

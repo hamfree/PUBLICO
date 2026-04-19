@@ -50,6 +50,13 @@ public class MenuErrors {
      */
     public static final String ERR_OPTION_ALREADY_EXISTS = "This option already exists in the menu";
     /**
+     * Error message indicating that a specific menu option is controlled and
+     * managed by the menu system, and therefore cannot be manually modified
+     * or overridden. This constant ensures consistent error reporting when
+     * attempting to perform invalid operations on managed menu options.
+     */
+    public static final String ERR_MANAGED_OPTION = "This option is managed by the Menu";
+    /**
      * Message of error when it's trying to use a Menu Object with no menu options.
      */
     public static final String ERR_NO_OPTIONS = "There are no defined options in this menu";
@@ -69,7 +76,6 @@ public class MenuErrors {
      * Message of error when the root menu has a parent menu.
      */
     public static final String ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU = "Root menu cannot have a parent menu";
-
     /**
      * Message of error when a submenu is not found.
      */
@@ -87,6 +93,11 @@ public class MenuErrors {
      * Message of error when a submenu list is null.
      */
     public static final String ERR_SUBMENUS_CANNOT_BE_NULL = "Submenus list cannot be null";
+    /**
+     * Error message indicating that an operation failed because a submenu was expected
+     * but received a null value instead.
+     */
+    public static final String ERR_SUBMENU_CANNOT_BE_NULL = "Submenu cannot be null";
     /**
      * Message of error when a menu is pointed to itself.
      */

@@ -180,7 +180,7 @@ public class Demo {
 
 
         try {
-            theMenu = new Menu();
+            theMenu = Menu.getInstance();
             theMenu.setIsRootMenu(true);
             theMenu.setTitle("Demo for Utiles library");
             theMenu.setMessage(msg);

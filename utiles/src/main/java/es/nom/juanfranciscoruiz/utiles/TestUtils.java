@@ -75,8 +75,8 @@ public class TestUtils {
      * @param logger        the logger used to log the values; if null, the values are printed to the console
      */
     public static void printResults(Object expectedValue, Object actualValue, Logger logger) {
-        String actVal = "Return value -> " + actualValue;
-        String expVal = "Expected value -> " + expectedValue;
+        String actVal = "Return value -> '" + actualValue + "'";
+        String expVal = "Expected value -> '" + expectedValue + "'";
         if (logger != null) {
             logger.debug(actVal);
             logger.debug(expVal);
@@ -95,8 +95,8 @@ public class TestUtils {
      */
     public static void printResultsToLogAndConsole(Object expectedValue, Object actualValue,
                                                    Logger logger) {
-        String actVal = "Return value -> " + actualValue;
-        String expVal = "Expected value -> " + expectedValue;
+        String actVal = "Return value -> '" + actualValue + "'";
+        String expVal = "Expected value -> '" + expectedValue + "'";
         if (logger != null) {
             logger.debug(actVal);
             logger.debug(expVal);
