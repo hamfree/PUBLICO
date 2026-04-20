@@ -1,266 +1,215 @@
 package es.nom.juanfranciscoruiz.utiles;
 
+import es.nom.juanfranciscoruiz.utiles.exceptions.MenuErrors;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
+import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerErrors;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuManagerException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import es.nom.juanfranciscoruiz.utiles.model.MenuConstants;
 import org.junit.jupiter.api.Test;
-import org.junitpioneer.jupiter.StdIn;
-import org.junitpioneer.jupiter.StdIo;
-import org.junitpioneer.jupiter.StdOut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOutNormalized;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MenuManagerTest {
+    private static final ResourceBundle MESSAGES = loadMessages();
+    private static final String EXIT_OPTION = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
 
-    public final static Logger logger = LoggerFactory.getLogger(MenuManagerTest.class);
-    List<String> options = new ArrayList<>();
-    private static ResourceBundle messages;
+    @Test
+    void constructorPorDefectoCreaUnMenuValido() throws MenuException {
+        MenuManager manager = new MenuManager();
 
-    @BeforeAll
-    static void beforeAll() {
-        printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Starting MenuManagerTest" + System.lineSeparator(), logger);
+        assertNotNull(manager.getMenu());
+        assertTrue(manager.getMenu().getIsRootMenu());
+        assertEquals(1, manager.getMenu().getOptions().size());
+    }
+
+    @Test
+    void constructorConMenuNuloLanzaExcepcion() {
+        MenuManagerException ex = assertThrows(MenuManagerException.class, () -> new MenuManager(null));
+        assertEquals(getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL), ex.getMessage());
+    }
+
+    @Test
+    void setMenuConMenuValidoActualizaLaReferencia() throws MenuException, MenuManagerException {
+        MenuManager manager = new MenuManager();
+        Menu otherMenu = Menu.getInstance();
+
+        manager.setMenu(otherMenu);
+
+        assertSame(otherMenu, manager.getMenu());
+    }
+
+    @Test
+    void showMenuSinAnsiImprimeLaVistaDelMenu() throws Exception {
+        Menu menu = Menu.getInstance();
+        menu.setTitle("Menu de prueba");
+        menu.setMessage("Seleccione una opcion");
+        MenuManager manager = new MenuManager(menu);
+
+        String output = tapSystemOutNormalized(() -> manager.showMenu(false));
+
+        assertEquals(normalize(menu.getMenuView()), normalize(output));
+    }
+
+    @Test
+    void showMenuConAnsiLanzaExcepcion() throws MenuException, MenuManagerException {
+        MenuManager manager = new MenuManager(Menu.getInstance());
+
+        MenuManagerException ex = assertThrows(MenuManagerException.class, () -> manager.showMenu(true));
+
+        assertEquals(getMessage("err.menu.manager.ansi", MenuManagerErrors.ERR_CANNOT_SHOW_MENU_BECAUSE_ANSI_IS_NOT_SUPPORTED), ex.getMessage());
+    }
+
+    @Test
+    void awaitResponseDevuelveLaOpcionSeleccionadaYLaGuardaEnElMenu() throws Exception {
+        Menu menu = Menu.getInstance();
+        MenuManager manager = new MenuManager(menu);
+        manager.addOptionToMenu("Primera opcion");
+        manager.addOptionToMenu("Segunda opcion");
+
+        Long result = ejecutarConEntrada("1", () -> manager.awaitResponse("Seleccione: "));
+
+        assertAll(
+                () -> assertEquals(1L, result),
+                () -> assertEquals(1L, manager.getMenu().getSelectedOption())
+        );
+    }
+
+    @Test
+    void awaitResponseConEntradaVaciaLanzaExcepcionYGuardaMensaje() throws Exception {
+        Menu menu = Menu.getInstance();
+        MenuManager manager = new MenuManager(menu);
+        manager.addOptionToMenu("Primera opcion");
+
+        MenuException ex = assertThrows(MenuException.class, () -> ejecutarConEntrada("", () -> manager.awaitResponse("Seleccione: ")));
+
+        assertAll(
+                () -> assertEquals(getMessage("err.menu.blank", MenuErrors.ERR_BLANK_NULL), ex.getMessage()),
+                () -> assertEquals(getMessage("err.menu.blank", MenuErrors.ERR_BLANK_NULL), menu.getMessage())
+        );
+    }
+
+    @Test
+    void awaitResponseConTextoNoNumericoLanzaExcepcionYGuardaMensaje() throws Exception {
+        Menu menu = Menu.getInstance();
+        MenuManager manager = new MenuManager(menu);
+        manager.addOptionToMenu("Primera opcion");
+
+        MenuException ex = assertThrows(MenuException.class, () -> ejecutarConEntrada("abc", () -> manager.awaitResponse("Seleccione: ")));
+
+        assertAll(
+                () -> assertEquals(getMessage("err.menu.no.number", MenuErrors.ERR_NO_NUMBER), ex.getMessage()),
+                () -> assertEquals(getMessage("err.menu.no.number", MenuErrors.ERR_NO_NUMBER), menu.getMessage())
+        );
+    }
+
+    @Test
+    void awaitResponseConOpcionFueraDeRangoLanzaExcepcionYGuardaMensaje() throws Exception {
+        Menu menu = Menu.getInstance();
+        MenuManager manager = new MenuManager(menu);
+        manager.addOptionToMenu("Primera opcion");
+
+        MenuException ex = assertThrows(MenuException.class, () -> ejecutarConEntrada("9", () -> manager.awaitResponse("Seleccione: ")));
+
+        assertAll(
+                () -> assertEquals(getMessage("err.menu.out.of.range", MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE), ex.getMessage()),
+                () -> assertEquals(getMessage("err.menu.out.of.range", MenuErrors.ERR_SELECTED_OPTION_IS_OUTSIDE_THE_ALLOWED_RANGE), menu.getMessage())
+        );
+    }
+
+    @Test
+    void addOptionToMenuNumeraYOcultaDuplicados() throws MenuException, MenuManagerException {
+        MenuManager manager = new MenuManager(Menu.getInstance());
+
+        manager.addOptionToMenu("Abrir");
+
+        MenuException ex = assertThrows(MenuException.class, () -> manager.addOptionToMenu("Abrir"));
+
+        assertAll(
+                () -> assertEquals("1. Abrir", manager.getMenu().getOptions().get(1)),
+                () -> assertEquals(getMessage("err.menu.option.exists", MenuErrors.ERR_OPTION_ALREADY_EXISTS), ex.getMessage())
+        );
+    }
+
+    @Test
+    void removeOptionFromMenuEliminaLaOpcionIndicada() throws MenuException, MenuManagerException {
+        MenuManager manager = new MenuManager(Menu.getInstance());
+        manager.addOptionToMenu("Abrir");
+
+        manager.removeOptionFromMenu("1. Abrir");
+
+        assertEquals(List.of(EXIT_OPTION), manager.getMenu().getOptions());
+    }
+
+    @Test
+    void addSubMenuToMenuRelacionaMenusYAnadeOpcion() throws MenuException, MenuManagerException {
+        Menu parent = Menu.getInstance();
+        Menu child = Menu.getInstance(new ArrayList<>(), "Submenu", "Msg", false);
+        MenuManager manager = new MenuManager(parent);
+
+        manager.addSubMenuToMenu(child);
+
+        assertAll(
+                () -> assertEquals(1, parent.getSubMenus().size()),
+                () -> assertSame(parent, child.getParentMenu()),
+                () -> assertTrue(parent.getOptions().contains("1. Submenu"))
+        );
+    }
+
+    @Test
+    void removeSubMenuFromMenuConSubmenuNuloLanzaExcepcion() throws MenuException, MenuManagerException {
+        Menu parent = Menu.getInstance();
+        MenuManager manager = new MenuManager(parent);
+
+        MenuException ex = assertThrows(MenuException.class, () -> manager.removeSubMenuFromMenu(null));
+
+        assertEquals(getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL), ex.getMessage());
+    }
+
+    private Long ejecutarConEntrada(String input, ThrowingSupplier<Long> supplier) throws Exception {
+        InputStream originalSystemIn = System.in;
         try {
-            messages = ResourceBundle.getBundle("messages");
-        } catch (Exception e) {
-            messages = null;
+            System.setIn(new ByteArrayInputStream((input + System.lineSeparator()).getBytes(StandardCharsets.UTF_8)));
+            return supplier.get();
+        } finally {
+            System.setIn(originalSystemIn);
         }
     }
 
-    @AfterAll
-    static void afterAll() {
-        printMsgToLogAndConsole(System.lineSeparator() + LocalDateTime.now() + " - Ending MenuManagerTest" + System.lineSeparator(), logger);
-    }
-
-
-    public MenuManagerTest() {
-    }
-
-    /**
-     * Sets up the test fixture.
-     * Called before every test case method.
-     */
-    @BeforeEach
-    void setUp() {
-        options.add("Option One");
-        options.add("Option Two");
-        options.add("Option Three");
-    }
-
-    @Test
-    void getMenu() throws MenuException {
-        printTitletoLogAndConsole("testGetMenu()", logger);
-        MenuManager instance = new MenuManager();
-        Menu expectedValue = instance.getMenu();
-        printResultsToLogAndConsole(expectedValue,instance.getMenu(),logger);
-        assertNotNull(expectedValue, "Menu should not be null after initialization");
-    }
-
-    @Test
-    void setMenu() throws MenuException, MenuManagerException {
-        printTitletoLogAndConsole("testSetMenu()", logger);
-        MenuManager instance = new MenuManager();
-        Menu expectedValue = Menu.getInstance();
-        instance.setMenu(expectedValue);
-        printResultsToLogAndConsole(expectedValue,instance.getMenu(),logger);
-        assertEquals(expectedValue, instance.getMenu(), "Menu should be the same after setting it");
-    }
-    
-    @Test
-    void setMenuWithNull() throws MenuException {
-        printTitletoLogAndConsole("testSetMenuWithNull()", logger);
-        MenuManager instance = new MenuManager();
-        assertThrows(MenuManagerException.class, () -> instance.setMenu(null),
-            "MenuManagerException should be thrown");
-    }
-
-    /**
-     * Tests menu rendering against expected output
-     */
-    @Test
-    void showMenu() throws Exception {
-        printTitletoLogAndConsole("testShowMenu()", logger);
-        MenuManager instance = new MenuManager();
-        Menu menu = Menu.getInstance();
-        menu.setOptions(options);
-        menu.setIsRootMenu(true);
-        menu.setMessage("Select an option:");
-        menu.setTitle("Testing the showMenu method");
-        instance.setMenu(menu);
-        menu.generateMenuView();
-        String expectedValue = menu.getMenuView();
-        String actualValue = tapSystemOut(() -> {
-            instance.showMenu(false);
-        });
-        printResultsToLogAndConsole(expectedValue,actualValue,logger);
-        assertEquals(expectedValue, actualValue);
-    }
-
-    /**
-     * Tests exception on empty menu options
-     */
-    @Test
-    void showInvalidMenu() throws MenuException, MenuManagerException {
-        printTitletoLogAndConsole("testShowInvalidMenu()", logger);
-        MenuManager instance = new MenuManager();
-        Menu menu = Menu.getInstance();
-        menu.setOptions(options);
-        menu.setIsRootMenu(true);
-        menu.setMessage("Select an option:");
-        menu.setTitle("Testing the showMenu method");
-
-        // Clear options to simulate an invalid menu
-        menu.getOptions().clear();
-
-        instance.setMenu(menu);
-
+    private static ResourceBundle loadMessages() {
         try {
-            instance.showMenu(false);
-            fail("Expected MenuException not thrown");
-        } catch (MenuManagerException e) {
-            String expectedMessage = messages != null && messages.containsKey("err.menu.no.options") 
-                ? messages.getString("err.menu.no.options") 
-                : "There are no defined options in this menu";
-            assertEquals(expectedMessage, e.getMessage());
+            return ResourceBundle.getBundle("messages");
+        } catch (MissingResourceException ex) {
+            return null;
         }
     }
 
-    /**
-     * Test of awaitResponse method, of class Menu.
-     *
-     * @param in a StdIn object for testing
-     * @param out a StdOut object for testing
-     * @throws java.lang.Exception in case of an error
-     */
-    @Test
-    @StdIo({"2"})
-    public void testAwaitResponse(StdIn in, StdOut out) throws Exception {
-        printTitletoLogAndConsole("testAwaitResponse()", logger);
-        String msg = "";
-        
-        Menu menu = Menu.getInstance();
-        menu.setOptions(options);
-        menu.setIsRootMenu(true);
-        menu.setMessage("Select an option:");
-        menu.setTitle("Testing the awaitResponse() method");
-        Long expResult = 2L;
-        MenuManager instance = new MenuManager();
-        instance.setMenu(menu);
-        instance.awaitResponse(msg);
-        Long result = menu.getSelectedOption();
-        printResultsToLogAndConsole(expResult,result,logger);
-        assertEquals(expResult, result, "The selected option should be 2");
-    }
-
-    private List<String> generateOptionsForChildMenus() {
-        List<String> opciones = new ArrayList<>();
-        opciones.add("Option One");
-        opciones.add("Option Two");
-        opciones.add("Option Three");
-        return opciones;
-    }
-
-    /**
-     * Test of awaitResponse method, of class Menu when the user answer with
-     * an invalid response (not a number).
-     *
-     * @param in a StdIn object for testing
-     * @param out a StdOut object for testing
-     */
-    @Test
-    @StdIo({"notValid"})
-    public void testAwaitResponseForInvalidResponse(StdIn in, StdOut out) throws MenuException, MenuManagerException {
-        printTitletoLogAndConsole("testAwaitResponseForInvalidResponse()",logger);
-        String msg = "";
-        Menu menu = Menu.getInstance();
-        menu.setOptions(generateOptionsForChildMenus());
-        menu.setIsRootMenu(true);
-        menu.setMessage("Select an option:");
-        menu.setTitle("Testing the awaitResponse() method");
-        MenuManager instance = new MenuManager();
-        instance.setMenu(menu);
-
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
-                "The user answer with an invalid response (not a number) and throws an MenuException");
-        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-    }
-
-    /**
-     * Test of awaitResponse method, of class Menu when the user answer with
-     * an invalid response (not a number).
-     *
-     * @param in a StdIn object for testing
-     * @param out a StdOut object for testing
-     */
-    @Test
-    @StdIo({"6"})
-    public void testAwaitResponseForResponseOutOfRange(StdIn in, StdOut out) throws MenuException, MenuManagerException {
-        printTitletoLogAndConsole("testAwaitResponseForResponseOutOfRange()",logger);
-        String msg = "";
-        Menu menu = Menu.getInstance();
-        menu.setOptions(generateOptionsForChildMenus());
-        menu.setIsRootMenu(true);
-        menu.setMessage("Select an option:");
-        menu.setTitle("Testing the awaitResponse() method");
-        
-        MenuManager instance = new MenuManager();
-        instance.setMenu(menu);
-
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
-                "The user answer with an invalid response (out of range) and throws an MenuException");
-        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
-    }
-
-
-    /**
-     * Tests exception on invalid menu object
-     */
-    @Test
-    public void testAwaitResponseForNonValidMenuObject() throws MenuException, MenuManagerException {
-        printTitletoLogAndConsole("testAwaitResponseForNonValidMenuObject()", logger);
-        String msg = "";
-        Menu menu = Menu.getInstance();
-        menu.setIsRootMenu(false); //Not include the exit option
-        menu.setMessage("Select an option:");
-        menu.setTitle("Testing the awaitResponse() method");
-
-        MenuManager instance = new MenuManager();
-        instance.setMenu(menu);
-        
-        /*
-         We must use reflexion to bypass the private field validation. In normal cases, the
-         options property should be set by the client class and validated by the constructor
-         and the setter methods. This is an **exceptional case** for testing purposes.
-         */
-        if (logger.isDebugEnabled()) logger.debug("Setting options to null with api reflection!");
-        try {
-            Class<?> clazz = menu.getClass();
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (field.getName().equals("options")) {
-                    field.setAccessible(true);
-                    field.set(menu,null); // set the List<String> of field 'options' to null
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+    private static String getMessage(String key, String defaultMessage) {
+        if (MESSAGES != null && MESSAGES.containsKey(key)) {
+            return MESSAGES.getString(key);
         }
+        return defaultMessage;
+    }
 
-        if (logger.isDebugEnabled()) logger.debug("Value of 'options' field: {}",
-                menu.getOptions() != null ? "not null" :"null");
-        MenuException ex = assertThrows(MenuException.class, () -> instance.awaitResponse(msg),
-                "The user answer with an invalid response (not a number) and throws an MenuException");
-        if (logger.isDebugEnabled()) logger.debug("MenuException : {}", ex.getMessage());
+    private static String normalize(String value) {
+        return value.replace("\r\n", "\n");
+    }
+
+    @FunctionalInterface
+    private interface ThrowingSupplier<T> {
+        T get() throws Exception;
     }
 }

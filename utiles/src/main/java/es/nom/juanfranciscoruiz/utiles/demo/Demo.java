@@ -179,18 +179,16 @@ public class Demo {
         theOptions.add("Show and navigate menu hierarchical structure");
 
 
-        try {
-            theMenu = Menu.getInstance();
-            theMenu.setIsRootMenu(true);
-            theMenu.setTitle("Demo for Utiles library");
-            theMenu.setMessage(msg);
-            theMenu.setOptions(theOptions);
-        } catch (MenuException e) {
-            throw new RuntimeException(e);
-        }
+        theMenu = Menu.getInstance();
 
         try {
             mm = new MenuManager(theMenu);
+
+            mm.getMenu().setMessage(msg);
+            mm.getMenu().setTitle("Demo for Utiles library");
+            mm.getMenu().setIsRootMenu(true);
+            mm.setOptionsInMenu(theOptions);
+
         } catch (MenuManagerException e) {
             error(logger, e.getMessage());
             throw new RuntimeException(e);
