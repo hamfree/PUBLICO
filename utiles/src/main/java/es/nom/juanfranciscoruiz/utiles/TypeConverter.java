@@ -104,13 +104,10 @@ public class TypeConverter {
         Long theLong = (long) -1;
         try {
             if (src != null) {
-                // We 'sanitize' the input, because it may come with characters 
-                // that are not digits...
-                src = src.trim();
-
-                // regular expression that only allows digits to pass
-                src = src.replaceAll("(?=^-?)|(\\D+)", "");
-
+                // We 'sanitize' the input, preserving the minus sign if present
+                // right before the first digit.
+                src = extractDigits(src, true);
+                
                 // Makes the conversion
                 theLong = Long.valueOf(src);
             }
@@ -279,15 +276,36 @@ public class TypeConverter {
      * @return a string containing only digits.
      */
     public static String extractDigits(String src) {
+        return extractDigits(src, false);
+    }
+
+    /**
+     * Extracts the existing digits in a String and returns them in a string.
+     * It can optionally preserve a minus sign if it is right before the first digit found.
+     *
+     * @param src the string that can contain digits.
+     * @param preserveFirstMinus if true, keeps the minus sign if it immediately precedes the first digit.
+     * @return a string containing the extracted digits.
+     */
+    public static String extractDigits(String src, boolean preserveFirstMinus) {
         StringBuilder builder = new StringBuilder();
         if (src == null || src.isBlank()) {
             return builder.toString();
         }
-        for (int i = 0; i < src.length(); i++) {
-            char c = src.charAt(i);
-            if (Character.isDigit(c)) {
-                builder.append(c);
+        
+        Pattern pattern = Pattern.compile("-?\\d+");
+        Matcher matcher = pattern.matcher(src);
+        
+        boolean firstMatch = true;
+        while (matcher.find()) {
+            String match = matcher.group();
+            if (firstMatch && preserveFirstMinus) {
+                builder.append(match);
+            } else {
+                // For subsequent matches, or if preserveFirstMinus is false, remove any minus sign
+                builder.append(match.replace("-", ""));
             }
+            firstMatch = false;
         }
         return builder.toString();
     }

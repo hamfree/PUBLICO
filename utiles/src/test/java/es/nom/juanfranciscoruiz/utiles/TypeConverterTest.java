@@ -118,6 +118,27 @@ public class TypeConverterTest {
                     assertEquals(expectedValue, actualValue, "The value returned is %dand it should be%s".formatted(actualValue, expectedValue));
                 },
                 () -> {
+                    String theString = "sobre334343";
+                    Long actualValue = extractLongFromString(theString);
+                    Long expectedValue = 334343L;
+                    printResultsToLogAndConsole(expectedValue, actualValue, logger);
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
+                },
+                () -> {
+                    String theString = "antes78987despues";
+                    Long actualValue = extractLongFromString(theString);
+                    Long expectedValue = 78987L;
+                    printResultsToLogAndConsole(expectedValue, actualValue, logger);
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
+                },
+                () -> {
+                    String theString = "before-123text-456moreText789After";
+                    Long actualValue = extractLongFromString(theString);
+                    Long expectedValue = -123456789L;
+                    printResultsToLogAndConsole(expectedValue, actualValue, logger);
+                    assertEquals(expectedValue, actualValue, "The value returned is" + actualValue + "and it should be" + expectedValue);
+                },
+                () -> {
                     String theString = "-987654321012me";
                     Long actualValue = extractLongFromString(theString);
                     Long expectedValue = -987654321012L;

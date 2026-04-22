@@ -1,10 +1,12 @@
 package es.nom.juanfranciscoruiz.utiles.demo.options;
 
 import es.nom.juanfranciscoruiz.utiles.TermCtl;
+import es.nom.juanfranciscoruiz.utiles.TypeConverter;
+import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
+import static es.nom.juanfranciscoruiz.utiles.Util.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
 
 /**
@@ -60,6 +62,7 @@ public class ConvertTypes {
 
     /**
      * Sets the TermCtl implementation for this class.
+     *
      * @param tc the TermCtl instance to be associated with this class.
      */
     public void setTc(TermCtl tc) {
@@ -86,13 +89,37 @@ public class ConvertTypes {
      */
     public void run() throws Exception {
         getInstance().getTc().clearScreen(Using.ANSI);
-        final long PAUSE_DURATION = 3000L;
-        String msg = "Converting types";
-        prtln(2, title(msg, '*', 80));
+        String title = "Converting types";
+        String message;
+        String yourInput;
+        String response;
+        prtln(2, title(title, '*', 80));
         // Implementation for type conversion demo
-        // ...
-        prtln(3, "Converting types not implemented yet.");
-        pause(PAUSE_DURATION, null);
+        // Do a demo with all the methods of the class TypeConverter
+        prtln(2, "This demo shows you several methods to convert types.");
+        try {
+            //extractLongFromString() demo
+            message = "Please, type a string with digits and other chars. " + SL +
+                    "Press <ENTER> to send your input. ";
+            prtln(1, message);
+            prt("-> ");
+            yourInput = read();
+            Long longFromString = TypeConverter.extractLongFromString(yourInput);
+            prtln(2, "Long from String '" + yourInput + "': " + longFromString);
+            // extractDigits() demo
+             message = "Please enter some text containing digits. The digits can be jumbled however you like. " + SL +
+                    "Press <ENTER> to send your input.";
+            prtln(2, message);
+            prt("-> ");
+            yourInput = read();
+            response = TypeConverter.extractDigits(yourInput);
+            prtln(2, "You entered '" + yourInput + SL + "'. The digits are: '" + response + "'.");
+        } catch (TypeConverterException e) {
+            dbg(logger, e.getMessage());
+            prtln(2, "Something went wrong: " + e.getMessage());
+        }
+
+        pause(FOREVER, null);
     }
 
 }

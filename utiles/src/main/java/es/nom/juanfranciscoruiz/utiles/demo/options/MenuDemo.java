@@ -75,6 +75,7 @@ public class MenuDemo {
         final long PAUSE_DURATION = 3000L;
         String msg = "Show and navigate menu hierarchical structure...";
         prtln(2, title(msg, '*', 80));
+        // Implementation of a hierarchical menu demo with a main menu and two submenus. One of this submenus have one child menu.
         prtln(3, "This demo is not implemented yet.");
         pause(PAUSE_DURATION, "");
     }
