@@ -3,13 +3,7 @@ package es.nom.juanfranciscoruiz.utiles;
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
-import static es.nom.juanfranciscoruiz.utiles.Util.dbg;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junitpioneer.jupiter.StdIn;
 import org.junitpioneer.jupiter.StdIo;
 import org.junitpioneer.jupiter.StdOut;
@@ -17,6 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+
+import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.line;
+import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test class for the IO utility class.
@@ -166,7 +166,7 @@ public class IOimplTest {
         .concat("      MESSAGE      ")
         .concat(System.lineSeparator())
         .concat("********************");
-    String actualValue = IOimpl.title("MESSAGE", '*', 20);
+    String actualValue = title("MESSAGE", '*', 20);
     printResultsToLogAndConsole(expectedValue, actualValue, logger);
     assertEquals(expectedValue, actualValue, "The values should be the same");
   }
@@ -177,7 +177,7 @@ public class IOimplTest {
   @Test
   public void testTitleMessageNull() {
     printTitletoLogAndConsole("testTitleMessageNull()", logger);
-    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.title(null, '*', 20));
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> title(null, '*', 20));
     assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
   }
   
@@ -187,7 +187,7 @@ public class IOimplTest {
   @Test
   public void testTitleNullCharacter() {
     printTitletoLogAndConsole("testTitleNullCharacter()", logger);
-    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.title("MESSAGE", null, 20));
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> title("MESSAGE", null, 20));
     assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
   }
   
@@ -197,7 +197,7 @@ public class IOimplTest {
   @Test
   public void testTitleLengthLessThanLengthMessage() {
     printTitletoLogAndConsole("testTitleLengthLessThanLengthMessage()", logger);
-    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.title("MESSAGE", '*', 3));
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> title("MESSAGE", '*', 3));
     assertEquals(ERR_LONG, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_LONG);
   }
   
@@ -208,7 +208,7 @@ public class IOimplTest {
   public void testLine() {
     printTitletoLogAndConsole("testLine()", logger);
     String expectedValue = "**********";
-    String actualValue = IOimpl.line('*', 10);
+    String actualValue = line('*', 10);
     printResultsToLogAndConsole(expectedValue, actualValue, logger);
     assertEquals(expectedValue, actualValue, "The line() method should generate a string with 10 asterisks (*)");
   }
@@ -219,7 +219,7 @@ public class IOimplTest {
   @Test
   public void testLineNullCharacter() {
     printTitletoLogAndConsole("testLineNullCharacter()", logger);
-    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.line(null, 10));
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> line(null, 10));
     assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
   }
   
@@ -229,7 +229,7 @@ public class IOimplTest {
   @Test
   public void testLineWrongLength() {
     printTitletoLogAndConsole("testLineWrongLength()", logger);
-    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> IOimpl.line('#', 0));
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> line('#', 0));
     assertEquals(ERR_PARAM, ex.getMessage(), "An IllegalArgumentException should be thrown with the message " + ERR_PARAM);
   }
   

@@ -21,12 +21,6 @@ public class Types {
      * For debugging.
      */
     private static final Logger logger = LoggerFactory.getLogger(Types.class.getName());
-
-    /**
-     * Singleton instance of the {@code Types} class.
-     */
-    private static final Types INSTANCE = new Types();
-
     /**
      * A utility class containing methods for type-related operations and checks.
      * This class provides static methods to evaluate object types, ensure type
@@ -36,18 +30,6 @@ public class Types {
      */
     private Types() {
     }
-
-    /**
-     * Returns the singleton instance of the Types class. This method ensures that
-     * the same instance is reused across the application, adhering to the singleton
-     * design pattern.
-     *
-     * @return the singleton instance of the Types class.
-     */
-    public static Types getInstance() {
-        return INSTANCE;
-    }
-
     /**
      * Indicates whether the passed object is null or empty (in the case of a
      * collection, or other object containing objects.
@@ -70,7 +52,7 @@ public class Types {
         } else if (obj.getClass().isAssignableFrom(String.class)) {
             if (logger.isDebugEnabled()) {
                 logger.debug(TYPE_STRING);
-                logger.debug(IS_EMPTY + " {}", obj.toString().isEmpty());
+                logger.debug(IS_EMPTY_ASK + " {}", obj.toString().isEmpty());
             }
             return obj.toString().isEmpty();
         } else if (obj.getClass().isPrimitive()) {
@@ -82,7 +64,7 @@ public class Types {
             int l = Array.getLength(obj);
             if (logger.isDebugEnabled()) {
                 logger.debug(IS_AN_ARRAY);
-                logger.debug(IS_EMPTY + " {}", l > 0);
+                logger.debug(IS_EMPTY_ASK + " {}", l > 0);
             }
             return l <= 0;
         } else {
@@ -92,7 +74,7 @@ public class Types {
                     Collection<?> col = (Collection<?>) obj;
                     if (logger.isDebugEnabled()) {
                         logger.debug(TYPE_LIST);
-                        logger.debug(IS_EMPTY + " {}", col.isEmpty());
+                        logger.debug(IS_EMPTY_ASK + " {}", col.isEmpty());
                     }
                     return col.isEmpty();
                 }
@@ -100,7 +82,7 @@ public class Types {
                     Map<?, ?> col = (Map<?, ?>) obj;
                     if (logger.isDebugEnabled()) {
                         logger.debug(TYPE_MAP);
-                        logger.debug(IS_EMPTY + " {}", col.isEmpty());
+                        logger.debug(IS_EMPTY_ASK + " {}", col.isEmpty());
                     }
                     return col.isEmpty();
                 }

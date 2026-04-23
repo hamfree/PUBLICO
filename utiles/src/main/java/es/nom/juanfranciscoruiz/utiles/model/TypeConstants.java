@@ -32,12 +32,16 @@ public class TypeConstants {
      */
     public static final String IS_NOT_NULL = "Is not null";
     /**
+     * Represents a constant string indicating that a value is empty.
+     */
+    public static final String IS_EMPTY = "Is empty";
+    /**
      * Represents a constant string used as a prompt to inquire if a value is null.
      * <p>
      * This constant can be utilized in various contexts where a question regarding
      * the nullability of a value needs to be expressed or represented.
      */
-    public static final String IS_EMPTY = "Is empty? ";
+    public static final String IS_EMPTY_ASK = "Is empty? ";
     /**
      * Represents a constant string indicating that a value is an array.
      * <p>

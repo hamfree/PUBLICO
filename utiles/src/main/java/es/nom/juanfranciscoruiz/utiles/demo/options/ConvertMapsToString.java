@@ -6,8 +6,8 @@ import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.*;
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
 
 /**

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
 import static es.nom.juanfranciscoruiz.utiles.TypeConverter.*;
-import static es.nom.juanfranciscoruiz.utiles.Util.dbg;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.dbg;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.slf4j.Logger;

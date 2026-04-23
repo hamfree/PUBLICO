@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.*;
 import static es.nom.juanfranciscoruiz.utiles.TestUtils.printMsgToLogAndConsole;
-import static es.nom.juanfranciscoruiz.utiles.Util.SL;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.SL;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.slf4j.Logger;

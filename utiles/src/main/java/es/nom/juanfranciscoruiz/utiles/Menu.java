@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.*;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
 
 /**
  * It's the representation of an options menu, capable of generating a view of

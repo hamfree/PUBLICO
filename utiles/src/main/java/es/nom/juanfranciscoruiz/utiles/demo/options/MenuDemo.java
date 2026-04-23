@@ -4,7 +4,7 @@ import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
 

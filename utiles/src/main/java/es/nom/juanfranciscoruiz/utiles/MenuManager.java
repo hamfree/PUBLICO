@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.error;
-import static es.nom.juanfranciscoruiz.utiles.Util.warn;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.error;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.warn;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
 
 /**

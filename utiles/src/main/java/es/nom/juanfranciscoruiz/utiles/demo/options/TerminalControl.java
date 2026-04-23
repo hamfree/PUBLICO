@@ -5,8 +5,8 @@ import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Dimensions;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
 
-import static es.nom.juanfranciscoruiz.utiles.Util.FOREVER;
-import static es.nom.juanfranciscoruiz.utiles.Util.pause;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.FOREVER;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
 

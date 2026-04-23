@@ -19,27 +19,29 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prtln;
  * - `FOREVER`: A constant used to specify an indefinite pause.
  * <p>
  * Methods:
- * - `getFeaturesAsMap()`: Returns system resource details including CPU cores,
- * free memory, maximum usable memory, and total memory.
- * - `getSystemPropertiesAsMap()`: Returns a map of system properties.
- * - `getAllCharsets()`: Retrieves all charsets supported by the current JVM.
- * - `CollectionToString(Object obj, boolean showValues, int maxElements)`: Processes and returns
- * string representations of lists or maps in a specified format or detail level.
- * - `pause(long milliseconds, String msg)`: Pauses program execution with a custom message or default prompt.
- * - `pauseWithoutMessage(long milliseconds)`: Pauses program execution without displaying any message.
- * - `warn(Logger logger, String msg)`: Logs a sanitized warning message using the specified logger.
- * - `info(Logger logger, String msg)`: Logs a sanitized informational message using the specified logger.
- * - `error(Logger logger, String msg)`: Logs a sanitized error message using the specified logger.
- * - `dbg(Logger logger, String msg)`: Logs a sanitized debug-level message using the specified logger.
- * - `dbg(Logger logger, String msg, Object... params)`: Logs a sanitized formatted debug-level message with parameters.
+ * <ul>
+ * <li>`getFeaturesAsMap()`: Returns system resource details including CPU cores,
+ * free memory, maximum usable memory, and total memory.</li>
+ * <li>`getSystemPropertiesAsMap()`: Returns a map of system properties.</li>
+ * <li>`getAllCharsets()`: Retrieves all charsets supported by the current JVM.</li>
+ * <li>`CollectionToString(Object obj, boolean showValues, int maxElements)`: Processes and returns
+ * string representations of lists or maps in a specified format or detail level.</li>
+ * <li>`pause(long milliseconds, String msg)`: Pauses program execution with a custom message or default prompt.</li>
+ * <li>`pauseWithoutMessage(long milliseconds)`: Pauses program execution without displaying any message.</li>
+ * <li>`warn(Logger logger, String msg)`: Logs a sanitized warning message using the specified logger.</li>
+ * <li>`info(Logger logger, String msg)`: Logs a sanitized informational message using the specified logger.</li>
+ * <li>`error(Logger logger, String msg)`: Logs a sanitized error message using the specified logger.</li>
+ * <li>`dbg(Logger logger, String msg)`: Logs a sanitized debug-level message using the specified logger.</li>
+ * <li>`dbg(Logger logger, String msg, Object... params)`: Logs a sanitized formatted debug-level message with parameters.</li>
+ * </ul>
  */
-public class Util {
+public class Stuff {
     /**
      * A static, final logger instance used for logging messages throughout
      * the utility class. It is initialized with the logging configuration
      * for the {@code Util} class.
      */
-    public static final Logger logger = LoggerFactory.getLogger(Util.class);
+    public static final Logger logger = LoggerFactory.getLogger(Stuff.class);
     /**
      * A constant representing an indefinite duration of time. This value can be
      * used in methods or logic that require an infinite or undefined wait period.
@@ -56,6 +58,31 @@ public class Util {
      * across different operating systems.
      */
     public static final String SL = System.lineSeparator();
+
+    /** Left square bracket used for formatting collections. */
+    public static final String OPEN_BRACKET = "[";
+
+    /** Single quote used to wrap elements in string representations. */
+    public static final String SINGLE_QUOTE = "'";
+
+    /** A single space string used for separation. */
+    public static final String SPACE = " ";
+
+    /** Ellipsis prefixed with a space, indicating truncated output. */
+    public static final String ELLIPSIS = " ...";
+
+    /** Right square bracket used for formatting collections. */
+    public static final String CLOSE_BRACKET = "]";
+
+    /** Opening curly brace and a single quote, used for map entry formatting. */
+    public static final String OPEN_MAP_ENTRY = "{'";
+
+    /** Arrow symbol surrounded by single quotes, used to separate map keys and values. */
+    public static final String MAP_ARROW = "'->'";
+
+    /** Single quote followed by a closing curly brace, used for map entry formatting. */
+    public static final String CLOSE_MAP_ENTRY = "'}";
+    
     /**
      * A static instance of {@link ResourceBundle} used to fetch internationalized messages
      * from a properties file. This allows the application to support multiple languages
@@ -92,7 +119,7 @@ public class Util {
     /**
      * We prevent it from being instantiated (Utility class)
      */
-    private Util() {}
+    private Stuff() {}
 
     /**
      * Returns in a map the existing CPUs on the PC, the free memory available
@@ -123,10 +150,10 @@ public class Util {
         String maxMemory = numberFormatter.format(rt.maxMemory());
         String totalMemmory = numberFormatter.format(rt.totalMemory());
 
-        hm.put("Processor Cores", String.valueOf(rt.availableProcessors()));
-        hm.put("Free Memory", freeMemory);
-        hm.put("Available Memory", maxMemory);
-        hm.put("Total Memory", totalMemmory);
+        hm.put(getMessage("stuff.cores", "Processor Cores"), String.valueOf(rt.availableProcessors()));
+        hm.put(getMessage("stuff.memory.free", "Free Memory"), freeMemory);
+        hm.put(getMessage("stuff.available","Available Memory") , maxMemory);
+        hm.put(getMessage("stuff.memory.total","Total Memory"), totalMemmory);
         return hm;
     }
 
@@ -184,58 +211,58 @@ public class Util {
         StringBuilder sb = new StringBuilder();
 
         if (obj == null) {
-            sb.append("null");
+            sb.append(getMessage("stuff.null", "null"));
         } else {
             Class<?> clazz = obj.getClass();
             if (clazz.isAssignableFrom(ArrayList.class)) {
                 List<?> l = (List<?>) obj;
                 if (showValues) {
-                    sb.append("[");
+                    sb.append(OPEN_BRACKET);
                     if (l.size() < maxElements) {
                         for (Object o : l.toArray()) {
-                            sb.append("'").append(o).append("'").append(" ");
+                            sb.append(SINGLE_QUOTE).append(o).append(SINGLE_QUOTE).append(SPACE);
                         }
                     } else {
                         for (int i = 0; i < maxElements; i++) {
-                            sb.append("'").append(l.get(i)).append("'").append(" ");
+                            sb.append(SINGLE_QUOTE).append(l.get(i)).append(SINGLE_QUOTE).append(SPACE);
                         }
-                        sb.append(" ...");
+                        sb.append(ELLIPSIS);
                     }
-                    sb.append("]");
+                    sb.append(CLOSE_BRACKET);
                 } else {
                     sb.append(obj.getClass().getCanonicalName())
                             .append(" ")
                             .append(l.size())
-                            .append(" items.");
+                            .append(getMessage("stuff.items", " items."));
                 }
 
             } else if (clazz.isAssignableFrom(java.util.HashMap.class)) {
                 Map<?, ?> m = (Map<?, ?>) obj;
                 if (showValues) {
-                    sb.append("[");
+                    sb.append(OPEN_BRACKET);
                     if (m.size() < maxElements) {
                         for (Map.Entry<?, ?> entry : m.entrySet()) {
-                            sb.append("{'").append(entry.getKey()).append("'->'").append(entry.getValue()).append("'}").append(" ");
+                            sb.append(OPEN_MAP_ENTRY).append(entry.getKey()).append(MAP_ARROW).append(entry.getValue()).append(CLOSE_MAP_ENTRY).append(SPACE);
                         }
                     } else {
                         int i = 0;
                         for (Iterator<?> it = m.entrySet().iterator(); it.hasNext();) {
                             if (i < maxElements) {
                                 Map.Entry<?, ?> e = (Map.Entry<?, ?>) it.next();
-                                sb.append("{'").append(e.getKey()).append("'->'").append(e.getValue()).append("'}").append(" ");
+                                sb.append(OPEN_MAP_ENTRY).append(e.getKey()).append(MAP_ARROW).append(e.getValue()).append(CLOSE_MAP_ENTRY).append(SPACE);
                                 i++;
                             } else {
-                                sb.append(" ...");
+                                sb.append(ELLIPSIS);
                                 break;
                             }
                         }
                     }
-                    sb.append("]");
+                    sb.append(CLOSE_BRACKET);
                 } else {
                     sb.append(obj.getClass().getCanonicalName())
                             .append(" ")
                             .append(m.size())
-                            .append(" items.");
+                            .append(getMessage("stuff.items", " items."));
                 }
             } else {
                 sb.append(obj);
@@ -303,11 +330,7 @@ public class Util {
     public static void warn(Logger logger, String msg) {
         if (logger != null && logger.isWarnEnabled()) {
             if (msg != null && !msg.isEmpty()) {
-                msg = msg.trim();
-                msg = msg.replace("\n", " ");
-                msg = msg.replace("\r", " ");
-                msg = msg.replace("\t", " ");
-                msg = msg.replaceAll("  +", " ");
+                msg = sanitize(msg);
                 logger.warn(msg);
             }
         }
@@ -325,11 +348,7 @@ public class Util {
     public static void info(Logger logger, String msg) {
         if (logger != null && logger.isInfoEnabled()) {
             if (msg != null && !msg.isEmpty()) {
-                msg = msg.trim();
-                msg = msg.replace("\n", " ");
-                msg = msg.replace("\r", " ");
-                msg = msg.replace("\t", " ");
-                msg = msg.replaceAll("  +", " ");
+                msg = sanitize(msg);
                 logger.info(msg);
             }
         }
@@ -347,11 +366,7 @@ public class Util {
     public static void error(Logger logger, String msg){
         if (logger != null && logger.isErrorEnabled()) {
             if (msg != null && !msg.isEmpty()) {
-                msg = msg.trim();
-                msg = msg.replace("\n", " ");
-                msg = msg.replace("\r", " ");
-                msg = msg.replace("\t", " ");
-                msg = msg.replaceAll("  +", " ");
+                msg = sanitize(msg);
                 logger.error(msg);
             }
         }
@@ -369,11 +384,7 @@ public class Util {
     public static void dbg(Logger logger, String msg) {
         if (logger != null && logger.isDebugEnabled()) {
             if (msg != null && !msg.isEmpty()) {
-                msg = msg.trim();
-                msg = msg.replace("\n", " ");
-                msg = msg.replace("\r", " ");
-                msg = msg.replace("\t", " ");
-                msg = msg.replaceAll("  +", " ");
+                msg = sanitize(msg);
                 logger.debug(msg);
             }
         }
@@ -392,13 +403,26 @@ public class Util {
     public static void dbg(Logger logger, String msg, Object... params) {
         if (logger != null && logger.isDebugEnabled()) {
             if (msg != null && !msg.isEmpty()){
-                msg = msg.trim();
-                msg = msg.replace("\n", " ");
-                msg = msg.replace("\r", " ");
-                msg = msg.replace("\t", " ");
-                msg = msg.replaceAll("  +", " ");
+                msg = sanitize(msg);
                 logger.debug(msg, params);
             }
         }
+    }
+
+    /**
+     * Cleans up a given string by removing leading and trailing whitespace, replacing 
+     * newlines, carriage returns, tabs with a single space, and condensing multiple 
+     * consecutive spaces into a single space.
+     *
+     * @param msg the input string to be sanitized; if null, behavior is undefined
+     * @return the sanitized version of the input string
+     */
+    private static String sanitize(String msg){
+        msg = msg.trim();
+        msg = msg.replace("\n", " ");
+        msg = msg.replace("\r", " ");
+        msg = msg.replace("\t", " ");
+        msg = msg.replaceAll("  +", " ");
+        return msg;
     }
 }
