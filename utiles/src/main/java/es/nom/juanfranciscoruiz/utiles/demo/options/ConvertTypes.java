@@ -7,6 +7,8 @@ import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
@@ -101,27 +103,46 @@ public class ConvertTypes {
             clearScreenAndPrintTitle(title, subtitle);
             arrayByte2StringDemo();
             pause(FOREVER, null);
+
             clearScreenAndPrintTitle(title, subtitle);
             extractLongFromStringDemo();
             pause(FOREVER, null);
+
             clearScreenAndPrintTitle(title, subtitle);
             extractDigitsDemo();
             pause(FOREVER, null);
+
             clearScreenAndPrintTitle(title, subtitle);
             extractDoubleFromStringDemo();
             pause(FOREVER, null);
 
-            /*
-            TODO Do the deemos for methods map2String(), byteToHex(), charToHex(), extractDoubleFromString(),
-             array2String(), map2String(), collection2List() and map2List()
-             */
+            clearScreenAndPrintTitle(title, subtitle);
+            map2StringDemo();
+            pause(FOREVER, null);
 
+            clearScreenAndPrintTitle(title, subtitle);
+            byteToHexDemo();
+            pause(FOREVER, null);
 
+            clearScreenAndPrintTitle(title, subtitle);
+            charToHexDemo();
+            pause(FOREVER, null);
+
+            clearScreenAndPrintTitle(title, subtitle);
+            array2StringDemo();
+            pause(FOREVER, null);
+
+            clearScreenAndPrintTitle(title, subtitle);
+            collection2ListDemo();
+            pause(FOREVER, null);
+
+            clearScreenAndPrintTitle(title, subtitle);
+            map2ListDemo();
+            pause(FOREVER, null);
         } catch (TypeConverterException e) {
             dbg(logger, e.getMessage());
             prtln(2, "Something went wrong: " + e.getMessage());
         }
-
         pause(FOREVER, "This demonstration has ended. Press <ENTER> to return to the menu.");
     }
 
@@ -279,5 +300,80 @@ public class ConvertTypes {
         yourInput = read();
         response = TypeConverter.extractDigits(yourInput);
         prtln(2, "You entered '" + yourInput + SL + "'. The digits are: '" + response + "'.");
+    }
+
+    /**
+     * Demonstrates the conversion of a Map to a string representation using a custom utility method.
+     * <p>
+     * In this method:
+     * - A Map with Integer keys and String values is initialized and populated.<br>
+     * - The textual representation of the Map is displayed using both the default
+     *   toString() method of the Map and a custom map2String() utility method.<br>
+     * - Messages and results are printed using the prtln() method.<br>
+     * <p>
+     * This method assumes the existence of the TypeConverter.map2String() utility method
+     * for string conversion of the Map and uses prtln() to perform message output.
+     */
+    private void map2StringDemo(){
+        String message, response;
+        Map<Integer, String> theMap = new HashMap<>();
+        theMap.put(0, "ZERO");
+        theMap.put(1, "ONE");
+        theMap.put(2, "TWO");
+        theMap.put(3, "THREE");
+        theMap.put(4, "FOUR");
+        theMap.put(5, "FIVE");
+        theMap.put(6, "SIX");
+        theMap.put(7, "SEVEN");
+        theMap.put(8, "EIGHT");
+        theMap.put(9, "NINE");
+        theMap.put(10, "TEN");
+
+        message = "This demo shows the textual representation of a map using the map2String() method.";
+        prtln(2, message);
+        response = TypeConverter.map2String(theMap);
+        prtln(1, "The values of the map with its default toString() method are: '" + theMap + "'");
+        prtln(2, "The values of the map with the map2String() method are: '" +response + "'");
+    }
+
+    /**
+     * Demonstrates the conversion of a byte value to its hexadecimal representation.
+     */
+    private void byteToHexDemo(){
+        showDemoNotImplemented("byteToHexDemo");
+    }
+
+    private void charToHexDemo(){
+        showDemoNotImplemented("charToHexDemo");
+    }
+
+    private void array2StringDemo(){
+        showDemoNotImplemented("array2StringDemo");
+    }
+
+    private void collection2ListDemo(){
+        showDemoNotImplemented("collection2ListDemo");
+    }
+
+    private void map2ListDemo(){
+        showDemoNotImplemented("map2ListDemo");
+    }
+
+    /**
+     * Displays a message indicating that a specific demonstration has not been implemented.
+     * If a title is provided, it will be included in the message to specify which demo
+     * is not yet available.
+     *
+     * @param title the title of the demonstration that is not implemented; if null,
+     *              a generic message is displayed.
+     */
+    private void showDemoNotImplemented(String title){
+        String msg;
+        if (title == null) {
+            msg = "Demo not yet implemented";
+        } else {
+            msg = "The demonstration '" + title + "' is not yet implemented";
+        }
+        prtln(2, msg);
     }
 }
