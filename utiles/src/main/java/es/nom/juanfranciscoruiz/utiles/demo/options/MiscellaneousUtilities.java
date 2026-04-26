@@ -88,16 +88,6 @@ public class MiscellaneousUtilities {
 
     /**
      * Executes various miscellaneous utility operations.
-     * <p>
-     * This method performs the following actions:
-     * 1. Clears the terminal screen using the TermCtl implementation associated
-     *    with the current instance.
-     * 2. Prints a title message to the console indicating the execution of
-     *    miscellaneous utilities.
-     * 3. Outputs a message to indicate that miscellaneous utilities have not been
-     *    implemented yet.
-     * 4. Pauses the program for a predefined duration of 3000 milliseconds.
-     * <p>
      * Note: The actual implementation of miscellaneous utilities is currently
      * not defined within this method.
      *

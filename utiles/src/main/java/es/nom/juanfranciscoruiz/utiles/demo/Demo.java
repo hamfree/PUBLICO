@@ -183,12 +183,10 @@ public class Demo {
 
         try {
             mm = new MenuManager(theMenu);
-
             mm.getMenu().setMessage(msg);
             mm.getMenu().setTitle("Demo for Utiles library");
             mm.getMenu().setIsRootMenu(true);
             mm.setOptionsInMenu(theOptions);
-
         } catch (MenuManagerException e) {
             error(logger, e.getMessage());
             throw new RuntimeException(e);

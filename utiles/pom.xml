@@ -12,7 +12,7 @@
   <packaging>jar</packaging>
   
   <name>utiles</name>
-  <description>Librería de utilidades reutilizables</description>
+  <description>Library of reusable utilities</description>
   
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
@@ -26,21 +26,21 @@
   </properties>
   
   <dependencies>
-    <!-- API de logging para consumidores de la librería -->
+    <!-- Logging API for library consumers -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
     
-    <!-- Dependencia real de la librería -->
+    <!-- Actual dependence of the library -->
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna-platform</artifactId>
       <version>${jna.version}</version>
     </dependency>
     
-    <!-- Backend de logging solo para tests -->
+    <!-- Library for testing purposes only -->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -62,7 +62,7 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- Para comprobar clases que escriben o leen de los streams estándar -->
+    <!-- To check classes that write to or read from standard streams -->
     <dependency>
       <groupId>org.junit-pioneer</groupId>
       <artifactId>junit-pioneer</artifactId>
@@ -70,7 +70,7 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- Otra librería para comprobar clases que escriben o leen de los streams estándar -->
+    <!-- Another library for checking classes that write to or read from standard streams -->
     <dependency>
       <groupId>com.github.stefanbirkner</groupId>
       <artifactId>system-lambda</artifactId>
@@ -184,7 +184,7 @@
         </executions>
       </plugin>
       
-      <!-- Fat jar adicional, sin sustituir el artefacto principal -->
+      <!-- Additional fat jar, without replacing the main device -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

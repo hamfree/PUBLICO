@@ -22,9 +22,9 @@ import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
  * display menus.
  * <p>
  * Most of the logic, management, and validation of this object is handled
- * through its associated class, MenuManager.
+ * through its associated class, @see MenuManager.
  * <p>
- * It is recommended to use MenuManager to perform operations on Menus, such as
+ * It is <b>strongly recommended</b> to use @see MenuManager to perform operations on Menus, such as
  * adding, removing, adding, modifying, and deleting menus, or working with
  * their properties.
  *
@@ -133,13 +133,26 @@ public class Menu {
     private Menu parentMenu;
 
     // Constructors
+
     /**
-     * Default constructor for the Menu class.
-     * This constructor initializes the Menu object with default values, including
-     * an empty options list, an empty submenu list, and default settings for root menu,
-     * title, message, menu view, and the selected option.
-     *
-     * @throws MenuException if an error occurs during the initialization of the Menu object.
+     * Constructs a new instance of the Menu class.
+     * This private constructor initializes a Menu object with default properties
+     * and is primarily used to create a "Root Menu" type. The first option of this
+     * menu is always set as the exit option.
+     * <p>
+     * Throws:
+     *     MenuException - if an error occurs during the initialization of the menu
+     * <p>
+     * Initialization Details:
+     * <ul>
+     * <li>Sets the root menu flag to true.</li>
+     * <li>Sets the parent menu reference to null.</li>
+     * <li>Assigns a default title and message using localized messages.</li>
+     * <li>Initializes the view string to an empty value.</li>
+     * <li>Sets the selected option ID to 0.</li>
+     * <li>Initializes the options list and adds the default exit option as the first entry.</li>
+     * <li>Initializes an empty list of sub-menus.</li>
+     * </ul>
      */
     private Menu() throws MenuException {
         this.instance = this;
@@ -158,24 +171,20 @@ public class Menu {
     }
 
     /**
-     * Constructs a new Menu instance with the specified parameters.
+     * Constructs a Menu object with the specified options, title, message, and root menu indicator.
+     * Initializes the menu with the given parameters, applying default values for the title and
+     * message if they are not provided.
      *
-     * @param options    A list of options to be included in the menu. If the list is null or empty, no additional
-     *                   options will be added except for the default root/back menu option.
-     * @param title      The title of the menu. If null or empty, a default "no title" value will be assigned.
-     * @param message    A message to be displayed in the menu. Can be null if no message is required.
-     * @param isRootMenu Indicates whether the menu is the root menu or a sub-menu. If true, an "Exit" option will be
-     *                   added as the first menu item, otherwise a "Back" option will be added.
-     * @throws MenuException If an error occurs while creating or initializing the menu instance.
+     * @param options   the list of menu options to be added to the menu. If null or empty, no options will be added.
+     * @param title     the title of the menu. If null or empty, a default title will be used.
+     * @param message   the message or description displayed in the menu. If null, a default message will be used.
+     * @param isRootMenu a boolean indicating whether the menu is a root menu.
+     * @throws MenuException if an error occurs while constructing the menu or adding options.
      */
     private Menu(List<String> options, String title, String message,
                 boolean isRootMenu) throws MenuException {
         this();
-
         this.setRootMenu(isRootMenu);
-
-
-
         if (options != null && !options.isEmpty()) {
             for (String option : options) {
                 this.addOption(option);
