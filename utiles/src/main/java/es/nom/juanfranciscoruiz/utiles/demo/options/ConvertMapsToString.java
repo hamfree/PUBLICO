@@ -5,6 +5,8 @@ import es.nom.juanfranciscoruiz.utiles.TypeConverter;
 import es.nom.juanfranciscoruiz.utiles.impl.IOimpl;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
 import static es.nom.juanfranciscoruiz.utiles.Stuff.pause;
@@ -18,12 +20,15 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.title;
  * Performs the the second and third options of the menu shown in Demo class.
  */
 public class ConvertMapsToString {
+    private static final Logger logger = LoggerFactory.getLogger(ConvertMapsToString.class);
+
     private TermCtl tc;
     
     /**
      * Private constructor to make this class non-instantiable
      */
     private ConvertMapsToString() {
+        info(logger, "Entering ConvertMapsToString ...");
         tc = new TermCtlImpl();
     }
     
@@ -82,6 +87,7 @@ public class ConvertMapsToString {
         IOimpl.prtln(1,"String representation: ");
         IOimpl.prtln(2,TypeConverter.map2String(map));
         pause(FOREVER,"");
+        info(logger,"Leaving runConversionSimpleMap ...");
     }
 
     /**
@@ -99,6 +105,7 @@ public class ConvertMapsToString {
         IOimpl.prtln(2,map2);
         IOimpl.prtln(2, TypeConverter.map2String(map2));
         pause(FOREVER,"");
+        info(logger,"Leaving runConversionSimpleMap ...");
     }
 
 }

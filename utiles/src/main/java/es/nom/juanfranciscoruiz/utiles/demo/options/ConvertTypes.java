@@ -6,6 +6,8 @@ import es.nom.juanfranciscoruiz.utiles.exceptions.TypeConverterException;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.SampleObject;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.random.RandomGenerator;
@@ -25,6 +27,8 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
  * are used to enhance the demonstration output.
  */
 public class ConvertTypes {
+    private static final Logger logger = LoggerFactory.getLogger(ConvertTypes.class);
+
     /**
      * Private constructor to make this class non-instantiable
      */
@@ -34,6 +38,7 @@ public class ConvertTypes {
      * Private constructor to make this class non-instantiable
      */
     private ConvertTypes() {
+        info(logger,"Entering ConvertTypes ...");
         tc = new TermCtlImpl();
     }
 
@@ -144,6 +149,7 @@ public class ConvertTypes {
             prtln(2, "Something went wrong: " + e.getMessage());
         }
         pause(FOREVER, "This demonstration has ended. Press <ENTER> to return to the menu.");
+        info(logger, "Leaving ConvertTypes ...");
     }
 
     /**
@@ -361,11 +367,11 @@ public class ConvertTypes {
         String message, text1, text2;
         Collection<Integer> vector = new Vector<>();
         Stack<String> stack = new Stack<>();
-        List<?> responseList = new ArrayList<>();
+        List<?> responseList;
 
-        vector.add(Integer.valueOf(1));
-        vector.add(Integer.valueOf(2));
-        vector.add(Integer.valueOf(3));
+        vector.add(1);
+        vector.add(2);
+        vector.add(3);
 
 
         stack.add("uno");
@@ -388,7 +394,7 @@ public class ConvertTypes {
     private void map2ListDemo(){
         String message, text1, text2;
         Map<String, Object> theMap = new HashMap<>();
-        List<?> responseList = new ArrayList<>();
+        List<?> responseList;
 
         theMap.put("ZERO", 0);
         theMap.put("ONE", 1);

@@ -15,6 +15,8 @@ package es.nom.juanfranciscoruiz.utiles.exceptions;
 public class MenuErrors {
 
 
+
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -45,6 +47,10 @@ public class MenuErrors {
      * Error message indicating that a menu option cannot be null or empty.
      */
     public static final String ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY = "A menu option cannot be null or empty";
+    /**
+     * Message of error when the options list is empty.
+     */
+    public static final String ERR_OPTIONS_CANNOT_BE_EMPTY = "In this context the options list cannot be empty" ;
     /**
      * Message of error when the option already exists in the menu.
      */

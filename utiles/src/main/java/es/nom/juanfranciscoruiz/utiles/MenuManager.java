@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static es.nom.juanfranciscoruiz.utiles.Stuff.error;
-import static es.nom.juanfranciscoruiz.utiles.Stuff.warn;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
 
 /**
@@ -374,6 +373,76 @@ public class MenuManager {
     }
 
     /**
+     * Sets the options for a given submenu within the menu system. If the submenu is
+     * a root menu, the "exit" option will be automatically added as the first option,
+     * otherwise, the "back" option will be added. The method ensures the options are
+     * validated, numbered, and added correctly to the submenu.
+     *
+     * @param options The list of options to be added to the submenu. This list must not
+     *                be null or empty. Each option will be validated and assigned a
+     *                sequential visual index.
+     * @param submenu The submenu to which the options should be added. This submenu must
+     *                exist among the submenus of the parent menu managed by the current menu
+     *                manager.
+     * @throws MenuException If the options list is null, empty, or contains invalid items,
+     *                       or if the submenu is null or invalid.
+     */
+    public void setOptionsInSubMenu(List<String> options, Menu submenu) throws MenuException  {
+        String exitOpt = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
+        String backOpt = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
+        int i = 0;
+        int index = 1;
+        List<String> menuOptions;
+
+        // Validations
+        // The list 'options' have to exist and have values.
+        if (options == null) {
+            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            throw new MenuException(msg);
+        }
+        if (options.isEmpty()) {
+            String msg = getMessage("err.menu.options.empty", MenuErrors.ERR_OPTIONS_CANNOT_BE_EMPTY);
+        }
+        // The menu 'submenu' have to exist, be valid AND is an object of the arraylist submenus property of the menu property of this menumanager.
+        if (submenu == null) {
+            String msg = getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL);
+            throw new MenuException(msg);
+        }
+        if (!this.menu.getSubMenus().contains(submenu)) {
+            String msg = getMessage("err.menu.submenu.not.found", MenuErrors.ERR_SUBMENU_NOT_FOUND);
+            throw new MenuException(msg);
+        }
+
+        // Obtenemos el submenú al que tenemos que insertarle las opciones
+        for (Menu sm : this.menu.getSubMenus()){
+            if (sm.getTitle().equals(submenu.getTitle())){
+                // Validates the options and add the visual index to each option.
+                for (String option : options) {
+                    if (!option.equals(exitOpt) || option.equals(backOpt)){
+                        options.set(i, addNumbertoOptionMenu(option, index));
+                        i++;
+                        index++;
+                    } else {
+                        warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
+                    }
+                }
+                menuOptions = sm.getOptions();
+                // Set the list of options.
+                if (menuOptions != null) {
+                    menuOptions.addAll(options);
+                    } else {
+                    menuOptions = options;
+                }
+                // The first option of the menu is added automatically and, in a submenu, is the option to exit to parent menu
+                if ( !menuOptions.contains(backOpt)) {
+                    menuOptions.addFirst(backOpt);
+                }
+                break;
+            }
+        }
+    }
+
+    /**
      * Adds a sub-menu to an existing menu and establishes the parent-child relationship.
      * This method ensures that the `childMenu` is valid, avoids cycles, and maintains
      * referential integrity between menus. Also updates the parent menu's list of sub-menus.
@@ -525,4 +594,11 @@ public class MenuManager {
         return optionText.toUpperCase();
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MenuManager{");
+        sb.append("menu=").append(menu);
+        sb.append('}');
+        return sb.toString();
+    }
 }

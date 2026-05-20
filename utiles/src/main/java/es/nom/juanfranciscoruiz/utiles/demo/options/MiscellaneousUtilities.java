@@ -3,7 +3,10 @@ package es.nom.juanfranciscoruiz.utiles.demo.options;
 import es.nom.juanfranciscoruiz.utiles.TermCtl;
 import es.nom.juanfranciscoruiz.utiles.impl.TermCtlImpl;
 import es.nom.juanfranciscoruiz.utiles.model.Using;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static es.nom.juanfranciscoruiz.utiles.Stuff.info;
 import static es.nom.juanfranciscoruiz.utiles.Stuff.pause;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
 
@@ -12,6 +15,7 @@ import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
  * It includes methods for printing titles, messages, and pauses with formatted output.
  */
 public class MiscellaneousUtilities {
+    private static final Logger logger = LoggerFactory.getLogger(MiscellaneousUtilities.class);
     /**
      * Represents an instance of the TermCtl interface used for terminal control operations
      * such as clearing the screen, retrieving console size, and setting console dimensions.
@@ -29,7 +33,9 @@ public class MiscellaneousUtilities {
      * such as clearing the screen and managing console dimensions. Since the class follows a
      * singleton pattern, this constructor is private to prevent external instantiation.
      */
-    private MiscellaneousUtilities() {
+    private MiscellaneousUtilities()
+    {
+        info(logger, "Entering MiscellaneousUtilities ...");
         tc = new TermCtlImpl();
     }
 
@@ -102,5 +108,6 @@ public class MiscellaneousUtilities {
         // Implementation for miscellaneous utilities demo (classes TestUtils and Util)
         prtln(3, "Miscellaneous utilities not implemented yet.");
         pause(PAUSE_DURATION, "");
+        info(logger, "Leaving MiscellaneousUtilities ...");
     }
 }
