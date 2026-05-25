@@ -215,7 +215,7 @@ public class MenuTest {
     public void testConstructorWithSubmenusSetsParentAndSubmenus() throws MenuException {
         printTitletoLogAndConsole("testConstructorWithSubmenusSetsParentAndSubmenus()", logger);
         Menu parent = Menu.getInstance();
-        List<Menu> subMenus = new ArrayList<>();
+        ArrayList<Menu> subMenus = new ArrayList<>();
         Menu instance = Menu.getInstance().getInstance(generateOptionsForChildMenus(), "Title", "Msg", false,
                 subMenus, parent);
         assertAll(
@@ -542,6 +542,28 @@ public class MenuTest {
     }
 
     @Test
+    void testSetSubMenusKeepsParentForRetainedSubMenu() throws MenuException {
+        printTitletoLogAndConsole("testSetSubMenusKeepsParentForRetainedSubMenu()", logger);
+        Menu parent = Menu.getInstance();
+        Menu retainedChild = Menu.getInstance(new ArrayList<>(), "Retained Child", "Msg", false);
+        Menu removedChild = Menu.getInstance(new ArrayList<>(), "Removed Child", "Msg", false);
+        Menu addedChild = Menu.getInstance(new ArrayList<>(), "Added Child", "Msg", false);
+
+        parent.setSubMenus(List.of(retainedChild, removedChild));
+        parent.setSubMenus(List.of(retainedChild, addedChild));
+
+        assertAll("Set SubMenus keeps retained child linked",
+                () -> assertEquals(2, parent.getSubMenus().size(), "Parent should have the new submenu list"),
+                () -> assertTrue(parent.getSubMenus().contains(retainedChild), "Retained child should still be present"),
+                () -> assertTrue(parent.getSubMenus().contains(addedChild), "Added child should be present"),
+                () -> assertFalse(parent.getSubMenus().contains(removedChild), "Removed child should no longer be present"),
+                () -> assertSame(parent, retainedChild.getParentMenu(), "Retained child should keep the parent"),
+                () -> assertSame(parent, addedChild.getParentMenu(), "Added child should point to the parent"),
+                () -> assertNull(removedChild.getParentMenu(), "Removed child should be detached")
+        );
+    }
+
+    @Test
     void TestGetParentMenu() throws MenuException {
         printTitletoLogAndConsole("TestGetParentMenu()", logger);
         Menu instance = Menu.getInstance();
@@ -629,12 +651,7 @@ public class MenuTest {
                 () -> assertTrue(rootMenu.getSubMenus().contains(childMenu), "ChildMenu should be in the root menu's subMenus list")
         );
 
-        // Verificar que el título (formateado) está en las opciones
-        // Importante: addOption(Menu) formatea el título como "(CHILD MENU)" y añade el prefijo numérico
-        // Necesitamos buscar la opción que contiene el título original para asegurar la independencia de formato.
-        boolean optionFound = rootMenu.getOptions().stream()
-                .anyMatch(opt -> opt.contains(childMenu.getTitle()));
-        assertTrue(optionFound, "The child menu title should be present in the root menu options");
+
 
 
         // Pruebas de excepciones (Reglas de negocio)
@@ -842,10 +859,7 @@ public class MenuTest {
                 "Option Seven" + LS  +
                 "Option Eight" + LS  +
                 "Option Nine" + LS  +
-                "Option Ten" + LS  +
-                "SubMenu One" + LS  +
-                "SubMenu Two" + LS  +
-                "SubMenu Three" + LS + LS +
+                "Option Ten" + LS  + LS  +
                 "Select an option:" + LS;
     }
 

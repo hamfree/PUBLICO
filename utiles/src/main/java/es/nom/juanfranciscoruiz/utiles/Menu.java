@@ -1,17 +1,15 @@
 package es.nom.juanfranciscoruiz.utiles;
 
-import es.nom.juanfranciscoruiz.utiles.model.MenuConstants;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuErrors;
 import es.nom.juanfranciscoruiz.utiles.exceptions.MenuException;
+import es.nom.juanfranciscoruiz.utiles.model.MenuConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
-import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.CollectionToString;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.SL;
 
 /**
  * It's the representation of an options menu, capable of generating a view of
@@ -27,7 +25,6 @@ import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
  * It is <b>strongly recommended</b> to use @see MenuManager to perform operations on Menus, such as
  * adding, removing, adding, modifying, and deleting menus, or working with
  * their properties.
- *
  *
  * @author Juan F. Ruiz
  */
@@ -52,6 +49,7 @@ public class Menu {
             messages = null;
         }
     }
+
     /**
      * Helper method to fetch internationalized messages, falling back to default if not found.
      *
@@ -65,6 +63,7 @@ public class Menu {
         }
         return defaultMessage;
     }
+
     /**
      * Default value for the title property of a Menu Object.
      */
@@ -73,7 +72,7 @@ public class Menu {
      * For a Menu object that is the Home Menu this is the option 0 of the menu
      * for exiting the application.
      */
-    private static final String EXITOPT = getMessage("msg.menu.exit.opt",MenuConstants.EXITOPT);
+    private static final String EXITOPT = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
     /**
      * Default vale for the message shown to the user below the list options.
      */
@@ -84,13 +83,6 @@ public class Menu {
     public static final Long WRONG_OPTION = -1L;
 
     //Properties of the Menu object
-    /**
-     * Represents an instance of the {@code Menu} class.
-     * This variable holds a reference to a {@code Menu} object
-     * that could be used to manage or store menu-related behavior
-     * or structure within the application.
-     */
-    private Menu instance;
     /**
      * List of options for the menu.
      */
@@ -141,7 +133,7 @@ public class Menu {
      * menu is always set as the exit option.
      * <p>
      * Throws:
-     *     MenuException - if an error occurs during the initialization of the menu
+     * MenuException - if an error occurs during the initialization of the menu
      * <p>
      * Initialization Details:
      * <ul>
@@ -155,7 +147,6 @@ public class Menu {
      * </ul>
      */
     private Menu() throws MenuException {
-        this.instance = this;
         this.setRootMenu(true);
         this.setParentMenu(null);
         this.setTitle(getMessage("msg.menu.no.title", MenuConstants.NO_TITLE));
@@ -166,7 +157,7 @@ public class Menu {
         // By default, the default constructor builds a Menu Object of type "Root Menu"
         // and then, the first option is ALWAYS the exit option.
         this.options = new ArrayList<>();
-        this.getOptions().addFirst( getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT));
+        this.options.addFirst(getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT));
         this.subMenus = new ArrayList<>();
     }
 
@@ -175,16 +166,18 @@ public class Menu {
      * Initializes the menu with the given parameters, applying default values for the title and
      * message if they are not provided.
      *
-     * @param options   the list of menu options to be added to the menu. If null or empty, no options will be added.
-     * @param title     the title of the menu. If null or empty, a default title will be used.
-     * @param message   the message or description displayed in the menu. If null, a default message will be used.
+     * @param options    the list of menu options to be added to the menu. If null or empty, no options will be added.
+     * @param title      the title of the menu. If null or empty, a default title will be used.
+     * @param message    the message or description displayed in the menu. If null, a default message will be used.
      * @param isRootMenu a boolean indicating whether the menu is a root menu.
      * @throws MenuException if an error occurs while constructing the menu or adding options.
      */
     private Menu(List<String> options, String title, String message,
-                boolean isRootMenu) throws MenuException {
+                 boolean isRootMenu) throws MenuException {
         this();
         this.setRootMenu(isRootMenu);
+        this.setTheFirstOption(isRootMenu);
+
         if (options != null && !options.isEmpty()) {
             for (String option : options) {
                 this.addOption(option);
@@ -208,11 +201,11 @@ public class Menu {
      * Constructs a new Menu object with the specified options, title, message, root menu
      * status, submenus, and parent menu.
      *
-     * @param options a list of string options available in the menu.
-     * @param title the title of the menu.
-     * @param message a message or description associated with the menu.
+     * @param options    a list of string options available in the menu.
+     * @param title      the title of the menu.
+     * @param message    a message or description associated with the menu.
      * @param isRootMenu a boolean flag indicating whether this Menu is a root menu.
-     * @param subMenus a list of submenus belonging to this menu; cannot be null.
+     * @param subMenus   a list of submenus belonging to this menu; cannot be null.
      * @param parentMenu the parent menu of this menu; must be null if the menu is a root menu,
      *                   and must be non-null if the menu is a submenu.
      * @throws MenuException if any validation fails:
@@ -243,32 +236,17 @@ public class Menu {
         }
     }
 
-    //Getters and Setters
     /**
-     * Retrieves an instance of the Menu class.
-     * This method creates and returns a new Menu object.
+     * Provides a factory method to create a new instance of the Menu class.
      *
-     * @return a new instance of the Menu class
-     * @throws MenuException if an error occurs while creating the Menu instance
+     * @return a new instance of the Menu class.
+     * @throws MenuException if an error occurs during instance creation.
      */
     public static Menu getInstance() throws MenuException {
         return new Menu();
     }
-    /**
-     * Creates and returns an instance of the Menu class with the specified configuration.
-     *
-     * @param options     the list of options to be displayed in the menu
-     * @param title       the title of the menu to be displayed
-     * @param message     additional message or description for the menu
-     * @param isRootMenu  indicates if the menu is a root menu
-     * @param subMenus    the list of submenus associated with this menu
-     * @param parentMenu  the parent menu of this menu, or null if it does not have one
-     * @return a new instance of the Menu class with the specified properties
-     * @throws MenuException if an error occurs while creating the menu
-     */
-    public Menu getInstance(List<String> options, String title, String message, boolean isRootMenu, List<Menu> subMenus, Menu parentMenu) throws MenuException {
-        return new Menu(options, title, message, isRootMenu, subMenus, parentMenu);
-    }
+
+
     /**
      * Creates and returns an instance of the Menu object.
      *
@@ -279,24 +257,46 @@ public class Menu {
      * @return an instance of the Menu object initialized with the provided parameters.
      * @throws MenuException if there is an error while creating the menu instance.
      */
-    public static Menu getInstance(List<String> options, String title, String message, boolean isRootMenu) throws MenuException{
+    public static Menu getInstance(List<String> options, String title, String message, boolean isRootMenu) throws MenuException {
         return new Menu(options, title, message, isRootMenu);
     }
+
     /**
-     * Gets the list of menu options
+     * Creates and returns a new instance of the Menu class.
      *
-     * @return A list of strings with the options.
+     * @param options    a list of strings representing menu options or related data
+     * @param title      the title of the menu
+     * @param message    a message associated with the menu
+     * @param isRootMenu a boolean flag indicating specific behavior or condition for the menu
+     * @param subMenus   an ArrayList of Menu objects representing submenus or related menus
+     * @param parentMenu the parent Menu object, if available, to establish a parent-child relationship
+     * @return a new instance of the Menu class initialized with the provided parameters
+     * @throws MenuException if an error occurs during the creation of the menu
+     */
+    public static Menu getInstance(List<String> options, String title, String message,
+                                   boolean isRootMenu, List<Menu> subMenus, Menu parentMenu) throws MenuException {
+        return new Menu(options, title, message, isRootMenu, subMenus, parentMenu);
+    }
+
+    //Getters and Setters
+
+    /**
+     * Retrieves an unmodifiable view of the options list.
+     * The returned list cannot be modified directly, ensuring the integrity of the original options.
+     *
+     * @return an unmodifiable list of options
      */
     public List<String> getOptions() {
-        return options;
+        return Collections.unmodifiableList(this.options);
     }
 
     /**
      * Sets a list of options for the menu.
      *
-     *  <p>
-     *  <b style='color:red'>Note:</b> Remember, the numeration of the options is set and validated by the MenuManager class!
-     *  </p>
+     * <p>
+     * <b style='color:red'>Note:</b> Remember, the numeration of the options is set and validated by the MenuManager class!
+     * </p>
+     *
      * @param options the list of options to be set; must not be null
      * @throws MenuException if the provided options list is null
      */
@@ -307,7 +307,7 @@ public class Menu {
         }
 
         // Set the list of options.
-        if (this.getOptions() != null) {
+        if (this.options != null) {
             this.options.addAll(options);
         } else {
             this.options = options;
@@ -419,7 +419,7 @@ public class Menu {
      */
     public void setParentMenu(Menu parentMenu) throws MenuException {
         if (parentMenu == null) {
-            if (!this.isRootMenu()){
+            if (!this.isRootMenu()) {
                 String msg = getMessage("err.menu.submenu.must.have.parent", MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
                 throw new MenuException(msg);
             }
@@ -443,13 +443,14 @@ public class Menu {
      * @param parentMenu the parent menu to be detached; must not be null
      * @throws MenuException if the provided parent menu is null
      */
-    public void disableLinkToRootMenu(Menu parentMenu) throws MenuException {
-         if (parentMenu == null) {
-             throw new MenuException(getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL));
-         }
-         this.parentMenu = null;
-         this.isRootMenu = true;
-         setTheFirstOption(true);
+    public void detachFromParent(Menu parentMenu) throws MenuException {
+        if (parentMenu == null) {
+            throw new MenuException(getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL));
+        }
+        if (this.parentMenu != parentMenu){
+            throw new MenuException(getMessage("err.menu.notparentmenu", MenuErrors.ERR_MENU_NOT_PARENT_MENU));
+        }
+        this.parentMenu = null;
     }
 
 
@@ -470,8 +471,8 @@ public class Menu {
         }
         this.setRootMenu(isRootMenu);
 
-        if (this.getOptions() == null) {
-            this.setOptions(new ArrayList<>());
+        if (this.options == null) {
+            this.options = new ArrayList<>();
         }
 
         this.setTheFirstOption(this.getIsRootMenu());
@@ -555,28 +556,31 @@ public class Menu {
     }
 
     /**
-     * Gets the list of submenus for this menu.
+     * Retrieves the list of sub-menus associated with this menu.
      *
-     * @return a list of submenus for this menu.
+     * @return an unmodifiable list of sub-menus
      */
     public List<Menu> getSubMenus() {
-        return subMenus;
+        return Collections.unmodifiableList(this.subMenus);
     }
 
     /**
-     * Sets the list of submenus for this menu. Each submenu will have its parent menu
-     * set to the current menu, and their titles will be added to the options list. However,
-     * the submenus will be rendered with a different style in the generateMenuView() method.
+     * Sets the submenus for this menu. Submenus are child menus that are associated
+     * with this parent menu. If the provided list is null, the submenus are cleared.
+     * Each submenu in the provided list is also updated to set this menu as its parent.
      *
-     * @param subMenus the list of submenus to be associated with the current menu
-     * @throws MenuException if an error occurs while setting the submenus
+     * @param subMenus the list of submenu objects to be associated with this menu.
+     *                 If null, all existing submenus will be removed.
+     * @throws MenuException if any issue occurs while processing the submenus.
      */
     public void setSubMenus(List<Menu> subMenus) throws MenuException {
         if (subMenus == null) {
-            this.subMenus = null;
+            for (Menu currentSubmenu : this.subMenus){
+                currentSubmenu.detachFromParent(this);
+            }
+            this.subMenus = new ArrayList<>();
             return;
         }
-
         // Defensive copying: avoids fixed-size (Arrays.asList) or non-modifiable lists
         List<Menu> mutable = new ArrayList<>(subMenus);
 
@@ -584,27 +588,48 @@ public class Menu {
         // style in generateMenuView() method.
         for (Menu subMenu : mutable) {
             subMenu.setParentMenu(this);
-            this.addOption(subMenu.getTitle());
+        }
+
+        if (this.subMenus !=  null) {
+            for (Menu currentSubmenu : this.subMenus){
+                if (!mutable.contains(currentSubmenu)) {
+                    currentSubmenu.detachFromParent(this);
+                }
+            }
         }
         this.subMenus = mutable;
     }
 
     // Methods of the object Menu.
+
     /**
-     * Adds a submenu to this menu.
-     * Note: when adding a submenu, their title will be added to the options list.
+     * Adds a submenu to the current menu instance.
      *
-     * @param childMenu The submenu to add.
-     * @throws MenuException If the child menu is this menu or if the child menu is a root menu.
+     * This method allows linking a child menu to the current menu. The added submenu
+     * becomes part of the current menu's hierarchy. Several constraints are evaluated
+     * before adding the submenu:
+     * - The child menu cannot be null.
+     * - A menu cannot add itself as its own submenu.
+     * - Root menus are not allowed to become submenus of other menus.
+     *
+     * @param childMenu The submenu to be added to the current menu.
+     * @throws MenuException If the childMenu is null, if it points to itself, or if it is
+     *         a root menu attempting to attach to another menu.
      */
     public void addSubMenu(Menu childMenu) throws MenuException {
-       try {
-           childMenu.setParentMenu(this);
-           this.subMenus.add(childMenu);
-           this.addOption(childMenu.getTitle());
-       } catch (Exception e) {
-           throw new MenuException(e.getMessage());
-       }
+        if (childMenu == null){
+            throw new MenuException(getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL));
+        }
+        if (childMenu == this) {
+            throw new MenuException(getMessage("err.menu.point.itself", MenuErrors.ERR_MENU_CANNOT_POINT_TO_ITSELF));
+        }
+        if (childMenu.isRootMenu()) {
+            throw new MenuException(getMessage("err.menu.root.point.another",
+                    MenuErrors.ERR_ROOTMENU_CANT_POINT_TO_ANOTHER_MENU));
+        }
+
+        childMenu.setParentMenu(this);
+        this.subMenus.add(childMenu);
     }
 
     /**
@@ -617,12 +642,10 @@ public class Menu {
         if (childMenu == null) {
             throw new MenuException(getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL));
         }
-        this.options.remove(childMenu.getTitle());
-        childMenu.disableLinkToRootMenu(this);
-
-        if (!this.subMenus.remove(childMenu)){
+        if (!this.subMenus.remove(childMenu)) {
             throw new MenuException(getMessage("err.menu.submenu.not.found", MenuErrors.ERR_SUBMENU_NOT_FOUND));
         }
+        childMenu.detachFromParent(this);
     }
 
     /**
@@ -633,12 +656,11 @@ public class Menu {
      */
     public void addOption(String optionText) throws MenuException {
         try {
-            this.getOptions().add(optionText);
+            this.options.add(optionText);
         } catch (Exception e) {
             throw new MenuException(e.getMessage());
         }
     }
-
 
 
     /**
@@ -650,10 +672,27 @@ public class Menu {
      */
     public void removeOption(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {
-            throw new MenuException(getMessage("err.menu.option.null.or.empty", MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY));
+            throw new MenuException(getMessage("err.menu.option.null.or.empty",
+                    MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY));
         }
-        this.getOptions().remove(optionText);
+        this.options.remove(optionText);
 
+    }
+
+    /**
+     * Promotes the current menu instance to become a root-level menu.
+     * <p>
+     * This method sets the parent menu reference to null, marking the current menu
+     * as a root menu in the hierarchy. Additionally, it ensures that the first
+     * option of the menu is correctly configured by calling the
+     * {@code setTheFirstOption} method.
+     *
+     * @throws MenuException if there is an error during the promotion process.
+     */
+    public void promoteToRootMenu() throws MenuException {
+        this.parentMenu = null;
+        this.isRootMenu = true;
+        setTheFirstOption(true);
     }
 
     /**
@@ -667,17 +706,16 @@ public class Menu {
     @Override
     public String toString() {
         return SL + "Menu{" + SL +
-                "\toptions=" + CollectionToString(this.getOptions(), true, 20) + SL +
+                "\toptions=" + CollectionToString(this.options, true, 20) + SL +
                 "\ttitle=" + this.getTitle() + SL +
                 "\tmessage=" + this.getMessage() + SL +
                 "\tselectedOption=" + this.getSelectedOption() + SL +
                 "\tisRootMenu=" + this.getIsRootMenu() + SL +
                 "\tparentMenu=" + (this.getParentMenu() != null ?
                 this.getParentMenu().getTitle() : "null") + SL +
-                "\tsubMenus=" + CollectionToString(this.getSubMenus(), true, 20) + SL +
+                "\tsubMenus=" + CollectionToString(this.subMenus, true, 20) + SL +
                 '}';
     }
-
 
 
     /**
@@ -693,16 +731,18 @@ public class Menu {
         // The first option of the menu is added automatically and depends from 'rootMenu' property.
         if (this.isRootMenu()) {
             // It's a 'Root Menu, the first option is 'Exit'
-            if (this.getOptions() != null && !this.getOptions().isEmpty()){
-                this.getOptions().removeFirst();
-                this.getOptions().addFirst(getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT));
+            if (this.options != null && !this.options.isEmpty()) {
+                this.options.removeFirst();
+                this.options.addFirst(getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT));
             }
         } else {
             // It's a 'Sub Menu or Child Menu, the first option is 'Back'
-            if (this.getOptions() != null && !this.getOptions().isEmpty()){
-                this.getOptions().removeFirst();
-                this.getOptions().addFirst(getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU));
+            if (this.options != null && !this.options.isEmpty()) {
+                this.options.removeFirst();
+                this.options.addFirst(getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU));
             }
         }
     }
+
+
 }

@@ -304,7 +304,7 @@ public class MenuManager {
         } else {
             optionText = addNumbertoOptionMenu(optionText, this.menu.getOptions().size());
         }
-        this.menu.getOptions().add(optionText);
+        this.menu.addOption(optionText);
     }
 
     /**
@@ -316,11 +316,12 @@ public class MenuManager {
      */
     public void removeOptionFromMenu(String optionText) throws MenuException {
         if (optionText == null || optionText.isEmpty()) {
-            String msg = getMessage("err.menu.option.to.remove.null.or.empty", MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
+            String msg = getMessage("err.menu.option.to.remove.null.or.empty",
+                    MenuErrors.ERR_OPTION_TO_REMOVE_CAN_T_BE_NULL_OR_EMPTY);
             error(logger, msg);
             throw new MenuException(msg);
         }
-        this.menu.getOptions().remove(optionText);
+        this.menu.removeOption(optionText);
     }
 
     /**
@@ -337,39 +338,29 @@ public class MenuManager {
         String backOpt = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
         int i = 0;
         int index = 1;
-        List<String> menuOptions = this.menu.getOptions();
 
         if (options == null) {
             String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
             throw new MenuException(msg);
         }
 
+        if (options.isEmpty()){
+            String msg = getMessage("err.menu.options.empty", MenuErrors.ERR_OPTIONS_CANNOT_BE_EMPTY);
+            throw new MenuException(msg);
+        }
+
         // Validates the options and add the visual index to each option.
+        ArrayList<String> validOptions = new ArrayList<>();
         for (String option : options) {
-            if (!option.equals(exitOpt) || option.equals(backOpt)){
-                options.set(i, addNumbertoOptionMenu(option, index));
+            if (!option.equals(exitOpt) && !option.equals(backOpt)){
+                validOptions.add(i, addNumbertoOptionMenu(option, index));
                 i++;
                 index++;
             } else {
                 warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
             }
         }
-
-        // Set the list of options.
-        if (menuOptions != null) {
-            menuOptions.addAll(options);
-        } else {
-            menuOptions = options;
-        }
-
-        // The first option of the menu is added automatically and depends from 'rootMenu' property.
-        if (this.menu.isRootMenu() && !menuOptions.contains(exitOpt)) {
-            menuOptions.removeFirst();
-            menuOptions.addFirst(exitOpt);
-        } else if (!this.menu.isRootMenu() && !menuOptions.contains(backOpt)) {
-            menuOptions.removeFirst();
-            menuOptions.addFirst(backOpt);
-        }
+       this.menu.setOptions(validOptions);
     }
 
     /**
@@ -402,6 +393,7 @@ public class MenuManager {
         }
         if (options.isEmpty()) {
             String msg = getMessage("err.menu.options.empty", MenuErrors.ERR_OPTIONS_CANNOT_BE_EMPTY);
+            throw new MenuException(msg);
         }
         // The menu 'submenu' have to exist, be valid AND is an object of the arraylist submenus property of the menu property of this menumanager.
         if (submenu == null) {
@@ -414,32 +406,18 @@ public class MenuManager {
         }
 
         // Obtenemos el submenú al que tenemos que insertarle las opciones
-        for (Menu sm : this.menu.getSubMenus()){
-            if (sm.getTitle().equals(submenu.getTitle())){
-                // Validates the options and add the visual index to each option.
-                for (String option : options) {
-                    if (!option.equals(exitOpt) || option.equals(backOpt)){
-                        options.set(i, addNumbertoOptionMenu(option, index));
-                        i++;
-                        index++;
-                    } else {
-                        warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
-                    }
-                }
-                menuOptions = sm.getOptions();
-                // Set the list of options.
-                if (menuOptions != null) {
-                    menuOptions.addAll(options);
-                    } else {
-                    menuOptions = options;
-                }
-                // The first option of the menu is added automatically and, in a submenu, is the option to exit to parent menu
-                if ( !menuOptions.contains(backOpt)) {
-                    menuOptions.addFirst(backOpt);
-                }
-                break;
+        ArrayList<String> validOptions = new ArrayList<>();
+        // Validates the options and add the visual index to each option.
+        for (String option : options) {
+            if (!option.equals(exitOpt) && !option.equals(backOpt)){
+                validOptions.add(i, addNumbertoOptionMenu(option, index));
+                i++;
+                index++;
+            } else {
+                warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
             }
         }
+        submenu.setOptions(validOptions);
     }
 
     /**
@@ -471,20 +449,8 @@ public class MenuManager {
             throw new MenuException(msg);
         }
 
-        // Ensures initialized and mutable list
-        if (this.menu.getSubMenus() == null) {
-            this.menu.setSubMenus(new ArrayList<>());
-        } else {
-            try {
-                this.menu.getSubMenus().add(null);
-                this.menu.getSubMenus().removeLast();
-            } catch (UnsupportedOperationException ex) {
-                this.menu.setSubMenus(new ArrayList<>(this.menu.getSubMenus()));
-            }
-        }
 
-        childMenu.setParentMenu(this.menu);
-        this.menu.getSubMenus().add(childMenu);
+        this.menu.addSubMenu(childMenu);
         this.addOptionToMenu(childMenu.getTitle());
     }
 
@@ -522,16 +488,16 @@ public class MenuManager {
         }
 
         if (childMenu.getIsRootMenu() && this.menu.getSubMenus().size() > 1) {
-            String msg = getMessage("err.menu.root.with.submenus.removed", MenuErrors.ERR_ROOTMENU_WITH_SUBMENUS_CANT_BE_REMOVED);
+            String msg = getMessage("err.menu.root.with.submenus.removed",
+                    MenuErrors.ERR_ROOTMENU_WITH_SUBMENUS_CANT_BE_REMOVED);
             error(logger, msg);
             throw new MenuException(msg);
         }
-        childMenu.setParentMenu(null); //Needs to remove the reference to this in the child menu, too.
-        this.removeOptionFromMenu(childMenu.getTitle());
-        this.menu.getSubMenus().remove(childMenu);
+
+        removeVisibleOptionForSubMenu(childMenu);
+        this.menu.removeSubMenu(childMenu);
     }
 
-    //Helper methods
     // Helper methods
     /**
      * Adds a number as a prefix to the specified option in the menu.
@@ -551,7 +517,7 @@ public class MenuManager {
             throw new MenuException(msg);
         }
         //It's validates the argument 'theoption' has no number added yet.
-        if (theOption.substring(1, 2).matches("\\d")) {
+        if (theOption.matches("^\\d+\\.\\s.*")) {
             return theOption;
         } else {
             return index + ". " + theOption;
@@ -559,40 +525,25 @@ public class MenuManager {
     }
 
     /**
-     * Checks if the provided option corresponds to the title of a submenu
-     * within the current menu's list of submenus.
+     * Removes the visible option corresponding to the given sub-menu from the parent menu.
+     * The method identifies the matching option based on the title of the child menu and removes it
+     * from the list of options if found.
      *
-     * @param option the title of the option to check
-     * @return true if the option matches the title of a submenu, false otherwise
+     * @param childMenu the sub-menu whose corresponding visible option is to be removed
+     * @throws MenuException if an error occurs during the removal of the visible option
      */
-    private boolean isOptionALinkToMenu(String option) {
-        for (Menu menu : this.menu.getSubMenus()) {
-            if (menu.getTitle().equals(option)) return true;
+    private void removeVisibleOptionForSubMenu(Menu childMenu) throws MenuException {
+        String title = childMenu.getTitle();
+        String visibleOption = this.menu.getOptions().stream()
+                .filter(option -> option.replaceFirst("^\\d+\\.\\s", "").equals(title))
+                .findFirst()
+                .orElse(null);
+
+        if (visibleOption != null) {
+            this.menu.removeOption(visibleOption);
         }
-        return false;
     }
 
-    /**
-     * Formats the given option text by converting the content within parentheses
-     * to uppercase while retaining the rest of the text unchanged.
-     *
-     * @param optionText the option text to be formatted, which must include
-     *                   a substring enclosed in parentheses
-     * @return the formatted text where the parentheses' content is uppercase
-     */
-    private static String formatOptionTextAsSubmenuOptionText(String optionText) throws MenuException {
-        if (optionText == null || optionText.isEmpty()) {
-            String msg = getMessage("err.menu.option.null.or.empty", MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
-            throw new MenuException(msg);
-        }
-        if (!optionText.contains("(")) {
-            optionText = "(" + optionText;
-        }
-        if (!optionText.contains(")")) {
-            optionText = optionText + ")";
-        }
-        return optionText.toUpperCase();
-    }
 
     @Override
     public String toString() {

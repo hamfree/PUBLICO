@@ -112,6 +112,11 @@ public class MenuErrors {
      * Message of error when a menu has itself as parent.
      */
     public static final String ERR_MENU_CANNOT_HAVE_ITSELF_AS_PARENT = "Menu cannot have itself as parent";
+
+    /**
+     * Message of error when a menu is not the parent menu.
+     */
+    public static final String ERR_MENU_NOT_PARENT_MENU = "This menu is not the parent menu";
     /**
      * Message of error when a root menu is pointed to another menu.
      */
