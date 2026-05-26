@@ -16,15 +16,22 @@ import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.*;
 
 /**
- * The ConvertTypes class provides a placeholder for demonstrating type conversion
- * functionalities. The class includes a static method to simulate the conversion
- * of types with formatted messages and pauses for demonstration purposes.
+ * The ConvertTypes class serves as a utility for demonstrating and performing various type
+ * conversion tasks and related operations. It employs a Singleton design pattern to ensure
+ * that only one instance of this class exists throughout the application lifecycle.
  * <p>
- * This class does not currently implement any actual type conversion logic but
- * serves as a framework for future development of type conversion utilities.
+ * This class provides methods for converting types, extracting specific data types from
+ * user input, performing type-related demonstrations, and working with collections and maps.
+ * It includes examples of utility methods for terminal interaction, string formatting, and
+ * random data generation.
  * <p>
- * Utility methods such as formatted printing, title generation, and pausing
- * are used to enhance the demonstration output.
+ * Key features of this class include:<br>
+ * - Singleton access using the getInstance() method.<br>
+ * - Conversion demonstrations for bytes, characters, and collections.<br>
+ * - Data extraction utilities for Long, Double, and numeric digits from strings.<br>
+ * - Utilities for working with maps, arrays, and lists.<br>
+ * - Integration with a TermCtl instance for terminal management.<br>
+ * - Methods for generating and working with random objects for simulation purposes.<br>
  */
 public class ConvertTypes {
     private static final Logger logger = LoggerFactory.getLogger(ConvertTypes.class);
@@ -79,22 +86,23 @@ public class ConvertTypes {
     }
 
     /**
-     * Simulates the process of type conversion by displaying placeholder messages
-     * and pausing for demonstration purposes.
+     * Orchestrates a demonstration of various data type conversion methods
+     * provided by the TypeConverter utility class. This method performs the
+     * following actions sequentially:
      * <p>
-     * This method clears the screen, displays a formatted title message indicating
-     * that types are being converted, logs that the conversion logic is not yet
-     * implemented, and pauses for a predefined duration.
+     * - Clears the terminal screen and displays a title and subtitle for each section.<br>
+     * - Invokes specific demo methods, such as converting arrays to strings,
+     *   extracting numbers from strings, and converting maps or collections to lists.<br>
+     * - Pauses the execution after each demonstration to allow the user to review results.<br>
+     * - Handles exceptions of type TypeConverterException and logs any errors encountered.<br>
+     * - Displays a final message indicating the end of the demonstration.<br>
      * <p>
-     * The method uses the following utility functionalities:
-     * - Clears the terminal screen using `getInstance().getTc().clearScreen(true)`.
-     * - Prints formatted messages with utility methods such as `prtln` and `title`.
-     * - Pauses execution using the `pause` method.
-     * <p>
-     * Note: The actual implementation for converting types has not been provided
-     * and is indicated by a placeholder comment within the method.
+     * Each demo method showcases a distinct feature of the TypeConverter utility,
+     * such as type conversion, extraction, or formatting. The method ensures a
+     * structured and user-friendly flow through multiple demos.
      *
-     * @throws Exception if an error occurs during screen clearing or pausing.
+     * @throws Exception if an error occurs during execution, including interrupt
+     *                   signals or issues with the underlying TypeConverter operations.
      */
     public void run() throws Exception {
 

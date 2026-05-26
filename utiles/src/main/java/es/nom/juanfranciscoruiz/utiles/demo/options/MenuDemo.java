@@ -79,17 +79,39 @@ public class MenuDemo {
     }
 
     /**
-     * Executes the demo for navigating a hierarchical menu structure in the terminal.
+     * Executes the demonstration of a hierarchical menu system within an application.
      * <p>
-     * This method performs the following actions:
+     * This method creates a hierarchical menu structure and manages its interaction with the user.
+     * It demonstrates how to:
      * <ul>
-     * <li>Clears the terminal screen using the `TermCtl` instance associated with the class.</li>
-     * <li>Displays a formatted title message indicating the purpose of the demo.</li>
-     * <li>Outputs a message stating that the demo is not yet implemented.</li>
-     * <li>Pauses the program execution for a predefined duration.</li>
+     * <li>Create and configure a main menu and multiple submenus.</li>
+     * <li>Define and assign menu options for each submenu.</li>
+     * <li>Handle user navigation through the menu hierarchy.</li>
+     * <li>Manage incorrect input and provide error feedback.</li>
+     * </ul>
+     * <p>
+     * Key components:
+     * <ul>
+     * <li>Menu hierarchy is created using the `Menu` and `MenuManager` classes.</li>
+     * <li>A primary menu titled "Hierarchical Menu Demo" is set up with four submenus: "Archivo", "Editar",
+     *   "Ver", and "Ayuda".</li>
+     * <li>Each submenu contains specific options, such as "Nuevo archivo", "Deshacer", and "Acerca de".</li>
+     * <li>Real-time user interaction allows for menu selection, navigation, and error handling.</li>
      * </ul>
      *
-     * @throws Exception if an error occurs during terminal operations or execution pause.
+     * <p>
+     * Features:
+     * <ul>
+     * <li>Clears the screen before displaying the menu.</li>
+     * <li>Displays the menu titles, messages, and available options to the user.</li>
+     * <li>Accepts user input to navigate the menu and calls relevant methods based on the selected submenu.</li>
+     * <li>Implements safeguards against invalid inputs and displays appropriate error messages.</li>
+     * <li>Provides instructions upon completion of the demonstration and logs the exit message.</li>
+     *</ul>
+     * <p>
+     * Note: The method pauses indefinitely at the end of the demonstration until the user presses &lt;ENTER&gt;.
+     *
+     * @throws Exception if an error occurs during menu interaction or processing.
      */
     public void run() throws Exception {
         final long PAUSE_DURATION = 3000L;

@@ -1,13 +1,14 @@
 package es.nom.juanfranciscoruiz.utiles;
 
-import es.nom.juanfranciscoruiz.utiles.model.MenuConstants;
 import es.nom.juanfranciscoruiz.utiles.exceptions.*;
+import es.nom.juanfranciscoruiz.utiles.model.MenuConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static es.nom.juanfranciscoruiz.utiles.Stuff.*;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.error;
+import static es.nom.juanfranciscoruiz.utiles.Stuff.warn;
 import static es.nom.juanfranciscoruiz.utiles.impl.IOimpl.prt;
 
 /**
@@ -68,6 +69,7 @@ public class MenuManager {
      * for managing menu operations, including setting, displaying, and interacting
      * with menus within the application. The class provides utility methods for
      * customizing and handling menu-related functionality.
+     *
      * @throws MenuException if the menu cannot be instantiated
      */
     public MenuManager() throws MenuException {
@@ -171,8 +173,8 @@ public class MenuManager {
      *            the user prompt. If nothing is specified, the phrase "Make your
      *            selection: " will be printed.
      * @return The option selected by the user.
-     * @throws  MenuException In case an error is detected.
-     * @throws  MenuManagerException In case an error is detected.
+     * @throws MenuException        In case an error is detected.
+     * @throws MenuManagerException In case an error is detected.
      */
     public Long awaitResponse(String msg) throws MenuException, MenuManagerException {
         if (menu == null) {
@@ -325,77 +327,37 @@ public class MenuManager {
     }
 
     /**
-     * Configures the options presented in a menu by validating and setting the provided list of options.
-     * Automatically adds a visual index to each valid option and ensures that the correct navigation option
-     * ("exit" for root menus or "back" for non-root menus) is included as the first option.
+     * Sets the given list of options in the menu after validating and processing them.
      *
-     * @param options a list of strings representing the menu options to set. Each option is validated, indexed,
-     *                and added to the menu. Should not be null or contain reserved options managed by the menu system.
-     * @throws MenuException if the provided list of options is null.
+     * @param options the list of options to be set in the menu; must not be null or empty.
+     * @throws MenuException if an error occurs during the validation or setting of options.
      */
     public void setOptionsInMenu(List<String> options) throws MenuException {
-        String exitOpt = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
-        String backOpt = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
-        int i = 0;
-        int index = 1;
-
-        if (options == null) {
-            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
-            throw new MenuException(msg);
-        }
-
-        if (options.isEmpty()){
-            String msg = getMessage("err.menu.options.empty", MenuErrors.ERR_OPTIONS_CANNOT_BE_EMPTY);
-            throw new MenuException(msg);
-        }
-
-        // Validates the options and add the visual index to each option.
-        ArrayList<String> validOptions = new ArrayList<>();
-        for (String option : options) {
-            if (!option.equals(exitOpt) && !option.equals(backOpt)){
-                validOptions.add(i, addNumbertoOptionMenu(option, index));
-                i++;
-                index++;
-            } else {
-                warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
-            }
-        }
-       this.menu.setOptions(validOptions);
-    }
-
-    /**
-     * Sets the options for a given submenu within the menu system. If the submenu is
-     * a root menu, the "exit" option will be automatically added as the first option,
-     * otherwise, the "back" option will be added. The method ensures the options are
-     * validated, numbered, and added correctly to the submenu.
-     *
-     * @param options The list of options to be added to the submenu. This list must not
-     *                be null or empty. Each option will be validated and assigned a
-     *                sequential visual index.
-     * @param submenu The submenu to which the options should be added. This submenu must
-     *                exist among the submenus of the parent menu managed by the current menu
-     *                manager.
-     * @throws MenuException If the options list is null, empty, or contains invalid items,
-     *                       or if the submenu is null or invalid.
-     */
-    public void setOptionsInSubMenu(List<String> options, Menu submenu) throws MenuException  {
-        String exitOpt = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
-        String backOpt = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
-        int i = 0;
-        int index = 1;
-        List<String> menuOptions;
-
         // Validations
         // The list 'options' have to exist and have values.
-        if (options == null) {
-            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
-            throw new MenuException(msg);
-        }
-        if (options.isEmpty()) {
-            String msg = getMessage("err.menu.options.empty", MenuErrors.ERR_OPTIONS_CANNOT_BE_EMPTY);
-            throw new MenuException(msg);
-        }
-        // The menu 'submenu' have to exist, be valid AND is an object of the arraylist submenus property of the menu property of this menumanager.
+        ensureOptionsNotNullOrEmpty(options);
+        // Validates the options and add the visual index to each option.
+        ArrayList<String> validOptions = generateValidOptions(options);
+        this.menu.setOptions(validOptions);
+    }
+
+
+    /**
+     * Sets the provided options in the specified submenu.
+     * Validates that the options list is not null or empty and that the submenu exists,
+     * is valid, and belongs to the list of submenus in the current menu manager's menu.
+     *
+     * @param options a list of strings representing the options to be added to the submenu
+     * @param submenu the submenu in which the options will be set
+     * @throws MenuException if the options list is null or empty, the submenu is null,
+     *                       or the provided submenu is not part of the current menu's submenus
+     */
+    public void setOptionsInSubMenu(List<String> options, Menu submenu) throws MenuException {
+        // Validations
+        // The list 'options' have to exist and have values.
+        ensureOptionsNotNullOrEmpty(options);
+        // The menu 'submenu' have to exist, be valid AND is an object of the arraylist submenus property of the
+        // menu property of this menumanager.
         if (submenu == null) {
             String msg = getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL);
             throw new MenuException(msg);
@@ -406,17 +368,7 @@ public class MenuManager {
         }
 
         // Obtenemos el submenú al que tenemos que insertarle las opciones
-        ArrayList<String> validOptions = new ArrayList<>();
-        // Validates the options and add the visual index to each option.
-        for (String option : options) {
-            if (!option.equals(exitOpt) && !option.equals(backOpt)){
-                validOptions.add(i, addNumbertoOptionMenu(option, index));
-                i++;
-                index++;
-            } else {
-                warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
-            }
-        }
+        ArrayList<String> validOptions = generateValidOptions(options);
         submenu.setOptions(validOptions);
     }
 
@@ -448,7 +400,6 @@ public class MenuManager {
             error(logger, msg);
             throw new MenuException(msg);
         }
-
 
         this.menu.addSubMenu(childMenu);
         this.addOptionToMenu(childMenu.getTitle());
@@ -499,6 +450,7 @@ public class MenuManager {
     }
 
     // Helper methods
+
     /**
      * Adds a number as a prefix to the specified option in the menu.
      * If the option already contains a numeric prefix, it returns the option unchanged.
@@ -544,6 +496,50 @@ public class MenuManager {
         }
     }
 
+    /**
+     * Generates a list of valid menu options by filtering out reserved options such as "exit"
+     * and "back", and numbers the remaining options sequentially.
+     *
+     * @param options the list of menu options to process
+     * @return an ArrayList of valid, numbered menu options
+     * @throws MenuException if an error occurs during processing
+     */
+    private ArrayList<String> generateValidOptions(List<String> options) throws MenuException {
+        String exitOpt = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
+        String backOpt = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
+        int i = 0;
+        int index = 1;
+        ArrayList<String> validOptions = new ArrayList<>();
+
+        for (String option : options) {
+            if (!option.equals(exitOpt) && !option.equals(backOpt)) {
+                validOptions.add(i, addNumbertoOptionMenu(option, index));
+                i++;
+                index++;
+            } else {
+                warn(logger, getMessage("err.menu.option.managed", MenuErrors.ERR_MANAGED_OPTION));
+            }
+        }
+        return validOptions;
+    }
+
+    /**
+     * Checks if the provided options list is null or empty and throws a MenuException if either condition is true.
+     *
+     * @param options the list of options to check
+     * @throws MenuException if the options list is null or empty
+     */
+    private void ensureOptionsNotNullOrEmpty(List<String> options) throws MenuException {
+        if (options == null) {
+            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            throw new MenuException(msg);
+        }
+
+        if (options.isEmpty()) {
+            String msg = getMessage("err.menu.options.empty", MenuErrors.ERR_OPTIONS_CANNOT_BE_EMPTY);
+            throw new MenuException(msg);
+        }
+    }
 
     @Override
     public String toString() {

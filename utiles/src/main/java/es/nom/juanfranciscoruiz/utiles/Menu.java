@@ -125,7 +125,6 @@ public class Menu {
     private Menu parentMenu;
 
     // Constructors
-
     /**
      * Constructs a new instance of the Menu class.
      * This private constructor initializes a Menu object with default properties
@@ -177,7 +176,7 @@ public class Menu {
         this();
         this.setRootMenu(isRootMenu);
         this.setTheFirstOption(isRootMenu);
-
+        String msg;
         if (options != null && !options.isEmpty()) {
             for (String option : options) {
                 this.addOption(option);
@@ -187,13 +186,15 @@ public class Menu {
         if (title != null && !title.isEmpty()) {
             this.setTitle(title);
         } else {
-            this.setTitle(getMessage("msg.menu.no.title", MenuConstants.NO_TITLE));
+            msg = getMessage("msg.menu.no.title", MenuConstants.NO_TITLE);
+            this.setTitle(msg);
         }
 
         if (message != null) {
             this.setMessage(message);
         } else {
-            this.setMessage(getMessage("msg.menu.default.msg", MenuConstants.DEFAULT_MSG));
+            msg = getMessage("msg.menu.default.msg", MenuConstants.DEFAULT_MSG);
+            this.setMessage(msg);
         }
     }
 
@@ -214,23 +215,24 @@ public class Menu {
      *                       - when the menu is a submenu but does not have a parent menu.
      */
     private Menu(List<String> options, String title, String message, boolean isRootMenu,
-                List<Menu> subMenus, Menu parentMenu) throws MenuException {
+                 List<Menu> subMenus, Menu parentMenu) throws MenuException {
         this(options, title, message, isRootMenu);
+        String msg;
         if (subMenus == null) {
-            String msg = getMessage("err.menu.submenus.null", MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
+            msg = getMessage("err.menu.submenus.null", MenuErrors.ERR_SUBMENUS_CANNOT_BE_NULL);
             throw new MenuException(msg);
         }
         this.setSubMenus(subMenus);
         if (isRootMenu) {
             if (parentMenu != null) {
-                String msg = getMessage("err.menu.root.no.parent", MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
+                msg = getMessage("err.menu.root.no.parent", MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
                 throw new MenuException(msg);
             }
         } else {
             if (parentMenu != null) {
                 this.setParentMenu(parentMenu);
             } else {
-                String msg = getMessage("err.menu.submenu.must.have.parent", MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
+                msg = getMessage("err.menu.submenu.must.have.parent", MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
                 throw new MenuException(msg);
             }
         }
@@ -257,7 +259,8 @@ public class Menu {
      * @return an instance of the Menu object initialized with the provided parameters.
      * @throws MenuException if there is an error while creating the menu instance.
      */
-    public static Menu getInstance(List<String> options, String title, String message, boolean isRootMenu) throws MenuException {
+    public static Menu getInstance(List<String> options, String title, String message,
+                                   boolean isRootMenu) throws MenuException {
         return new Menu(options, title, message, isRootMenu);
     }
 
@@ -279,10 +282,12 @@ public class Menu {
     }
 
     //Getters and Setters
-
     /**
      * Retrieves an unmodifiable view of the options list.
      * The returned list cannot be modified directly, ensuring the integrity of the original options.
+     * <p>
+     * <b style='color:red'>Important:</b> To manage the list of options of a menu use the proper methods of MenuManager class:
+     * addOptionToMenu(),  removeOptionFromMenu(), setOptionsInMenu() and setOptionsInSubMenu().
      *
      * @return an unmodifiable list of options
      */
@@ -301,8 +306,9 @@ public class Menu {
      * @throws MenuException if the provided options list is null
      */
     public void setOptions(List<String> options) throws MenuException {
+        String msg;
         if (options == null) {
-            String msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
+            msg = getMessage("err.menu.options.null", MenuErrors.ERR_OPTIONS_CANNOT_BE_NULL);
             throw new MenuException(msg);
         }
 
@@ -334,8 +340,9 @@ public class Menu {
      * @throws MenuException If the title is null
      */
     public void setTitle(String title) throws MenuException {
+        String msg;
         if (title == null) {
-            String msg = getMessage("err.menu.title.null", MenuErrors.ERR_TITLE_CANNOT_BE_NULL);
+            msg = getMessage("err.menu.title.null", MenuErrors.ERR_TITLE_CANNOT_BE_NULL);
             throw new MenuException(msg);
         }
         this.title = title;
@@ -358,8 +365,9 @@ public class Menu {
      * @throws MenuException If the message is null
      */
     public void setMessage(String message) throws MenuException {
+        String msg;
         if (message == null) {
-            String msg = getMessage("err.menu.message.null", MenuErrors.ERR_MESSAGE_CANNOT_BE_NULL);
+            msg = getMessage("err.menu.message.null", MenuErrors.ERR_MESSAGE_CANNOT_BE_NULL);
             throw new MenuException(msg);
         }
         this.message = message;
@@ -418,18 +426,19 @@ public class Menu {
      * @throws MenuException if an error occurs while setting the parent menu.
      */
     public void setParentMenu(Menu parentMenu) throws MenuException {
+        String msg;
         if (parentMenu == null) {
             if (!this.isRootMenu()) {
-                String msg = getMessage("err.menu.submenu.must.have.parent", MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
+                msg = getMessage("err.menu.submenu.must.have.parent", MenuErrors.ERR_SUBMENU_MUST_HAVE_A_PARENT_MENU);
                 throw new MenuException(msg);
             }
         } else {
             if (this.isRootMenu) {
-                String msg = getMessage("err.menu.root.no.parent", MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
+                msg = getMessage("err.menu.root.no.parent", MenuErrors.ERR_ROOTMENU_CANT_HAVE_A_PARENT_MENU);
                 throw new MenuException(msg);
             }
             if (parentMenu.equals(this)) {
-                String msg = getMessage("err.menu.cannot.have.itself.parent", MenuErrors.ERR_MENU_CANNOT_HAVE_ITSELF_AS_PARENT);
+                msg = getMessage("err.menu.cannot.have.itself.parent", MenuErrors.ERR_MENU_CANNOT_HAVE_ITSELF_AS_PARENT);
                 throw new MenuException(msg);
             }
         }
@@ -437,18 +446,24 @@ public class Menu {
     }
 
     /**
-     * Disables the link to the root menu by setting the parent menu to null and
-     * marking the current menu as the root menu.
+     * Detaches the current menu from its parent menu.
+     * This method removes the reference to the parent menu if the specified
+     * parent menu matches the actual parent menu of this menu.
      *
-     * @param parentMenu the parent menu to be detached; must not be null
-     * @throws MenuException if the provided parent menu is null
+     * @param parentMenu The parent menu to detach from. Must be non-null and must
+     *                   match the current parent menu of this menu.
+     * @throws MenuException If the supplied parent menu is null or does not match
+     *                       the current parent menu of this menu.
      */
     public void detachFromParent(Menu parentMenu) throws MenuException {
+        String msg;
         if (parentMenu == null) {
-            throw new MenuException(getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL));
+            msg = getMessage("err.menu.null", MenuErrors.ERR_MENU_OBJECT_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
-        if (this.parentMenu != parentMenu){
-            throw new MenuException(getMessage("err.menu.notparentmenu", MenuErrors.ERR_MENU_NOT_PARENT_MENU));
+        if (this.parentMenu != parentMenu) {
+            msg = getMessage("err.menu.notparentmenu", MenuErrors.ERR_MENU_NOT_PARENT_MENU);
+            throw new MenuException(msg);
         }
         this.parentMenu = null;
     }
@@ -465,16 +480,15 @@ public class Menu {
      * @throws MenuException if the current menu has a parent menu and is being set as a root menu.
      */
     public void setIsRootMenu(boolean isRootMenu) throws MenuException {
+        String msg;
         if (this.getParentMenu() != null) {
-            String msg = getMessage("err.menu.submenu.set.root", MenuErrors.ERR_SUBMENU_SET_AS_ROOT);
+            msg = getMessage("err.menu.submenu.set.root", MenuErrors.ERR_SUBMENU_SET_AS_ROOT);
             throw new MenuException(msg);
         }
         this.setRootMenu(isRootMenu);
-
         if (this.options == null) {
             this.options = new ArrayList<>();
         }
-
         this.setTheFirstOption(this.getIsRootMenu());
     }
 
@@ -556,9 +570,13 @@ public class Menu {
     }
 
     /**
-     * Retrieves the list of sub-menus associated with this menu.
+     * Retrieves the list of sub-menus associated with this menu (like an unmodifiable list!).
+     * The returned list cannot be modified directly, ensuring the integrity of the original list of submenus.
+     * <p>
+     * <b style='color:red'>Important:</b> To manage the submenus of a menu use the proper methods of MenuManager like :
+     * addSubMenuToMenu() and removeSubMenuFromMenu().
      *
-     * @return an unmodifiable list of sub-menus
+     * @return an unmodifiable list of Menu objects representing the sub-menus.
      */
     public List<Menu> getSubMenus() {
         return Collections.unmodifiableList(this.subMenus);
@@ -575,7 +593,7 @@ public class Menu {
      */
     public void setSubMenus(List<Menu> subMenus) throws MenuException {
         if (subMenus == null) {
-            for (Menu currentSubmenu : this.subMenus){
+            for (Menu currentSubmenu : this.subMenus) {
                 currentSubmenu.detachFromParent(this);
             }
             this.subMenus = new ArrayList<>();
@@ -590,8 +608,8 @@ public class Menu {
             subMenu.setParentMenu(this);
         }
 
-        if (this.subMenus !=  null) {
-            for (Menu currentSubmenu : this.subMenus){
+        if (this.subMenus != null) {
+            for (Menu currentSubmenu : this.subMenus) {
                 if (!mutable.contains(currentSubmenu)) {
                     currentSubmenu.detachFromParent(this);
                 }
@@ -601,10 +619,9 @@ public class Menu {
     }
 
     // Methods of the object Menu.
-
     /**
      * Adds a submenu to the current menu instance.
-     *
+     * <p>
      * This method allows linking a child menu to the current menu. The added submenu
      * becomes part of the current menu's hierarchy. Several constraints are evaluated
      * before adding the submenu:
@@ -614,18 +631,21 @@ public class Menu {
      *
      * @param childMenu The submenu to be added to the current menu.
      * @throws MenuException If the childMenu is null, if it points to itself, or if it is
-     *         a root menu attempting to attach to another menu.
+     *                       a root menu attempting to attach to another menu.
      */
     public void addSubMenu(Menu childMenu) throws MenuException {
-        if (childMenu == null){
-            throw new MenuException(getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL));
+        String msg;
+        if (childMenu == null) {
+            msg = getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         if (childMenu == this) {
-            throw new MenuException(getMessage("err.menu.point.itself", MenuErrors.ERR_MENU_CANNOT_POINT_TO_ITSELF));
+            msg = getMessage("err.menu.point.itself", MenuErrors.ERR_MENU_CANNOT_POINT_TO_ITSELF);
+            throw new MenuException(msg);
         }
         if (childMenu.isRootMenu()) {
-            throw new MenuException(getMessage("err.menu.root.point.another",
-                    MenuErrors.ERR_ROOTMENU_CANT_POINT_TO_ANOTHER_MENU));
+            msg = getMessage("err.menu.root.point.another", MenuErrors.ERR_ROOTMENU_CANT_POINT_TO_ANOTHER_MENU);
+            throw new MenuException(msg);
         }
 
         childMenu.setParentMenu(this);
@@ -639,11 +659,14 @@ public class Menu {
      * @throws MenuException if an error occurs during the removal process
      */
     public void removeSubMenu(Menu childMenu) throws MenuException {
+        String msg;
         if (childMenu == null) {
-            throw new MenuException(getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL));
+            msg = getMessage("err.menu.submenu.null", MenuErrors.ERR_SUBMENU_CANNOT_BE_NULL);
+            throw new MenuException(msg);
         }
         if (!this.subMenus.remove(childMenu)) {
-            throw new MenuException(getMessage("err.menu.submenu.not.found", MenuErrors.ERR_SUBMENU_NOT_FOUND));
+            msg = getMessage("err.menu.submenu.not.found", MenuErrors.ERR_SUBMENU_NOT_FOUND);
+            throw new MenuException(msg);
         }
         childMenu.detachFromParent(this);
     }
@@ -662,7 +685,6 @@ public class Menu {
         }
     }
 
-
     /**
      * Removes an option from the options list.
      *
@@ -671,9 +693,10 @@ public class Menu {
      * @throws MenuException If the provided option is null or empty.
      */
     public void removeOption(String optionText) throws MenuException {
+        String msg;
         if (optionText == null || optionText.isEmpty()) {
-            throw new MenuException(getMessage("err.menu.option.null.or.empty",
-                    MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY));
+            msg = getMessage("err.menu.option.null.or.empty", MenuErrors.ERR_OPTION_CANNOT_BE_NULL_OR_EMPTY);
+            throw new MenuException(msg);
         }
         this.options.remove(optionText);
 
@@ -686,10 +709,8 @@ public class Menu {
      * as a root menu in the hierarchy. Additionally, it ensures that the first
      * option of the menu is correctly configured by calling the
      * {@code setTheFirstOption} method.
-     *
-     * @throws MenuException if there is an error during the promotion process.
      */
-    public void promoteToRootMenu() throws MenuException {
+    public void promoteToRootMenu() {
         this.parentMenu = null;
         this.isRootMenu = true;
         setTheFirstOption(true);
@@ -717,7 +738,7 @@ public class Menu {
                 '}';
     }
 
-
+    // Helper methods
     /**
      * Sets the first option of the menu based on whether the current menu is a root menu or a sub-menu.
      * For a root menu, the first option will be "Exit".
@@ -728,21 +749,22 @@ public class Menu {
      *                   otherwise, it is treated as a sub-menu or child menu.
      */
     private void setTheFirstOption(boolean isRootMenu) {
+        String msg;
         // The first option of the menu is added automatically and depends from 'rootMenu' property.
         if (this.isRootMenu()) {
             // It's a 'Root Menu, the first option is 'Exit'
             if (this.options != null && !this.options.isEmpty()) {
                 this.options.removeFirst();
-                this.options.addFirst(getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT));
+                msg = getMessage("msg.menu.exit.opt", MenuConstants.EXITOPT);
+                this.options.addFirst(msg);
             }
         } else {
             // It's a 'Sub Menu or Child Menu, the first option is 'Back'
             if (this.options != null && !this.options.isEmpty()) {
                 this.options.removeFirst();
-                this.options.addFirst(getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU));
+                msg = getMessage("msg.menu.back.opt", MenuConstants.BACKTOPARENTMENU);
+                this.options.addFirst(msg);
             }
         }
     }
-
-
 }
