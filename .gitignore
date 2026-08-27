@@ -151,3 +151,5 @@ nbdist/
 .nb-gradle/
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,netbeans,java
+ansiterm/nbactions.xml
+ansiterm/dependency-reduced-pom.xml
